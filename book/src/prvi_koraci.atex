@@ -1,8 +1,8 @@
 @chapter{Prvi koraci}
 
-@p Naredna glava sadrži minimum informacija neophodan za razumevanje svih ostalih glava. Ako neku glavu ne bi smelo da preskočite u ovoj knjizi, to je definitivno ova galava. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno za naredne glave da budu poznate.
+@p Naredna glava sadrži informacije neophodne za razumevanje svih ostalih glava. Ako neku glavu ne bi trebalo da preskočite u ovoj knjizi, to je definitivno ova galava. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
 
-@p Sekcije @em{Let ... in} i @em{Where} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da lako demonstriramo neke pojedinosti Haskel koda.
+@p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda.
 
 @section{Haskel kompajler}
 
@@ -240,7 +240,7 @@ ghci> b
 
 @section{Prelom i nazubljivanje}
 
-@p Često nije zgodno pisati ceo @em{let in} ili @em{if then else} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje ili uvlačenje je dodavanje praznog prostra na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo nekoliko neformalnijih pravila koja za naše potrebe dobro sažimaju tehnička pravila:
+@p Često nije zgodno pisati ceo @em{let in} ili @em{if then else} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostra na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo nekoliko neformalnijih pravila koja za naše potrebe dobro sažimaju tehnička pravila:
 
 @list{
 @li Nazubljivanje Haskel koda se vrši isključivo sa razmacima.
