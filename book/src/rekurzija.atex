@@ -1,0 +1,142 @@
+@chapter{Rekurzija}
+
+@p Rekurzija je način rešavanja nekog problema korišćenjem rešenja istog problema manje složenosti (dimenzije, veličine). To u praksi znači da rekurzivna implementacija algoritma podrazumeva (direktno ili indirektno) samopozivanje funkcije sa promenjenim argumentima. Moć rekurzije leži u tome što se rešenja teških problema mogu iskazati kroz jednostavne veze. 
+
+@p U nastavku ćemo kroz neke klasične primere videti kako možemo implementirati rekurziju u Haskelu. Primer su poređani od jednostavnijih ka složenijim, i demonstriraju različite oblike rekurzije. Neke druge rekurzivne tehnike ćemo upoznati kasnije kroz Haskel.
+
+@section{Aritmetička suma}
+
+@problem{Napisati funkciju @code{zbir :: Int -> Int} koja vraća zbir prvih @code{n} prirodnih brojeva.}
+
+@p Funkciju @code{zbir} je lako implementirati u nekom imperativnom jeziku pomoću jedne petlje. Međutim, u Haskelu  ne postoji pojam petlje, te moramo iskoristiti tehniku rekurzije. To podrazumeva da pri nalaženju rešenja koristimo rešenje istog problema manje složenosti. Konkretno u ovom slučaju prilikom nalaženja zbira brojeva koristimo zbir manje brojeva. Ako napišemo izraz za zbir, rešenje će nam se samo ukazati:
+@eq{\mathtt{zbir \; n = 1 + 2 + \cdots + (n-1) + n}}
+Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir prvih @code{n - 1} brojeva. Stoga  se rešenje u kodu samo nameće:
+
+@codeBlock{zbir n = zbir (n - 1) + n}
+
+@p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo prva 4 broja i dodati 5 na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati 4 na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj, slučaj u kom ne koristimo rekurzivnu definiciju, nazivamo @em{bazni slučaj}. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
+
+@codeBlock{
+zbir n
+    | n == 0 = 0
+    | otherwise = zbir (n - 1) + n
+}{Ovde možete i koristiti @code{if then else} notaciju da bi ste definisali @code{zbir} u jednoj liniji.}
+
+@p Pogledajmo na primeru kako napisani program radi. Svaki korak u narednom nizu predstavlja ili izračunavanje ili poziv funkcije @code{zbir}:
+
+@eq{
+\begin{aligned}
+\mathtt{zbir} \; \mathtt 3 &= \mathtt{zbir \; (3 - 1) + 3} \\
+& = \mathtt{zbir \; 2 + 3} \\
+& = (\mathtt{zbir \; (2 - 1) + 2) + 3} \\
+& = (\mathtt{zbir \; 1 + 2) + 3} \\
+& = ((\mathtt{zbir \; (1 - 1) + 1) + 2) + 3} \\
+& = ((\mathtt{zbir \; 0 + 1) + 2) + 3} \\
+& = \mathtt{(((0 + 1) + 2) + 3  = 6}
+\end{aligned}
+}
+
+@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} koja je totalna (definisana je za sve vrednosti domena):
+
+@codeBlock{
+zbir n
+    | n <= 0 = 0
+    | otherwise = zbir (n - 1) + n
+}
+
+@problem{U matematici, faktorijel prirodnog broja @m{n!} predstavlja proizvod svih prirodnih brojeva manjih ili jednakih sa @m{n} tj. @m{n! = 1 \cdot 2 \cdot 3 \cdots (n-1) \cdot n}. Napisati funkciju @code{faktorijel} koja vraća faktorijel @m{n!} prirodnog broja.}
+{@p Možemo primetiti da se @m{n!} može izračunati kao proizvod @m{(n - 1)!} sa @m{n}. Postupajući kao u prethodnom primeru dobijamo sledeći Haskel kod:
+
+@codeBlock{
+faktorijel' n
+    | n <= 0 = 1
+    | otherwise = faktorijel' (n - 1) * n
+}}
+
+@problem{Napisati rekurzivnu funkciju koja računa sumu prvih @m{k+1} članova aritmetičkog niza čiji je prvi član @m{a}, a korak (razlika između dva susedna člana niza) @m{d}. Tačnije napisati rekurzivnu funkciju koja računa sumu @eq{a+(a+d)+(2+2d)+\cdots+(a+dk).}}
+
+@section{Par-nepar}
+
+@problem{
+Implementirati funkciju @code{paran :: Int -> Bool} koja proverava da li je broj prirodan paran. Pretpostaviti da će argument funkcije biti pozitivan broj.
+}
+
+@p Korišćenjem funkcije @code{mod}, možemo dati odmah sledeće rešenje
+
+@codeBlock{
+paran :: Int -> Bool
+paran n = 0 == mod n 2
+}{Izraz @code{0 == mod x 2} ima vrednost @code{True} ako je @code{n} paran broj, prema tome ovde nama potrebe da koristimo @code{if then else}.}
+
+@p Ovaj problem možemo da rešimo i rekurzivno. Za broj @code{0} znamo da je paran, i ta činjenica će nam predstavljati bazu rekurzije. Za svaki drugi prirodan broj @m{n} znamo da je paran ako i samo ako je @code{n-1} neparan. Stoga možemo definisati dve funkcije @code{paran} i @code{neparan} koje će se međusobno pozivati:
+
+@codeBlock{
+paran :: Int -> Bool
+paran 0 = True
+paran n = not (neparan (n - 1))
+
+neparan :: Int -> Bool
+neparan 0 = False
+neparan n = not (paran (n - 2))
+}
+
+@p Demonstirajmo izvršavanje koda na jednom primeru:
+
+@eq{
+\begin{aligned}
+\mathtt{paran} \; 3 &= \, \mathtt{not}  \, (\mathtt{neparan} \; 2)\\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{paran} \; 1)) \\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, (\mathtt{neparan} \; 0))) \\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, \mathtt{False})) = \mathtt{False}
+\end{aligned}
+}
+
+@p Primetimo da navedene funkcije nisu definisane za negativne brojeve.
+
+@problem{Izmeniti funkcije @code{paran} i @code{neparan} tako da i za negativne brojeve vraćaju ispravne rezultate.}
+
+@problem{Definisati rekurzivnu funkciju @code{ostatak3 :: Int -> Int} koja određuje ostatak broja pri deljenju sa @m{3}.}
+
+@problem{Definisati rekurzivnu funkciju @code{ostatak :: Int -> Int -> Int} koja određuje ostatak prilikom deljenja prvog argumenta sa drugim argumentom.}
+
+@section{Fibonačijev niz}
+
+@p Fibonačijev niz je dobro poznati niz prirodnih brojeva, koji se konstruiše po sledećem prinicpu:
+
+@p Prva dva člana Fibonačijevog niza su @code{1} i @code{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
+
+@p Po navedenom principu, treći član Fibonačijevog niza je @m{2} (jer je @m{2 = 1 + 1}), četvrti član je @m{3} (jer je @m{3 = 1 + 2}), peti član je @m{5} (jer je @m{5 = 2 + 3}), šesti član je @m{8} (jer je @m{8 = 3 + 5}), i tako dalje...
+
+@p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća n-ti Fibonačijev broj je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)}@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{\mathtt n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
+
+@codeBlock{
+fib n
+    | n == 1 = 0 
+    | n == 2 = 1
+    | otherwise = fib (n - 1) + fib (n - 2)
+}{Aplikacija argumenta ima veći prioritet od aritmetičkih operacija, te se @code{fib (n - 1) + fib (n - 2)} interpretira kao @code{(fib (n - 1)) + (fib (n - 2))}. Iz istog razloga ne možemo pisati samo @code{fib n - 1 + fib n - 2}, jer se to interpretira kao @code{(fib n) - 1 + (fib n) - 2}
+}
+
+@todo{Napisati o šetnji po mreži i hanojskom kulama}
+
+@section{Zadaci}
+
+@problem{Napisati funkciju koja određuje @m{n}-ti stepen broja.}
+
+@problem{Napisati funkciju koja određuje zbir neparnih cifara prirodnog broja.}
+
+@problem{Napisati funkciju koja određuje količnik dva prirodna broja na @m{k} decimala.}
+
+@problem{Napisati funkciju koja određuje binomni koeficijent @m{n \choose k}.}
+
+@problem{Napisati funkciju koja određuje najveći zajednički delilac dva prirodna broja (koristiti Euklidov algoritam).}
+
+@problem{Spratovi jedne zgrade se kreče u zeleno, plavo ili crveno. Svaki sprat se kreči u jednu od te tri boje. Na koliko načina je moguće okrečiti zgradu, ako važi pravilo da se dva susedna sprata ne smeju okrečiti istom bojom.}
+
+@problem{Za proizvoljan prirodan broj @m{n} definišemo njegov Kolacov niz na sledeći način: @m{x_0 = n}, @m{x_{m+1} = x_m / 2} ako je @m{x_n} parno, odnosno @m{x_{m+1} = 3 x_m + 1} ako je @m{x_m} neparno. Pritom ako je @m{x_{m+1} = 1} niz se prekida. Na primer Kolacov niz za @m{n = 12} je @m{12, 6, 3, 10, 5, 16, 8, 4, 2, 1}. Pretpostavlja se da će se Kolacov niz svakog prirodnog broja eventualno prekinuti, tj. da će se pojaviti @m{1} u njemu. Naći prirodan broj manji od @m{10000} koji ima najduži Kolacov niz.}
+
+@problem{@em{Metoda polovjenja intervala} je numerička metoda određivanja korena neprekidne funkcija tipa @m{\mathbb R\to \mathbb R}. Posmatrajmo interval @m{[a, b]}. Ako za funkciju @m{f} važi da je @m{f(a) < 0} i @m{f(b) > 0} (ili da je @m{f(a) > 0} i @m{f(b) < 0}) za neke brojeve @m{a < b}, tada zbog neprekidnosti znamo da postoji @m{x}, @m{a < x < b}, takvo da je @m{f(x) = 0}. Uzmimo @m{c = (a + b) / 2}. Ako je @m{f(c) \ne 0} postupak možemo da ponovimo za jedan od intervala @m{[a , c]} ili @m{[c, b]} (naravno, ako je @m{f(c) = 0}, postupak prekidamo). Na ovaj način dobijamo niz intervala čija dužina se prepolovljava, i za koje znamo da sadrže barem jedno rešenje jednačine @m{f(x) = 0}. Stoga, u @m{n} koraka možemo odrediti koren jednačine sa greškom manjom od @m{(b-a)/2^n}. Koristeći ovaj metod, naći koren polinoma @m{p(x) = 2x^3-4x^2-6x+2} na intervalu @m{[1, 4]} sa greškom ne većom od @m{0.001}.}
+
+@problem{Dat je niz prirodnih brojeva sa @m{n>0} članova. Element na poziciji @m{k \le n} predstavlja cenu neke akcije na berzi u @m{k}-tom danu. Potrebno je u jednom od ponuđenih dana kupiti akciju, a zatim u nekom od narednih dana i prodatitu akciju. Naravno, cilj je ostvariti što veću dobit (dobit računamo kao razliku prodajne i kupovne cene).
+
+Napisati funkciju @code{profit :: [Int] -> Int} koja uzima cene akcija tokom vremena, i vraća najveći profit koji je moguće ostvariti trgovinom akcija. Akcija se može samo jednom kupiti i prodati, prodaja se mora odviti nakon kupovine ili istog dana. Pretpostaviti da prosleđeni niz nije prazan. Na primer @code{profit [7,1,5,3,6,4] = 5} jer kupovinom drugog dana i prodajom petog dana ostvarujemo profit \(6 - 1 = 5\). Ne možemo ostvariti dobit \(7 - 1 = 5\) jer se prodaja mora odviti nakon kupovine.}

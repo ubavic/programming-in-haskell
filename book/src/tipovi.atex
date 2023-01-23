@@ -1,0 +1,443 @@
+@chapter{Tipovi}
+
+@p Haskel poseduje @def{statički sistem tipova} što znači da su tipovi svih izraza poznati prilikom kompilacije ili interpretacije. Time se otklanjaju mnoge greške koje bi mogle srušiti ceo program prilikom izvršavanja@note{Na primer, @em{GHC} neće iskompajlirati kôd u kom se broj oduzima od niske, jer takva operacija nema smisla.}. Jezici poput @em{Python}-a ili @em{JavaScript}-a nemaju statički sistem tipova, već @em{dinamički} sistem tipova. U takvim jezicima, tipovi izraza se određuju prilikom izvršavanja programa što ostavlja veliku mogućnost za pojavljivanje bagova.
+
+@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler skoro uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip vrednosti. 
+
+@p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove glave ćemo se upoznati sa nekim osnovnim tipovima u Haskelu i operacijama koje se mogu vršiti nad ovim tipovima.
+
+@section{Tip @code{Bool}}
+
+@p Tip @code{Bool} predstavlja kolekciju koja sadrži sve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}. Nad logičkim vrednostima moguće je vršiti naredne logičke operacije
+
+@list{
+@li @em{Konjunkcija} @code{p && q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako logičke vrednosti @code{p} i @code{q} imaju vrednost @code{True}.
+
+@li @em{Disjunkcija} @code{p || q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako barem jedna od vrednosti @code{p} i @code{q} ima vrednost @code{True}.
+}
+
+@p Koristeći ove dve operacije i zagrade, možemo kreirati logičke izraze proizvoljne složenosti. 
+
+@terminal{
+ghci> True || False
+True
+ghci> ((True && False) || False) && (True || True)
+False
+}{Kao i aritmetičke izraze, @em{GHCi} će i logičke izraze pokušati da @em{svede} na jednu vrednost.}
+
+@p Uz navedene binarne operacije koristimo i unarnu operaciju @code{not} koja negira logičku vrednost. Ova unarna operacija je jedna funkcija@note{Zapravo, i logičke operacije @code{&&} i @code{||} su funkcije zapisane u infiksnom obliku. Više o tome kasnije.}, te je stoga ovde dobro mesto da kažemo par reči o pozivanju funkcija u Haskelu.
+
+@p Funkcije su vrednosti kao što su to i brojevi ili logičke vrednosti. Na primer, sa imenom @code{not} je označena funkcija koja negira logičku vrednost koja joj je prosleđena. Da bi smo "pozvali" funkciju @code{not} potrebno je da nakon imena funkcije napišemo logičku vrednost koju želimo da negiramo. Za razliku od drugih jezika, u Haskelu ime funkcije i argument razdvajamo razmakom, a ne zagradom:
+
+@terminal{
+ghci> not True
+False
+ghci> a = True && False
+ghci> not a
+True
+}{Funkciju @code{not} možemo pozivati nad logičkim vrednostima ili nad imenima kojima su dodeljene logičke vrednosti (u ovom primeru to je ime @code{a}).}
+
+@p Funkcija @code{not} vraća novu logičku vrednost, te stoga tu vrednost možemo kombinovati ponovo u složenijim logičkim izrazima:
+
+@terminal{
+ghci>(not True) || False
+False
+}
+
+@p Zagrade postavljamo oko izraza da bismo uspostavili poredak kojim je potrebno evaluirati izraz. U prethodnom primeru postavili smo zagrade oko logičkog izraza @code{not True}, da bismo bili sigurni da se celokupan izraz neće protumačiti kao @code{not (True || False)}@note{Na prvi pogled izraz @code{not True || False} bi mogao da se shvati i kao @code{(not True) || False} ali i kao @code{not (True || False)}.}. Ali kao što u aritmetici imamo konvenciju o prioritetu računskih operacija, tako i u Haskelu imamo niz pravila koja se tiču prioriteta raznih operatora i poziva funkcija. Za sada je važno znati da primena funkcije na vrednost ima @em{najveći} prioritet. Prema tome, izraz @code{not True || False} se tumači kao @code{(not True) || False}, baš kao što se se aritmetički izraz @m{5\cdot 4 + 7} tumači kao @m{(5\cdot 4) + 7} a ne kao @m{5 \cdot (4 + 7)}.
+
+@p Osim primene logičkih operacija, logičke vrednosti možemo da poredimo sa operatorom @code{==} odnosno @code{/=}, koji utvrđuje da li su vrednosti iste odnosno različite. Rezultati ovih poređenja su takođe logičke vrednosti:
+
+@terminal{
+ghci> p = True
+ghci> q = False
+ghci> p == p 
+True
+ghci> p == q
+False
+ghci> p /= q
+True
+}
+
+@section{Tipovi @code{Int} i @code{Integer}}
+
+@p Tip @code{Int} predstavlja kolekciju celobrojnih vrednosti koje se mogu predstaviti u procesorskoj reči, odnosno u 32 ili 64 bita@note{Specifikacija Haskel jezika garantuje da je vrednost tipa @code{Int} predstavljena sa barem 30 bitova}. Nad vrednostima tipa @code{Int} moguće je vršiti naredne operacije i funkcije:
+
+@subsection{@code{+} i @code{*}}
+
+@p Sa sabiranjem i množenjem brojeva smo se već upoznali u prethodnoj glavi. Ovi operatori se ponašaju isto kao i svim drugim programskim jezicima ili u svakodnevnoj aritmetici.
+
+@subsection{@code{-}}
+
+@p Oduzimanje brojeva je takođe poznato iz svakodnevnog života i ostalih programskih jezika. Ali potrebno je naglasiti da se sa znakom @code{-} može negirati broj. Znak @code{-} ima nizak prioritet, te je često potrebno koristiti zagrade oko izraza koji se negira:
+
+@terminal{
+ghci> 3 * -2
+<interactive>:101:1: error:
+recedence parsing error
+cannot mix ‘*’ [infixl 7] and prefix `-' [infixl 6] in the same infix expression
+ghci> 3 * (-2)
+-6
+}{Izraz @code{3 * -2} dovodi do greške u parsiranju, te je potrebno staviti zagrade oko broja koji se negira.}
+
+@subsection{@code{div}}
+
+@p Za deljenje celobrojnih vrednosti, koristi se funkcija @code{div} od dve promenljive. Prvi parametar je deljenik (broj koji se deli) a drugi je delilac (broj kojim se deli). Rezultat deljenja je @em{celobrojna} vrednost odnosno vrednost tipa @code{Int}. 
+
+@p I pri radu sa funkcijama više promenljivih argumenti se razdvaju razmacima@note{Česta početnička greška je da se sintaksa pozivanja funkcija iz drugih jezika prenese u Haskel, odnosno da se argumenti funkcije postave u zagrade i razdvoje zarezom. Zato početnici često pokušavaju da podele dva broja sa @code{div (5, 7)} što dovodi do sintaksne greške. Uverite se i sami.}:
+
+@terminal{
+ghci> div 7 2
+3
+}{Rezultat je @m{3} jer je @m{3\cdot 2 + 1 = 7}.}
+
+@p Ponovo napominjemo da primena funkcije na argument ima najveći prioritet. Stoga se kôd @code{div 7 2 * 2} interpretira kao @code{(div 7 2) * 2} a ne kao @code{div 7 (2 * 2)}.
+
+@subsection{@code{mod}}
+
+@p Funkcija dva argumenta @code{mod} vraća ostatak pri celobrojnom deljenju prvog argumenta sa drugim. 
+
+@terminal{
+ghci> mod 7 3
+1
+}
+
+@p Za funkcije @code{div} i @code{rem} i proizvoljne cele brojeve @code{x} i @code{y} različite od nule važi veza @eq{\mathtt{(div\; x\;  y)*y + (mod\; x \; y) = x}.}
+
+@subsection{@code{^}}
+
+@p Operatorom @code{^} je moguće stepenovati celobrojnu vrednost na prirodan stepen. Na primer @code{7^2} će se evaluirati u @code{49}.
+
+@p Ako pokušamo da sa @code{^} stepenujemo broj na negativan stepen dobićemo izuzetak@note{Pokušajte da iz neke @code{.hs} datoteke učitate definiciju @code{a = 7^(-2)}. Primetićete da će se datoteka uspešno učitati. Tek kada kroz @em{GHCi} prompt potražite vrednost od @code{a} doći će do izuzetka. Ovo nam govori da se Haskel kôd ne izvršava pri učitavanju datoteke već prilikom evaluacije izraza.}:
+
+@terminal{
+ghci> 7^(-2)
+*** Exception: Negative exponent
+}{Rezultat dizanja prirodnog broja na negativan stepen pozitivan racionalan broj manji od 1, a takav broj se ne može predstaviti tipom @code{Int}}
+
+@subsection{Poređenja}
+
+@p Vrednosti tipa @code{Int} takođe možemo porediti sa operatorima @code{==} i @code{/=}. Ali možemo koristiti i operatore @code{<}, @code{<=}, @code{>} i @code{>=} koji upoređuju brojeve po veličini. Rezultat svih navedenih operacija je logička vrednost:
+
+@terminal{
+ghci> 2 < 3
+True
+ghci> 2 >= 3
+False
+}
+
+@p U Haskelu nije dozvoljeno porediti tipove različitog tipa sa operatorima @code{==} i @code{/=}. U jezicima poput Javaskripta, poređenje poput @code{True == 1} bi bilo validno (i tačno), dok u Haskelu takvo poređenje dovodi do greške:
+
+@terminal{
+ghci> True == 1
+<interactive>:8:9: error:
+    • No instance for (Num Bool) arising from the literal ‘1’
+    • In the second argument of ‘(==)’, namely ‘1’
+      In the expression: True == 1
+      In an equation for ‘it’: it = True == 1
+}
+
+@subsection{Tip @code{Integer}}
+
+@p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @code{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da prezentuje baš proizvoljno veliki broj. Ograničenja ovog tipa su data radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
+
+@p Da bi demonstrirali razliku možemo napraviti mali eksperiment. U jednoj @code{.hs} datoteci definišimo jednu @code{Int} i jednu @code{Integer} konstantu:
+
+@codeBlock{
+a :: Int
+a = 7
+
+b :: Integer
+b = 7
+}{Obe vrednosti predstavljaju broj @m{7}, ali poseduju različit tip.}
+
+@p Nakon učitavanja gorenavedenog koda, možemo stepenovati definisane vrednosti na velike stepene i tako prekoračiti ograničenje koje nameće @code{Int} tip. Uvidećemo da su rezultati različiti:
+
+@terminal{
+ghci> a^70
+254007274765394321
+ghci> b^70
+143503601609868434285603076356671071740077383739246066639249
+}{Broj @m{254007274765394321} je velik ali nije jednak @m{7^{70}}. Evaluacija koda @code{b^7} daje tačnu vrednost.}
+
+@p Pri radu sa tipom @code{Integer} trebalo bi imati na umu da su aritmetičke operacije nad ovim tipom značajno sporije nego nad @code{Int} tipom. Razlog tome je što se aritmetičke operacije sa @code{Int} odbijaju na nivou hardvera, što nije slučaj i sa tipom @code{Integer}.
+
+@section{Tipovi @code{Float} i @code{Double}}
+
+@p Za reprezentovanje realnih brojeva koriste se tipovi @code{Float} i @code{Double} koji realan broj prezentuju u skladu sa @em{IEEE 754} standardom. Jedina razlika između ova dva tipa je u tome što @code{Float} koristi jednostruku tačnost (32 bita) a @code{Double} dvostruku tačnost (64 bita). Kako moderne arhitekture računara podjednako dobro podržavaju računske operacije u jednostrukoj i dvostrukoj tačnosti, preporučeno je da se uvek koristi @code{Double}.
+
+@p Sa tipovima @code{Float} i @code{Double} moguće je koristiti operatore @code{+}, @code{-}, @code{*}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Za deljenje realnih brojeva koristi se operator @code{/}. Uz operator @code{^}, za stepenovanje se može koristiti i operator @code{**} koji dozvoljava da stepen bude proizvoljan realan broj@note{Iako pri korišćenju operatora @code{**} neće nikad doći do izuzetka, rezultat može biti @code{NaN}.}
+
+@p Takođe, Haskel ima ugrađene funkcije poput @code{sin}, @code{cos}, @code{tan}, @code{asin}, @code{acos}, @code{atan}, @code{exp}, @code{log}, @code{sqrt} itd... Dostupna je takođe i Arhimedova konstanta @m{\pi} pod imenom @code{pi}.
+
+@terminal{
+ghci> r = 10
+ghci> pi * r**2
+314.1592653589793
+}
+
+@section{Liste}
+
+@p U Haskelu @def{liste} su strukture podataka koje predstavljaju uređenu kolekciju elemenata nekog tipa. U jednoj listi se ne mogu naći dve vrednosti različitog tipa.@note{Zbog toga za liste kažemo da su @em{homogene} strukture podataka.}
+
+@p U kodu, lista se konstruiše tako što se između uglastih zagrada navedu vrednosti međusobno razdvojene zarezima. Na primer, lista od prva četiri prirodna broja može da se definiše kao @code{[0, 1, 2, 3]}. Razmaci oko elemenata i zagrada nisu od bilo kakvog značaja.@note{Prema tome, navedeni primer može da se zapiše i kao @code{[0,1,2&nbsp;&nbsp;,3 ]} itd..} @def{Prazna lista} se zapisuje kao @code{[]}.
+
+@p Za označavanje tipa liste koristi se specijalna sintaksa. Ako je data lista elemenata tipa @code{a} tada ta lista ima tip koji se označava sa @code{[a]}@note{Kad god govorimo o nekom opštem tipu, a ne nekom konkretnom tipu, koristićemo ime koje započinje malim a ne velikim slovom.}. Na primer, lista elemenata tipa @code{Int} poseduje tip @code{[Int]}. 
+
+@codeBlock{
+maliProstiBrojevi :: [Int]
+maliProstiBrojevi = [2,3,5,7,11,13,17,19]
+
+logickeVrednosti :: [Bool]
+logickeVrednosti = [True,False]
+
+vazneKonstante :: [Double]
+vazneKonstante = [3.14159,2.71828,0.57721]
+}{Definicije tri liste različitog tipa.}
+
+@p U specijalnom slučaju, možemo definisati i listu lista, i listu lista lista, itd...
+
+@codeBlock{
+a :: [[Int]]
+a = [[1], [2,3], [4,5,6]]
+}{Lista @code{a} je lista lista celih brojeva. Tip ove liste je @code{[[Int]]}. Primetimo, da se u listi tipa @code{[[Int]]} ne može naći element @code{5} (jer je to vrednost tipa @code{[Int]}), ali može element @code{[5]} koji je tipa @code{[5]}.}
+
+@problem{Koliko elemenata ima lista @code{[[]]}?}
+{@p Lista @code{[[]]} ima jedan element. Taj element je prazna lista @code{[]}.}
+
+@p Liste možemo spajati uz pomoć operatora @code{++}. Nadovezivanjem prazne liste @code{[]} na početak ili kraj liste, ta lista se ne menja. Naravno, moguće je spajati samo liste istog tipa.
+
+@terminal{
+ghci> [1,2,3,4] ++ [10,11,12]
+[1,2,3,4,10,11,12]
+ghci> [True,False] ++ []
+[True,False]
+}
+
+@terminal{
+ghci> [1,2,3] ++ [True]
+<interactive>:8:2: error:
+    • No instance for (Num Bool) arising from the literal ‘1’
+    • In the expression: 1
+      In the first argument of ‘(++)’, namely ‘[1,2,3]’
+      In the expression: [1,2,3] ++ [True]
+}{Prilikom spajanja lista različitog tipa dolazi do tipske greške.}
+
+@p Za nadovezivanje elemenata na početak liste može se koristi i operator @code{:}. Sa leve strane operatora @code{:} potrebno je navesti vrednost tipa @code{a}, a sa desne strane je potrebno navesti listu elemenata tipa @code{[a]}
+
+@terminal{
+ghci> 1 : [2,3,4,5]
+[1,2,3,4,5]
+ghci> [1] ++ [2,3,4,5]
+[1,2,3,4,5]
+}{Dva načina nadovezivanja jednog elementa na početak liste.}
+
+@terminal{
+ghci> [1] : [2,3,4,5]
+<interactive>:9:1: error:
+    • Non type-variable argument in the constraint: Num [a]
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall a. (Num a, Num [a]) => [[a]]
+
+ghci> 1 ++ [2,3,4,5]
+<interactive>:10:1: error:
+    • Non type-variable argument in the constraint: Num [a]
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall a. (Num a, Num [a]) => [a]
+}{Česta greška je da se element nadovezuje na početak sa operatorom @code{++} ili da se liste spajaju pomoću operatora @code{:}.}
+@todo{Popraviti ovo!}
+
+@p Liste predstavljaju strukturu podataka koja se najčešće koristi u Haskelu. Zbog toga postoje mnoge funkcije koje uzimaju ili vraćaju liste. Sa mnogim takvim funkcijama upoznaćemo se u glavi @em{Liste}. Za sada navodimo samo naredne funkcije:
+
+@list{
+@li @code{length} vraća dužinu prosleđene liste.
+@li @code{head} vraća prvi element prosleđene liste ako taj element postoji. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
+@li @code{last} vraća poslednji element prosleđene liste ako taj element postoji. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
+@li @code{init} vraća sve elemente prosleđene liste osim poslednjeg. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
+@li @code{tail} vraća sve elemente prosleđene liste osim prvog. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
+@li @code{reverse} vraća prosleđenu listu u obrnutom smeru.
+@li @code{elem} je funkcija od dva parametra koja proverava da li se prvi argument nalazi u listi prosleđenoj kao drugi argument. Rezultat provere je logička vrednost.
+}
+
+@terminal{
+ghci> mojaLista = [10,20,30,40,50,60]
+ghci> length a
+6
+ghci> head a
+10
+ghci> last a
+60
+ghci> init a
+[10,20,30,40,50]
+ghci> tail a
+[20,30,40,50,60]
+ghci> reverse a
+[60,50,40,30,20,10]
+ghci> elem 10 a
+True
+}
+
+@p Sa operatorom @code{!!} možemo pristupiti @m{m}-tom elementu liste. Sa leve strane operatora se navodi lista, a sa desne strane vrednost tipa @code{Int}. Elementi su indeksirani od nule. Pokušaj pristupanja indeksu koji je veći od dužine liste dovodi do izuzetka.
+
+@terminal{
+ghci>[True, False, True, False, True] !! 2
+True
+}
+
+@terminal{
+ghci>[True, False, True, False, True] !! 7
+*** Exception: Prelude.!!: index too large
+}
+
+@p Kad god imamo tip čije se vrednosti mogu upoređivati sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=} tada se i liste elemenata tog tipa mogu porediti sa istim operatorima. Ova poređenja se vrše član po član. Specijalno, liste se su jednake ako i samo ako sadrže iste vrednosti poređane istim redosledom.
+
+@terminal{
+ghci> [1,2,3] == [1,2,3]
+True
+ghci> [1,2,3] == [2,3,1]
+False
+}
+
+@section{Tipovi @code{Char} i @code{[Char]}}
+
+@p Vrednosti tipa @code{Char} su karakteri kodirani @em{Unicode} standardom. U samom kodu, karakteri se navode između jednostrukih navodnika:
+
+@terminal{
+ghci> mojKarakter = 'ш'
+ghci> mojKarakter
+'ш'
+}
+
+@p Funkcija @code{fromEnum} konvertuje karakter u vrednost tipa @code{Int} koja predstavlja poziciju tog karaktera u @em{Unicode} kodnoj tabeli
+
+@terminal{
+ghci> fromEnum 'A'
+65
+}{Za nekoga ko ne poznaje @em{Unicode} možda deluje neobično da se @code{'A'} nalazi tek na 65 mestu. Na prvim mestima se nalaze specijalni karakteri, zatim cifre, zatim velika pa mala latinična slova, nakon toga slede interpunkcijski znaci, pa tek onda nelatinična pisma...}
+
+@p Karaktere, kao i brojeve, možemo porediti. To poređenje je takođe ustanovljeno pozicijom u @em{Unicode} kodnoj tabeli. Stoga imamo
+
+@terminal{
+ghci> 'a' < 'b'
+True
+ghci> 'a' < 'B'
+False
+ghci> 'a' < 'ш'
+True
+}
+
+@p Terminom @def{niske} nazivamo liste karaktera. Niske se mogu koristiti za prezentovanje tekstualnih vrednosti@note{Postoje još neki tipovi koji mogu prezentovati tekstualne vrednosti, ali ih nećemo spominjati ovde.}. Na primer, pozdrav @em{Hello!} se u Haskelu predstavlja kao lista @code{['H', 'e', 'l', 'l', 'o', '!']}.  Srećom, niske se mogu zapisati i prostim navođenjem karaktera između dvostrukih navodnika potpuno isto sintaksi u ostalim programskim jezicima. Tako se pozdrav @em{Hello!} može konstruisati i kao @code{"Hello!"}:
+
+@codeBlock{
+ghci> "Hello" == ['H', 'e', 'l', 'l', 'o', '!']
+True
+}{Poređenjem uviđamo da dva navedena načina konstrukcije niski daju istu vrednost.}
+
+@p Kako su niske u suštini liste, sve funkcije nad listama možemo iskoristiti i za niske.
+
+@terminal{
+ghci> niska = "Hello" ++ "!"
+ghci> niska
+"Hello!"
+ghci> length a
+6
+ghci> head a
+'H'
+ghci> last a
+'!'
+ghci> init a
+"Hello"
+ghci> tail a
+"ello!"
+ghci> reverse a
+"!olleH"
+}{Obratite pažnju na razliku između niske i pojedinačnog karaktera. Na primer funkcija @code{head} vraća prvi element liste, a u ovom primeru to je karakter @code{'a'} (a ne niska @code{"a"}). Karakteri se uvek navode između jednostrukih navodnika, a niske između dvostrukih.}
+
+@p Mnogi tipovi u Haskelu (ali svakako ne svi), dozvoljavaju da se nad njima pozove funkcija @code{show}. Ova funkcija uzima vrednost i vraća nisku koja prezentuje tu vrednost. Na primer:
+
+@terminal{
+ghci> show 2
+"2"
+ghci> show True
+"True"
+ghci> show [1,  2, 3]
+"[1,2,3]"
+}{Obratite pažnju da niska @code{"2"} nije isto što i vrednost @code{2}. I slično za ostale navedene primere. Ako je neke vrednosti moguće "prikazati" sa @code{show} funkcijom, tada je i listu takvih vrednosti moguće "prikazati" sa @code{show} funkcijom. Lista će uvek biti prikazana na kanonski način (bez razmaka između elemenata), bez obzira kako smo tu listu konstruisali u kodu.}
+
+@section{Uređene @m{n}-torke}
+
+@p Liste sadrže proizvoljan broj elemenata istog tipa. Suprotno tome, uređene @m{n}-torke sadrže fiksiran broj elemenata ne nužnog istog tipa. Uređene @m{n}-torke se konstruišu navođenjem vrednosti odvojenih zarezima između zagrada @code{( )}. Tip uređene @m{n}-torke je uređene @m{n}-torka odgovarajućih tipova.
+
+@p Na primer, @code{("More!", True, 100.0)} je jedna uređena trojka koja sadrži nisku, logičku vrednost i @code{Float}. Ova uređena trojka ima tip @code{([Char], Bool, Float)}.
+
+@p Najznačajnije uređene @m{n}-torke su svakako uređene dvojke koje češće nazivamo @def{uređeni parovi}. Nad svakim uređenim parom možemo pozvati funkciju @code{fst} i @code{snd} koje redom vraćaju prvu i drugu koordinatu uređenog para.
+
+@terminal{
+ghci> fst (5, 'C')
+5
+ghci> snd (5, 'C')
+'C'
+}{Funkcije @code{fst} i @code{snd} se mogu koristiti za "izvlačenje" prve i druge koordinate uređenog para.}
+
+@p Uređene trojke, četvorke, itd. se ređe koriste, te za njih ne postoje funkcije poput @code{fst} i @code{snd}. U narednim sekcijama ćemo videti kako možemo konstruisati odgovarajuće funkcije. 
+
+@p Poredak tipova u tipu uređene @m{n}-torke je važan: tip @code{(Int, Char)} nije isti kao tip @code{(Char, Int)}. Takođe broj pojavljivanja nekog tipa uređenoj @m{n}-torci je bitan: tip  @code{(Int, Int, Char)} nije isti kao tip @code{(Int, Char)}.
+
+@problem{Koliko vrednosti sadrži tip @code{(Bool, Bool)}?}
+{@p Navedeni tip sadrži četiri vrednosti: @code{(True, True)}, @code{(True, False)}, @code{(False, True)} i @code{(False, False)}.}
+
+@section{Tipske klase}
+
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija različitih tipova koji dozvoljavaju pozivanje određenog skupa funkcija nad tipovima te klase. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase. 
+
+@p Navedenu apstraktnu definiciju ćemo približiti kroz primere klasa koje su predefinisane u Haskel jeziku:
+
+@list{
+@li Klasa @code{Eq} je klasa svih tipova čije vrednosti se mogu porediti sa operatorima @code{==} i @code{/=}.
+@li Klasa @code{Ord} je klasa svih tipova čije vrednosti se mogu porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}. Klasa @code{Ord} je po definiciji jedna podklasa klase @code{Eq}. Drugim rečima svaka instanca klase @code{Ord} mora biti instanca i klase @code{Eq}.
+@li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show}.
+@li Klasa @code{Num} je klasa svih tipova nad kojima se mogu pozivati operacije @code{+}, @code{-}, @code{*}.
+@li Klasa @code{Fractional} je podklasa klase @code{Num} koja sadrži tipove nad kojima se može pozivati operacija @code{/}.
+}
+
+@p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju@note{Za raliku od vrednosti koje mogu pripadati samo jednom tipu, tipovi mogu da se nalaze u više klasa (ili nijednoj).} klasama @code{Eq}, @code{Ord} i @code{Show}.
+
+@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo koristeći operacije @code{+}, @code{-}, @code{*}. Međutim, od navedenih tipova, samo @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
+
+@p Kao što smo gore istakli ako neki tip @code{a} pripada klasi @code{Eq}, tada i tip @code{[a]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu upoređivati sa @code{==} i @code{/=}, tada se i liste tog tipa mogu upoređivati sa @code{==} i @code{/=}. Kao što smo rekli, poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{t} pripada nekoj od ovih klasa, tada i @code{[t]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
+
+@p Za uređene @m{n}-torke važi sličan princip. Ako tipovi @code{a}, @code{b}, ... @code{t} pripadaju klasi @code{Eq}, tada i tip @code{(a, b,..., t)} pripada klasi @code{Eq}. Ovo takođe važi i za klase @code{Ord} i @code{Show}.
+
+@p Klase omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} operatora i funkcija nad različitim tipovima što značajno pojednostavljuje programiranje. Tako je na primer funkciju @code{show} moguće pozivati i nad vrednostima tipa @code{Bool} ali i na vrednostima tipa @code{[Int]}.
+
+@p Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno kasnije. 
+
+@section{Zaključivanje tipova}
+
+@p Kao što smo već naveli @em{GHC} kompajler (skoro) uvek može da zaključi tip izraza. Zbog toga često nije neophodno navoditi tipske dekleracije u izvornim datotekama.@note{Ipak, uvek je dobro navesti tipove svih definicija, jer je takav kod znatno čitljiviji.} 
+
+@p Zaključivanje tipova nam takođe omogućava da u @em{GHCi} okruženju proverimo tipove izraza. To možemo uraditi pomoću naredbe @code{:type} nakon koje navodimo izraz čiji tip nas interesuje:
+
+@terminal{
+ghci> :type [True, True, False]
+[True, True, False] :: [Bool]
+ghci> :type [True, True, False] !! 1
+a !! 1 :: Bool
+ghci> :type length [True, True, False]
+length [True, True, False] :: Int
+ghci> :type (True, 'a')
+(Bool, Char) 
+}{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 2}, itd...}
+
+@p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numerički konstanti:
+
+@terminal{
+ghci> :type 2
+2 :: Num a => a
+}
+
+@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Izraz @code{2} može da predstavlja vrednost tipa @code{Int}, @code{Integer}, @code{Float} ili @code{Double}. Međutim svi ovi tipovi, pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}. Takav tip se označava sa @code{Num a => a}. Deo tipa koji se nalazi pre znaka @code{=>} naziva se @def{klasno ograničenje}.
+
+@p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, stoga ne može biti @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor, već klasno ograničenje koje nam sugeriše da se radi o tipu koji može da predstavlja racionalne brojeve.
