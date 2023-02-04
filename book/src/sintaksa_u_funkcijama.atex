@@ -27,14 +27,14 @@
 
 @p Jedna od osnovnih stvari koje svaki imperativni programski jezik mora da poseduje je sposobnost promene toka izvršavanja u zavisnosti od stanja u kom se nalazi. Tako i funkcionalni jezici moraju posedovati način na koji se evaluacija izraza može izmeniti u zavisnosti od neke vrednosti. Ovakve promene toka nazivamo @def{grananje}.
 
-@p Izraz @em{if then else} je najjednostavniji primer grananja u Haskelu@note{Izraz u potpunosti odgovara trenarnom operatoru @code{? :} koji je prisutan u mnogim imperativnim jezicima.}. Sintaksa za ovu konstrukciju ima oblik @code{if t then a else b}, gde je @code{t} neki logički izraz kojeg nazivamo @em{uslov}, a @code{a} i @code{b} izrazi istog tipa. Izraz @code{if t then a else b} se evaluira u @code{a} ako se @code{t} evaluira u @code{True}, a u suprotnom u @code{b}. Sledeći primer ilustruje korišćenje @code{if then else} konstrukcije:
+@p Izraz @em{if then else} je najjednostavniji primer grananja u Haskelu@note{Izraz u potpunosti odgovara trenarnom operatoru @code{? :} koji je prisutan u mnogim imperativnim jezicima.}. Sintaksa za ovu konstrukciju ima oblik @code{if t then a else b}, gde je @code{t} neki logički izraz kojeg nazivamo @em{uslov}, a @code{a} i @code{b} izrazi istog tipa. Izraz @code{if t then a else b} se evaluira u @code{a} ako se @code{t} evaluira u @code{True}, a u suprotnom u @code{b}. Sledeći primer ilustruje korišćenje @em{if then else} konstrukcije:
 
 @terminal{
 ghci> if 5 > 0 then "5 je pozitivan broj" else "5 nije pozitivan broj"
 "5 je pozitivan broj"
 }
 
-@p U prikazanom primeru, uslov je konstantan, te će navedeni @em{if then else} izraz uvek imati istu vrednost. Mnogo korisnije je kada @code{if then else} postavimo u telo funkcije:
+@p U prikazanom primeru, uslov je konstantan, te će navedeni @em{if then else} izraz uvek imati istu vrednost. Mnogo korisnije je kada @em{if then else} postavimo u telo funkcije:
 
 @codeBlock{
 daLiJepozitivan = \x -> if x > 0 then show x ++ "jeste" else show x ++ "nije"

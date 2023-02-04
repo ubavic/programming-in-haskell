@@ -151,7 +151,7 @@ ghci> map (\x -> x^2) [1, 2, 3, 4]
 
 @p Funckcije @code{map} i @code{filter}, prolaze kroz datu listu primenjujući na svaki element datu funkciju, a zatim vrednosti tih primena koriste za konstruisanje nove liste. Funkcija @code{foldr} je malo drugačija: ova funkcija koristi prosleđenu binarnu funkciju da bi prosleđenu listu "presavila" (@em{fold}) u jednu jedinu vrednost (a ne listu). Tip funkcije @code{foldr} je
 
-@terminal{
+@codeBlock{
 foldl :: (a -> b -> b) -> b -> [a] -> b
 }
 

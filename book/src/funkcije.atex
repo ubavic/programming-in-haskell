@@ -25,26 +25,26 @@
 
 @section{Lambda izrazi}
 
-@p Haskel je zasnovan na matematičkom formalizmu zvanom @def{lambda račun}. Lambda račun je elegantan sistem koji omogućuje definisanje funkcija i primenu definisanih funkcija na vrednosti. Ovde neće bit prezentovan lambda račun, ali mnoge stvari koje slede važe i za sam lambda račun. 
+@p Haskel je zasnovan na matematičkom formalizmu zvanom @def{lambda račun}. Lambda račun je formalni sistem koji omogućuje predstavljane pojma izračunljivosti pomoću definisanja i primene funkcija. Ovde neće biti prezentovan lambda račun, ali mnoge stvari koje slede važe i za sam lambda račun. 
 
-@p U Haskelu, funkcije su @em{vrednosti} koje se definišu pravilom @def{apstrakcije}@note{@em{Apstrakcija} je samo naziv za sintaksu oblika @code{\x -> v}. U lambda računu koriti se nešto malo drugačija sintaksa @m{\lambda x . v}. Sam račun nosi naziv baš po slovu koje se nalazi na početku svake apstrakcije. Ovo slovo je proizvoljno odabrano i nema nikakvo dodatno značenje.}. U Haskelu sintaksa za apstrakciju je @code{\x -> v}. Lambda apstrakcija se sastoji od znaka @code{\} (koji je odabran tako da podseća na slovo @m{\lambda}), zatim imena parametra (u ovom primeru to je @code{x} ali može biti bilo koja validna labela), zatim strelice @code{->} nakon koje sledi povratna vrednost funkcije odnosno neki izraz koji potencijalno zavisi od parametra. Izraz @code{\x -> v} nazivamo @def{lambda funkcija} a izraz koji sledi nakon strelice, tj. @code{v}, nazivamo @def{telo lambda funkcije}.
+@p U Haskelu, funkcije su @em{vrednosti} koje se definišu pravilom @def{apstrakcije}@note{@em{Apstrakcija} je samo naziv za sintaksu oblika @code{\x -> v}. U lambda računu koriti se nešto malo drugačija sintaksa @m{\lambda x . v}. Račun nosi naziv baš po slovu koje se nalazi na početku svake apstrakcije. Ovo slovo je proizvoljno odabrano i nema nikakvo dodatno značenje.}. U Haskelu sintaksa za apstrakciju je @code{\x -> v}. Lambda apstrakcija se sastoji od znaka @code{\} (koji je odabran tako da podseća na slovo @m{\lambda}), zatim imena parametra (u ovom primeru to je @code{x} ali može biti bilo koja validna labela), zatim strelice @code{->} nakon koje sledi povratna vrednost funkcije odnosno neki izraz koji potencijalno zavisi od parametra ( tj. od @code{x}). Izraz @code{\x -> v} nazivamo @def{lambda funkcija} a izraz koji sledi nakon strelice (tj. @code{v}), nazivamo @def{telo lambda funkcije}.
 
 @p Na primer, funkcija koja vraća dvostruki argument se definiše pravilom apstrakcije kao:
 @eq{\backslash \mathtt{x \rightarrow (2 * x)}}
-Matematičkom notacijom zapisano, navedeni izraz predstavlja funkciju koja udvostručava argument. Ime promenljive je u potpunosti proizvoljno uzeto. Ista funkcija se može definisati i kao @code{\y -> (2 * y)} ili kao @code{\broj -> (2 * broj)}. Telo navedene lambda funkcije je @code{(2 * x)}. Primetimo da navedenim kodom nismo definisali i ime funkcije@note{Lambda funkcije se često nazivaju i anonimne funckije. Čist lambda račun ne podrazumeva način imenovanja funkcija, pa su lambda funkcije @em{anonimne}.}. Da bismo mogli ovu funkciju da primenjujemo na vrednosti, dodelićemo je nekom imenu:
+Matematičkom notacijom zapisano, navedeni izraz predstavlja funkciju koja udvostručava argument. Ime promenljive je u potpunosti proizvoljno uzeto. Ista funkcija se može definisati i kao @code{\y -> (2 * y)} ili kao @code{\broj -> (2 * broj)}, itd... Telo navedene lambda funkcije je @code{(2 * x)}. Primetimo da navedenim kodom nismo definisali i ime funkcije@note{Lambda funkcije se često nazivaju i anonimne funkcije. Čist lambda račun ne podrazumeva način imenovanja funkcija, pa su lambda funkcije @em{anonimne}.}. Da bismo mogli ovu funkciju da primenjujemo na vrednosti, dodelićemo je nekom imenu:
 
 @codeBlock{
 g = \x -> (2 * x)
 }{Primer validne definicije funkcije u @code{.hs} datoteci.}
 
-@p Nakon učitavanja koda sa gornjom definicijom u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima zgodnije je reći @em{primena funkcije na vrednost}.} je na neke vrednosti. Kao što smo rekli, da bi se funkcija primenila na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
+@p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima zgodnije je reći @em{primena funkcije na vrednost}.} je na neke vrednosti. Kao što smo rekli, da bi se funkcija primenila na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
 
 @terminal{
 ghci> g 10
 20
 }{Izraz @code{g 10} shvatamo kao @m{g(10)}. Nismo ranije napomenuli, ali dužina razmaka (dokle god je taj razmak u jednoj liniji), ne igra nikakvu ulogu. Moguće je tako pisati i @code{g&nbsp;&nbsp;10} ili @code{g&nbsp;&nbsp;&nbsp;10} itd...}
 
-@p Svaki izraz oblika @code{m n}, gde su @code{m} i @code{n} neki izrazi, nazivamo @def{aplikacija}@note{eng. @em{aplication} - primena}. U Haskelu, svaka aplikacija predstavlja pokušaj primene izraza @code{m} na izraz @code{n}. Međutim, @code{m n} nema smisla ako @code{m} nije funkcija. Na primer, naredni kôd daje grešku
+@p Svaki izraz oblika @code{m n}, gde su @code{m} i @code{n} neki izrazi, nazivamo @def{aplikacija}@note{eng. @em{aplication} - primena}. U Haskelu, svaka aplikacija predstavlja pokušaj primene izraza @code{m} na izraz @code{n}. Međutim, @code{m n} nema smisla ako @code{m} nije funkcija. Na primer, "primena" @code{'a' 'b'} daje grešku
 
 @terminal{
 ghci> 'a' 'b'
@@ -197,7 +197,7 @@ ghci>(aritm 8) 10
 
 @p Zašto je funkcija pozvana na ovaj način? Pogledajmo samu definicije funkcije @code{aritm}. Izraz @code{aritm 8} predstavlja jedan redeks. Beta redukcijom ovaj redeks se svodi na @code{(\y -> ((8+y)/2))}. Ali ovaj rezultat je ponovo jedna funkcija, stoga je možemo primeniti na vrednost @code{10}. Aplikacija @code{(\y -> ((8+y)/2))) 10} se beta-redukuje u izraz @code{(8 + 10)/2} koji se zatim sračunava u vrednost @code{9}.
 
-@p Ipak poziv @code{(aritm 8) 10} nije baš u potpunosti isti kao poziv @code{mod 7 2} kog smo videli u prethodnoj glavi. Razlog tome je što u Haskelu (kao i lambda računu), aplikacija (primena funkcije na argument) je levo asocijativna operacija što znači da se izraz @code{(f x) y} može jednostavnije zapisati kao @code{f x y}. I zaista, ako se vratimo na prethodni primer, možemo se uveriti u to:
+@p Ipak, aplikacija @code{(aritm 8) 10} ne izgleda baš u potpunosti isto kao aplikacija @code{mod 7 2} koju smo videli u prethodnoj glavi. Razlog tome je što u Haskelu aplikacija (primena funkcije na argument) je levo asocijativna operacija što znači da se izraz @code{(f x) y} može jednostavnije zapisati kao @code{f x y}. I zaista, ako se vratimo na prethodni primer, možemo se uveriti u to:
 
 @terminal{
 ghci> aritm 8 10
