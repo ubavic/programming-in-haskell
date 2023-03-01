@@ -1,0 +1,29 @@
+@chapter{Operatori}
+
+@section{Prioritet operatora}
+
+@section{Definisanje operatora}
+
+@section{Neki važni operatori}
+
+@subsection{Operator kompozicije}
+
+@subsection{Operator aplikacije}
+
+@subsection{Operator podizanja}
+
+@section{Programiranje bez tačaka}
+
+@section{Kombinatori}
+
+@subsection{Kombinator @code{on}}
+
+@subsection{Kombinator @code{fix}}
+
+@section{Zadaci}
+
+@problem{Neka su @code{p} i @code{q} dve funkcije tipa @code{a -> Bool}. Zašto su @code{filter p . filter q} i @code{filter (\x -> p x && q x)} iste funkcije?}
+
+@problem{Neka je @code{f :: a -> b} i @code{g :: b -> c}. Zašto su @code{map g . map f} i @code{map (g . f)} iste funkcije?}
+
+@problem{Implementirati funkciju @code{ks :: [a -> a] -> a -> a} koja uzima listu funkcija i vraća njihovu kompoziciju. Tačnije, za funkciju @code{ks} mora da važi @eq{\mathrm{ks}\;[f_1, f_2, \dots, f_n] = f_1 \circ f_2 \circ \cdots \circ f_n}}
