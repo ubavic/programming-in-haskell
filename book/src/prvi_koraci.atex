@@ -1,6 +1,6 @@
 @chapter{Prvi koraci}
 
-@p Naredna glava sadrži informacije neophodne za razumevanje svih ostalih glava. Ako neku glavu ne bi trebalo da preskočite u ovoj knjizi, to je definitivno ova galava. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
+@p Naredna glava sadrži informacije neophodne za razumevanje svih ostalih glava. Ako neku glavu ne bi trebalo da preskočite u ovoj knjizi, to je definitivno ova glava. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
 
 @p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda.
 
@@ -12,7 +12,7 @@
 
 @p Razvojna okruženja za Haskel ne postoje, ali postoji @em{Haskell Language Server} (HSL) koji može da nadomesti ovaj nedostatak.
 
-@p Instalacija navedenih programa može se razlikovati u zavisnosti od sistema do sistema. Trenutno se za sve operativne sisteme (Linux, Windows, Mac) preporučuje @url{GHCup}{https://www.haskell.org/ghcup/} kao alat za automatsku instalaciju svih potrebnih programa. Na sajtu @em{GHCup} projekta možete pronaći instrukcije za instalaciju@note{Korisnici @em{Windows} operativnog sistema moraju da instaliraju @url{Msys2}{https://www.msys2.org/} pre pokretanja @em{GHCup} instalacije.}. Preporučljivo je da da prilikom instalacije instalirate sve programe (@em{Stack}, @em{Cabal}, @em{HSL}).
+@p Instalacija navedenih programa može se razlikovati u zavisnosti od sistema. Trenutno se za sve operativne sisteme (Linux, Windows, Mac) preporučuje @url{GHCup}{https://www.haskell.org/ghcup/} kao alat za automatsku instalaciju svih potrebnih programa. Na sajtu @em{GHCup} projekta možete pronaći instrukcije za instalaciju@note{Korisnici @em{Windows} operativnog sistema moraju da instaliraju @url{Msys2}{https://www.msys2.org/} pre pokretanja @em{GHCup} instalacije.}. Preporučljivo je da da prilikom instalacije instalirate sve programe (@em{Stack}, @em{Cabal}, @em{HSL}).
 
 @p Uz instaliran @em{GHC} potreban Vam je još samo i editor koda. Naravno, svaki editor koda može se koristiti u svrhu pisanja Haskel koda. Moja preporuka je @url{VS Code}{https://code.visualstudio.com/} sa instaliranim ekstenzijama @url{Haskell}{https://marketplace.visualstudio.com/items?itemName=haskell.haskell} i @url{Haskell Syntax Highlighting}{https://marketplace.visualstudio.com/items?itemName=justusadam.language-haskell}.
 
@@ -20,10 +20,10 @@
 
 @section{Struktura Haskel koda}
 
-@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se labelama (imenima) pridružuju vrednosti nekog izraza:
+@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se imenima (labelama) pridružuju vrednosti nekog izraza:
 
 @codeBlock{
-ime = <em>izraz</em>
+ime = izraz
 }
 
 @p Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
@@ -34,9 +34,9 @@ dana_u_nedelji = 7
 sati_u_danu = 24
 }
 
-@p Važno je znati da labele (imena) @em{moraju} početi malim slovom@note{Barem kad su u pitanju imena vrednosti i funkcija}. Na ostalim mestima u labeli je dozvoljeno koristiti velika i mala slova, brojeve kao i karaktere @code{_} i @code{'}.
+@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kad su u pitanju imena vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova, brojeve kao i karaktere @code{_} i @code{'}.
 
-@p Vrednost koja je pridružena jednom imenu ne može se nikad više menjati, te definicije predstavljaju definicije konstanti. Samim tim nije dozvoljeno u jednoj @code{.hs} datoteci imati više definicija sa istim imenom. Naravno, različitim imenima možemo dodeliti iste vrednosti. Takođe, poredak definicija nije bitan!
+@p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, nije dozvoljeno u jednoj @code{.hs} datoteci imati više definicija sa istim imenom. Naravno, različitim imenima možemo dodeliti iste vrednosti. Takođe, poredak definicija nije bitan.
 
 @p@def{Tip} neke vrednosti predstavlja kolekciju kojoj ta vrednost pripada. Svaka vrednost pripada jednom i samo jednom tipu. Ako neka vrednost @code{v} pripada tipu @code{T} tada za tu vrednost kažemo da @em{poseduje tip} @code{T} ili da još @em{da je tipa} @code{T} i to označavamo sa @code{v :: T}. Nazivi tipova uvek počinju velikim slovom.
 

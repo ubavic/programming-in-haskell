@@ -222,7 +222,7 @@ g :: Int -> Int -> Int
 g x = \y -> x + 2*y
 }{Sintaksu podudaranja oblika možemo da shvatimo na sledeći način: kada @code{g} primenimo na neku vrednost @code{x}, tada dobijamo funkciju @code{\y -> x + 2*y}.}
 
-@p Tehnika podudaranja oblika je veoma korisna pri radu sa listama@note{Kasnije ćemo još primera gde je podudaranje oblika izuzetno korisno.}. Tada lako možemo da uhvatimo praznu, jednočlanu, dvočlanu listu, itd... ili da rastavimo listu na glavu i rep. Na primer, funkciju koja proverava da li je lista celih brojeva prazna, možemo definisati na sledeći način
+@p Tehnika podudaranja oblika je veoma korisna pri radu sa listama@note{Kasnije ćemo videti još primera gde je podudaranje oblika izuzetno korisno.}. Tada lako možemo da uhvatimo praznu, jednočlanu, dvočlanu listu, itd... ili da rastavimo listu na glavu i rep. Na primer, funkciju koja proverava da li je lista celih brojeva prazna, možemo definisati na sledeći način
 
 @codeBlock{
 prazan :: [Int] -> Bool

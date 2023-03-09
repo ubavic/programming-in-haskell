@@ -42,7 +42,7 @@ g = \x -> (2 * x)
 @terminal{
 ghci> g 10
 20
-}{Izraz @code{g 10} shvatamo kao @m{g(10)}. Nismo ranije napomenuli, ali dužina razmaka (dokle god je taj razmak u jednoj liniji), ne igra nikakvu ulogu. Moguće je tako pisati i @code{g&nbsp;&nbsp;10} ili @code{g&nbsp;&nbsp;&nbsp;10} itd...}
+}{Izraz @code{g 10} shvatamo kao @m{g(10)}. Nismo ranije napomenuli, ali dužina razmaka (dokle god je taj razmak u jednoj liniji), ne igra nikakvu ulogu.}
 
 @p Svaki izraz oblika @code{m n}, gde su @code{m} i @code{n} neki izrazi, nazivamo @def{aplikacija}@note{eng. @em{aplication} - primena}. U Haskelu, svaka aplikacija predstavlja pokušaj primene izraza @code{m} na izraz @code{n}. Međutim, @code{m n} nema smisla ako @code{m} nije funkcija. Na primer, "primena" @code{'a' 'b'} daje grešku
 
