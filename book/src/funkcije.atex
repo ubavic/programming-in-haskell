@@ -101,7 +101,7 @@ h :: [Int] -> Int
 h = \x -> (head x + 1)
 }{Aplikacija ima najveći prioritet te se izraz @code{head x + 1} tumači kao @code{(head x) + 1}.}
 
-@p Možemo se uveriti u tip funkcije @code{h} koristeći @code{:type} naredbu u @em{GHCi} okruženju:
+@p Možemo se uveriti u tip funkcije @code{h} koristeći @pre{:type} naredbu u @em{GHCi} okruženju:
 
 @terminal{
 ghci> :type h
