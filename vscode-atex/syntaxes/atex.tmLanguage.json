@@ -10,7 +10,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.atex",
-				"match": "@(chapter|section|subsection|eq|todo|figure|codeBlock|terminal|problem|list|li|url|em|def|code|m|note|ref|p)"
+				"match": "@(chapter|section|subsection|eq|todo|figure|codeBlock|terminal|problem|example|list|li|url|em|def|code|m|note|ref|pre|p)"
 			}]
 		}
 	},
