@@ -1,3 +1,4 @@
 public/*.html
+compiler/dist-newstyle
 .env
 deploy.sh

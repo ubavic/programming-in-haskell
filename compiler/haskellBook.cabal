@@ -1,0 +1,23 @@
+cabal-version:      2.4
+name:               haskellBook
+version:            0.1.0.0
+synopsis:           Book about Haskell
+description:
+bug-reports:        https://github.com/ubavic/haskel_kolacici
+license:            MIT
+author:             Nikola Ubavić
+maintainer:         haskellBook@ubavic.rs
+extra-source-files: README.md
+
+executable haskellBook
+    main-is:          Main.hs
+    build-depends:    base >=4.10.0.0,
+                      megaparsec >=9.0,
+                      text,
+                      time,
+                      lens,
+                      ghc-syntax-highlighter,
+                      blaze-html
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    other-modules:    Parser, Document, Renderer
