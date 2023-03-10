@@ -36,12 +36,15 @@ instance HTMLRenderer P where
 
 
 instance HTMLRenderer Block where
-    render (Section name ref) = h2 ! A.id (stringValue $ "S" <> show ref) $ render name
+    render (Section name ref) = h2 ! A.id (stringValue id) $ a ! A.href (stringValue $ '#' : id) $ mark >> render name
+        where id = "S" <> show ref
+              mark = span ! A.class_ "ref" $ string $ "§" ++ show ref ++ " "
     render (Subsection name) = h3 $ render name
     render (Paragraph ps) = 
         p (render ps) >> sequence_ notes
         where notes = [ f text index | (PNote text index) <- ps]
-              f t index = let i = show index in aside ! A.id (stringValue $ "note" ++ i) $ (string (i ++ ". ") >> render t)
+              f t index = let i = show index in aside ! A.id (stringValue $ "note" ++ i) $ (mark i >> render t)
+              mark i = span ! A.class_ "ref" $ string (i ++ ". ")
     render (CodeBlock code Nothing) = pre $ highlight code
     render (CodeBlock code (Just desc)) =
         figure $ do
@@ -123,6 +126,7 @@ pageHTML :: Html -> Text -> String -> Html
 pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
     head $ do
         title $ text pageTitle
+        meta ! A.charset "UTF-8"
         meta ! A.name "author" ! A.content "Nikola Ubavić"
         meta ! A.name "description" ! A.content "Knjiga o programskom jeziku Haskel"
         meta ! A.name "viewport" ! A.content "width=device-width, user-scalable=yes"
