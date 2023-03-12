@@ -17,10 +17,10 @@ cmd name = char '@' >> string name
 
 chapter :: Parser Chapter
 chapter = label "chapter" $ do
-        _ <- cmd "chapter" <* space
+        cmd "chapter" <* space
         name <- argument text <* space
         blocks <- many block
-        return (Chapter name blocks)
+        return $ Chapter name blocks
 
 block :: Parser Block
 block = choice 
@@ -38,37 +38,37 @@ subsection = label "subsection" $ cmd "subsection" *> (Subsection <$> argument c
 
 figure :: Parser Block
 figure = label "figure" $ do
-        _ <- cmd "figure" <* space
+        cmd "figure" <* space
         path <- argument text <* space
         description <- argument captionText <* space
-        return (Figure path description 0)
+        return $ Figure path description 0
 
 codeBlock :: Parser Block
 codeBlock = label "codeBlock" $ do
-        _ <- cmd "codeBlock" <* space
+        cmd "codeBlock" <* space
         code <- argument text <* space
         description <- option Nothing (Just <$> argument captionText) <* space
-        return (CodeBlock code description)
+        return $ CodeBlock code description
 
 terminal :: Parser Block
 terminal = label "terminal" $ do
-        _ <- cmd "terminal" <* space
+        cmd "terminal" <* space
         code <- argument text <* space
         description <- option Nothing (Just <$> argument captionText) <* space
-        return (Terminal code description)
+        return $ Terminal code description
 
 problem :: Parser Block
 problem = label "problem" $ do
-        _ <- cmd "problem" <* space
+        cmd "problem" <* space
         problem <- argument paragraph <* space
         solution <- option [] (argument $ many problemBlock) <* space
-        return (Problem problem solution 0)
+        return $ Problem problem solution 0
 
 example :: Parser Block
 example = label "example" $ do
-        _ <- cmd "example" <* space
+        cmd "example" <* space
         text <- argument (space *> many problemBlock) <* space
-        return (Example text 0)
+        return $ Example text 0
 
 list :: Parser Block
 list = label "list" $ cmd "list" *> (List <$> argument (many listItem)) <* space
@@ -116,26 +116,25 @@ note = label "code" $ cmd "note" >> flip PNote 0 <$> argument paragraph
 
 reference :: Parser PElement
 reference = label "reference" $ do
-        _ <- cmd "ref"
+        cmd "ref"
         id <- argument text
-        return (PReference id)
+        return $ PReference id
 
 inlineMath :: Parser PElement
 inlineMath = label "inline math" $ cmd "m" >> PMath <$> argument mathCode
 
 equation :: Parser PElement
 equation = label "block math" $ do
-        _ <- cmd "eq"
+        cmd "eq"
         math <- argument mathCode
-        return (DisplayMath math "")
+        return $ DisplayMath math ""
 
 url :: Parser PElement
 url = label "url" $ do
-        _ <- cmd "url"
+        cmd "url"
         name <- argument text
-        _ <- space
         url <- argument text
-        return (PUrl name url)
+        return $ PUrl name url
 
 mathCode :: Parser Text
 mathCode = label "math code" $ T.concat <$> many (choice $ try <$> [T.pack <$> some onf, addParentheses <$> argument mathCode])
