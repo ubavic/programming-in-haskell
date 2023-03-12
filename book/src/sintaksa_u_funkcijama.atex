@@ -12,15 +12,15 @@
 @li @em{Višestruke apstrakcije se mogu svesti pod jednu lambdu.} Na primer umesto @code{\x -> \y -> x + y} pišemo samo @code{\x y -> x + y}. Obratite pažnju da parametri funkcije moraju međusobno biti razdvojeni razmakom.
 }
 
-@problem{Primenom navedenih pravila, pojednostaviti lambda izraz @code{(\x -> (\y -> ((f x) (g y))))}}
+@problem{Primenom navedenih pravila, pojednostaviti lambda izraz @ccode{(\x -> (\y -> ((f x) (g y))))}}
 {@p Pre svega, zagrade oko celog lambda izraza mogu se obrisati, čime se dobija
-@codeBlock{\x -> (\y -> ((f x) (g y)))}
-@p Višestruka apstrakcija može se svesti pod jednu apstrakciju, čime se dobija
-@codeBlock{\x y -> ((f x) (g y))}
-@p Zagrade u telu lambda funkcije nisu neophodne, jer se u tim zagradama nalazi jedna aplikacija (a po drugom pravilu, aplikacija ima veći prioritet u odnosu na apstrakciju)
-@codeBlock{\x y -> (f x) (g y)}
-@p Kako je aplikacija levo asocijativna, levi par zagrada se može obrisati
-@codeBlock{\x y -> f x (g y)}
+@ccode{\x -> (\y -> ((f x) (g y)))}.
+Višestruka apstrakcija može se svesti pod jednu apstrakciju, čime se dobija
+@ccode{\x y -> ((f x) (g y))}.
+Zagrade u telu lambda funkcije nisu neophodne, jer se u tim zagradama nalazi jedna aplikacija (a po drugom pravilu, aplikacija ima veći prioritet u odnosu na apstrakciju)
+@ccode{\x y -> (f x) (g y)}.
+Kako je aplikacija levo asocijativna, levi par zagrada se može obrisati
+@ccode{\x y -> f x (g y)}
 }
 
 @section{@em{If then else}}

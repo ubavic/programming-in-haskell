@@ -109,7 +109,11 @@ zbir [] = 0
 zbir (x:xs) = x + zbir xs
 }
 
-@p Gornja funkcija je rekurzivna funkcija koja sabira elemente liste tako što nepraznu listu dekonstuiše na glavu (@code{x}) i rep (@code{xs}), a zatim pozove samu sebe za pronalaženje zbira repa. U slučaju prazne vraćamo naravno samo @code{0}.
+@p Gornja funkcija je rekurzivna funkcija koja sabira elemente liste tako što nepraznu listu dekonstuiše na glavu (@code{x}) i rep (@code{xs}), a zatim pozove samu sebe za pronalaženje zbira repa. U slučaju prazne liste vraćamo samo @code{0}.
+
+@problem{
+Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, @code{unique}.
+}
 
 @section{Funkcije višeg reda}
 
@@ -117,67 +121,105 @@ zbir (x:xs) = x + zbir xs
 
 @p Funkcija višeg reda @code{filter} nam omogućuje da iz neke liste izdvojimo samo elemente koji zadovoljavaju neki uslov. Tip ove funkcije je
 
-@codeBlock{
+@ccode{
 filter :: (a -> Bool) -> [a] -> [a]
 }
 
-@p Prvi argument funkcije je funkcija tipa @code{a -> Bool}. Ova funkcija treba da vrati vrednost @code{True} ako element treba da ostane u listi, odnosno @code{False} ako je element potrebno ukloniti iz liste. Drugi argument funkcije je lista koju filtriramo. Rezultat je lista iz koje su uklonjeni elementi koji ne zadovoljavaju predikat.
+@p Prvi argument funkcije je funkcija tipa @code{a -> Bool} koju nazivamo @def{predikat}. Predikat treba da vrati vrednost @code{True} ako element treba da ostane u listi, odnosno @code{False} ako je element potrebno ukloniti iz liste. Drugi argument funkcije je lista koju filtriramo. Rezultat je lista iz koje su uklonjeni elementi koji ne zadovoljavaju predikat.
 
-@p Na primer, ako želimo da "uzmemo" samo parne projeve iz liste @code{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} možemo napisati naredni program:
+@example{
+@p Ako želimo da "uzmemo" parne prirodne brojeve manje od @code{10} možemo napisati:
 
 @terminal{
-ghci> filter (\x -> mod x 2 == 0) [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-[2, 4, ,6 , 8, 10]
+ghci> filter (\x -> mod x 2 == 0) [1 .. 10]
+[2, 4, 6, 8, 10]
+}
+}
+
+@problem{
+Data je lista @code{visine :: [Float]} koja predstavlja visine svih učenika jedne škole. Odrediti broj učenika viših od @m{180\mathrm{cm}}.
+}{
+@codeBlock{
+brojVisokihUcenika = length visokiUcenici
+    where visokiUcenici = filter (\x -> x >= 180) visine
+}
+}
+
+@problem{
+Reimplementirati funkciju @code{filter}.
+}{
+@p Iskoristićemo tehniku rekurzije. Ako funkciju @code{filter' p} primenimo na praznu listu, tada je logično da dobijemo praznu listu bez obzira na predikat @code{p}. Ovaj slučaj predstavlja bazu rekurzije.
+
+@p Ako lista nije prazna, tada je možemo rastaviti na glavu @code{x} i rep @code{xs}. Ako je @code{p x} tačno, tada se @code{x} nalazi na početku liste koju vraćamo, a u suprotnom ne. Za ostatak liste @code{xs} iskoristićemo rekurzivni poziv, da bismo isfiltrirali @code{xs}.
+
+@codeBlock{
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' _ [] = []
+filter' p (x:xs) = if p x then x : filter p xs else filter p xs
+}{Pošto nas u baznom slučaju ne interesuje predikat, iskoristili smo džoker @code{_}.}
 }
 
 @subsection{Map}
 
 @p Još jedna funkcija višeg reda koja se često koristi sa listama je @code{map}. Funkcija @code{map} primenjuje neku drugu funkciju na svaki element liste i vraća listu dobijenih vrednosti. Tip funkcije @code{map} je:
 
-@codeBlock{
+@ccode{
 map :: (a -> b) -> [a] -> [b]
 }
 
 @p Prvi argument funkcije je funkcija tipa @code{a -> b}, a drugi argument je lista tipa @code{[a]}. Rezultat je lista tipa @code{[b]} koji je nastao od prosleđene liste primenom prosleđene funkcije na svaki element liste.
 
-Na primer, ako želimo da kvadriramo svaki element liste @code{[1, 2, 3, 4]}, možemo napisati program 
+@example{
+@p Ako želimo da kvadriramo svaki element liste @code{[1, 2, 3, 4]}, možemo napisati program 
 
 @codeBlock{
 ghci> map (\x -> x^2) [1, 2, 3, 4]
 [1, 4, 9, 16]
+}}
+
+@problem{
+Reimplementirati funkciju @code{map}.
+}{
+@p Iskoristićemo ponovo tehniku rekurzije. Funkcija @code{map'} treba da primeni neku funkciju @code{f} na svaki element liste @code{l}. Ako je lista @code{l} prazna, tada je i @code{map f l} prazna lista. Ovaj slučaj predstavlja bazu rekurzije.
+
+@p Ako lista nije prazna, tada ćemo na glavu liste @code{x} primeniti funkciju @code{f}, čime dobijamo prvi element tražene liste. Za dobijanje ostatka liste, rekurzvno ćemo pozvati @code{map' f} nad repom liste @code{xs}.
+
+@codeBlock{
+map' :: (a -> b) -> [a] -> [b]
+map' _ [] = []
+map' f (x:xs) = f x ++ map' f xs 
+}
 }
 
 @subsection{Fold}
 
-@p Funckcije @code{map} i @code{filter}, prolaze kroz datu listu primenjujući na svaki element datu funkciju, a zatim vrednosti tih primena koriste za konstruisanje nove liste. Funkcija @code{foldr} je malo drugačija: ova funkcija koristi prosleđenu binarnu funkciju da bi prosleđenu listu "presavila" (@em{fold}) u jednu jedinu vrednost (a ne listu). Tip funkcije @code{foldr} je
+@p Funkcija @code{foldr} koristi prosleđenu binarnu funkciju da bi prosleđenu listu "presavila" (@em{fold}) u jednu vrednost. Tip funkcije @code{foldr} je
+@ccode{foldl :: (a -> b -> b) -> b -> [a] -> b}
 
-@codeBlock{
-foldl :: (a -> b -> b) -> b -> [a] -> b
-}
+@p Prvi argument funkcije @code{foldl} je binarna funkcija tipa @code{a -> b -> b}. Drugi argument je @def{početna vrednost}, a treći argument je lista koju želimo da "presavijemo". Funkcija @code{foldr} "prolazi" kroz datu listu s desna na levo (otuda @em{foldr}) pozivajući nad svakim argumentom datu binarnu funkciju. Za svaki taj poziv, rezultat poziva nad prethodnim argumentom se koristi kao drugi argument binarne funkcije. Inicijalna vrednost se koristi kao drugi argument pri prvom pozivu (a to je poziv nad poslednjim elementom u listi).
 
-@p Prvi argument funkcije @code{foldl} je binarna funckija tipa @code{a -> b -> b}. Drugi argument je početna vrednost, a treći argument je lista koju želimo da "presavijemo". Funkcija @code{foldr} "prolazi" kroz datu listu s desna na levo (otuda @em{foldr}) pozivajući nad svakim argumentom datu binarnu funckiju. Za svaki taj poziv, rezultat poziva nad prethodnim argumentom se koristi kao drugi argument binarne funkcije. Inicijalna vrednost se koristi kao drugi argument pri prvom pozivu (a to je poziv nad poslednjim elementom u listi).
-
+@example{
 @p Komplikovano objašnjenje će postati jasnije kroz naredni primer. Uz pomoć @code{foldr} možemo da saberemo sve elemente jedne liste. Definišimo
 
 @codeBlock{
 f = \a b -> a + b
 }
 
-@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo samo inicijalnu vrednost:
+@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo samo početnu vrednost:
 
 @terminal{
 ghci> foldr f 0 []
 0
 }
 
-@p Ako @code{foldr} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{f} nad jedinim elementom liste i inicijanom vrednošću:
+@p Ako @code{foldr} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{f} nad jedinim elementom liste i inicijanom vrednošću (tj. @code{f 1 0}):
 
 @terminal{
 ghci> foldr f 0 [1]
 1
 }
 
-@p U slučaju dvočlane liste, funkcija @code{f} biče dva puta pozvana. Pri drugom pozivu biće iskorišćena povratna vrednost prvog poziva:
+@p U slučaju dvočlane liste, funkcija @code{f} biče dva puta pozvana. Pri drugom pozivu biće iskorišćena povratna vrednost prvog poziva (tj. @code{f 2 (f 1 0)}):
 
 @terminal{
 ghci> foldr f 0 [2, 1]
@@ -191,7 +233,8 @@ ghci> foldr f 0 [5, 4, 3, 2, 1]
 15
 }
 
-@p Prostije rečeno, u ovom slučaju funkcija @code{foldr} se ponaša tako što postavlja operaciju @code{+} između svaka dva elementa, asocirajući zagrade ka desno: @eq{(5 + (4 + (3 + (2 + (1 + 0)))))}
+@p Prethodih izraz je ekvivalentan izrazu @ccode{f 5 (f 4 (f 3 (f 2 (f 1 0))))} koji je naravno ekvivalentan izrazu @ccode{5 + (4 + (3 + (2 + (1 + 0))))}
+}
 
 @p Uz funkciju @code{foldr} koristi se i @code{foldl} koja "presavija" listu sa leva. Naravno, kada koristimo @em{komutativnu} operaciju, dobijamo isti rezultat sa @code{foldl} i @code{foldr} funkcijama. Ali za nekomutatine operacije, rezultati će se uglavno razlikovati:
 
@@ -203,7 +246,7 @@ ghci> foldr g 1 [1, 2, 3]
 1.5 -- 1 / (2 / 3)
 }
 
-@subsection{@code{zipWith}}
+@subsection{Zip with}
 
 @p Funkcija @code{zipWith} je upoštenje prethodno opisane funkcije @code{zip}. @code{zipWith} kombinuje dve liste element-po-element koristeći prosleđenu funkciju, te je @code{zipWith} funkcija višeg reda za razliku od funkcije @code{zip}. Tip funkicje @code{zipWith} je:
 
@@ -217,6 +260,7 @@ zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 zip = zipWith (\x y -> (x, y))
 }
 
+
 @section{Zadaci}
 
 @problem{Napisati program koji vraća listu prvih @m{n} Fibonačijevih brojeva.}
@@ -224,8 +268,6 @@ zip = zipWith (\x y -> (x, y))
 @problem{Svi prirodni brojevi manji od 10 koji su deljivi sa @m{3} ili @m{5} su @m{3}, @m{5}, @m{6} i @m{9}. Njihov zbir je @m{23}. Naći zbir svih prirodnih brojeva manjih od @m{100} koji su deljivi sa @m{3} ili @m{5}.}
 
 @problem{Palindromski broj je prirodan broj koji se čita isto i sa leva i sa desna. Najveći palindromski broj koji je proizvod dva dvocifrena broja je @m{9009}, jer je @m{9009 = 91 \cdot 99}. Naći najveći palindromski broj koji je proizvod dva trocifrena broja.}
-
-@problem{Reimplementirati funkcije za rad sa listama poput: @code{reverse}, @code{filter}, @code{map}, @code{zip}, @code{foldl}, @code{unique}}
 
 @problem{Implementirati funkciju @code{dekartovProzivod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProzivod [1, 2, 3] ['a', 'b']} daje @code{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.}
 

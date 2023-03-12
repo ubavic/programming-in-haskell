@@ -69,7 +69,7 @@ True
 
 @subsection{@code{-}}
 
-@p Oduzimanje brojeva je takođe poznato iz svakodnevnog života i ostalih programskih jezika. Ali potrebno je naglasiti da se sa znakom @code{-} može negirati broj. Znak @code{-} ima nizak prioritet, te je često potrebno koristiti zagrade oko izraza koji se negira:
+@p Oduzimanje brojeva je takođe poznato iz svakodnevnog života i ostalih programskih jezika. Ali potrebno je naglasiti da se sa znakom @pre{-} može negirati broj. Znak @pre{-} ima nizak prioritet, te je često potrebno koristiti zagrade oko izraza koji se negira:
 
 @terminal{
 ghci> 3 * -2
@@ -139,7 +139,7 @@ ghci> True == 1
 
 @subsection{Tip @code{Integer}}
 
-@p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @code{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da prezentuje baš proizvoljno veliki broj. Ograničenja ovog tipa su data radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
+@p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @pre{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da prezentuje baš proizvoljno veliki broj. Ograničenja ovog tipa su data radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
 
 @p Da bi demonstrirali razliku možemo napraviti mali eksperiment. U jednoj @code{.hs} datoteci definišimo jednu @code{Int} i jednu @code{Integer} konstantu:
 
@@ -166,7 +166,7 @@ ghci> b^70
 
 @p Za reprezentovanje realnih brojeva koriste se tipovi @code{Float} i @code{Double} koji realan broj prezentuju u skladu sa @em{IEEE 754} standardom. Jedina razlika između ova dva tipa je u tome što @code{Float} koristi jednostruku tačnost (32 bita) a @code{Double} dvostruku tačnost (64 bita). Kako moderne arhitekture računara podjednako dobro podržavaju računske operacije u jednostrukoj i dvostrukoj tačnosti, preporučeno je da se uvek koristi @code{Double}.
 
-@p Sa tipovima @code{Float} i @code{Double} moguće je koristiti operatore @code{+}, @code{-}, @code{*}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Za deljenje realnih brojeva koristi se operator @code{/}. Uz operator @code{^}, za stepenovanje se može koristiti i operator @code{**} koji dozvoljava da stepen bude proizvoljan realan broj@note{Iako pri korišćenju operatora @code{**} neće nikad doći do izuzetka, rezultat može biti @code{NaN}.}
+@p Sa tipovima @code{Float} i @code{Double} moguće je koristiti operatore @code{+}, @pre{-}, @code{*}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Za deljenje realnih brojeva koristi se operator @code{/}. Uz operator @code{^}, za stepenovanje se može koristiti i operator @code{**} koji dozvoljava da stepen bude proizvoljan realan broj@note{Iako pri korišćenju operatora @code{**} neće nikad doći do izuzetka, rezultat može biti @code{NaN}.}
 
 @p Takođe, Haskel ima ugrađene funkcije poput @code{sin}, @code{cos}, @code{tan}, @code{asin}, @code{acos}, @code{atan}, @code{exp}, @code{log}, @code{sqrt} itd... Dostupna je takođe i Arhimedova konstanta @m{\pi} pod imenom @code{pi}.
 
@@ -398,13 +398,13 @@ ghci> snd (5, 'C')
 @li Klasa @code{Eq} je klasa svih tipova čije vrednosti se mogu porediti sa operatorima @code{==} i @code{/=}.
 @li Klasa @code{Ord} je klasa svih tipova čije vrednosti se mogu porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}. Klasa @code{Ord} je po definiciji jedna podklasa klase @code{Eq}. Drugim rečima svaka instanca klase @code{Ord} mora biti instanca i klase @code{Eq}.
 @li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show}.
-@li Klasa @code{Num} je klasa svih tipova nad kojima se mogu pozivati operacije @code{+}, @code{-}, @code{*}.
+@li Klasa @code{Num} je klasa svih tipova nad kojima se mogu pozivati operacije @code{+}, @pre{-}, @code{*}.
 @li Klasa @code{Fractional} je podklasa klase @code{Num} koja sadrži tipove nad kojima se može pozivati operacija @code{/}.
 }
 
 @p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju@note{Za raliku od vrednosti koje mogu pripadati samo jednom tipu, tipovi mogu da se nalaze u više klasa (ili nijednoj).} klasama @code{Eq}, @code{Ord} i @code{Show}.
 
-@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo koristeći operacije @code{+}, @code{-}, @code{*}. Međutim, od navedenih tipova, samo @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
+@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo koristeći operacije @code{+}, @pre{-}, @code{*}. Međutim, od navedenih tipova, samo @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
 
 @p Kao što smo gore istakli ako neki tip @code{a} pripada klasi @code{Eq}, tada i tip @code{[a]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu upoređivati sa @code{==} i @code{/=}, tada se i liste tog tipa mogu upoređivati sa @code{==} i @code{/=}. Kao što smo rekli, poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{t} pripada nekoj od ovih klasa, tada i @code{[t]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
@@ -418,7 +418,7 @@ ghci> snd (5, 'C')
 
 @p Kao što smo već naveli @em{GHC} kompajler (skoro) uvek može da zaključi tip izraza. Zbog toga često nije neophodno navoditi tipske dekleracije u izvornim datotekama.@note{Ipak, uvek je dobro navesti tipove svih definicija, jer je takav kod znatno čitljiviji.} 
 
-@p Zaključivanje tipova nam takođe omogućava da u @em{GHCi} okruženju proverimo tipove izraza. To možemo uraditi pomoću naredbe @code{:type} nakon koje navodimo izraz čiji tip nas interesuje:
+@p Zaključivanje tipova nam takođe omogućava da u @em{GHCi} okruženju proverimo tipove izraza. To možemo uraditi pomoću naredbe @pre{:type} nakon koje navodimo izraz čiji tip nas interesuje:
 
 @terminal{
 ghci> :type [True, True, False]

@@ -57,7 +57,7 @@ sati_u_danu = 24
 
 @section{Izvršavanje Haskel koda}
 
-@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operacije i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operacija. Operacije i jesu funkcije koje se zapisuju u takozvanom infisksnom zapisu.}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @code{-} i @code{*} i zagrade @code{()}. Sintaksa za aritmetičke izraze prati sintaksu koju svakodnevno koristimo:
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operacije i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operacija. Operacije i jesu funkcije koje se zapisuju u takozvanom infisksnom zapisu.}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*} i zagrade @code{()}. Sintaksa za aritmetičke izraze prati sintaksu koju svakodnevno koristimo:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -368,9 +368,9 @@ w = 2 * v
 @p Kao i svi drugi programskim jezici, Haskel podržava pisanje komentara odnosno delova koda koji ne utiču na izvršavanje. U Haskelu postoje dve vrste komentara:
 
 @list{
-@li @em{Linijski komentari} jesu komentari koji se nalaze samo u jednoj liniji koda. Linijski komentari počinju sa @code{--} i obuhvataju (desni) ostatak linije. Linijski komentari se mogu postaviti i u linijama u kojima se nalazi kôd.
+@li @em{Linijski komentari} jesu komentari koji se nalaze samo u jednoj liniji koda. Linijski komentari počinju sa @pre{--} i obuhvataju (desni) ostatak linije. Linijski komentari se mogu postaviti i u linijama u kojima se nalazi kôd.
 
-@li @em{Višelinijski komentari} jesu komentari koji pružaju kroz jednu ili više linija koda. Ovi komentari se nalaze između @code{@@{-} i @code{-@@}}
+@li @em{Višelinijski komentari} jesu komentari koji pružaju kroz jednu ili više linija koda. Ovi komentari se nalaze između @pre{@@{-} i @pre{-@@}}
 }
 
 @codeBlock{
