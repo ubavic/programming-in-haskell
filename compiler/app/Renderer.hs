@@ -21,6 +21,7 @@ instance HTMLRenderer PElement where
     render :: PElement -> Html
     render (PText str) = text str
     render (PCode str) = code $ highlight str
+    render (PCCode str sign) = div ! A.class_ "centerCode" $ code (highlight str) >> text sign
     render (PPre str) = code $ text str
     render (PMath str) = text $ "\\(" <> str <> "\\)"
     render (DisplayMath eq tag) = text $ "\\[" <> eq <> "\\]"

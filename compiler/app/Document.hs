@@ -22,6 +22,7 @@ data Block = Section P Reference
 
 data PElement = PText Text
     | PCode Text
+    | PCCode Text Text
     | PPre Text
     | PMath Text
     | DisplayMath Text Text

@@ -81,7 +81,7 @@ paragraphBlock = cmd "p" *> paragraph
 
 paragraph :: Parser P
 paragraph = label "paragraph" $ space >>
-        (some . choice $ try <$> [PText <$> text, emphasis, definition, inlineMath, inlineCode, equation, note, url, pre])
+        (some . choice $ try <$> [PText <$> text, emphasis, definition, inlineMath, code, cCode, equation, note, url, pre])
 
 text :: Parser Text
 text = label "text" $ T.concat <$> some (choice $ try <$> [nonSpecialChars, spaceChars, specialChar])
@@ -90,7 +90,7 @@ text = label "text" $ T.concat <$> some (choice $ try <$> [nonSpecialChars, spac
 
 captionText :: Parser P
 captionText = space >>
-        (some . choice $ try <$> [PText <$> text, emphasis, inlineMath, inlineCode, pre])
+        (some . choice $ try <$> [PText <$> text, emphasis, inlineMath, code, pre])
 
 emphasis :: Parser PElement
 emphasis = label "emphasis" $ cmd "em" >> PEmphasis <$> argument text
@@ -98,8 +98,15 @@ emphasis = label "emphasis" $ cmd "em" >> PEmphasis <$> argument text
 definition :: Parser PElement
 definition = label "def" $ cmd "def" >> PDefinition <$> argument text
 
-inlineCode :: Parser PElement
-inlineCode = label "code" $ cmd "code" >> PCode <$> argument text
+code :: Parser PElement
+code = label "code" $ cmd "code" >> PCode <$> argument text
+
+cCode :: Parser PElement
+cCode = label "cCode" $ do 
+        cmd "ccode"
+        code <- argument text
+        sign <- option "" ((\x->T.pack [x]) <$> choice (try <$> [char '.', char ',']))
+        return $ PCCode code sign
 
 pre :: Parser PElement
 pre = label "pre" $ cmd "pre" >> PPre <$> argument text
