@@ -1,0 +1,110 @@
+{
+	"name": "Atex",
+	"patterns": [
+		{
+			"name": "keyword.control.atex",
+			"match": "@(figure|terminal|problem|example|list|li|note|ref|pre|eq|p|m)"
+		},
+		{
+			"begin": "(@em)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "markup.italic.atex"
+		},
+		{
+			"begin": "(@def)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "markup.bold.atex"
+		},
+		{
+			"begin": "(@url)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "markup.underline.link.atex"
+		},
+		{
+			"begin": "(@codeBlock)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "source.haskell",
+			"patterns": [
+				{
+					"include": "source.haskell"
+				}
+			]
+		},
+		{
+			"begin": "(@code)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "source.haskell",
+			"patterns": [
+				{
+					"include": "source.haskell"
+				}
+			]
+		},
+		{
+			"begin": "(@chapter)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "markup.heading.atex"
+		},
+		{
+			"begin": "(@section)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "markup.heading.atex"
+		},
+		{
+			"begin": "(@subsection)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "markup.heading.atex"
+		},
+		{
+			"begin": "(@todo)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "comment.line"
+		}
+	],
+	"scopeName": "source.atex"
+}
