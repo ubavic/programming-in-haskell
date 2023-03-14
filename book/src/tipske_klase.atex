@@ -1,0 +1,164 @@
+@chapter{Tipske klase}
+
+@p @def{Tipska klasa} predstavlja kolekciju tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz funkcije koje je moguće pozivati nad svim tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
+
+@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova nekih funkcija koje instanaca mora da implementira:
+
+@codeBlock{
+class K a where
+  f1 :: T1
+  f2 :: T2
+}{Ovde @code{a} je tipska promenljiva koja predstavlja instancu klase @code{K}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku pormenljivu @code{a}.}
+
+@p Da bi neki tip @code{T} pridružili klasi tipova @code{K}, koristimo narednu konstrukciju nakon koje slede definicije funkcija koje propisuje klasa:
+
+@codeBlock{
+instance ImeKlase T where
+}
+
+@p Više o klasama tipova naučićemo na primerima poznatih klasa koje se često koriste.
+
+@section{@em{Equality}}
+
+@p U klasi @code{Eq} nalaze se svi tipovi koje je moguće porediti pomoću funkcija @code{==} i @code{\=}. Definicija klase @code{Eq} je sasvim jednostavna:
+
+@codeBlock{
+class Eq a where
+  (==) :: a -> a -> Bool
+  (/=) :: a -> a -> Bool
+}
+
+@p Dakle klasa @code{Eq} propisuje dve operacije koje vraćaju logičke vrednosti. Te dve operacije služe za poređenje vrednosti tipa.
+
+@example{
+@p Definišimo tip koji predstavlja racionalan broj. Kako je svaki racionalan broj oblika @m{a/b} za neka sva cela broja @m{a} i @m{b\ne 0}, to tip @code{Racionalan} možemo definisati kao uređen par celih brojeva:
+
+@codeBlock{
+newtype Racionalan = R (Int, Int)
+}
+
+@p Pokušaj korišćenja vrednosti tipa @code{Racionalan} sa operatorima klase @code{Eq} dovešće do greške, jer tip @code{Racionalan} nije intanca ove klase:
+
+@terminal{
+ghci> a = R (1, 2)
+ghci> b = R (5, 10) 
+ghci> a == b 
+
+<interactive>:3:3: error:
+    • No instance for (Eq Racionalan) arising from a use of ‘==’
+    • In the expression: a == b
+      In an equation for ‘it’: it = a == b
+}
+
+@p Da bismo mogli da poredimo vrednosti tipa @code{Racionalan}, uvećemo ovaj tip u klasu @code{Eq}:
+
+@codeBlock{
+instance Eq Racionalan where
+    (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
+    (Racionalan (a, b)) \= (Racionalan (c, d)) = a * d \= c * b
+}
+
+@p Ponivnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost da poredimo vrednosti tipa @code{Racionalan}:
+
+@terminal{
+ghci> a = R (1, 2)
+ghci> b = R (5, 10) 
+ghci> a == b 
+True
+ghci> a \= b
+False 
+}
+}
+
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{\=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo definisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje progrmaer mora definisati za svaku instancu.
+
+@p Konkretno, puna definicija klase @code{Eq} je
+
+@codeBlock{
+class Eq a where
+  (==) :: a -> a -> Bool
+  x == y = not (x /= y)
+  
+  (/=) :: a -> a -> Bool
+  x /= y = not (x == y)
+}
+
+@p U prethodinm linijama, vidimo da klasa @code{Eq} podrazumeva dve funkcije. Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{\=}. 
+
+
+@example{
+@p @em{Nastavak prethodnog primera}. Za instacu @code{Racionalan}, dovoljno je napisati sledeće
+
+@codeBlock{
+instance Eq Racionalan where
+    (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
+}{Umesto definicije za @code{==}, mogli smo da napišemo i samo definiciju za @code{\=}.}
+}
+
+@section{@em{Ordering}}
+
+@p Klasu @code{Ord} čine svi tipovi koje je moguće porediti pomoću funkcija @code{<}, @code{<=}, @code{>} i @code{>=}. Definicija klase @code{Ord} je sledeća:
+
+@codeBlock{
+class (Eq a) => Ord a where
+  compare :: a -> a -> Ordering
+  (<) :: a -> a -> Bool
+  (<=) :: a -> a -> Bool
+  (>) :: a -> a -> Bool
+  (>=) :: a -> a -> Bool
+  max :: a -> a -> a
+  min :: a -> a -> a
+}
+
+@p Klasa propisuje uobičajne relacije (funkcije koje vraćaju logičke vrednosti) za poređenje elementa kao i dve binarne funkicje @code{min} i @code{max} koje respektivno vraćaju manji odnosno veći od argumenata.
+
+@p U ovom primeru vidimo nešto drugačiju definiciju klase. Umesto sa @ccode{class Ord a where} definicija klase započinje sa @ccode{class (Eq a) => Ord a where}. Izraz @code{(Eq a) =>} naziva se @def{klasno ograničenje}. Klasnim ograničenjima garantujemo da će neki tip pripadati nekoj drugoj klasi pre nego što ga pridružimo ovoj klasi. 
+
+@p U slučaju klase @code{Ord} ima smisla zahtevati da tip već pripada klasi @code{Eq} jer pojam jednakosti vrednosti neophodan za razlikovanje funkcija @code{>} i @code{>=}. Prema tome, klasa @code{Ord} je podklasa klase @code{Eq}.
+
+@example{
+@p Načinom tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
+
+@codeBlock{
+class (Eq a) => Ord a where
+  compare (R (a, b)) (R (c, d)) = compare (a * d) (c * b)
+}{U implementaciji smo iskoristili činjenicu da je odnos između brojeva @m{a/b} i @m{c/d} isti kao odnos između brojeva @m{a\cdot d} i @m{c \cdot b}.}
+
+}
+
+@section{@em{Show} i @em{Read}}
+
+@p Klasu @code{Show} čine oni tipovi koji se mogu prezentovati u vidu niske: definicija klase @code{Show} je jednostavna:
+
+@codeBlock{
+class Show a where
+  show :: a -> String
+}
+
+@p Klasa @code{Show} je nophodna za ispisivanje vrednosti u @code{ghci} okruženju.
+
+@section{@em{Number} i @em{Fractional}}
+
+@p Klasu @code{Num} čine svi tipovi koji predstavljaju nekakav skup brojeva (celih, racionalnih, realnih, kompleksnih...). Definicija klase @code{Num} je:
+
+@codeBlock{
+class Num a where
+  (+) :: a -> a -> a
+  (-) :: a -> a -> a
+  (*) :: a -> a -> a
+  negate :: a -> a
+  abs :: a -> a
+  signum :: a -> a
+}
+
+
+@p Klasa @code{Fractional} je podklasa klase @code{Num}:
+
+@codeBlock{
+class Num a => Fractional a where
+  (/) :: a -> a -> a
+  recip :: a -> a
+}{@code{recip} je funkcija koja dodljuje broj njegovu recipročnu vrednost.}
+
+@p Razlika klase @code{Fractional} u odnosu na klasu @code{Num} je ta što tipovi klase @code{Fractional} dozvoljavaju deljenje. Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama @em{prstena} i @em{polja}.
+

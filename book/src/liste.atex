@@ -101,7 +101,10 @@ velikoSlovo c = elem c ['A' .. 'W']
 
 @section{Rekurzija nad listama}
 
-@p Korišćenje operatora @code{:} je posebno korisno kada želimo listu podeliti na @em{glavu} i @em{rep}, odnosno prvi element i ostatak liste. Na primer, ako želimo da napišemo funkciju @code{zbir :: [Int] -> Int} koja sabira sve elemete liste, možemo postupiti ovako:
+@p Korišćenje operatora @code{:} je posebno korisno kada želimo listu podeliti na @em{glavu} i @em{rep}, odnosno prvi element i ostatak liste.
+
+@example{
+@p Funkciju @code{zbir :: [Int] -> Int} koja sabira sve elemete liste možemo napisati ovako:
 
 @codeBlock{
 zbir :: [Int] -> Int
@@ -109,13 +112,74 @@ zbir [] = 0
 zbir (x:xs) = x + zbir xs
 }
 
-@p Gornja funkcija je rekurzivna funkcija koja sabira elemente liste tako što nepraznu listu dekonstuiše na glavu (@code{x}) i rep (@code{xs}), a zatim pozove samu sebe za pronalaženje zbira repa. U slučaju prazne liste vraćamo samo @code{0}.
+@p Gornja funkcija je rekurzivna funkcija koja sabira elemente liste tako što nepraznu listu dekonstuiše na glavu (@code{x}) i rep (@code{xs}), a zatim pozove samu sebe za pronalaženje zbira repa. Baza idukcije je slučaj prazne liste, čije je zbir naravno @code{0}.
+}
 
 @problem{
-Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, @code{unique}.
+Implementirati funkciju @code{proizvod :: [Int] -> Int} koja pronalazi proizvod elemenata liste.
+}
+
+@example{
+@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekuzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkicije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
+
+@codeBlock{
+last' :: [a] -> a
+last' [x] = x
+last' (_:xs) = last xs
+}{Pošto nas u drugom slučaju ne interesuje glava liste, iskoristili smo džoker @code{_}.}
+}
+
+@problem{
+Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, @code{elem}, @code{unique}.
+}
+
+@p Ponekad je potrebno implementirati funkcije koje su rekuzrivne po više argumenata.
+
+
+@example{
+@p Često se u programiranju javlja potreba da se odredi da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodnsika :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodnsika} je naravno tehnika rekurzije.
+
+@p Pretpostavimo da su nam date dve neprazne niske @code{igla} i @code{seno}@note{U literaturi je uobičajno da se niske imenuju @em{igla} i @em{seno}, jer to jasno sugreše u kojoj od niska očekujemo da se nalazi druga niska.}, i da se pitamo da li se @code{igla} sadrži u nisci @code{seno}. Tada postoje dve mogućnosti:
+
+@list{
+    @li Niska @code{igla} predstavlja početak niske @code{seno}. U ovom slučaju, odgovor je na pitanje da li se igla nalazi u senu je potvrdan.
+    @li Niska @code{igla} nije početak niske @code{seno}. U ovom slučaju, ako se niska @code{igla} nalazi u nisci @code{seno}, tada se mora nalaziti u repu te niske. Stoga pretragu možemo da okraničimo na rep niske @code{seno}.
+}
+
+@p Ako je niska @code{seno} prazna, tada se niska @code{igla} nalazi u njoj ako i samo ako je @code{igla} prazna niska. Da bi proverili da li je neka lista (specijalno niska) prazna, možemo iskoristiti ugrаđenu funkciju @code{null :: [a] -> Bool}
+
+@p Na osnovu ove analize, implementacija @code{daLiJePodnsika} je jednostavna:
+
+@codeBlock{
+daLiJePodnsika :: [Char] -> [Char] -> Bool
+daLiJePodnsika igla "" = null igla 
+daLiJePodnsika igla seno =
+    if daLiJePocetak igla seno
+        then True
+        else daLiJePodnsika igla (tail seno)
+}
+
+@p Ostaje nam još da implementiramo funkiju @ccode{daLiJePocetak :: [Char] -> [Char] -> Bool} koja proverava da li prva prosleđena niska predstavlja početak druge prosleđene niske. Ponovo ćemo koristiti rekurziju, ali ćemo sada vršiti rekurziju po oba argumenta. 
+
+@p Ako su glave obe prosleđene niske iste, tada možemo da nastavimo da poredimo repove. U suprotonom možemo da budemo sigurni da druga niska ne počinje sa prvom niskom. Baza indukcije su slučajevi u kojima je jedna od niski prazna. Ako je prva niska prazna, onda druga niska započinje prvom niskom. Ako je druga niska prazna, a prva niska nije prazna, tada znamo da se prva niska ne sadrži u drugoj nisci
+
+
+@codeBlock{
+daLiJePocetak :: [Char] -> [Char] -> Bool
+daLiJePocetak "" _ = True
+daLiJePocetak _ "" = False
+daLiJePocetak (x:xs) (y:ys) =
+    if x == y
+        then daLiJePocetak xs ys
+        else False  
+}
+
+@p Primetimo da se funkcija @ccode{daLiJePodlista :: Eq a => [a] -> [a] -> Bool} može implementirati na gotovo isti način.
 }
 
 @section{Funkcije višeg reda}
+
+@p Implementacijom mnogih rekurzivnih algoritama nad listama uvidećemo da se neki šabloni konstrukcije algoritama ponavljaju. Zbog toga su definisane funkcije višeg reda sa rad sa listama. Korišćenjem ovih funkcija možemo da izbegne eksplicitnu rekurziju u mnogim slučajevima.
 
 @subsection{Filter}
 
@@ -137,12 +201,16 @@ ghci> filter (\x -> mod x 2 == 0) [1 .. 10]
 }
 
 @problem{
-Data je lista @code{visine :: [Float]} koja predstavlja visine svih učenika jedne škole. Odrediti broj učenika viših od @m{180\mathrm{cm}}.
+Data je lista @code{visine :: [Float]} koja predstavlja visine svih učenika jedne škole. Odrediti broj učenika viših od @m{180\mathrm{cm}}. Dati rešenja sa i bez funkcije @code{filter}.
 }{
 @codeBlock{
 brojVisokihUcenika = length visokiUcenici
     where visokiUcenici = filter (\x -> x >= 180) visine
 }
+}
+
+@problem{
+Svaka osoba je predstavljena sa uređenim parom tipa @code{([Char], Int)} koji sadrži ime osobe i njene godine. Implementirati funkciju @ccode{punoletne :: [([Char], Int)] -> [([Char], Int)]} koja iz liste osoba eliminiše maloletne osobe. Dati rešenja sa i bez funkcije @code{filter}.
 }
 
 @problem{
@@ -246,33 +314,64 @@ ghci> foldr g 1 [1, 2, 3]
 1.5 -- 1 / (2 / 3)
 }
 
-@subsection{Zip with}
+@problem{Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju tipa @code{Int -> Float} koja u zavisnosti od parametra @m{n} računa sumu @eq{\sum^{n}_{i=1} \frac{1}{i}.}}
 
-@p Funkcija @code{zipWith} je upoštenje prethodno opisane funkcije @code{zip}. @code{zipWith} kombinuje dve liste element-po-element koristeći prosleđenu funkciju, te je @code{zipWith} funkcija višeg reda za razliku od funkcije @code{zip}. Tip funkicje @code{zipWith} je:
+@problem{Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.}
+
+@problem{Reimplementirati funkciju @code{filter} koristeći funkciju @code{foldl}.}
+
+@subsection{@em{Zip with}}
+
+@p Funkcija @code{zipWith} kombinuje dve liste element-po-element koristeći prosleđenu funkciju. Tip funkicje @code{zipWith} je:
 
 @codeBlock{
 zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 }
 
-@p Na primer, funkcija @code{zip} se može definisati preko funkicje @code{zipWith}:
+@example{
+@p U Haskelu je implementirana i funkcija @code{zip :: [a] -> [b] -> [(a, b)]} koja spaja dve liste u listu uređenih parova. Funkcija @code{zip} se može definisati preko funkicje @code{zipWith}:
 
 @codeBlock{
 zip = zipWith (\x y -> (x, y))
 }
-
+}
 
 @section{Zadaci}
 
-@problem{Napisati program koji vraća listu prvih @m{n} Fibonačijevih brojeva.}
+@problem{
+Napisati program koji vraća listu prvih @m{n} Fibonačijevih brojeva.
+}
 
-@problem{Svi prirodni brojevi manji od 10 koji su deljivi sa @m{3} ili @m{5} su @m{3}, @m{5}, @m{6} i @m{9}. Njihov zbir je @m{23}. Naći zbir svih prirodnih brojeva manjih od @m{100} koji su deljivi sa @m{3} ili @m{5}.}
+@problem{
+Svi prirodni brojevi manji od 10 koji su deljivi sa @m{3} ili @m{5} su @m{3}, @m{5}, @m{6} i @m{9}. Njihov zbir je @m{23}. Naći zbir svih prirodnih brojeva manjih od @m{100} koji su deljivi sa @m{3} ili @m{5}.
+}
 
-@problem{Palindromski broj je prirodan broj koji se čita isto i sa leva i sa desna. Najveći palindromski broj koji je proizvod dva dvocifrena broja je @m{9009}, jer je @m{9009 = 91 \cdot 99}. Naći najveći palindromski broj koji je proizvod dva trocifrena broja.}
+@problem{
+Palindromski broj je prirodan broj koji se čita isto i sa leva i sa desna. Najveći palindromski broj koji je proizvod dva dvocifrena broja je @m{9009}, jer je @eq{9009 = 91 \cdot 99.} Naći najveći palindromski broj koji je proizvod dva trocifrena broja.
+}
 
-@problem{Implementirati funkciju @code{dekartovProzivod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProzivod [1, 2, 3] ['a', 'b']} daje @code{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.}
+@problem{
+Implementirati funkciju @code{dekartovProzivod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProzivod [1, 2, 3] ['a', 'b']} daje @ccode{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.
+}
 
-@problem{Naći sve početke data liste. Na primer @code{poceci [1, 2, 3]} bi trebalo da nam vrati @code{[[], [1], [1, 2], [1, 2, 3]]}.}
+@problem{
+Naći sve početke data liste. Na primer @code{poceci [1, 2, 3]} bi trebalo da nam vrati @code{[[], [1], [1, 2], [1, 2, 3]]}.
+}
 
-@problem{Napisati funkciju @code{kodiraj :: String -> [(Char, Int)]} koja kodira nisku tako što je predstavlja kao listu uređenih parova karatera i prirodnih brojeva. Broj označava dužinu uzastopnog ponavljanja datog karaktera. Na primer: @code{kodiraj "aaaabb"} daje @code{[('a', 4), ('b', 2)]}, a @code{kodiraj "Google"} daje @code{[('G', 1), ('o', 2), ('g', 1), ('l', 1), ('e', 1)]}. Napisati i funkciju @code{dekodiraj :: [(Char, Int)] -> String}.}
+@problem{
+Napisati funkciju @code{kodiraj :: String -> [(Char, Int)]} koja kodira nisku tako što je predstavlja kao listu uređenih parova karatera i prirodnih brojeva. Broj označava dužinu uzastopnog ponavljanja datog karaktera. Na primer: @code{kodiraj "aaaabb"} daje @ccode{[('a', 4), ('b', 2)]}, a @code{kodiraj "Google"} daje @ccode{[('G', 1), ('o', 2), ('g', 1), ('l', 1), ('e', 1)]}. Napisati i funkciju @code{dekodiraj :: [(Char, Int)] -> String}.\
+}
 
-@problem{Napisati funkciju @code{rotate :: Int -> [a] -> [a]} koja "rotira" listu tako što svaki element pomera za @code{n} koraka u levo: @code{rotate 1 ['a', 'b', 'c', 'd']} daje @code{['b', 'c', 'd', 'a']}, a @code{rotate 2 ['a', 'b', 'c', 'd']} daje @code{['c', 'd', 'a', 'b']}, itd...}
+@problem{
+Napisati funkciju @code{rotate :: Int -> [a] -> [a]} koja "rotira" listu tako što svaki element pomera za @code{n} koraka u levo: @code{rotate 1 ['a', 'b', 'c', 'd']} daje @code{['b', 'c', 'd', 'a']}, a @code{rotate 2 ['a', 'b', 'c', 'd']} daje @code{['c', 'd', 'a', 'b']}, itd...
+}
+
+
+@problem{
+Implementirati funkciju @ccode{srednjaVrednost :: [Float] -> Float} koja računa srednju vrednost liste. Implementirati funkciju @ccode{disperzija :: [Float] -> Folat} koja računa disperziju vrednosti liste.
+}
+
+@problem{
+Data je lista prirodnih brojeva sa @m{n>0} članova. Element na poziciji @m{k \le n} predstavlja cenu neke akcije na berzi u @m{k}-tom danu. Potrebno je u jednom od ponuđenih dana kupiti akciju, a zatim u nekom od narednih dana (uključujići i dan kupovine) i prodati akciju. Naravno, cilj je ostvariti što veći profit (profit računamo kao razliku prodajne i kupovne cene).
+Napisati funkciju @code{profit :: [Int] -> Int} koja uzima cene akcija tokom vremena, i vraća najveći profit koji je moguće ostvariti trgovinom akcija. Akcija se može samo jednom kupiti i prodati, prodaja se mora odviti nakon kupovine ili istog dana. Pretpostaviti da prosleđena lista nije prazna. Na primer @code{profit [7,1,5,3,6,4] = 5} jer kupovinom drugog dana i prodajom petog dana ostvarujemo profit \(6 - 1 = 5\). Ne možemo ostvariti dobit \(7 - 1 = 5\) jer se prodaja mora ostvariti nakon kupovine.
+}

@@ -1,29 +1,209 @@
 @chapter{Operatori}
 
-@section{Prioritet operatora}
+@p Iako možda nismo ni svesni, funkcije koristimo još od najranijih dana matematičkog obrzovanja. Operacije sabiranja, oduzimanja, množenja i deljenja su zapravo funkcije od dve promenljive. Tako na primer, operacija sabiranja koju označavamo simbolom @m{+} je funkcija koja svakom paru brojeva pridružuje njihov zbir. Za razliku od većine ostalih funkcija od dve promenljive, primena funkcije @m{+} na vrednosti @m{x} i @m{y}, ne označava se sa @m{+(x, y)}, već sa @m{x+y}. Glavni razlog je naravno istorijski: simbol @m{+} je ušao u upotrebnu pre nego što se pojam funkcije pojavio. Ali postoji i praktičan razlog: zapis @m{x+y} je jednostavniji (pa samim tim i čitljiviji) od zapisa @m{+(x, y)}. Slično važi i za simbole @m{-}, @m{\times}, @m{\colon} koji takođe predstavljaju funkcije dve promenljive.
+
+@p Notaciju pri kojoj ime funkcije navodimo između argumenata funkicje, nazivamo @em{infiksna notacija}. Za razliku od toga, notaciju u kojoj se ime funkcije navodi pre argumenta, naziva se @em{prefiksna notacija}@note{Postoji takođe i @em{postfiksna notacija} u kojoj se ime funkcije navodi nakon argumenta. Postfiksna notacija se znatno ređe koristi. Notacija za faktorijel @m{n!} je u postfiksnom obliku.}. Do sada, sve funkcije koje smo definisali u Haskelu smo koristili isključivo u prefiksnoj notaciji (npr. @code{f x y}).
+
+@p Pojam funkcije je fundamentalan u Haskel jeziku. Zbog toga je Haskel jezik dizajniran tako da omogući programerima da sami definišu funkcije koje će moći da se koriste u infiksnoj notaciji. Ovakve funkcije nazivamo @def{operatori}.
+
+@section{Osnovni operatori}
+
+@p Do sada smo već imali prilike da koristimo neke opetore. To su bili
+
+@list{
+@li @em{Aritmetički operatori} @code{+}, @pre{-}, @code{*}, @code{/}, @code{^}
+@li @em{Logički operatori} @code{&&}, @code{||}
+@li @em{Operatori poređenja} @code{==}, @code{\=}
+@li @em{Nizovni operatori} @code{:}, @code{++}, @code{!!}
+}
+
+@p Koristeći @code{:type} naredbu u @em{GHCi} okruženju, možemo se uveriti da su i navedeni operatori funkcije. Na primer, tip operatora @code{&&} nam govori da se radi o binarnoj funkciji
+
+@terminal{
+ghci> :type (&&)
+(&&) :: Bool -> Bool -> Bool
+}
+
+@p Da bi smo @code{:type} naredbu da iskoristimo sa operatorom, neophodno je da ime tog operatora postavimo u zagrada. Zapravo, postavljanjem imena proizvoljnog operatora u zagrade dobijamo prefiksnu funkciju:
+
+@terminal{
+ghci> (&&) True False
+False
+ghci> (+) 4 3
+7
+}
+
+@p Sličnim postupkom možemo videti da operatora @code{++} poseduje tip @code{[a] -> [a] -> [a]} (jer ovaj operator 'spaja' dve liste istog tipa), a operator @code{:} poseduje tip @code{a -> [a] -> a} jer ovaj operator dodaje element (levi argument) na početak liste (desni argument).
+
+@problem{Kog je tipa operator @code{==}?}
+{@p Operator poređenja poredi dve vrednosti istog tipa i vraća logičku vrednost kao rezultat tog poređenja. Da bi se dve vrednosti nekog tipa mogle porediti, neophodno je da taj tip pripada klasi @code{Eq}. Prema tome, operator @code{==} ima tip @code{Eq a => a -> a -> Bool}.
+}
+
+@section{Prioritet i asocijativnost}
 
 @section{Definisanje operatora}
 
 @section{Neki važni operatori}
 
+@p Osim aritmetičkih, logičkih i operatora nad listama, Haskel programi sadrže obilje drugih operatora (od kojih mnogi nisu prisutni u drugim jezicima). Haskel programeri vole da koriste razne operatore jer time skraćuju programe i direktnije prenose ideju o tome šta odrđene funkcije rade. Neke od tih operatora ćemo predstaviti u nastavku ove glave, dok ćemo ostale obraditi u narednim glavama. 
+
 @subsection{Operator kompozicije}
+
+@p @def{Kompozicija} funkcija @code{f :: a -> b} i @code{g :: b -> c} jeste funkcija @code{h :: a -> c} za koju važi @code{(g (f x)) = h x} za svako @code{x :: a}. Drugim rečima, kompozicija funkcija @code{f} i @code{g} je funkcija čija vrednost za argument @code{x} se dobija primenom funkcije @code{g} na vrednost @code{f x}.
+
+@p Kompozicija funkcija je operacija koja se često koristi u matematici. U matematičkoj notaciji, kompozicija funkcija @m{f} i @m{g} se označava se @m{g\circ f}. Primetimo da se ispred operatora @m{\circ} navodi funkcija koja se primenjuje druga! 
+
+@example{
+@p Neka su date funkcije @m{f(x)=2x} i @m{g(x)=x^2}. Tada je funkcija @m{g\circ f} data sa @eq{(g\circ f)(x) = g(f(x))=g(2x)=4x^2.} Sa druge strane funkcija @m{f\circ g} je data sa @eq{(f\circ g)(x) = f(g(x)) = f(x^2)= 2x^2.}
+Dakle vidimo da funkcije @m{g\circ f} i @m{f\circ g} ne moraju biti iste.
+}
+
+@p U Haskelu, operator kompozicije se označava sa @code{.}, i u potpunosti odgovara matematičkom operatoru kompozije @m{\circ}. Tip operatora @code{.} je 
+
+@codeBlock{
+(.) :: (b -> c) -> (a -> b) -> a -> c 
+}{Iz tipa vidimo da je prvi argumet funkcija tipa @code{b -> c} pa zatim funkcija tipa @code{a -> b}. Primenom vrednosti ova dva tipa, ostaje nam tip @code{a -> c} koji predstavlja funkciju.}
+
+@example{
+@p Prethodni primer možemo prevesti u Haskel. Funkcije @code{f} i @code{g} i kompozicije se lako definišu:
+
+@codeBlock{
+f :: Int -> Int
+f x = 2 * x
+
+g :: Int -> Int
+g x = x ^ 2
+
+h1 :: Int -> Int
+h1 = g . f
+
+h2 :: Int -> Int
+h2 = f . g
+}
+
+@p Učitavanjem u @em{GHCi}, možemo proveriti kompozicije nad nekoliko vrednosti
+
+@terminal{
+ghci> h1 3
+36
+ghci> h2 3
+18 
+}}
+
+@p Funkcije se ne mogu proizvoljno komponovati. Da bismo mogli funkciju @code{g} da primenimo na vrednost @code{f x}, neophodno je da domen funkcije @code{g} bude jednak kodomenu funkcije @code{f}. Zato su argumenti operatora @code{.} funkcije tipa @code{b -> c} i @code{a -> b}.
+
+@example{
+@p Neka je dat kod
+@codeBlock{
+paran :: Int -> Bool
+paran x = mod x 2 == 0
+
+duzina :: [a] -> Int
+duzina xs = length xs 
+}
+
+@p Dve navedene funkcije možemo da komponujemo samo na jedan način. Pokušaj konstukcije kompozicije @code{duzina . paran} dovešće do tipske greške.
+
+@terminal{
+ghci> k1 = paran . duzina
+ghci> k2 = duzina . paran
+
+<interactive>:7:15: error:
+    • Couldn't match type ‘Bool’ with ‘t0 a0’
+        Expected: a -> t0 a0
+            Actual: a -> Bool
+    • In the second argument of ‘(.)’, namely ‘paran’
+      In the expression: duzina . paran
+      In an equation for ‘k2’: k2 = duzina . paran
+}}
+
+@problem{
+Neka su @code{p} i @code{q} dve funkcije tipa @code{a -> Bool}. Zašto su @ccode{filter p . filter q} i @ccode{filter (\x -> p x && q x)} iste funkcije?
+}{
+@p Kako je @ccode{(filter p . filter q) xs = filter p (filter q xs)} to se  primenom funkcije @code{filter p . filter q} na listu @code{xs} odstranjuju svi elementi koji ne zadovoljavaju predikat @code{q}, a zatim se odstranjuju sve elementi koji ne zadovoljavuju predikat @code{q}. Prema tome, u listi @ccode{(filter p . filter q) xs} se nalaze svi elementi koji zadovoljavaju predikat @code{p} i predikat @code{q}. A upravo se ista lista dobija i kao @ccode{filter (\x -> p x && q x) xs}.
+}
+
+@problem{
+Implementirati funkciju @code{ks :: [a -> a] -> a -> a} koja uzima listu funkcija i vraća njihovu kompoziciju. Tačnije, za funkciju @code{ks} mora da važi @eq{\mathrm{ks}\;[f_1, f_2, \dots, f_n] = f_1 \circ f_2 \circ \cdots \circ f_n}
+}{
+@p Zadatak možemo da rešimo rekurzivno. Funkcija @code{ks} primenjena na praznu listu treba da nam da identičku funkciju @code{\x -> x} koja je već definisna u Haskelu pod imenom @code{id}. Ako lista funkcija nije prazna, tada je možemo rastaviti na glavu i na rep, rekurzivno naći kompoziciju repa, a zatim komponovati glavu sa tom kompozicijom:
+
+@codeBlock{
+ks :: [a -> a] -> a -> a
+ks [] = id
+ks (f:fs) = f . ks fs
+}
+
+@p Navedeni rekurzivni šablon obrade liste se može zameniti sa jednom @code{foldl} funkcijom:
+
+@codeBlock{
+ks :: [a -> a] -> a -> a
+ks fs = foldl (.) id fs 
+}
+}
+
+@problem{Kog je tipa izraz @code{. (.)}?}
+
+@problem{Kog je tipa izraz @code{(.) (.)}?}
 
 @subsection{Operator aplikacije}
 
+@p Operator aplikacije je operator koji na prvi pogled ne radi ništa korisno. Definicija ovog operatora je
+
+@codeBlock{
+infixr 0
+($) :: (a -> b) -> a -> b
+f $ a = f a
+}
+
+@p Dakle, operator @code{$} primenjuje (aplicira) funkciju na vrednost. Razlog zašto je @code{$} koristan, je taj što je @code{$} definisan sa najnižim prioritetom, dok aplikacija funkcije na vrednost (@code{f x}) ima najviši prioritet. Pošto @code{$} ima najniži priroitet, često se može iskoristiti za uklanjanje zagrada iz izraza. 
+
+@example{@p Ako želimo funkciju @code{f :: Int -> Int} da primenimo na vrednost @code{32 * 81}, tada je neispravno napisati @code{f 32 * 81}. Aplikacija ima veći prioritet od množenja pa se izraz @code{f 32 * 81} tumači kao @code{(f 32) * 81} što ne želimo. Ali ako iskoristimo operator aplikacije @code{$}, tada jednostavno možemo napisati @code{f $ 32 * 81}. Kako @code{$} ima manji prioritet od @code{*}, navedeni izraz će se protumačiti kao @code{f (32 * 81)} što smo i želeli.}
+
+@p Naravno, ušteda od jednog karaktera koju smo ostavrili na prethodnom primeru nije vredna uvođenja posebnog operatora. Ali operator @code{$} se može iskoristiti u mnogim drugim situacijama.
+
+@example{@p Ako bismo želeli da niz funkicja @code{f1}, @code{f2}, @code{f3}, @code{f4} primenimo jednu za drugom, prvi pokušaj bi verovatno bio
+@codeBlock{
+f4 (f3 (f2 (f1 x)))
+}{Primetimo da ne možemo izostaviti zagrade iz navedenog izraza, jer je aplikacija levo asocijativna te se izraz @code{f4 f3 f2 f1 x} tumači kao @code{(((f4 f3) f2) f1) x} (što u ovom slučaju nema smisla).}
+
+@p I ovde ćemo iskoristiti @code{$} da pojednostavimo zapis. Korišćenjem činjenice da je @code{$} definisan kao desnoasocijativan operator, možemo pisati 
+@codeBlock{
+f4 $ f3 $ f2 $ f1 x
+}
+
+@p Naravno, navedeni kod možemo napisati i korišćenjem kompozicije. Time dobijamo
+@codeBlock{
+(f4 . f3 . f2 . f1) x
+}
+@p Međutim, možemo da iskoristimo operator @code{$} da bismo aplicirali kompoziciju na vrednost @code{x}. Kako @code{$} ima manji prioritet od @code{.}, možemo pisati
+@codeBlock{
+f4 . f3 . f2 . f1 $ x
+}
+}
+
+@p Osim što se često koristi da pojednostavi zapis, @code{$} je koristan kad god je potrebno eksplicitno navesti primenu funkcije na argument. Na primer, ako su nam date liste @code{[1, 2, 3] :: [Int]} i @code{[f, g, h] :: [Int -> Int]}, tada uparivanje funkcija sa brojevim možemo jednostavno napisati kao
+@codeBlock{
+zipWith ($) [f, g, h] [1, 2, 3]
+}{Ovim se naravno dobija lista @code{[f 1, g 2, h 3]}}
+
+@p Slično, ako je data lista funkcija @code{[f1, f2, f3]} i @em{jedna} vrednost @code{x}, tada možemo iskoristiti parcijalnu aplikaciju i napisati @code{map ($ x) [f1, f2, f3]} da bi smo dobili listu @code{[f1 x, f2 x, f3 x]}@note{Da ne znamo za @code{$}, verovtno bi smo sa @code{map} funkcijom iskoristili lambdu @code{\f -> f x}.}.
+
 @subsection{Operator podizanja}
 
-@section{Programiranje bez tačaka}
+@p Za funkciju @code{map} se kaže da @em{podiže} funkcije tipa @code{a -> b} do funkcija tipa @code{[a] -> [b]}. Zaista, kada @code{map} apliciramo na @code{f :: a -> b}, dobijamo vrednost tipa @code{[a] -> [b]}. Zbog toga što se @code{map} izuzetno često koristi u kodu, ova funkcija poseduje i operatorski oblik @code{<$>}@note{Zapravo @code{<$>} je funkcija @code{fmap :: (a -> b) -> M a -> M b} koja se može koristiti za podizanje u kontekstu mnogih struktura podataka (a ne samo lista). Funkcija @code{map} je samo specijalan slučaj funkcije @code{fmap}. Više o tome kasnije...}. Sa leve strane operatora se navodi funkcija, a sa desne strane lista. 
 
-@section{Kombinatori}
+@example{@p Ako smo do sada koristili @code{map}, ne bi trebalo da imamo problema sa @code{<$>}.
 
-@subsection{Kombinator @code{on}}
+@terminal{
+ghci> (*2) <$> [1 .. 10]
+[2,4,6,8,10,12,14,16,18,20]
+}
+}
 
-@subsection{Kombinator @code{fix}}
+@problem{Neka je @code{f :: a -> b} i @code{g :: b -> c}. Zašto su @code{map g . map f} i @code{map (g . f)} iste funkcije? Koji su odgovarajući izrazi sa @code{<$>} operatorom?}
+{@p Funkcija @code{map g . map f} je kompozicija funkcija @code{map f} i @code{map g}. Funkcija @code{map f} transformiše neku listu @code{[x1, x2 ... xN]} u listu @ccode{[f x1, f x2 ... f xN]}, a zatim funkcija @code{map g} transormiše tu listu u @ccode{[g (f x1), g (f x2)...  g(f xN)]}. Sa druge strane, funkcija @code{map (g . f)} primenjuje kompoziciju @code{g . f} na svaki element liste, odnosno @code{[x1, x2 ... xN]} transforimše u @ccode{[(g . f) x1, (g . f) x2 ... (g . f) xN]}. Međutim, po definiciji kompozicije funkcije, jasno je da su liste @ccode{[g (f x1), g (f x2)...  g(f xN)]} i @ccode{[(g . f) x1, (g . f) x2 ... (g . f) xN]} iste vrednosti.
 
-@section{Zadaci}
+@p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve stane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}. Operator @code{<$>} je desnoasocijativan, pa se poslednja jednakost može zapisati kao @ccode{g <$> f <$> xs = (g . f) <$> xs}.
+}
 
-@problem{Neka su @code{p} i @code{q} dve funkcije tipa @code{a -> Bool}. Zašto su @code{filter p . filter q} i @code{filter (\x -> p x && q x)} iste funkcije?}
-
-@problem{Neka je @code{f :: a -> b} i @code{g :: b -> c}. Zašto su @code{map g . map f} i @code{map (g . f)} iste funkcije?}
-
-@problem{Implementirati funkciju @code{ks :: [a -> a] -> a -> a} koja uzima listu funkcija i vraća njihovu kompoziciju. Tačnije, za funkciju @code{ks} mora da važi @eq{\mathrm{ks}\;[f_1, f_2, \dots, f_n] = f_1 \circ f_2 \circ \cdots \circ f_n}}
