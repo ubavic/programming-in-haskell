@@ -46,14 +46,14 @@ figure = label "figure" $ do
 codeBlock :: Parser Block
 codeBlock = label "codeBlock" $ do
         cmd "codeBlock" <* space
-        code <- argument text <* space
+        code <- argument spaceText <* space
         description <- option Nothing (Just <$> argument captionText) <* space
         return $ CodeBlock code description
 
 terminal :: Parser Block
 terminal = label "terminal" $ do
         cmd "terminal" <* space
-        code <- argument text <* space
+        code <- argument spaceText <* space
         description <- option Nothing (Just <$> argument captionText) <* space
         return $ Terminal code description
 
@@ -87,6 +87,10 @@ text :: Parser Text
 text = label "text" $ T.concat <$> some (choice $ try <$> [nonSpecialChars, spaceChars, specialChar])
         where nonSpecialChars = (\x->T.pack [x]) <$> satisfy (\x -> x /= '{' && x /= '}' && x /= '@' && x/= ' ')
               spaceChars      = space1 *> return " "
+
+spaceText :: Parser Text
+spaceText = label "space text" $ T.concat <$> some (choice $ try <$> [nonSpecialChars, specialChar])
+        where nonSpecialChars = (\x->T.pack [x]) <$> satisfy (\x -> x /= '{' && x /= '}' && x /= '@')
 
 captionText :: Parser P
 captionText = space >>
@@ -149,7 +153,7 @@ specialChar :: Parser Text
 specialChar = label "specialChar" $ cmd "@" *> ((\x->T.pack [x]) <$> choice (try <$> [char '@', char '{', char '}'])) <* space
 
 argument :: Parser a -> Parser a
-argument x = label "argument" $ between (char '{') (char '}') x
+argument x = label "argument" $ between (char '{' <* space) (char '}') x
 
 parseDoc :: Text -> Either String Chapter
 parseDoc input = let output = parse (chapter <* space <* eof) "" input
