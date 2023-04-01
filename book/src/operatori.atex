@@ -41,6 +41,35 @@ ghci> (+) 4 3
 
 @section{Prioritet i asocijativnost}
 
+@p Korišćenjem operatora dobijamo nove vrednosti na koje ponovo možemo delovati s operatorima. Na primer, rezultat zbira @m{1+2} možemo pomnožiti sa @m{5}, a izraz koji odgovara ovom postupku je @m{(1 + 2) \cdot 5}. U datom izrazu, kao i uvek, zagrade označavaju @em{podziraz} koji je potrebno izračunati prvo.
+
+@p Zagrade su neophodne da bi se tačno preneo izraz. Ako bismo iz prethodnog primera obrisali zagrade, dobili bismo izraz @m{1 + 2 \cdot 5}. U zavisnosti od toga kojim redom vršimo računske operacije, od ovog izraza možemo da dobijemo vrednost @m{11} ili @m{15}. Naravno ovde grešku nećemo napraviti jer znamo za konvenciju o prioritetu računskih operacija koja govori da je množenje potrebno izvršiti pre sabiranja kada zagradama drugačije nije naznačeno. Pomenutom konvencijom je ustanovljen @def{prioritet} operatora. Za operator @m{\cdot} kažemo da ima @def{veći} (ili @def{viši}) prioritet od operatora @code{+}.
+
+@p Dakle, upostavljenjem prioriteta operatora, možemo se osloboditi nekih parova zagrada bez brige da ćemo izgubiti originalno značenje. Na primer, iz izraza @m{1 + (2 \cdot 5)} možemo obristai zagrade, ali ne i izraza @m{(1 + 2) \cdot 5} jer bismo time dobili drugačiju vrednost.
+
+@p Šta se dešava kada imamo kombinujemo operatore istog prioriteta? Štaviše, šta se dešava kada koristimo samo jedan operator? Da li možemo iz izraza @m{(2 + 4) + 6} da obrišemo zagrade? Naravno da možemo, jer izrazi @m{(2 + 4) + 6} i @m{2 + (4 + 6)} daju potpuno isti rezultat.
+
+@p Za neki operator @m{\star} kažemo da je @def{asocijativan} ako važi @eq{(a \star b)\star c = a \star (b\star c)} za sve vrednosti @m{a,b,c} na koje operator može da deluje. Kao što smo ustanovili, operator sabiranja @m{+} je asocijativan operator, a takav je i operator množenja @m{\cdot}.
+
+@example{
+@p Nije svaki operator asocijativan. Operator deljenja @m{/} nije, jer izraz @m{1 / (2 / 3)} ima drugačiju vrednost od izraza @m{(1 / 2) / 3}. Prema tome, izraz @m{1 / 2 / 3} je potrebno pažljivo interpretitirati@note{U matematici, konvencija je da se izračunavanje izraza vrši s leva na desno, ako je izraz sačeinje od operatora istog prioriteta. Prema tome, u matematici izraz @m{1/2/3} označava @m{(1/2)/3}}.
+}
+
+@p Korišćenjem osobine asocijativnosti i konvenicje o priroritetu možemo se soloboditi mnogih zagrada u izrazima. Prema tome, jasno je zašto se ova dva pojma odnose i na operatore u Haskelu.
+
+@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{10}.
+
+@example{
+@p Operator @code{++} koji nadovezuje liste je asocijativan operator jer očigledno važi @ccode{xs ++ (ys ++ zs) = xs ++ (ys ++ zs)} za sve liste @code{xs}, @code{ys}, @code{zs}. Prima tome, uvek kada nadovezujemo više lista, možemo pisati izraz poput @ccode{xs ++ ys ++ zs} jer je sve jedno kako se taj izraz interpretira.
+}
+
+@example{
+@p Operator @code{:} koji nadovezuju element na početak liste nije asocijativan. Zaista iz izraza @code{(x:xs):ys} možemo zaključiti da ako je @code{x :: a} tada mora biti @code{xs :: [a]} a samim tim @code{ys :: [[a]]} (jer @code{xs :: [a]} nadovezujemo na početak @code{ys}). Sa druge strane, ako u izrazu @code{x:(xs:ys)} važi @code{x :: a}, tada mora biti @code{(xs:ys) :: [a]}, a samim tim i @code{xs :: a}, @code{ys :: [a]}.
+
+@p Dakle, @code{(x:xs):ys} i  @code{x:(xs:ys)} predstavljaju potpuno različite izraze (štaviše ako je jedan dobro tipiziran, tada onaj drugi nije).
+}
+
+
 @section{Definisanje operatora}
 
 @section{Neki važni operatori}

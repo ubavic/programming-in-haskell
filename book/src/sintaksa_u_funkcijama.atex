@@ -81,7 +81,9 @@ f x1 x2 x3
 
 @p Kao i kod @em{if then else} konstrukcije, i kod @em{guards} konstrukcije sve povratne vrednosti moraju biti istog tipa.
 
-@p Na primer, funkcija @code{pozitivan :: Int -> [Char]} koja vraća nisku @code{"Pozitivan"} ako je broj veći ili jednak nuli, a u suprotnom @code{"Negativan"}, može se ovako definisati
+
+@example{
+@p Funkcija @code{pozitivan :: Int -> [Char]} koja vraća nisku @code{"Pozitivan"} ako je broj veći ili jednak nuli, a u suprotnom @code{"Negativan"}, može se ovako definisati
 
 @codeBlock{
 pozitivan :: :: Int -> [Char]
@@ -99,8 +101,11 @@ pozitivan' :: :: Int -> [Char]
 pozitivan' x
  | x > 0 = "Pozitivan"
  | x < 0 = "Negativan"
-}{U ovoj lošoj definiciji uslov @code{x == 0} nikad nije proveren, zbog čega će poziv @code{pozitivan' 0} dovesti do izuzetka.}
+}{U ovoj, @em{lošoj}, definiciji uslov @code{x == 0} nikad nije proveren, zbog čega će poziv @code{pozitivan' 0} dovesti do izuzetka.}
+}
 
+
+@example{
 @p Pogledajmo nešto složeniji primer. Funkcija koja vraća opis jačine zemljotresa na osnovu njegove jačine u Rihterima može biti  definisana sa narednim kodom:
 
 @codeBlock{
@@ -145,6 +150,7 @@ opisZemljotresa r
   | r < 8.0 = "Velik"
   | r < 10.0 = "Razarajući"
   | otherwise = "Epski"
+}
 }
 
 @problem{Definisati funkciju @code{max3 :: Int -> Int -> Int -> Int} sa @em{guards} sintaksom.}
@@ -291,27 +297,33 @@ rep (_:xs) = xs
 
 @p Dobro je naglasiti da pri podudaranju oblika nije moguće navesti oblik koji sadrži operator @code{++} (na primer ne možemo uhvatiti dvočlanu listu sa @code{[x] ++ [y]}). Razlog zašto je operator @code{:} moguće koristiti, a @code{++} ne, postaće jasan u jednoj od narednih glava.
 
-@p Osim lista, i uređene @m{n}-torke se mnogu dekonstruisati podudaranjem oblika. Na primer, funkciju @code{saberi :: (Double, Double) -> Double} koja sabira koordinate uređenog para možemo definisati sa narednim kodom
+@p Osim lista, i uređene @m{n}-torke se mnogu dekonstruisati podudaranjem oblika. 
+
+@example{
+@p Funkciju @code{saberi :: (Double, Double) -> Double} koja sabira koordinate uređenog para možemo definisati sa narednim kodom
 
 @codeBlock{
 saberi :: (Double, Double) -> Double
 saberi (x, y) = x + y
 }
+}
 
+@example{
 @p Funkicju @code{saberi3} koja sabira koordinate uređene trojke možemo definisati na sledeći način
 
 @codeBlock{
 saberi3 :: (Double, Double, Double) -> Double
 saberi3 (x, y, z) = x + y + z
 }
+}
 
-@p Iz ova dva navedena primera, vidimo da nam funkcije poput @code{fst} ili @code{snd} nisu neophodne.
+@p Iz dva navedena primera, vidimo da nam funkcije poput @code{fst} ili @code{snd} nisu neophodne.
 
 @problem{Implementirati funkciju @code{fst3 :: (a, b, c) -> a} koja vraća prvu koordinatu uređene trojke.}
 {@codeBlock{
 fst3 :: (a, b, c) -> a
 fst3 (x, _, _) = x
-}{Pošto ne koristimo vrednosti druge i treće kordinate, te vrednosti ne moramo da vezujemo novim imneom, već možemo iskoristi džoker.}
+}{Pošto ne koristimo vrednosti druge i treće kordinate, te vrednosti ne moramo da vezujemo novim imenom, već možemo iskoristi džoker.}
 }
 
 @todo{case}
