@@ -57,7 +57,7 @@ ghci> (+) 4 3
 
 @p Korišćenjem osobine asocijativnosti i konvenicje o priroritetu možemo se soloboditi mnogih zagrada u izrazima. Prema tome, jasno je zašto se ova dva pojma odnose i na operatore u Haskelu.
 
-@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{10}.
+@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{9}. Prioritet @code{10} je rezervisan sa aplikaciju funkcija na vrednost.
 
 @example{
 @p Operator @code{++} koji nadovezuje liste je asocijativan operator jer očigledno važi @ccode{xs ++ (ys ++ zs) = xs ++ (ys ++ zs)} za sve liste @code{xs}, @code{ys}, @code{zs}. Prima tome, uvek kada nadovezujemo više lista, možemo pisati izraz poput @ccode{xs ++ ys ++ zs} jer je sve jedno kako se taj izraz interpretira.
@@ -69,8 +69,115 @@ ghci> (+) 4 3
 @p Dakle, @code{(x:xs):ys} i  @code{x:(xs:ys)} predstavljaju potpuno različite izraze (štaviše ako je jedan dobro tipiziran, tada onaj drugi nije).
 }
 
-
 @section{Definisanje operatora}
+
+@p Operatori se definišu veoma slično ostalim funkcijama. Pri biranju imena operatora, potrebno ispoštovati tri uslova:
+
+@list{
+    @li Ime operatora mora da se satoji samo od znakova @pre{!#$%&*+./<=>?@@@\^|-~:}
+    @li Ime operatora ne sme biti: @code{..},  @code{:}, @code{::} @code{=}, @code{\}, @code{|}, @code{<-} @code{->} @code{@@@}, @code{~}, @code{=>}.
+    @li Ime operatora ne sme da počinje sa @code{:}.
+}
+
+@p Operatori se mogu definisati kao i ostale funkcije, pri čemu se ime operatora mora predstaviti u prefikson obliku, postavljanjem u zagrade. Moguće je koristiti podudaranje oblika pri čemu se operator postavlja infiksno i bez zagrada.
+
+@example{
+@p Definišimo operator @em{isklučujuće disjunkcije}, ondosno operator tipa @code{Bool -> Bool -> Bool} koji vraća @code{True} samo ako argumenti imaju razlčiti logičku vrednost. Za ime ovog operatora možemo uzeti na primer @code{|-|}.
+
+@p Ako definišemo operator dodelom lambda izraza, možemo prosto pisati:
+
+@codeBlock{
+(|-|) :: Bool -> Bool -> Bool
+(|-|) = \x y -> x /= y
+}{Zagrade @code{()} nisu deo imena operatora, već su služe za predstavljanje operatora u prefiksnom obliku.}
+
+@p Naravno, u prethodnom kodu možemo iskoristiti podudaranje oblika kao i do sada:
+
+@codeBlock{
+(|-|) :: Bool -> Bool -> Bool
+(|-|) x y = x /= y
+}
+
+@p Podudaranje oblika dozvoljava i narednu definiciju:
+
+@codeBlock{
+(|-|) :: Bool -> Bool -> Bool
+x |-| y = x /= y
+}
+
+@p Sve tri navedene definicje su u potpunosti iste. Poslednja oblik definicje je najprirodniji pa se i najčešće koristi.
+
+@p Učitavanjem bilo koje od definicjija u @em{GHCi} možemo koristiti novi logički operator
+
+@terminal{
+ghci> True |-| False
+True
+ghci> True |-| True
+False
+}
+}
+
+@p Moguće je deklarisati i prioritet operatora i asocijativnost takozvanim @em{infix} dekleracijama. Ova dekleracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja, manjeg od @code{9}, koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da  operator nije asocijativan.
+
+@p Ako prioritet i asocijativnost operatora nisu deklarisani, tada će se podrazumevati vrednost @code{infixl 9}.
+
+@example{
+@p Operator nadovezivanja elementa na kraj niza možemo definisati sa
+
+@codeBlock{
+(@@@:) :: a -> [a] -> [a]
+x @@@: xs = xs ++ [x] 
+}{Obratite pažnju da je operator definisan tako da levi argument nadovezuje na kraj desnog argumenta! Operator je ovako definisan radi primera.}
+
+@terminal{
+ghci> '!' @@@: "Hello"
+"Hello!"
+}
+
+@p Za gore definisan operator @code{@@@:} se podrazumeva da je levoasocijativan sa prioritetom @code{9}. Zbog leve asocijativnosti, izraz @code{x @@@: y @@@: z} se tumači kao @code{(x @@@: y) @@@: z} što nam ne odgovara:
+
+@terminal{
+ghci> '?' @@@: '!' @@@: "Hello"
+
+<interactive>:2:12: error:
+    • Couldn't match expected type ‘[String]’ with actual type ‘Char’
+    • In the second argument of ‘(@@@:)’, namely ‘'!'’
+      In the first argument of ‘(@@@:)’, namely ‘"Hello" @@@: '!'’
+      In the expression: "Hello" @@@: '!' @@@: '!'
+
+<interactive>:2:19: error:
+    • Couldn't match expected type ‘[[String]]’ with actual type ‘Char’
+    • In the second argument of ‘(@@@:)’, namely ‘'!'’
+      In the expression: "Hello" @@@: '!' @@@: '!'
+      In an equation for ‘it’: it = "Hello" @@@: '!' @@@: '!'
+}
+
+@p Izraz @code{x @@@: y @@@: z}, tj @code{(x @@@: y) @@@: z}, zahteva da @code{x} bude tipa @code{a}, @code{y} tipa @code{[a]} a @code{z} tipa @code{[[a]]}. Zbog toga, @code{@@@:} nije pogodan za nadovezivanje više elemenata na kraj liste@note{Sa druge starne, ovako definisan operator nam dozvoljava pisanje izraza @ccode{'!' @@@: "world" @@@: ["Hello"]}} jer moramo pisati zagrade kad povezujemo više elemenata na kraj liste:
+
+@terminal{
+ghci> '?' @@@: ('!' @@@: "Hello")
+"Hello!?"
+}
+
+@p Ipak, možemo deklarisati @code{@@@:} kao desnoasocijativan operator navođenjem linije:
+@codeBlock{
+infixr 9 @@@:
+}{Ovu dekleraciju je moguće postaviti bilo gde u kodu.}
+
+@p Ako ponovo učitamo kod u @em{GHCi}-u, prethodni primer će bez problema funkcionisati:
+
+@terminal{
+ghci> '?' @@@: '!' @@@: "Hello"
+"Hello!?"
+}{Sada se izraz interpretira kao @code{'?' @@@: ('!' @@@: "Hello")}, što ima smisla.}
+
+
+@p Nijedna dekleracija asocijativnosti i prioriteta nije pogrešna. Ipak, pažljivom upotrebon @em{infix} dekleracija možemo se osloboditi mnogih zagrada u kodu.
+}
+
+@problem{
+Definisati operator @code{!+ :: (Float, Float) -> (Float, Float) -> (Float, Float)} koji sabira vektore (odnosno sabira odgovarajuće koordinate uređenog para).
+}
 
 @section{Neki važni operatori}
 
