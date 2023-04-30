@@ -404,7 +404,6 @@ sifrujKarakter k = snd (head sifrovano)
 
 @p Funkcija @code{sifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{sifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalinih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head sifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste  @code{sifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
 
-
 @codeBlock{
 sifrujKarakter :: Char -> Char
 sifrujKarakter k

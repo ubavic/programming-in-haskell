@@ -13,7 +13,7 @@ class K a where
 @p Da bi neki tip @code{T} pridružili klasi tipova @code{K}, koristimo narednu konstrukciju nakon koje slede definicije funkcija koje propisuje klasa:
 
 @codeBlock{
-instance ImeKlase T where
+instance K T where
 }
 
 @p Više o klasama tipova naučićemo na primerima poznatih klasa koje se često koriste.

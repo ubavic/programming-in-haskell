@@ -57,7 +57,7 @@ ghci> (+) 4 3
 
 @p Korišćenjem osobine asocijativnosti i konvenicje o priroritetu možemo se soloboditi mnogih zagrada u izrazima. Prema tome, jasno je zašto se ova dva pojma odnose i na operatore u Haskelu.
 
-@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{9}. Prioritet @code{10} je rezervisan sa aplikaciju funkcija na vrednost.
+@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{9}. Prioritet @code{10} je rezervisan za aplikaciju funkcija na vrednost.
 
 @example{
 @p Operator @code{++} koji nadovezuje liste je asocijativan operator jer očigledno važi @ccode{xs ++ (ys ++ zs) = xs ++ (ys ++ zs)} za sve liste @code{xs}, @code{ys}, @code{zs}. Prima tome, uvek kada nadovezujemo više lista, možemo pisati izraz poput @ccode{xs ++ ys ++ zs} jer je sve jedno kako se taj izraz interpretira.
@@ -105,7 +105,7 @@ ghci> (+) 4 3
 x |-| y = x /= y
 }
 
-@p Sve tri navedene definicje su u potpunosti iste. Poslednja oblik definicje je najprirodniji pa se i najčešće koristi.
+@p Sve tri navedene definicje su u potpunosti iste. Poslednji oblik definicije je najprirodniji pa se i najčešće koristi.
 
 @p Učitavanjem bilo koje od definicjija u @em{GHCi} možemo koristiti novi logički operator
 
@@ -117,7 +117,7 @@ False
 }
 }
 
-@p Moguće je deklarisati i prioritet operatora i asocijativnost takozvanim @em{infix} dekleracijama. Ova dekleracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja, manjeg od @code{9}, koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da  operator nije asocijativan.
+@p Moguće je deklarisati i prioritet operatora i asocijativnost takozvanim @em{infix} dekleracijama. Ova dekleracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja manjeg od @code{9}, koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da operator nije ni jedno ni drugo.
 
 @p Ako prioritet i asocijativnost operatora nisu deklarisani, tada će se podrazumevati vrednost @code{infixl 9}.
 
@@ -152,7 +152,7 @@ ghci> '?' @@@: '!' @@@: "Hello"
       In an equation for ‘it’: it = "Hello" @@@: '!' @@@: '!'
 }
 
-@p Izraz @code{x @@@: y @@@: z}, tj @code{(x @@@: y) @@@: z}, zahteva da @code{x} bude tipa @code{a}, @code{y} tipa @code{[a]} a @code{z} tipa @code{[[a]]}. Zbog toga, @code{@@@:} nije pogodan za nadovezivanje više elemenata na kraj liste@note{Sa druge starne, ovako definisan operator nam dozvoljava pisanje izraza @ccode{'!' @@@: "world" @@@: ["Hello"]}} jer moramo pisati zagrade kad povezujemo više elemenata na kraj liste:
+@p Izraz @code{x @@@: y @@@: z}, tj @code{(x @@@: y) @@@: z}, zahteva da @code{x} bude tipa @code{a}, @code{y} tipa @code{[a]} a @code{z} tipa @code{[[a]]}. Zbog toga, @code{@@@:} nije pogodan za nadovezivanje više elemenata na kraj liste@note{Sa druge starne, ovako definisan operator nam dozvoljava pisanje izraza @ccode{'!' @@@: "world" @@@: ["Hello"]} koji se evaluira u @ccode{["Hello", "world!"]}} jer moramo pisati zagrade kad povezujemo više elemenata na kraj liste:
 
 @terminal{
 ghci> '?' @@@: ('!' @@@: "Hello")
@@ -175,9 +175,39 @@ ghci> '?' @@@: '!' @@@: "Hello"
 @p Nijedna dekleracija asocijativnosti i prioriteta nije pogrešna. Ipak, pažljivom upotrebon @em{infix} dekleracija možemo se osloboditi mnogih zagrada u kodu.
 }
 
-@problem{
-Definisati operator @code{!+ :: (Float, Float) -> (Float, Float) -> (Float, Float)} koji sabira vektore (odnosno sabira odgovarajuće koordinate uređenog para).
+@p Ako je fiksnost operatora deklerisana sa @code{infix}, tada je @em{uvek} neophodno koristiti zagrade kada se izraz sastoji od više primena operatora.
+
+@example{
+@p Da smo fiksnost operatora iz prethodnog primera definisali sa npr. @code{infix 8} tada bismo dobili narednu grešku u @em{GHCi}-u:
+
+@terminal{
+ghci> '?' @@@: '!' @@@: "Hello"
+<interactive>:1:1: error:
+    Precedence parsing error
+        cannot mix ‘@@@:’ [infix 8] and ‘@@@:’ [infix 8] in the same infix expression
+}{Ova greška nam sugriše da je neophodno da postavimo zagrade na odgovarajuće mesto. Primetimo da je u ovom slučaju samo jedan poredak zagrada validan (iz razloga koji su opisani ranije).}
+
+@p Operator poređenja vrednosti @code{==} je primer @code{infix} operatora. Primetimo da izraz@note{Ili bilo koji drugi izraz sačinjen od logičkih vrednosti i operatora @code{==}.} @ccode{True == False == True} izgleda kao validan, ali će zapravo dovesti do greške.
+}   
+
+@subsection{Funkcije kao operatori}
+
+@p U Haskelu je moguće @em{ad-hoc} napraviti operator od (prefiksne) funkcije. Potrebno je samo postaviti ime te funkcije između kosih navodnika @pre{``}. Navedno ime se tada može koristiti kao operator, pri čemu se prvi argument postavlja sa leve strane, a drugi argument sa desne strane.
+
+@example{
+@p Funkcija @code{elem :: Eq a => a -> [a] -> Bool} proverava da li se vrednost nalazi u listi. Ova funkcija se često koristi u infiksnom obliku, pa se umesto @code{elem x xs} piše @code{x `elem` xs}:
+
+@terminal{
+ghci> 2 `elem` [1,2,3]
+True
+ghci>'m' `elem` "Beograd"
+False
 }
+
+@p Primetimo da izraz @code{x `elem` xs} podseća na matmatičku notaciju @m{x \in XS}.
+}
+
+
 
 @section{Neki važni operatori}
 
@@ -343,3 +373,9 @@ ghci> (*2) <$> [1 .. 10]
 @p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve stane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}. Operator @code{<$>} je desnoasocijativan, pa se poslednja jednakost može zapisati kao @ccode{g <$> f <$> xs = (g . f) <$> xs}.
 }
 
+@section{Zadaci}
+
+
+@problem{
+Definisati operator @code{!+ :: (Float, Float) -> (Float, Float) -> (Float, Float)} koji sabira vektore (odnosno sabira odgovarajuće koordinate uređenog para).
+}

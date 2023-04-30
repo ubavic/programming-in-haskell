@@ -248,7 +248,7 @@ aside {
     color: var(--color-gray-2);
     position: absolute;
     padding: 0;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, top 0.5s ease-in-out;
 }
 
 aside:hover>.ref {
