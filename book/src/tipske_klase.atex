@@ -20,7 +20,7 @@ instance K T where
 
 @section{@em{Equality}}
 
-@p U klasi @code{Eq} nalaze se svi tipovi koje je moguće porediti pomoću funkcija @code{==} i @code{\=}. Definicija klase @code{Eq} je sasvim jednostavna:
+@p U klasi @code{Eq} nalaze se svi tipovi koje je moguće porediti pomoću funkcija @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
 
 @codeBlock{
 class Eq a where
@@ -55,7 +55,7 @@ ghci> a == b
 @codeBlock{
 instance Eq Racionalan where
     (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
-    (Racionalan (a, b)) \= (Racionalan (c, d)) = a * d \= c * b
+    (Racionalan (a, b)) /= (Racionalan (c, d)) = a * d /= c * b
 }
 
 @p Ponivnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost da poredimo vrednosti tipa @code{Racionalan}:
@@ -65,12 +65,12 @@ ghci> a = R (1, 2)
 ghci> b = R (5, 10) 
 ghci> a == b 
 True
-ghci> a \= b
+ghci> a /= b
 False 
 }
 }
 
-@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{\=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo definisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje progrmaer mora definisati za svaku instancu.
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo definisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje progrmaer mora definisati za svaku instancu.
 
 @p Konkretno, puna definicija klase @code{Eq} je
 
@@ -83,7 +83,7 @@ class Eq a where
   x /= y = not (x == y)
 }
 
-@p U prethodinm linijama, vidimo da klasa @code{Eq} podrazumeva dve funkcije. Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{\=}. 
+@p U prethodinm linijama, vidimo da klasa @code{Eq} podrazumeva dve funkcije. Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
 
 
 @example{
@@ -92,7 +92,7 @@ class Eq a where
 @codeBlock{
 instance Eq Racionalan where
     (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
-}{Umesto definicije za @code{==}, mogli smo da napišemo i samo definiciju za @code{\=}.}
+}{Umesto definicije za @code{==}, mogli smo da napišemo i samo definiciju za @code{/=}.}
 }
 
 @section{@em{Ordering}}

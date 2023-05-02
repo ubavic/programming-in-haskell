@@ -1,8 +1,10 @@
 @chapter{Tipovi}
 
+@p Kao što smo naveli u prethodnoj glavi, @def{tip} predstavlja kolekciju @em{vrednosti}. Svaka vrednost u Haskel jeziku, pripada jednom tip. Činjenicu da neka vrednost @code{v} pripada tipu @code{T}, označavamo sa @code{v :: T}. Izraz @code{v :: T} često čitamo kao "@code{v} poseduje tip @code{T}". 
+
 @p Haskel poseduje @def{statički sistem tipova} što znači da su tipovi svih izraza poznati prilikom kompilacije ili interpretacije. Time se otklanjaju mnoge greške koje bi mogle srušiti ceo program prilikom izvršavanja@note{Na primer, @em{GHC} neće iskompajlirati kôd u kom se broj oduzima od niske, jer takva operacija nema smisla.}. Jezici poput @em{Python}-a ili @em{JavaScript}-a nemaju statički sistem tipova, već @em{dinamički} sistem tipova. U takvim jezicima, tipovi izraza se određuju prilikom izvršavanja programa što ostavlja veliku mogućnost za pojavljivanje bagova.
 
-@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler skoro uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip vrednosti. 
+@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler skoro uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip (većine) vrednosti. 
 
 @p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove glave ćemo se upoznati sa nekim osnovnim tipovima u Haskelu i operacijama koje se mogu vršiti nad ovim tipovima.
 
@@ -390,29 +392,79 @@ ghci> snd (5, 'C')
 
 @section{Tipske klase}
 
-@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija različitih tipova koji dozvoljavaju pozivanje određenog skupa funkcija nad tipovima te klase. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase. 
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija (ili operacija) nad tipovima te klase. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
+
+@p Za razliku od vrednosti koje mogu pripadati samo jednom tipu, tipovi mogu da se nalaze u više klasa (ili nijednoj).
+
+@p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} operatora i funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.
 
 @p Navedenu apstraktnu definiciju ćemo približiti kroz primere klasa koje su predefinisane u Haskel jeziku:
 
 @list{
+@li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show}.
 @li Klasa @code{Eq} je klasa svih tipova čije vrednosti se mogu porediti sa operatorima @code{==} i @code{/=}.
 @li Klasa @code{Ord} je klasa svih tipova čije vrednosti se mogu porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}. Klasa @code{Ord} je po definiciji jedna podklasa klase @code{Eq}. Drugim rečima svaka instanca klase @code{Ord} mora biti instanca i klase @code{Eq}.
-@li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show}.
 @li Klasa @code{Num} je klasa svih tipova nad kojima se mogu pozivati operacije @code{+}, @pre{-}, @code{*}.
 @li Klasa @code{Fractional} je podklasa klase @code{Num} koja sadrži tipove nad kojima se može pozivati operacija @code{/}.
 }
 
-@p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju@note{Za raliku od vrednosti koje mogu pripadati samo jednom tipu, tipovi mogu da se nalaze u više klasa (ili nijednoj).} klasama @code{Eq}, @code{Ord} i @code{Show}.
+@p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}. To znači da vrednosti ovih tipova možemo da poredimo sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=} kao i da pretvaramo u niske sa funkcijom @code{show}.
+
+@example{
+
+@p Kako  @code{Bool}, @code{Int} i @code{Char} pripadaju klasi @code{Show}, sve vrednosti ovih tipova možemo kovertovati u niske koristeći istu funkciju @code{show}:
+
+@terminal{
+ghci> show True
+"True"  
+ghci> show 2
+"2"
+ghci> show 'a'
+"'a'"
+}
+}
 
 @p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo koristeći operacije @code{+}, @pre{-}, @code{*}. Međutim, od navedenih tipova, samo @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
 
-@p Kao što smo gore istakli ako neki tip @code{a} pripada klasi @code{Eq}, tada i tip @code{[a]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu upoređivati sa @code{==} i @code{/=}, tada se i liste tog tipa mogu upoređivati sa @code{==} i @code{/=}. Kao što smo rekli, poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{t} pripada nekoj od ovih klasa, tada i @code{[t]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
+@p Kao što smo gore istakli ako neki tip @code{a} pripada klasi @code{Eq}, tada i tip @code{[a]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu upoređivati sa @code{==} i @code{/=}, tada se i liste tog tipa mogu upoređivati sa @code{==} i @code{/=}. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{t} pripada nekoj od ovih klasa, tada i @code{[t]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
 @p Za uređene @m{n}-torke važi sličan princip. Ako tipovi @code{a}, @code{b}, ... @code{t} pripadaju klasi @code{Eq}, tada i tip @code{(a, b,..., t)} pripada klasi @code{Eq}. Ovo takođe važi i za klase @code{Ord} i @code{Show}.
 
-@p Klase omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} operatora i funkcija nad različitim tipovima što značajno pojednostavljuje programiranje. Tako je na primer funkciju @code{show} moguće pozivati i nad vrednostima tipa @code{Bool} ali i na vrednostima tipa @code{[Int]}.
+@example{
+@p Već znamo da vrednosti tipa @code{Int} i @code{Char} možemo da poredimo sa @code{==}:
 
-@p Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno kasnije. 
+@terminal{
+ghci> 8 == 2 * (3 + 1)
+True
+ghci> 'a' == 'b'
+False
+}
+
+@p Prema gore napisanom, i vrednosti tipa @code{(Int, Char)} možemo da poredimo:
+
+@terminal{
+ghci> (2, 'a') == (3, 'b')
+False
+ghci> (2, 'a') == (2, 'a')
+True
+}
+
+@p Dva uređena para će biti jednaka samo ako su im jednake prve koordinate i jednake druge koordinate.
+}
+
+@p Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno kasnije.
+
+@problem{
+Da li tip @code{[(Int, Char)]} pripada klasi @code{Eq}?
+}{
+@p Da. Oba tipa @code{Int} i @code{Char} pripdaju klasi @code{Eq}. Prema tome, i tip @code{(Int, Char)} pripada klasi @code{Eq}, jer uređen par dva tipa iz klase @code{Eq} takođe prpada klasi @code{Eq}. Sada, iz toga što @code{(Int, Char)} pripada klasi @code{Eq} sledi da i tip @code{[(Int, Char)]} pripada klasi @code{Eq}.
+
+@p I zaista, vrednosti tipa @code{[(Int, Char)]} možemo da poredimo sa @code{==} i @code{/=}:
+@terminal{
+ghci> [(2,'a')] == [(3,'b'), (2,'a')]
+False
+}
+}
 
 @section{Zaključivanje tipova}
 
