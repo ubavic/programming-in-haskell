@@ -18,7 +18,11 @@ instance K T where
 
 @p Više o klasama tipova naučićemo na primerima poznatih klasa koje se često koriste.
 
-@section{@em{Equality}}
+@todo{Jedan standardan primer}
+
+@section{Neke klase u Haskelu}
+
+@subsection{@em{Equality}}
 
 @p U klasi @code{Eq} nalaze se svi tipovi koje je moguće porediti pomoću funkcija @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
 
@@ -44,7 +48,7 @@ ghci> a = R (1, 2)
 ghci> b = R (5, 10) 
 ghci> a == b 
 
-<interactive>:3:3: error:
+<interactive>:1:3: error:
     • No instance for (Eq Racionalan) arising from a use of ‘==’
     • In the expression: a == b
       In an equation for ‘it’: it = a == b
@@ -95,7 +99,7 @@ instance Eq Racionalan where
 }{Umesto definicije za @code{==}, mogli smo da napišemo i samo definiciju za @code{/=}.}
 }
 
-@section{@em{Ordering}}
+@subsection{@em{Ordering}}
 
 @p Klasu @code{Ord} čine svi tipovi koje je moguće porediti pomoću funkcija @code{<}, @code{<=}, @code{>} i @code{>=}. Definicija klase @code{Ord} je sledeća:
 
@@ -123,10 +127,9 @@ class (Eq a) => Ord a where
 class (Eq a) => Ord a where
   compare (R (a, b)) (R (c, d)) = compare (a * d) (c * b)
 }{U implementaciji smo iskoristili činjenicu da je odnos između brojeva @m{a/b} i @m{c/d} isti kao odnos između brojeva @m{a\cdot d} i @m{c \cdot b}.}
-
 }
 
-@section{@em{Show} i @em{Read}}
+@subsection{@em{Show} i @em{Read}}
 
 @p Klasu @code{Show} čine oni tipovi koji se mogu prezentovati u vidu niske: definicija klase @code{Show} je jednostavna:
 
@@ -137,7 +140,7 @@ class Show a where
 
 @p Klasa @code{Show} je nophodna za ispisivanje vrednosti u @code{ghci} okruženju.
 
-@section{@em{Number} i @em{Fractional}}
+@subsection{@em{Number} i @em{Fractional}}
 
 @p Klasu @code{Num} čine svi tipovi koji predstavljaju nekakav skup brojeva (celih, racionalnih, realnih, kompleksnih...). Definicija klase @code{Num} je:
 
@@ -151,7 +154,6 @@ class Num a where
   signum :: a -> a
 }
 
-
 @p Klasa @code{Fractional} je podklasa klase @code{Num}:
 
 @codeBlock{
@@ -162,3 +164,5 @@ class Num a => Fractional a where
 
 @p Razlika klase @code{Fractional} u odnosu na klasu @code{Num} je ta što tipovi klase @code{Fractional} dozvoljavaju deljenje. Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama @em{prstena} i @em{polja}.
 
+
+@todo{Automatska derivacija klasa}

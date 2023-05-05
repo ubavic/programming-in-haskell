@@ -4,12 +4,10 @@ funkcije
 sintaksa_u_funkcijama
 rekurzija
 liste
-#tipovi_i_vrste
-#operatori
-#moduli
-#klase_tipova
+tipovi_i_vrste
+operatori
+tipske_klase
 #algebarski_tipovi_podataka
-#rekurzivni_tipovi_podataka
 #funktori_i_monade
 #IO monada
 #parser_kombinatori

@@ -3,7 +3,7 @@ name:               haskellBook
 version:            0.1.0.0
 synopsis:           Book about Haskell
 description:
-bug-reports:        https://github.com/ubavic/haskel_kolacici
+bug-reports:        https://github.com/ubavic/programming-in-haskell
 license:            MIT
 author:             Nikola Ubavić
 maintainer:         haskellBook@ubavic.rs
@@ -11,7 +11,7 @@ extra-source-files: README.md
 
 executable haskellBook
     main-is:          Main.hs
-    build-depends:    base >=4.10.0.0,
+    build-depends:    base >=4.13.0.0 && <=4.15.0.0,
                       megaparsec >=9.0,
                       text,
                       time,

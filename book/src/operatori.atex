@@ -13,7 +13,7 @@
 @list{
 @li @em{Aritmetički operatori} @code{+}, @pre{-}, @code{*}, @code{/}, @code{^}
 @li @em{Logički operatori} @code{&&}, @code{||}
-@li @em{Operatori poređenja} @code{==}, @code{\=}
+@li @em{Operatori poređenja} @code{==}, @code{/=}
 @li @em{Nizovni operatori} @code{:}, @code{++}, @code{!!}
 }
 

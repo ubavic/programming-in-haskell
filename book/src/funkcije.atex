@@ -6,26 +6,31 @@
 
 @section{Pojam funkcije i tip funkcije}
 
-@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @code{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Ako funkcija @m{f} elementu @m{x\in A} pridruži vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
+@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @code{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridruži vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
 
 @todo{Ubaciti sliku}
 
+@p Za funkciju tipa @m{A \to B} često kažemo da preslikava (slika, transformiše) skup @m{A} u skup @m{B}.
+
 @example{
 @p Funkcija @m{s\colon \mathbb N \to \mathbb N} definisana sa izrazom @m{s(x)=x + 1} svakom prirodnom broju pridružuje naredni prirodni broj tj. važi @m{s(0)=1}, @m{s(1)=2}, @m{s(2)=3} itd...
+
+@p Domen i kodomen ove funkcije je skup prirodnih brojeva @m{\mathbb N}.
 }
 
-@p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa pridružuju vrednosti drugog tipa. Činjenicu da neka funkcija @code{f} pridružuje vrednostima tipa @code{a} vrednosti tipa @code{b} označavamo sa @code{f :: a -> b} i kažemo da @code{f} poseduje tip @code{a -> b}.
+@example{
+@p Neka je @m{P} skup svih tačaka jedne ravni, a @m{T} skup svih duži te ravni. Definišmo funkciju @m{s} koja svakoj duži iz @m{T} pridružuje središte te duži. Domen funkcije @m{s} je @m{T}, kodomen je @m{P}, a tip je @m{T \to P}.
+}
+
+@p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja pridružuje vrednostima tipa @code{a} vrednosti tipa @code{b} označava se sa @code{a -> b}.
+
+@p Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{a -> b} predstavlja kolekciju svih funkcija koje tip @code{a} preslikavaju tip @code{b}. Naravno, činjenicu da funkcija @code{f} poseduje tip @code{a -> b} označavamo sa @code{f :: a -> b}.
 
 @example{
 @p Funkcija @code{not} svakoj logičkoj vrednosti dodeljuje njenu negaciju koja je takođe logička vrednost. Prema tome, funkcija @code{not} ima tip @code{Bool -> Bool}.
 }
 
-@p Možemo zaključiti nekoliko stvari:
-
-@list{
-@li Za razliku od imperativnih jezika, funkcije u Haskelu uvek moraju da "vrate" vrednost. U imperativnim jezicima neretko koristimo @code{void} funkcije koje nemaju povratnu vrednost. Takve funkcije ne postoje u Haskelu.
-@li Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{a -> b} predstavlja kolekciju svih funkcija koje vrednosti tipa @code{a} transformišu u vrednosti tipa @code{b}.
-}
+@p Za razliku od imperativnih jezika, funkcije u Haskelu uvek moraju da poseduju kodomen. Drugim rečima, primena funkcije na vrednost mora i sama da predstavlja vrednost nekog tipa. U imperativnim jezicima neretko koristimo @code{void} funkcije koje nemaju povratnu vrednost. Takve funkcije ne postoje u Haskelu.
 
 @section{Lambda izrazi}
 

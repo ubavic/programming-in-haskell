@@ -75,7 +75,7 @@ True
 
 @terminal{
 ghci> 3 * -2
-<interactive>:101:1: error:
+<interactive>:1:1: error:
 recedence parsing error
 cannot mix ‘*’ [infixl 7] and prefix `-' [infixl 6] in the same infix expression
 ghci> 3 * (-2)
@@ -132,7 +132,7 @@ False
 
 @terminal{
 ghci> True == 1
-<interactive>:8:9: error:
+<interactive>:1:9: error:
     • No instance for (Num Bool) arising from the literal ‘1’
     • In the second argument of ‘(==)’, namely ‘1’
       In the expression: True == 1
@@ -218,7 +218,7 @@ ghci> [True,False] ++ []
 
 @terminal{
 ghci> [1,2,3] ++ [True]
-<interactive>:8:2: error:
+<interactive>:1:2: error:
     • No instance for (Num Bool) arising from the literal ‘1’
     • In the expression: 1
       In the first argument of ‘(++)’, namely ‘[1,2,3]’
@@ -236,14 +236,14 @@ ghci> [1] ++ [2,3,4,5]
 
 @terminal{
 ghci> [1] : [2,3,4,5]
-<interactive>:9:1: error:
+<interactive>:1:1: error:
     • Non type-variable argument in the constraint: Num [a]
       (Use FlexibleContexts to permit this)
     • When checking the inferred type
         it :: forall a. (Num a, Num [a]) => [[a]]
 
 ghci> 1 ++ [2,3,4,5]
-<interactive>:10:1: error:
+<interactive>:2:1: error:
     • Non type-variable argument in the constraint: Num [a]
       (Use FlexibleContexts to permit this)
     • When checking the inferred type

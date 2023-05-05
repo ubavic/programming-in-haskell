@@ -151,7 +151,7 @@ ghci> a
 ghci> :reload
 Ok, one module loaded.
 ghci> a
-<interactive>:85:1: error: Variable not in scope: a
+<interactive>:1:1: error: Variable not in scope: a
 }{Prilikom definisanja nekog imena, vrednost dodeljenog izraza se neće ispisati u terminal. Tek unosom imena u prompt ispisujemo vrednost.}
 
 @p Za izlazak iz @em{GHCi} programa, koristi se naredba @pre{:quit}.
@@ -218,7 +218,7 @@ ghci> let broj = a + 3 where a = 3
 ghci> broj
 5
 ghci> a + 3 where a = 3
-<interactive>:20:7: error: parse error on input ‘where’
+<interactive>:1:7: error: parse error on input ‘where’
 }{Kod @code{a + 3 where a = 3} nije validan izraz, zbog čega je došlo do sintaksne greške.}
 
 
