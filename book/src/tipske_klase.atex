@@ -74,7 +74,7 @@ False
 }
 }
 
-@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo definisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje progrmaer mora definisati za svaku instancu.
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo definisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje programer mora definisati za svaku instancu.
 
 @p Konkretno, puna definicija klase @code{Eq} je
 
