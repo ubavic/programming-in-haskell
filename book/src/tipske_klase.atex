@@ -5,22 +5,93 @@
 @p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova nekih funkcija koje instanaca mora da implementira:
 
 @codeBlock{
-class K a where
+class C a where
   f1 :: T1
-  f2 :: T2
-}{Ovde @code{a} je tipska promenljiva koja predstavlja instancu klase @code{K}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku pormenljivu @code{a}.}
+  f2 :: T2 
+  ....
+}{Ovde @code{a} je tipska promenljiva koja predstavlja instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku pormenljivu @code{a}.}
 
-@p Da bi neki tip @code{T} pridružili klasi tipova @code{K}, koristimo narednu konstrukciju nakon koje slede definicije funkcija koje propisuje klasa:
+@p Da bi neki tip @code{T} pridružili klasi tipova @code{C}, koristimo narednu konstrukciju nakon koje slede definicije funkcija koje propisuje klasa:
 
 @codeBlock{
 instance K T where
+  f1 = ...
+  f2 = ... 
+  ...
 }
 
-@p Više o klasama tipova naučićemo na primerima poznatih klasa koje se često koriste.
+@section{Jedan primer}
 
-@todo{Jedan standardan primer}
+@p Gotovo da nema uvodne knjige o programiranju u nekom jeziku koja ne sadrži primer sa geometrisjkim figurama poput pravugaonika, trougla i kruga. Implementirati strukture koje predstavljaju figure i funkcije koje računaju površinu figura je jednostavno u svakom popularnom jeziku, ali može da pozluži za odličnu ilustraciju mnogobrojnih pojedinosti nekog programskog jezika. Nama će poslužiti da ilustrujemo zašto su klase tipova korisne.  
+
+@p Prvo ćemo definisati tri tipa podatka koji predstavljaju figure u Dekartovoj ravni:
+
+@list{
+  @li Svaki pravuganik se može odrediti sa jednim temenom, širinom i visinom (jednostavnosti radi, pretpostavljamo da su stranice pravuganika paralelne sa koordinatnim osama). Kako teme možemo predstaviti sa dve kooridnate, ceo kvadrat možemo predstaviti sa četiri @code{Double} vrednosti.
+  @li Trougao je u potpunosti određen sa tri temena. Prema tome, za predstavljanje trougla nam je potrebna struktura podataka koja sadrži šest @code{Double} vrednosti.
+  @li Krug je određen centrom i poluprečnikom. Stoga struktura koja predstavlja krug sadrži tri @code{Double} vrednosti.
+}
+
+@p Kada znamo šta strukture sadrže, lako ih je implementirati kao uređene @m{n}-torke:
+
+@codeBlock{
+newtype Pravuganik = Pravuganik (Double, Double, Double, Double)
+  deriving Show
+
+newtype Trougao = Trougao (Double, Double, Double, Double, Double, Double)
+  deriving Show
+
+newtype Krug = Krug (Double, Double, Double)
+  deriving Show
+}{Za sada možda nije jasno šta navedene koordinate predstavljaju, ali ćemo kroz naredni kod ustanoviti na šta se koordinate odnose.}
+
+@p Implementacija funkcija koje računaju obim navedenih figura je takođe jednostavna:
+
+@codeBlock{
+obimPravuganika :: Pravuganik -> Double
+obimPravuganika (Pravuganik (x, y, a, b)) = 2 * (a + b)
+
+obimTrougla :: Trougao -> Double
+obimTrougla (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
+  where
+    a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+    b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
+    c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
+
+obimKruga :: Krug -> Double
+obimKruga (Krug (x, y, r)) = 2 * pi * r 
+}{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
+
+@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli da primenimo jedinstvenu funkciju na svaki tip figure@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na verdnost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
+
+@p Da bi mogli da korstimo jedinstvenu funkciju @code{povrsina} sa sva tri tipa, definisaćemo klasu @code{Figura}. Ova klasa će obuhvatati tipove @code{Pravuganik}, @code{Trougao} i @code{Krug}. Pošto za sada želimo da nad svakim tipom iz klase @code{Figura} funkciju @code{obim}, ispod dekleracije klase ćemo navesti samo jednu dekleraciju tipa. 
+
+@codeBlock{
+class Figura a where
+  obim :: a -> Double
+}{Dekleracije koje klasa pruža moraju biti nazubljene za jedan nivo (barem jedan razmak), u odnosu na liniju @code{class ...}. }
+
+@p Sada ostaje samo tipove @code{Pravuganik}, @code{Trougao} i @code{Krug} učinimo instancama klase @code{Figura}. Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instacinaranje podrazumeva implementaciju funkcije @code{obim} za sveki od navedenih tipova.
+
+@codeBlock{
+instance Figura Kvadrat where
+  obim (Kvadrat (x, y, a, b)) = 2 * (a + b)
+
+instance Figura Trougao where
+  obim (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
+    where
+      a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+      b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
+      c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
+
+instance Figura Krug where
+  obim (Krug (x, y, r)) = 2 * pi * r 
+}{Definicije funkcija su u potpunosti iste kao definicje funkcija @code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}.}
+
 
 @section{Neke klase u Haskelu}
+
+@p Više o klasama tipova naučićemo na primerima poznatih klasa koje su već definisane u Haskelu.
 
 @subsection{@em{Equality}}
 
