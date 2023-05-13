@@ -71,7 +71,13 @@ class Figura a where
   obim :: a -> Double
 }{Dekleracije koje klasa pruža moraju biti nazubljene za jedan nivo (barem jedan razmak), u odnosu na liniju @code{class ...}. }
 
-@p Sada ostaje samo tipove @code{Pravuganik}, @code{Trougao} i @code{Krug} učinimo instancama klase @code{Figura}. Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instacinaranje podrazumeva implementaciju funkcije @code{obim} za sveki od navedenih tipova.
+@p Linijom @code{class ...} započinje se blok definicje klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve liije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
+
+@p Tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja tip koji ćemo pridružiti klasi @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
+
+@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, potrebno je tipove @code{Pravuganik}, @code{Trougao} i @code{Krug} učininiti instancama klase @code{Figura}.
+
+@p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instacinaranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
 
 @codeBlock{
 instance Figura Kvadrat where
@@ -85,8 +91,61 @@ instance Figura Trougao where
       c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
 
 instance Figura Krug where
-  obim (Krug (x, y, r)) = 2 * pi * r 
+  obim (Krug (x, y, r)) = 2 * pi * r
 }{Definicije funkcija su u potpunosti iste kao definicje funkcija @code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}.}
+
+@p Linijom @code{instance ... } započinje se blok definicija funkcija. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije. 
+
+@p U bloku definicja, neophodno je definisati sve funkcije koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnje pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
+
+@p Nakon učitavanja navedenih definicja u @em{GHCi}, možemo se uveriti da @code{povrsina} može da se primenjuje na razne tipove figura
+
+@terminal{
+ghci> trougao = Trougao (0, 0, 1, 0, 0, 1)
+ghci> obim trougao
+3.414213562373095
+ghci> kvadrat = Pravuganik (0, 0, 2, 2)
+obim kvadrat
+8.0
+ghci> krug = Krug (0, 0, 10)
+ghci> obim krug
+62.83185307179586
+}
+
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definicju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci morama da implementiramo funkciju @code{povrsina}. Površinu pravugaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiot Heronovu formulu. Kompletan kod sada izgleda ovako:
+
+@codeBlock{
+class Figura a where
+  obim :: a -> Double
+  povrsina :: a -> Double
+
+
+instance Figura Kvadrat where
+  obim (Kvadrat (x, y, a, b)) = 2 * (a + b)
+
+  povrsina (Kvadrat (x, y, a, b)) = a * b
+
+
+instance Figura Trougao where
+  obim (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
+    where
+      a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+      b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
+      c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2
+  
+  povrsina (Trougao (x1, y1, x2, y2, x3, y3)) = sqrt . prod $ [s, s-a, s-b, s-c]
+      where
+        a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+        b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2
+        c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2
+        s = (a + b + c) / 2
+
+
+instance Figura Krug where
+  obim (Krug (x, y, r)) = 2 * pi * r
+  
+  povrsina (Krug (x, y, r)) = pi * r^2
+}
 
 
 @section{Neke klase u Haskelu}
@@ -95,7 +154,7 @@ instance Figura Krug where
 
 @subsection{@em{Equality}}
 
-@p U klasi @code{Eq} nalaze se svi tipovi koje je moguće porediti pomoću funkcija @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
+@p U klasi @code{Eq} nalaze se svi tipovi čije vrednosti je moguće porediti pomoću funkcija @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
 
 @codeBlock{
 class Eq a where
@@ -103,7 +162,7 @@ class Eq a where
   (/=) :: a -> a -> Bool
 }
 
-@p Dakle klasa @code{Eq} propisuje dve operacije koje vraćaju logičke vrednosti. Te dve operacije služe za poređenje vrednosti tipa.
+@p Klasa @code{Eq} deklariše dva operatora koje vraćaju logičke vrednosti. Ta dva operatora služe za poređenje vrednosti tipa @code{a}.
 
 @example{
 @p Definišimo tip koji predstavlja racionalan broj. Kako je svaki racionalan broj oblika @m{a/b} za neka sva cela broja @m{a} i @m{b\ne 0}, to tip @code{Racionalan} možemo definisati kao uređen par celih brojeva:
@@ -145,21 +204,22 @@ False
 }
 }
 
-@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo definisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje programer mora definisati za svaku instancu.
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo deklaristai tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje programer mora definisati za svaku instancu.
 
 @p Konkretno, puna definicija klase @code{Eq} je
 
 @codeBlock{
 class Eq a where
-  (==) :: a -> a -> Bool
-  x == y = not (x /= y)
+  (==), (/=)           :: a -> a -> Bool
   
-  (/=) :: a -> a -> Bool
-  x /= y = not (x == y)
+  x /= y               = not (x == y)
+  x == y               = not (x /= y)
+  @@{ -# MINIMAL (==) | (/=) #-@@}
 }
 
-@p U prethodinm linijama, vidimo da klasa @code{Eq} podrazumeva dve funkcije. Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
+@p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma instrukcija}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno implementirati.
 
+@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
 
 @example{
 @p @em{Nastavak prethodnog primera}. Za instacu @code{Racionalan}, dovoljno je napisati sledeće
@@ -176,23 +236,41 @@ instance Eq Racionalan where
 
 @codeBlock{
 class (Eq a) => Ord a where
-  compare :: a -> a -> Ordering
-  (<) :: a -> a -> Bool
-  (<=) :: a -> a -> Bool
-  (>) :: a -> a -> Bool
-  (>=) :: a -> a -> Bool
-  max :: a -> a -> a
-  min :: a -> a -> a
+    compare              :: a -> a -> Ordering
+    (<), (<=), (>), (>=) :: a -> a -> Bool
+    max, min             :: a -> a -> a
+
+    compare x y = if x == y then EQ
+                  else if x <= y then LT
+                  else GT
+
+    x <= y = case compare x y of
+      GT -> False;
+      _ -> True
+
+    x >= y = y <= x
+    x > y = not (x <= y)
+    x < y = not (y <= x)
+
+    max x y = if x <= y then y else x
+    min x y = if x <= y then x else y
+    @@{ -# MINIMAL compare | (<=) #-@@}
 }
 
-@p Klasa propisuje uobičajne relacije (funkcije koje vraćaju logičke vrednosti) za poređenje elementa kao i dve binarne funkicje @code{min} i @code{max} koje respektivno vraćaju manji odnosno veći od argumenata.
+@p Ovde vidimo nešto drugačiju definiciju klase. Umesto sa @code{class Ord a where} definicija klase započinje sa @code{class (Eq a) => Ord a where}. Izraz @code{(Eq a) =>} predstavlja klasno ograničenje. Kao i kod tipova vrednosti, klasnim ograničenjima ograničavamo skup tipova koji mogu biti postavljeni na mesto tipske promenljive @code{a}. U ovom slučaju, sa klasnim ograničenjem garantujemo da će neki tip pripadati nekoj drugoj klasi pre nego što ga pridružimo ovoj klasi. 
 
-@p U ovom primeru vidimo nešto drugačiju definiciju klase. Umesto sa @ccode{class Ord a where} definicija klase započinje sa @ccode{class (Eq a) => Ord a where}. Izraz @code{(Eq a) =>} naziva se @def{klasno ograničenje}. Klasnim ograničenjima garantujemo da će neki tip pripadati nekoj drugoj klasi pre nego što ga pridružimo ovoj klasi. 
+@p U slučaju klase @code{Ord}, ima smisla zahtevati da tip već pripada klasi @code{Eq} jer pojam jednakosti vrednosti neophodan za razlikovanje funkcija @code{>} i @code{>=}@note{Drugim rečima, ako možemo da poredimo vrednosti sa @code{>} i @code{>=}, tada @code{a == b} možemo definisati kao @ccode{(a >= b) && not (a > b)}. Sa druge strane ako možemo da poredimo vrednosti sa @code{==} i @code{\=}, to nam ništa ne govori o poređenju vrednosti u smislu operatora @code{<}, @code{<=}, @code{>}, @code{>=}. Dakle, funkcije koje definiše klasa @code{Eq} su elementarnije od onih funkcija klase @code{Ord}. Stoga ima smisla zahtevati da @code{Ord} bude podklasa klase @code{Eq}.}. Prema tome, klasa @code{Ord} je podklasa klase @code{Eq}.
 
-@p U slučaju klase @code{Ord} ima smisla zahtevati da tip već pripada klasi @code{Eq} jer pojam jednakosti vrednosti neophodan za razlikovanje funkcija @code{>} i @code{>=}. Prema tome, klasa @code{Ord} je podklasa klase @code{Eq}.
+@p Klasa @code{Ord} propisuje funkciju @code{compare :: a -> a -> Ordering} koja upoređuje dve vrednosti, uobičajne relacije (operatore koje vraćaju logičke vrednosti) za poređenje elementa kao i dve binarne funkcije @code{min} i @code{max} koje respektivno vraćaju manji odnosno veći od argumenata.
+
+@p Tip @code{Ordering} je tip koji sadržati tri vrednosti @code{LT}, @code{EQ}, @code{GT} koje označavaju rezultat poređenja dve vrednosti. Vrednost @code{compare a b} je @code{LT}, @code{EQ}, @code{GT} ako je vrednost @code{a} strogo manja, jednaka, strogo veća od vrednosti @code{b}.
+
+@p Definicje operatora @code{<}, @code{>}, @code{>=} koriste operator @code{<=} i prilično su jasne. Jasne su i definicije binarnih funkcija @code{min} i @code{max} koje takođe koriste operator @code{<=}. Operator @code{<=} je definisan preko funkcije @code{compare}. Funkcija @code{compare} preko funkcije @code{<=}. Kao i kod klase @code{Eq}, i ovde imamo slučaj beskonačne rekurzije kroz definicije. Stoga je potrebno, i dovoljno, u instanci definisati samo jednu od funkcija @code{<=} ili @code{comapre}.
+
+@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkicije (u tom slučaju te definicje instance će potisnuti definicje u definicji klase), ali za tako nečim gotovo nikad nema potrebe.
 
 @example{
-@p Načinom tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
+@p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
 
 @codeBlock{
 class (Eq a) => Ord a where

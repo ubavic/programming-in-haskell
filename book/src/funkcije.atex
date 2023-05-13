@@ -44,7 +44,7 @@
 Matematičkom notacijom zapisano, navedeni izraz predstavlja funkciju @m{g(x) = 2 x}. Ime parametra je u potpunosti proizvoljno uzeto. Ista funkcija se može definisati i kao @code{\y -> (2 * y)} ili kao @code{\broj -> (2 * broj)}, itd... Telo prve navedene lambda funkcije je @code{(2 * x)}. Primetimo da navedenim kodom nismo definisali i ime funkcije@note{Lambda funkcije se često nazivaju i anonimne funkcije. Čist lambda račun ne podrazumeva način imenovanja funkcija, pa su lambda funkcije @em{anonimne}.}. Da bismo mogli ovu funkciju da primenjujemo na vrednosti, dodelićemo je nekom imenu:
 
 @codeBlock{
-g = \x -> (2 * x)
+g = (\x -> (2 * x))
 }{Primer validne definicije funkcije u @code{.hs} datoteci.}
 
 @p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima zgodnije je reći @em{primena funkcije na vrednost}.} je na neke vrednosti. Kao što smo rekli, da bi se funkcija primenila na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
@@ -107,7 +107,7 @@ ghci> (\x -> (2 * x)) 10
 
 @codeBlock{
 g :: Int -> Int
-g = \x -> (2 * x)
+g = (\x -> (2 * x))
 }{Iz tipa @code{Int -> Int} vidimo da funkcija uzima jednu vrednost tipa @code{Int} i vraća takođe vrednost tipa @code{Int}.}
 }
 
@@ -116,7 +116,7 @@ g = \x -> (2 * x)
 
 @codeBlock{
 h :: [Int] -> Int
-h = \x -> (head x + 1)
+h = (\x -> (head x + 1))
 }{Aplikacija ima najveći prioritet te se izraz @code{head x + 1} tumači kao @code{(head x) + 1}.}
 
 @p Možemo se uveriti u tip funkcije @code{h} koristeći @pre{:type} naredbu u @em{GHCi} okruženju:
@@ -175,8 +175,8 @@ head :: [a] -> a
 @problem{Kog tipa je funkcija @code{reverse} koja obrće listu?}
 {@p Funkcija @code{reverse} uzima listu bilo kog tipa i vraća listu @em{istog} tipa. Prema tome tip ove funkcije je @code{[a] -> [a]}. Tip funkcije @code{reverse} nije @code{[a] -> [b]} jer tipske promenljive @code{a} i @code{b} mogu predstavljati različite tipove.}
 
-@problem{Napisati funkciju @code{povrsinaKruga :: Double -> Double} koja za zadati poluprečnik kruga vraća njegovu površinu}
-{@p Koristeći predefinsanu konstantu @code{pi} dobijamo kôd:
+@problem{Napisati funkciju @code{povrsinaKruga :: Double -> Double} koja za zadati poluprečnik kruga vraća njegovu površinu. Konstanta @m{\pi} je dostupna u Haskelu kao @code{pi}.}
+{
 @codeBlock{
 povrsinaKruga :: Double -> Double
 povrsinaKruga = (\r -> (pi * r ** 2))
@@ -293,15 +293,83 @@ ghci> mod' (7, 2)
 @p Funkcije koje smo konstruisali u prethodnim redovima dostupne su pod imenima @code{curry} i @code{uncury} i poseduju sleće tipove
 
 @codeBlock{
-curry :: ((a, b) -> c) -> a -> b -> c
-uncurry :: (a -> b -> c) -> (a, b) -> c
+curry :: ((a, b) -> c) -> (a -> (b -> c))
+uncurry :: (a -> b -> c) -> ((a, b) -> c)
 }
 
-@problem{Konstruisati funkciju @code{curry3} koja uzima funkciju tipa @code{(a, b, c) -> d} i daje funkciju tipa @code{a -> b-> c -> d}.}
+@problem{Konstruisati funkciju @code{curry3} koja uzima funkciju tipa @code{(a, b, c) -> d} i daje funkciju tipa @code{a -> (b -> (c -> d))}.}
 
 @problem{Kog tipa je izraz @code{uncurry curry}?}
 
 @section{Zadaci}
+
+@problem{
+Rešenja @m{x_1} i @m{x_2} kvadratne jednačine @m{ax^2+bx+c=0} su data sa @em{kvadratnom formulom} @eq{x_{1,2} = \frac{-b\pm\sqrt{b^2-4ac}}{2a}.} Implementirati funkciju @ccode{resenja :: Double -> (Double -> (Double -> (Double, Double)))} koja za tri prosleđena parametra @m{a}, @m{b} i @m{c} vraća uređeni par rešenja koja su dobijena putem navedene formule. Pretpostaviti da će koeficijenti biti tako zadati da su sve računske operacije definisane.
+}
+
+@problem{
+Napisati funkciju @ccode{primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))} koja uzima jednu funkciju @code{f :: Int -> Bool}, jedan uređen par tipa @code{(Int, Int)}, i vraća uređen par koji se dobija primenom @code{f} na svaku koordinatu uređenog para.}{
+@p Kada se @code{primeni} primeni na neku funkciju @code{f}, potreno je da dobijemo lambda funkciju koja uzima par i vraća par dobijen primenom @code{f} na svaku od koordinata. Ova lambda funkcija se može zapisati kao @ccode{\par -> (f (fst par), f (snd par))}. Jedino što je potrebno je da uvedemo i @code{f} kao jedan parametar, tj. da napravimo apstrakciju po @code{f}. Time dobijamo:
+
+@codeBlock{
+primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))
+primeni = (\f -> (\par -> (f (fst par), f (snd par))))
+}
+
+@p Da bi testirali našu funkciju, definisaćemo i funkciju @code{paran}
+
+@code{
+paran :: Int -> Bool
+paran = (\n -> (0 == mod n 2))
+}
+
+@p Nakon učitavanja u @em{GHCi}, uveravamo se da funkcija zaista radi:
+
+@terminal{
+ghci> primeni paran (2, 7)
+(True,False)
+}
+
+}
+
+@p Za naredne zadatke neophodno je podsetiti se funkcija za rad sa listama iz prethodne glave: @code{length}, @code{head}, @code{last}, @code{init}, @code{tail}, @code{reverse}, @code{elem}.
+
+@problem{
+Napisati funkciju @code{inicijali :: [Char] -> ([Char] -> [Char])} koja od dve niske koje predstavlaju ime i prezime pravi inicijale. Na primer @code{inicijali "Nikola" "Tesla"} daje @code{"N.T."}. Pretpostaviti da su obe niske neprazne.
+}{
+@p Korišćenjem @code{head :: [a] -> a} funkcije, "uzećemo" prva slova imena i prezimena. Primena funkcije @code{head} na nisku nam daje vrednost tipa @code{Char}. Stoga dobijenu vrednost moramo postaviti u novu nisku, da bismo mogli koristiti operator @code{++} koji nadovezuje niske.
+
+@codeBlock{
+inicijali :: [Char] -> ([Char] -> [Char])
+inicijali = (\x1 -> (\x2 -> (
+    let y1 = head x1; y2 = head x2
+    in [x1] ++ "." [x2] ++ "."
+  )))
+}
+}
+
+@problem{Napisati funkciju @ccode{ukloni3 :: [Char] -> [Char]} koja uklanja prva tri elementa iz niske. Pretpostaviti da će funkcija uvek biti primenjena na niske dužine veće od tri.}{
+@p Funkcija @code{tail :: [a] -> [a]} nam vraća rep niske (sve osim prvog elmenta). Primenom ove funkcije tri puta na neku listu, efektivno uklanjamo prva tri elementa iz liste
+@codeBlock{
+ukloni3 :: [Char] -> [Char]
+ukloni3 = (\x -> (tail (tail (tail x))))
+}
+
+@p Primetimo da u rešenju zadatka ne postoji ništa što je specifično za niske karaktera. Prema tome možemo da implementiramo opštiju funkciju koja se može primeniti na liste bilo kog tipa. Dovoljno je samo da u dekleraciji tipa funkcije, tip @code{Char} zamenimo sa tipskom promenljivom @code{a}.
+@codeBlock{
+ukloni3 :: [a] -> [a]
+ukloni3 = (\x -> (tail (tail (tail x))))
+}
+}
+
+@problem{Za nisku kažemo da je @em{palindrom} ako se čita isto i sa levo i sa desno, npr. @code{"anavolimilovana"} jeste palindorm. Napisati funkciju @code{palindrom :: [Char] -> Bool} koja proverava da li je niska palindorm.}{
+@p Niske, odnosno vrednosti tipa @code{[Char]}, pripadaju klasi @code{Eq}. Zbog toga je moguće koristiti operator @code{==} za poređenje dve niske. Niska @code{s} je palindrom ako je jednaka nisci @code{reverse s}. Ovo zapažanje nas direktno dovodi do rešenja:
+
+@codeBlock{
+palindrom :: [Char] -> Bool
+palindorm = (\s -> (s == reverse s))
+}
+}
 
 @problem{Sa tipom @code{(Double, Double)} moguće je predstaviti vektor dvodimenzionalne ravni. Napisati funkciju @code{zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))} koja sabira vektore.}
 {@codeBlock{
@@ -313,5 +381,5 @@ zbir = (\u -> (\v -> (fst u + fst v, snd u + snd v)))
 {@p Ako su nam date vrednosi @code{x}, @code{y} i @code{z} tada ćemo prvo naći veću od vrednosi @code{x} i @code{y} a zatim ćemo tu veću vrednost da uporedimo sa @code{z}:
 @codeBlock{
 max3 :: Ord a => a -> a -> a -> a
-max3 = \x y z -> max (max x y) z
+max3 = (\x -> (\y -> (\z -> max (max x y) z)))
 }}

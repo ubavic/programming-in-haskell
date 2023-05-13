@@ -370,9 +370,9 @@ ghci> numerisaniDani = zipWith f [1 .. 7] dani
 
 @subsection{Cezarova šifra}
 
-@p Po rimskom istoričaru Svetoniju, Julije Cezar je šifrovao vojne poruke tako što bi slovo @em{A} zamenio slovom @em{D}, slovo @em{B} slovom @em{E}, slovo @em{C} slovom @em{F}, i tako dalje, zamenjujući svako slovo latinskog alfabeta sa slovom koje se nalazi tri mesta nakon tog slova. Na primer, reč @em{CLEOPATRA} bi pri ovom šifrovanju postala @em{FOHRSDYVD}@note{Za ovaj primer smo koristili rimski alfabet koji ne sadrži @em{J}, @em{U} i @em{W}}. Onaj ko bi primio poruku, dešifrovao bi poruku tako što bi uradio sličnu zamenu, ali ovog puta zamenjujući svako slovo sa slovom koje se u alfabetu nalazi tri mesta pre. Iako Cezar nije prvi iskoristio ovakvu šifru, danas šifra nosi ime po njemu. Štaviše, pod istim imenom nazivaju se šifre koje "pomeraju" slova za @m{n} mesta, gde @m{n} ne mora biti baš @m{3}.  
+@p Po rimskom istoričaru Svetoniju, Julije Cezar je šifrovao vojne poruke tako što bi slovo @em{A} zamenio slovom @em{D}, slovo @em{B} slovom @em{E}, slovo @em{C} slovom @em{F}, i tako dalje, zamenjujući svako slovo latinskog alfabeta sa slovom koje se nalazi tri mesta nakon tog slova. Na primer, reč @em{CLEOPATRA} bi pri ovom šifrovanju postala @em{FOHRSDYVD}@note{Za ovaj primer smo koristili rimski alfabet koji ne sadrži @em{J}, @em{U} i @em{W}. Nadalje koristimo engleski alfabet.}. Onaj ko bi primio poruku, dešifrovao bi poruku tako što bi uradio sličnu zamenu, ali ovog puta zamenjujući svako slovo sa slovom koje se u alfabetu nalazi tri mesta pre. Iako Cezar nije prvi iskoristio ovakvu šifru, danas šifra nosi ime po njemu. Štaviše, pod istim imenom nazivaju se šifre koje "pomeraju" slova za @m{n} mesta, gde @m{n} ne mora biti baš @m{3}.  
 
-@p Za implementaciju Cezarove šifre prvo ćemo konstruisati listu parova odgovarajućih karaktra (svaki par će sadržati slovo i šifrovano slovo). To možemo učiniti sa @code{zip} funkcijom
+@p Za implementaciju Cezarove šifre prvo ćemo konstruisati listu parova odgovarajućih karaktera (svaki par će sadržati slovo i šifrovano slovo). To možemo učiniti sa @code{zip} funkcijom
 
 @codeBlock{
 sifra :: [(Char, Char)]
@@ -445,12 +445,9 @@ desifruj niska = map desifrujSlovo niska
 Implementirati Cezarovu šifru sa proizvoljnim pomerajem @m{n}.
 }
 
-@problem{
-Implementirati šifrovanje za mala slova, brojeve, ćirilicu...
-}
 
 @problem{
-Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tjane poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljavmo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
+Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tajne poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljavmo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
 }
 
 @subsection{Određen integral}

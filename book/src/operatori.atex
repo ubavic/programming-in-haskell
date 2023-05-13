@@ -209,6 +209,33 @@ False
 
 
 
+@subsection{Sekcije}
+
+@p I operatore kao i 'obične funkcije', možemo parcijalno da apliciramo na vrednosti. Sintaksu kojom se predstavljaju ovakve parcijalne aplikacije nazivamo @def{sekcije}. Sekcija se zapisuje navođenjem operatora unutar zagrada zajedno sa još jednim od argumenata, i predstavlja prefiksnu funkciju.
+
+@example{
+@p Sa sekcijama možemo da apliciramo jedan operand, levi ili desni, na operator @code{/}:
+
+@list{
+    @li Sekcija @code{(/ 2)} predstavlja funkciju @code{\x -> x / 2}.
+    @li Sekcija @code{(2 /)} predstavlja funkciju @code{\x -> 2 / x}.
+}
+
+@p Kao što smo naveli, sekcije su prefiksne funkcije. Tako da nedostajući argument navodimo nakon sekcije, bez obzira da li je to levi ili desni operand:
+
+@terminal{
+ghci> (/ 2) 10
+5.0
+ghci> (2 /) 10
+0.2
+}
+}
+
+@example{
+@p Sekcije su posebno zgodne sa drugim funkcijama višeg reda. Ako želimo da svaki element liste @code{xs} dupliramo, možemo da napišemo @ccode{map (* 2) xs}
+umesto dosadašnjeg @ccode{map (\x -> x * 2) xs}.
+}
+
 @section{Neki važni operatori}
 
 @p Osim aritmetičkih, logičkih i operatora nad listama, Haskel programi sadrže obilje drugih operatora (od kojih mnogi nisu prisutni u drugim jezicima). Haskel programeri vole da koriste razne operatore jer time skraćuju programe i direktnije prenose ideju o tome šta odrđene funkcije rade. Neke od tih operatora ćemo predstaviti u nastavku ove glave, dok ćemo ostale obraditi u narednim glavama. 
