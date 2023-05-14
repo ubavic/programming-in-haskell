@@ -280,14 +280,50 @@ class (Eq a) => Ord a where
 
 @subsection{@em{Show} i @em{Read}}
 
-@p Klasu @code{Show} čine oni tipovi koji se mogu prezentovati u vidu niske: definicija klase @code{Show} je jednostavna:
+@p Klasu @code{Show} čine oni tipovi čije se vrednosti mogu prezentovati u vidu niske. Za nas je važno da definicija klase @code{Show} podrazumeva funkciju @code{show}:
 
 @codeBlock{
 class Show a where
   show :: a -> String
+}{Ovde nismo naveli kompletnu definicju klase, ali je dovoljno znati da minimalno instanciranje @code{Show} klase podrazumeva samo implementaciju funkcije @code{show}.}
+
+@p Klasa @code{Show} je neophodna za ispisivanje vrednosti u @em{GHCi} okruženju. Do sada smo koristili @code{deriving (Show)} konstrukciju koja je omogućavala da se neki tip podatka, automatski pridruži @code{Show} klasi. Od sada znamo kako to možemo i sami da uradimo.
+
+@example{
+
+@p Ako želimo da automatski instanciramo @code{Show Racionalan}, dovoljno je definiciju tipa promenimo u sledeću:
+
+@codeBlock{
+newtype Racionalan = R (Int, Int) deriving (Show)
 }
 
-@p Klasa @code{Show} je nophodna za ispisivanje vrednosti u @code{ghci} okruženju.
+@p Kod ovakvog automatskog instaciranja, @code{show} funkcija će kreirati nisku koja liči veoma na samo kod sa kojim je konstruisana vrednost.
+
+@terminal{
+ghci> a = R (2, 5)
+ghci> show a
+"R (2,3)"
+ghci> a
+R (2,3)
+}{Kada u @em{GHCi} unesemo neki izraz, taj izraz će se evaluirati, i dobijena vrednost će se prikazati kao niska dobijena primenom @code{show} funkcije.}
+
+@p Za tip @code{Racionalan} je bolje implementirati posedbnu @code{show} funkciju, a ne koristiti automatsko izvođenje. U tom slučaju treba ukloniti @code{deriving (Show)}, a dodati instancu @code{Show Racionalan}:
+
+@codeBlock{
+instance Show Racionalan where
+  show (R (x, y)) = show x ++ "/" ++ show y
+}{Primetimo da u definicji koristimo takođe @code{show} funkciju, ali primenjenu na celobrojne vrednosti. Možemo da kažemo da @code{show} sa leve i desne strane znaka @code{=}, ne predstavljaju iste funkcije.}
+
+@p Prikazivanje vrednosti je sada smislenije:
+
+@terminal{
+ghci> a = R (2, 5)
+ghci> show a
+"2/3"
+ghci> a
+2/3
+}
+}
 
 @subsection{@em{Number} i @em{Fractional}}
 

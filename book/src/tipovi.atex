@@ -1,21 +1,21 @@
 @chapter{Tipovi}
 
-@p Kao što smo naveli u prethodnoj glavi, @def{tip} predstavlja kolekciju @em{vrednosti}. Svaka vrednost u Haskel jeziku, pripada jednom tip. Činjenicu da neka vrednost @code{v} pripada tipu @code{T}, označavamo sa @code{v :: T}. Izraz @code{v :: T} često čitamo kao "@code{v} poseduje tip @code{T}". 
+@p @def{Tip} predstavlja kolekciju @em{vrednosti}. Svaka vrednost u Haskel jeziku, pripada jednom i samo jednom, tipu. Činjenicu da neka vrednost @code{v} pripada tipu @code{T} označavamo sa @code{v :: T}. Izraz @code{v :: T} često čitamo kao "@code{v} poseduje tip @code{T}". 
 
-@p Haskel poseduje @def{statički sistem tipova} što znači da su tipovi svih izraza poznati prilikom kompilacije ili interpretacije. Time se otklanjaju mnoge greške koje bi mogle srušiti ceo program prilikom izvršavanja@note{Na primer, @em{GHC} neće iskompajlirati kôd u kom se broj oduzima od niske, jer takva operacija nema smisla.}. Jezici poput @em{Python}-a ili @em{JavaScript}-a nemaju statički sistem tipova, već @em{dinamički} sistem tipova. U takvim jezicima, tipovi izraza se određuju prilikom izvršavanja programa što ostavlja veliku mogućnost za pojavljivanje bagova.
+@p Haskel poseduje @def{statički sistem tipova} što znači da su tipovi svih izraza poznati prilikom kompilacije (ili interpretacije). Time se otklanjaju mnoge greške koje bi mogle srušiti ceo program prilikom izvršavanja@note{Na primer, @em{GHC} neće iskompajlirati kôd u kom se broj oduzima od niske, jer takva operacija nema smisla.}. Jezici poput @em{Python}-a ili @em{JavaScript}-a nemaju statički sistem tipova, već @em{dinamički} sistem tipova. U takvim jezicima, tipovi izraza se određuju prilikom izvršavanja programa što ostavlja veliku mogućnost za pojavljivanje @em{bagova}.
 
-@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler skoro uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip (većine) vrednosti. 
+@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave (koji su statički tipizirani kao i Haskel) neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler (skoro) uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip (većine) vrednosti. 
 
-@p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove glave ćemo se upoznati sa nekim osnovnim tipovima u Haskelu i operacijama koje se mogu vršiti nad ovim tipovima.
+@p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove glave ćemo se upoznati sa nekim osnovnim tipovima u Haskelu, kao i operacijama i funkcijama koje se mogu koristiti sa ovim tipovima.
 
 @section{Tip @code{Bool}}
 
-@p Tip @code{Bool} predstavlja kolekciju koja sadrži sve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}. Nad logičkim vrednostima moguće je vršiti naredne logičke operacije
+@p Tip @code{Bool} predstavlja kolekciju koja sadrži dve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}. Nad logičkim vrednostima moguće je vršiti naredne logičke operacije:
 
 @list{
-@li @em{Konjunkcija} @code{p && q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako logičke vrednosti @code{p} i @code{q} imaju vrednost @code{True}.
+@li @em{Konjunkcija} (@em{i}) @code{p && q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako logičke vrednosti @code{p} i @code{q} imaju vrednost @code{True}.
 
-@li @em{Disjunkcija} @code{p || q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako barem jedna od vrednosti @code{p} i @code{q} ima vrednost @code{True}.
+@li @em{Disjunkcija} (@em{ili}) @code{p || q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako barem jedna od vrednosti @code{p} i @code{q} ima vrednost @code{True}.
 }
 
 @p Koristeći ove dve operacije i zagrade, možemo kreirati logičke izraze proizvoljne složenosti. 

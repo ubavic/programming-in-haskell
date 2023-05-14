@@ -34,11 +34,11 @@ dana_u_nedelji = 7
 sati_u_danu = 24
 }
 
-@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kad su u pitanju imena vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova, brojeve kao i karaktere @code{_} i @code{'}.
+@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova, brojeve kao i karaktere @code{_} i @code{'}.
 
 @p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, nije dozvoljeno u jednoj @code{.hs} datoteci imati više definicija sa istim imenom. Naravno, različitim imenima možemo dodeliti iste vrednosti. Takođe, poredak definicija nije bitan.
 
-@p@def{Tip} neke vrednosti predstavlja kolekciju kojoj ta vrednost pripada. Svaka vrednost pripada jednom i samo jednom tipu. Ako neka vrednost @code{v} pripada tipu @code{T} tada za tu vrednost kažemo da @em{poseduje tip} @code{T} ili da još @em{da je tipa} @code{T} i to označavamo sa @code{v :: T}. Nazivi tipova uvek počinju velikim slovom.
+@p@def{Tip} neke vrednosti predstavlja kolekciju kojoj ta vrednost pripada. Svaka vrednost pripada jednom i samo jednom tipu. Ako neka vrednost @code{v} pripada tipu @code{T} tada za tu vrednost kažemo da @em{poseduje tip} @code{T} ili da još @em{da je tipa} @code{T} i to označavamo sa @code{v :: T}. Za razliku od imena funkcije, ime tipa uvek počinje velikim slovom.
 
 @p Na primer, vrednosti koje smo dodelili imenima @code{meseci_u_godini} i @code{dana_u_nedelji} poseduju tip @code{Int}. Tip @code{Int} možemo da shvatimo kao kolekciju vrednosti koja sadrži sve cele brojeve koji se mogu prezentovati na računaru.
 @todo{Dodati sliku sa sa tipom Int}
@@ -57,7 +57,7 @@ sati_u_danu = 24
 
 @section{Izvršavanje Haskel koda}
 
-@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operacije i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operacija. Operacije i jesu funkcije koje se zapisuju u takozvanom infisksnom zapisu.}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*} i zagrade @code{()}. Sintaksa za aritmetičke izraze prati sintaksu koju svakodnevno koristimo:
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operatora. Operatori i jesu funkcije koje se zapisuju u takozvanom @em{infisksnom} zapisu...}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -76,16 +76,16 @@ sati_u_nedelji = dana_nedelji * sati_u_nedelji
 @p Lista definicija  nije sama po sebi mnogo korisna ako ne možemo utvrditi vrednosti izraza. Tako je u prethodnom primeru zgodno saznati koliko to sati ima u nedelji, a da bi smo saznali tu vrednost potrebno je da izvršimo Haskel kôd. Postoje dva načina na koje je moguće izvršiti Haskel kôd:
 
 @list{
-@li @em{Kompilacijom koda}. Uz pomoć @em{GHC} kompajlera, moguće je kompajlirati kôd u izvršni fajl. U ovom slučaju u kodu mora biti definisana labela @code{main :: IO ()} koja služi kao početna tačka izvršavanja programa.
+@li @em{Kompilacijom koda}. Uz pomoć @em{GHC} kompajlera, moguće je kompajlirati kôd u izvršni fajl. U ovom slučaju u kodu mora biti definisano ime @code{main :: IO ()} koja služi kao početna tačka izvršavanja programa.
 
 @li @em{Interpretacijom koda}. Uz pomoć programa @em{GHCi} moguće je učitati definicije u interaktivno okruženje i evaluirati te definicije.
 }
 
-@p Iz određenih razloga koji će biti pojašnjeni kasnije, definisanje imena @code{main} zahteva poznavanje nešto naprednijeg programiranja u Haskelu. Stoga će demonstracija kompilacije programa biti odložena za za glavu IO Monada, a do tada ćemo koristiti isključivo @em{GHCi} program.
+@p Iz određenih razloga koji će biti pojašnjeni kasnije, definisanje imena @code{main} zahteva poznavanje nešto naprednijeg programiranja u Haskelu. Stoga će demonstracija kompilacije programa biti odložena za neku narednu glavu, a do tada ćemo koristiti isključivo @em{GHCi} program.
 
 @todo{Linkovati glavu}
 
-@p Da bismo koristili @em{GHCi} potrebno je prvo da sačuvamo prethodni primer u datoteku sa ekstenzijom @code{.hs}. Na primer, neka je to datoteka @code{prviProgram.hs}. Zatim je potrebno da otvorimo terminal i promenimo aktivni direktorijum tog terminala u direktorijum u kom se nalazi datoteka @code{prviProgram.hs}. Nakon toga možemo pokrenuti @pre{ghci} program@note{Ako koristite @em{repl.it} web okruženje, dovoljno je da samo pokrenete komandu @pre{ghci} u terminalu koji se nalazi sa desne strane editora koda. Editor koda koji se nalazi na levoj strani prikazuje kôd koji se nalazi u datoteci @code{main.hs}. }. Nakon pokretanja komande @pre{ghci} komande pojaviće se tekst poput sledećeg:
+@p Rad u programu @em{GHCi} zahteva da prvo sačuvamo prethodni primer u datoteku sa ekstenzijom @code{.hs}. Na primer, neka je to datoteka @code{prviProgram.hs}. Zatim je potrebno da otvorimo terminal i promenimo aktivni direktorijum tog terminala u direktorijum u kom se nalazi datoteka @code{prviProgram.hs}. Nakon toga možemo pokrenuti @pre{ghci} program@note{Ako koristite @em{repl.it} web okruženje, dovoljno je da samo pokrenete komandu @pre{ghci} u terminalu koji se nalazi sa desne strane editora koda. Editor koda koji se nalazi na levoj strani prikazuje kôd koji se nalazi u datoteci @code{main.hs}. }. Nakon pokretanja komande @pre{ghci} komande pojaviće se tekst poput sledećeg:
 
 @terminal{
 C:\Users\User\Desktop>ghci
@@ -167,7 +167,7 @@ povrsina :: Int
 povrsina = 2*(10*5 + 5*3 + 3*10)
 }
 
-@p Kao što vidimo, definicija je malo nepregledna. Takođe, ako želimo da izračunamo zapreminu nekog drugog kvadra, svaku od dimenzija moramo da promenimo na dva mesta što predstavlja potencijalni izvor greške. Zbog toga ćemo iskoristiti @em{let in} sintaksu da bismo lokalno definisali imena @code{a}, @code{b} i @code{c}@note{Naravno, moguće je i globalno definisati imena @code{a}, @code{b} i @code{c}, ali time nepotrebno rezervišemo ta imena.}:
+@p Navedena definicija je malo nepregledna. Takođe, ako želimo da izračunamo zapreminu nekog drugog kvadra, svaku od dimenzija moramo da promenimo na dva mesta što predstavlja potencijalni izvor greške. Zbog toga ćemo iskoristiti @em{let in} sintaksu da bismo lokalno definisali imena @code{a}, @code{b} i @code{c}@note{Naravno, moguće je i globalno definisati imena @code{a}, @code{b} i @code{c}, ali time nepotrebno rezervišemo ta imena.}:
 
 @codeBlock{
 povrsina :: Int
@@ -198,23 +198,23 @@ ghci> let a = 2 in (let b = 3 in a + b)
 
 @section{@em{Where}}
 
-@p Sa @em{where} sintaksom takođe je moguće uvesti lokalne definicije kao i sa @pre{let ... in} sintaksom. Međutim, za razliku od @pre{let ... in} konstrukcije koja predstavlja izraz, @em{where} sintaksa se isključivo koristi uz definicije. Opšti oblik @em{where} sintakse je:
+@p Sa @em{where} sintaksom takođe je moguće uvesti lokalne definicije kao i sa @pre{let ... in} sintaksom. Za razliku od @em{let in} konstrukcije koja predstavlja izraz, @em{where} sintaksa se isključivo koristi uz definicije. Opšti oblik @em{where} sintakse je:
 
 @codeBlock{
 ime = izraz where ime1 = izraz1; ...; imeN = izrazN
 }
 
-@p Na primer, primer sa površinom kvadra iz prethodne sekcije bi mogao i ovako da se napiše:
+@p Primer sa površinom kvadra iz prethodne sekcije bi mogao i ovako da se napiše:
 
 @codeBlock{
 povrsina :: Int
 povrsina = 2*(a*b + b*c + c*a) where a = 10; b = 5; c = 3 
 }
 
-@p Za razliku @em{let ... in} sintakse @em{where} se ne može koristi van definicija
+@p Za razliku @em{let in} sintakse @em{where} se ne može koristi van definicija:
 
 @terminal{
-ghci> let broj = a + 3 where a = 3
+ghci> broj = a + 3 where a = 3
 ghci> broj
 5
 ghci> a + 3 where a = 3
@@ -222,7 +222,7 @@ ghci> a + 3 where a = 3
 }{Kod @code{a + 3 where a = 3} nije validan izraz, zbog čega je došlo do sintaksne greške.}
 
 
-@p Važno je znati da je u okviru @em{let ... in} ili @em{where} sintakse moguće lokalno predefinisati neka već definisana imena. Zbog toga, u narednom primeru, ime @code{b} predstavlja vrednost @code{11} a ne @code{21}:
+@p Važno je znati da je u okviru @em{let in} ili @em{where} sintakse moguće lokalno predefinisati neka već definisana imena. Zbog toga, u narednom primeru, ime @code{b} predstavlja vrednost @code{11} a ne @code{21}:
 
 
 @codeBlock{
@@ -240,7 +240,7 @@ ghci> b
 
 @section{Prelom i nazubljivanje}
 
-@p Često nije zgodno pisati ceo @em{let in} ili @em{if then else} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostra na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo nekoliko neformalnijih pravila koja za naše potrebe dobro sažimaju tehnička pravila:
+@p Često nije zgodno pisati ceo @em{let in} ili @em{where} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostra na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo neformalna pravila koja dobro sažimaju tehnička pravila:
 
 @list{
 @li Nazubljivanje Haskel koda se vrši isključivo sa razmacima.
@@ -274,7 +274,7 @@ a = 10 * 10
 a = 10 *
         10
   + 1
-}{Broj razmaka nije bitan pri nazubljivanju.}
+}{Broj razmaka nije bitan pri nazubljivanju. Ako neka linija sadrži barem jedan više razmak na početku nego druga, onda ćemo smatrati da je prva linija više nazubljena od druge.}
 
 @p Naredni kôd @em{nije} dobro formatiran, jer linija @code{+ 1} nije dodatno nazubljena u odnosu na početak @code{a =}:
 
@@ -316,7 +316,7 @@ povrsina = 2*(a*b + b*c + c*a)
 }{Oba primera su dobro nazubljena}
 
 
-@p Četvrto pravilo se odnosi na niz definicija u @em{let ... in} i @em{where} sintaksama. Po ovom pravilu, niz je moguće prelomiti u više linija, pri čemu se znaci @code{;} mogu izostaviti. Pri prelomu sve definicije se moraju postaviti tačno jedna ispod druge. Na primer, naredni kodovi su dobro nazubljeni:
+@p Četvrto pravilo se odnosi na niz definicija u @em{let ... in} i @em{where} sintaksama. Po ovom pravilu, niz je moguće prelomiti u više linija, pri čemu se znaci @code{;} mogu izostaviti. Pri prelomu sve definicije se moraju postaviti tačno jedna ispod druge. Naredni kodovi su dobro nazubljeni:
 
 @codeBlock{
 povrsina :: Int
@@ -361,7 +361,7 @@ w = 2 * v
     where
         v :: Int
         v = 10 * 3
-}{Osim definicija, u bloku je moguće navesti i dekleracije tipova.}
+}{Osim definicija, u bloku je moguće navesti i dekleracije tipova, ali se to retko radi u praksi.}
 
 @section{Komentari}
 
@@ -378,7 +378,7 @@ w = 2 * v
 
 a = 2 * 10 + 1 -- i ovo je komentar
 
-@@{-
+@@{ -
 Ovo
 je
 takođe
