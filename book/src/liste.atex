@@ -171,7 +171,7 @@ daLiJePocetak _ "" = False
 daLiJePocetak (x:xs) (y:ys) =
     if x == y
         then daLiJePocetak xs ys
-        else False  
+        else False
 }
 
 @p Primetimo da se funkcija @ccode{daLiJePodlista :: Eq a => [a] -> [a] -> Bool} može implementirati na gotovo isti način.
@@ -370,7 +370,7 @@ ghci> numerisaniDani = zipWith f [1 .. 7] dani
 
 @subsection{Cezarova šifra}
 
-@p Po rimskom istoričaru Svetoniju, Julije Cezar je šifrovao vojne poruke tako što bi slovo @em{A} zamenio slovom @em{D}, slovo @em{B} slovom @em{E}, slovo @em{C} slovom @em{F}, i tako dalje, zamenjujući svako slovo latinskog alfabeta sa slovom koje se nalazi tri mesta nakon tog slova. Na primer, reč @em{CLEOPATRA} bi pri ovom šifrovanju postala @em{FOHRSDYVD}@note{Za ovaj primer smo koristili rimski alfabet koji ne sadrži @em{J}, @em{U} i @em{W}. Nadalje koristimo engleski alfabet.}. Onaj ko bi primio poruku, dešifrovao bi poruku tako što bi uradio sličnu zamenu, ali ovog puta zamenjujući svako slovo sa slovom koje se u alfabetu nalazi tri mesta pre. Iako Cezar nije prvi iskoristio ovakvu šifru, danas šifra nosi ime po njemu. Štaviše, pod istim imenom nazivaju se šifre koje "pomeraju" slova za @m{n} mesta, gde @m{n} ne mora biti baš @m{3}.  
+@p Po rimskom istoričaru Svetoniju, Julije Cezar je šifrovao vojne poruke tako što bi slovo @em{A} zamenio slovom @em{D}, slovo @em{B} slovom @em{E}, slovo @em{C} slovom @em{F}, i tako dalje, zamenjujući svako slovo latinskog alfabeta sa slovom koje se nalazi tri mesta nakon tog slova. Na primer, reč @em{CLEOPATRA} bi pri ovom šifrovanju postala @em{FOHRSDYVD}@note{Za ovaj primer smo koristili rimski alfabet koji ne sadrži @em{J}, @em{U} i @em{W}. Nadalje koristimo engleski alfabet.}. Onaj ko bi primio poruku, dešifrovao bi poruku tako što bi uradio sličnu zamenu, ali ovog puta zamenjujući svako slovo sa slovom koje se u alfabetu nalazi tri mesta pre. Iako Cezar nije prvi iskoristio ovakvu šifru, danas šifra nosi ime po njemu. Štaviše, pod istim imenom nazivaju se šifre koje "pomeraju" slova za @m{n} mesta, gde @m{n} ne mora biti baš @m{3}.
 
 @p Za implementaciju Cezarove šifre prvo ćemo konstruisati listu parova odgovarajućih karaktera (svaki par će sadržati slovo i šifrovano slovo). To možemo učiniti sa @code{zip} funkcijom
 
@@ -425,7 +425,7 @@ sifruj niska = map sifrujSlovo niska
 @terminal{
 ghci> sifruj "NAPAD NA GALE VECERAS U OSAM"
 "QDSDG QD JDOH YHFHUDV X RVDP"
-}{Pošto se razmak @code{' '} ne nalazi u listi @code{sifra}, važi @code{sifrujKarakter ' '  = ' '}. Samim tim, prilikom šifrovanja razmaci se čuvaju.}
+}{Pošto se razmak @code{' '} ne nalazi u listi @code{sifra}, važi @code{sifrujKarakter ' ' = ' '}. Samim tim, prilikom šifrovanja razmaci se čuvaju.}
 
 @p Funkcija koja dešifruje poruku je potpuno analogna funkciji koja je šifruje, samo što je uloga koordinata obrnuta. Pretragu vršimo po drugoj koordinati, a vraćmo prvu:
 

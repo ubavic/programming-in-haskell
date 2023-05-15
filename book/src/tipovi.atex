@@ -104,7 +104,7 @@ ghci> mod 7 3
 1
 }
 
-@p Za funkcije @code{div} i @code{rem} i proizvoljne cele brojeve @code{x} i @code{y} različite od nule važi veza @eq{\mathtt{(div\; x\;  y)*y + (mod\; x \; y) = x}.}
+@p Za funkcije @code{div} i @code{rem} i proizvoljne cele brojeve @code{x} i @code{y} različite od nule važi veza @eq{\mathtt{(div\; x\; y)*y + (mod\; x \; y) = x}.}
 
 @subsection{@code{^}}
 

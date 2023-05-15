@@ -8,9 +8,9 @@
 
 @problem{Napisati funkciju @code{zbir :: Int -> Int} koja vraća zbir prvih @code{n} prirodnih brojeva.}
 
-@p Funkciju @code{zbir} je lako implementirati u nekom imperativnom jeziku pomoću jedne petlje. Međutim, u Haskelu  ne postoji pojam petlje, te moramo iskoristiti tehniku rekurzije. To podrazumeva da pri nalaženju rešenja koristimo rešenje istog problema manje složenosti. Konkretno u ovom slučaju prilikom nalaženja zbira brojeva koristimo zbir manje brojeva. Ako napišemo izraz za zbir, rešenje će nam se samo ukazati:
+@p Funkciju @code{zbir} je lako implementirati u nekom imperativnom jeziku pomoću jedne petlje. Međutim, u Haskelu ne postoji pojam petlje, te moramo iskoristiti tehniku rekurzije. To podrazumeva da pri nalaženju rešenja koristimo rešenje istog problema manje složenosti. Konkretno u ovom slučaju prilikom nalaženja zbira brojeva koristimo zbir manje brojeva. Ako napišemo izraz za zbir, rešenje će nam se samo ukazati:
 @eq{\mathtt{zbir \; n = 1 + 2 + \cdots + (n-1) + n}}
-Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir prvih @code{n - 1} brojeva. Stoga  se rešenje u kodu samo nameće:
+Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir prvih @code{n - 1} brojeva. Stoga se rešenje u kodu samo nameće:
 
 @codeBlock{zbir n = zbir (n - 1) + n}
 
@@ -32,7 +32,7 @@ zbir n
 & = (\mathtt{zbir \; 1 + 2) + 3} \\
 & = ((\mathtt{zbir \; (1 - 1) + 1) + 2) + 3} \\
 & = ((\mathtt{zbir \; 0 + 1) + 2) + 3} \\
-& = \mathtt{(((0 + 1) + 2) + 3  = 6}
+& = \mathtt{(((0 + 1) + 2) + 3 = 6}
 \end{aligned}
 }
 
@@ -84,7 +84,7 @@ neparan n = not (paran (n - 2))
 
 @eq{
 \begin{aligned}
-\mathtt{paran} \; 3 &= \, \mathtt{not}  \, (\mathtt{neparan} \; 2)\\
+\mathtt{paran} \; 3 &= \, \mathtt{not} \, (\mathtt{neparan} \; 2)\\
 & = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{paran} \; 1)) \\
 & = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, (\mathtt{neparan} \; 0))) \\
 & = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, \mathtt{False})) = \mathtt{False}

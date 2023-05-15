@@ -73,7 +73,7 @@ sati_u_nedelji :: Int
 sati_u_nedelji = dana_nedelji * sati_u_nedelji
 }{Definicija labele @code{sati_u_nedelji} koristi definicije @code{dana_u_nedelji} i @code{sati_u_danu}. definisana imena uvek predstavljaju vrednosti koje su im dodeljene prilikom definicije, i mogu se koristiti umesto tih konkretnih vrednosti. Opet, poredak definicija nije bitan pa je ime @code{sati_u_nedelji} moglo biti definisano prvo.}
 
-@p Lista definicija  nije sama po sebi mnogo korisna ako ne možemo utvrditi vrednosti izraza. Tako je u prethodnom primeru zgodno saznati koliko to sati ima u nedelji, a da bi smo saznali tu vrednost potrebno je da izvršimo Haskel kôd. Postoje dva načina na koje je moguće izvršiti Haskel kôd:
+@p Lista definicija nije sama po sebi mnogo korisna ako ne možemo utvrditi vrednosti izraza. Tako je u prethodnom primeru zgodno saznati koliko to sati ima u nedelji, a da bi smo saznali tu vrednost potrebno je da izvršimo Haskel kôd. Postoje dva načina na koje je moguće izvršiti Haskel kôd:
 
 @list{
 @li @em{Kompilacijom koda}. Uz pomoć @em{GHC} kompajlera, moguće je kompajlirati kôd u izvršni fajl. U ovom slučaju u kodu mora biti definisano ime @code{main :: IO ()} koja služi kao početna tačka izvršavanja programa.

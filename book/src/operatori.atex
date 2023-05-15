@@ -66,7 +66,7 @@ ghci> (+) 4 3
 @example{
 @p Operator @code{:} koji nadovezuju element na početak liste nije asocijativan. Zaista iz izraza @code{(x:xs):ys} možemo zaključiti da ako je @code{x :: a} tada mora biti @code{xs :: [a]} a samim tim @code{ys :: [[a]]} (jer @code{xs :: [a]} nadovezujemo na početak @code{ys}). Sa druge strane, ako u izrazu @code{x:(xs:ys)} važi @code{x :: a}, tada mora biti @code{(xs:ys) :: [a]}, a samim tim i @code{xs :: a}, @code{ys :: [a]}.
 
-@p Dakle, @code{(x:xs):ys} i  @code{x:(xs:ys)} predstavljaju potpuno različite izraze (štaviše ako je jedan dobro tipiziran, tada onaj drugi nije).
+@p Dakle, @code{(x:xs):ys} i @code{x:(xs:ys)} predstavljaju potpuno različite izraze (štaviše ako je jedan dobro tipiziran, tada onaj drugi nije).
 }
 
 @section{Definisanje operatora}
@@ -75,7 +75,7 @@ ghci> (+) 4 3
 
 @list{
     @li Ime operatora mora da se satoji samo od znakova @pre{!#$%&*+./<=>?@@@\^|-~:}
-    @li Ime operatora ne sme biti: @code{..},  @code{:}, @code{::} @code{=}, @code{\}, @code{|}, @code{<-} @code{->} @code{@@@}, @code{~}, @code{=>}.
+    @li Ime operatora ne sme biti: @code{..}, @code{:}, @code{::} @code{=}, @code{\}, @code{|}, @code{<-} @code{->} @code{@@@}, @code{~}, @code{=>}.
     @li Ime operatora ne sme da počinje sa @code{:}.
 }
 
@@ -188,7 +188,11 @@ ghci> '?' @@@: '!' @@@: "Hello"
 }{Ova greška nam sugriše da je neophodno da postavimo zagrade na odgovarajuće mesto. Primetimo da je u ovom slučaju samo jedan poredak zagrada validan (iz razloga koji su opisani ranije).}
 
 @p Operator poređenja vrednosti @code{==} je primer @code{infix} operatora. Primetimo da izraz@note{Ili bilo koji drugi izraz sačinjen od logičkih vrednosti i operatora @code{==}.} @ccode{True == False == True} izgleda kao validan, ali će zapravo dovesti do greške.
-}   
+}
+
+@problem{
+Definisati operator @code{!+ :: (Float, Float) -> (Float, Float) -> (Float, Float)} koji sabira vektore (odnosno sabira odgovarajuće koordinate uređenog para).
+}
 
 @subsection{Funkcije kao operatori}
 
@@ -206,8 +210,6 @@ False
 
 @p Primetimo da izraz @code{x `elem` xs} podseća na matmatičku notaciju @m{x \in XS}.
 }
-
-
 
 @subsection{Sekcije}
 
@@ -400,9 +402,11 @@ ghci> (*2) <$> [1 .. 10]
 @p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve stane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}. Operator @code{<$>} je desnoasocijativan, pa se poslednja jednakost može zapisati kao @ccode{g <$> f <$> xs = (g . f) <$> xs}.
 }
 
-@section{Zadaci}
+@section{Zaključak}
 
+@p Kreiranje operatora je moćna tehnika koju malo programskih jezika poseduje. Korišćenje operatora kao svih ostalih funkcija, kao i @em{ad hoc} transformisanje operatora u prefiksne funkcije i obrnuto, su tehnike koje još manje jezika poseduje. Nesumnjivo je da navedene osobine dozvoljavaju Haskel programeru veliku ekspresivnost.
 
-@problem{
-Definisati operator @code{!+ :: (Float, Float) -> (Float, Float) -> (Float, Float)} koji sabira vektore (odnosno sabira odgovarajuće koordinate uređenog para).
-}
+@p Ipak, potrebno je biti veoma pažljiv sa kreiranjem operatora. Uvođenjem novih operatora možemo značajno otežati razumevanje koda. Čak i sami semi možemo otežati programiranje kada posle kratke pauze u radu na nekom projektu zaboravimo semantiku operatora koje smo ranije definisali. 
+
+@p Iako nećemo u narednim lekcijama često definisati operatore, upoznaćemo sa mnogim, za nas novim, operatorima već definisanim u Haskel jeziku. Kao što ćemo videti, takvi operatori će biti korisni u rešavanju mnogih problema.
+

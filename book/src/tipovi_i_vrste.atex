@@ -32,7 +32,7 @@ f2 () = False
 }{Kako tip @code{()} sadrži samo jednu vrednost, podudaranje oblika je trivijalno. Zapravo, kako su obe navedene funkcije konstantne, mogli smo da koristimo i džoker @code{_}.}
 }
 
-@p Iako tipovi @code{()} i @code{Void} na prvi pogled deluju beskorisno, ti tipovi imaju i teorijsku i praktičnu važnost. Takođe, ova dva tipa će nam poslužiti kao dodatni primeri pri ilustraciju naprednih koncepata.  
+@p Iako tipovi @code{()} i @code{Void} na prvi pogled deluju beskorisno, ti tipovi imaju i teorijsku i praktičnu važnost. Takođe, ova dva tipa će nam poslužiti kao dodatni primeri pri ilustraciju naprednih koncepata.
 
 @section{Tipski sinonimi}
 
@@ -113,10 +113,10 @@ newtype NoviTip = Konst PostojeciTip
 newtype MyBool = MkMyBool Bool
 }{Često se za ime konstruktora uzima ime tipa ispred kojeg se stavlja @em{Mk} (skraćeno od @em{Make}), jer konstruktor predstavlja jedini način da se "napravi" vrednost tipa @code{MyBool}.}
 
-@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriri da vrednosti tipa  @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
+@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriri da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
 
 @terminal{
-ghic> a =  (MkMyBool True) || (MkMyBool False)
+ghic> a = (MkMyBool True) || (MkMyBool False)
 
 <interactive>:1:6: error:
     • Couldn't match expected type ‘Bool’ with actual type ‘MyBool’
@@ -131,7 +131,7 @@ ghic> a =  (MkMyBool True) || (MkMyBool False)
       In an equation for ‘a’: a = (MkMyBool True) || (MkMyBool False)
 }
 
-@p Prema tome za vrednosti tipa  @code{MyBool} moramo implementirati posebnu funkciju disjunkcije:
+@p Prema tome za vrednosti tipa @code{MyBool} moramo implementirati posebnu funkciju disjunkcije:
 
 @codeBlock{
 ili :: MyBool -> MyBool -> MyBool

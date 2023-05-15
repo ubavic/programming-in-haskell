@@ -92,7 +92,7 @@ pozitivan x
  | x < 0 = "Negativan"
 }
 
-@p Prilikom "poziva"  @code{pozitivan (-4)}, prvo će se proveriti prvi navedeni slučaj, odnosno @code{x >= 0}. Kako se @code{-4 >= 0} beta redukuje u @code{False}, proveriće se naredni slučaj @code{x < 0}. Kako se @code{-4 < 0} redukuje u @code{True}, vrednost @code{pozitivan (-4)} je @code{"Negativan"}.
+@p Prilikom "poziva" @code{pozitivan (-4)}, prvo će se proveriti prvi navedeni slučaj, odnosno @code{x >= 0}. Kako se @code{-4 >= 0} beta redukuje u @code{False}, proveriće se naredni slučaj @code{x < 0}. Kako se @code{-4 < 0} redukuje u @code{True}, vrednost @code{pozitivan (-4)} je @code{"Negativan"}.
 
 @p Dakle, sa @em{guards} sintaksom moguće je proveriti niz uslova. Funkcija će imati vrednost koja odgovara prvom tačnom uslovu. Ako ni jedan od uslova nije tačan, tada će doći do izuzetka.
 
@@ -106,7 +106,7 @@ pozitivan' x
 
 
 @example{
-@p Pogledajmo nešto složeniji primer. Funkcija koja vraća opis jačine zemljotresa na osnovu njegove jačine u Rihterima može biti  definisana sa narednim kodom:
+@p Pogledajmo nešto složeniji primer. Funkcija koja vraća opis jačine zemljotresa na osnovu njegove jačine u Rihterima može biti definisana sa narednim kodom:
 
 @codeBlock{
 opisZemljotresa :: Double -> [Char]
@@ -271,7 +271,7 @@ s _ = 1
 
 @p Kao što vidimo, podudaranjem oblika liste @em{dekonstruisali} smo neke moguće oblike argumenta funkcije. Na primer, u trećoj liniji definisali smo funkciju u slučaju kada je njen argument jednočlana lista @code{[x]}. Imenom @code{x} ovde smo "vezali" član te jednočlane liste. Slično, u narednoj lini koda, dekonstruisali smo dvočlane liste. U ovom slučaju, prvi element je predstavljen imenom @code{x} a drugi element imenom @code{y}.
 
-@p Moguće je takođe koristi činjenicu da se lista poput @code{[x, y, z]} može predstaviti kao @code{x:[y,z]} ili  @code{x:y:[z]} ili @code{x:y:z:[]}. Tako je prethodni primer moguće napisati i kao
+@p Moguće je takođe koristi činjenicu da se lista poput @code{[x, y, z]} može predstaviti kao @code{x:[y,z]} ili @code{x:y:[z]} ili @code{x:y:z:[]}. Tako je prethodni primer moguće napisati i kao
 
 @codeBlock{
 s :: [Int] -> Int

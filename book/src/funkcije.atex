@@ -371,7 +371,8 @@ palindorm = (\s -> (s == reverse s))
 }
 }
 
-@problem{Sa tipom @code{(Double, Double)} moguće je predstaviti vektor dvodimenzionalne ravni. Napisati funkciju @code{zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))} koja sabira vektore.}
+@problem{Sa tipom @code{(Double, Double)} moguće je predstaviti vektor dvodimenzionalne ravni. Napisati funkciju
+@ccode{zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))} koja sabira vektore.}
 {@codeBlock{
 zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))
 zbir = (\u -> (\v -> (fst u + fst v, snd u + snd v)))
