@@ -456,6 +456,8 @@ Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uop�
 
 @p Određeni integral funkcije @m{f\colon \mathbb R \to \mathbb R} na intervalu @m{[a,b]}, označava se sa @eq{\int\limits_a^b f(x)\,\mathrm dx} i može se shvatitii kao površina između grafika funkcije @m{f} i @m{x} ose@note{Pri čemu se ta površina uzima sa negativnim predznakom na oblastima gde je @m{f(x) < 0}.}. Integral, tj. površina, može se aproksimirati @em{Rimanovom sumom}, odnsno sumom površina malih pravuganika koji aproksimiraju površinu ispod grafika.
 
+@figure{4_integral}{Aproksimacija površine ispod grafika funkcije @m{f} nizom pravugaonika. Iako nije neophodno da svi pravugaonici budu iste širine, mi ćemo algoritam implementirati tako da su svi iste širine, baš kao na ovoj ilustraciji.}
+
 @p Rimanova suma se može zapisati kao
 @eq{I = \sum\limits_{i=0}^{n} f\left(x_i\right) \left(x_{i+1} - x_i\right),}
 gde je @eq{a = x_0 < x_1 < \cdots < x_{n} < x_{n+1} = b} niz tačaka koje dele interval @m{[a,b]}. Navedene podeone tačke se mogu uzeti proizvoljno, ali što ih više ima to će kvadratići biti uži, a samim tim će aproksimacija površine biti tačnija.

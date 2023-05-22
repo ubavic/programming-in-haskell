@@ -56,10 +56,13 @@ instance HTMLRenderer Block where
         figure $ do
             pre ! A.class_ "terminal" $ text code
             figcaption $ render desc
-    render (Figure path desc _) =
+    render (Figure path desc ref) =
         figure $ do
-            img ! A.src (textValue path)
-            figcaption $ render desc
+            img ! A.src (textValue $ "img/" <> path <> ".svg")
+            figcaption cap
+            where cap = case desc of
+                    Nothing -> pure ()
+                    Just s -> render s
     render (Problem ps s ref) =
         (if null s
             then p $ anchor >> render ps

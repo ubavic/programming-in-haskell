@@ -1,6 +1,6 @@
 @chapter{Algebarski tipovi podataka}
 
-@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj glavi predstavićemo jedan opštji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicije tipa @code{T} sada će počinjati sa@ccode{data T = ...}, a umesto @code{...} sada ćemo imati više konstruktora.
+@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj glavi predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicije tipa @code{T} sada će počinjati sa@ccode{data T = ...}, a umesto @code{...} sada ćemo imati više konstruktora.
 
 @p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaja @def{algebarski tipovi podataka}.
 
@@ -9,8 +9,10 @@
 @p Proizvod dva tipa @code{A} i @code{B} je tip čije vrednosti odgovaraju kobinacijama vrednosti tipova @code{A} i @code{B}. Proizvod tipova u Haskelu se jednostavno konstruiše na sledeći način:
 
 @codeBlock{
-data Product = MkProduct A B
-}{Ovde, @code{Product} je naziv definisanog proizvoda, @code{MkProduct} je konstuktor.}
+data P = MkP A B
+}{Ovde, @code{P} je naziv definisanog proizvoda, @code{MkP} je konstuktor.}
+
+@p Svaka vrednost gore definisanog tipa @code{P}, je oblika @code{MkP a b} gde su @code{a :: A} i  @code{b :: B} neke vrednosti. Podudaranje oblika dozvoljava da vrednosti tipa @code{P} "dekonstuišemo" na ovaj način.
 
 @example{
 @p Vektor dvodimenzionalne ravni možemo definsati kao proizvod tipova @code{Float} i @code{Float} na sledeći način:
@@ -25,7 +27,7 @@ data Vektor2D = Vektor Float Float deriving (Show)
 ghci> v = Vektor 2 1
 }
 
-@p Osim što se konstruktor može koristiti za konstrukciju vrednosti, može se koristiti i za dekonstrukciju vrednosti pti podudaranju oblika:
+@p Konstruktor se koristi i za dekonstrukciju vrednosti sa tehnikom podudaranja oblika:
 
 @codeBlock{
 duzinaVektora :: Vektor -> Float
@@ -38,19 +40,16 @@ ghci> duzinaVektora v
 }
 }
 
-@p Nije nužno postaviti iste tipove u proizvod, niti ih mora biti samo dva.
-
+@p Nije nužno postaviti iste tipove u proizvod, niti ih mora biti dva.
 
 @example {
 @p Naredni tip prestavlja jednu osobu (njeno ime, godine, i to da li je državljanin Srbije):
 
 @codeBlock{
 data Osoba = Osoba String Int Bool deriving (Show)
-}
+}{Ovde, kao i u nekim prethodnim primerima sa @code{newtype} konstrukcijom, tip i konstruktor imaju isto ime}
 
-@p Ovde primećujemo da je moguće da tip i konstruktor imaju isto ime@note{U Haskel kodovima, tipovi i odgovarajući konstuktori često imaju isto ime. To je moguće i sa tipovima definisanim sa @code{newtype}.}.
-
-@p Pri radu sa tipom @code{Osoba} takođe korsitimo podudaranje oblika. Na primer ako želimo da "izvučemo" ime iz osobe, možemo napisati narednu funkciju:
+@p Pri radu sa tipom @code{Osoba} takođe koristimo podudaranje oblika. Ako želimo da "izvučemo" ime iz osobe, možemo napisati narednu funkciju:
 
 @codeBlock{
 imeOsobe :: Osoba -> String
@@ -63,6 +62,10 @@ imeOsobe (Osoba ime _ _) = ime
 promeniIme :: String -> Osoba -> Osoba
 promeniIme novoIme (Osoba _ godine drzavljanin) = Osoba novoIme godine drzavljanin
 }
+}
+
+@problem{
+Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba}.
 }
 
 @p Proizvod tipova može da sadrži i samo jedan tip. U tom slučaju porozvod je ekvivalentan @code{newtype} konstrukciji koju smo ranije upoznali.
@@ -98,7 +101,7 @@ data T = K
 
 @section{Suma}
 
-@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednosti tipova @code{A} i @code{B}. Suma tipova se vrši navođenjem više konstruktora, koji su razdojeni vertikalnom crtom.
+@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednosti tipova @code{A} i @code{B}. Suma tipova se vrši navođenjem više konstruktora razdvojenih vertikalnom crtom. Svaki od konstruktora predstavlja konstruktor proizvoda, i može imati proizvoljno mnogo argumenata.
 
 @example{
 @p Tip @code{SlovoIliBroj} koji sadrži i slova i brojeve može se konstruisati kao
@@ -107,7 +110,7 @@ data T = K
 data SlovoIliBroj = Slovo Char | Broj Int deriving (Show)
 }
 
-@p Sada postoje dva konstruktra koja konstrišu vrednosti tipa @code{SlovoIliBroj}. 
+@p Sada postoje dva konstruktora koja konstrišu vrednosti tipa @code{SlovoIliBroj}. 
 
 @terminal{
 ghci> a1 = Slovo 'a'
@@ -126,7 +129,6 @@ daLiJeSlovo (Slovo x) = True
 daLiJeSlovo (Broj x) = False
 }
 }
-
 
 @p Moguće je "sabrati" više tipova od jednom, odnosno navesti više od dva konstruktora.
 

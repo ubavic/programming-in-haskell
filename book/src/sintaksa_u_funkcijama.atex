@@ -2,18 +2,19 @@
 
 @section{Brisanje zagrada}
 
-@p Kao što smo videli u prethodnim primerima lambda izrazi mogu da budu veoma nepregledni zbog višestrukih zagrada. Zbog toga su u lambda račun (i Haskel) uvedene neke konvencije koje nam omogućuju da obrišemo zagrade u lambda izrazima. Te konvencije postoje i u Haskelu:
+@p U prethodnim primerima videli smo da lambda izrazi mogu biti veoma nepregledni zbog višestrukih zagrada. Zbog toga su u lambda račun, pa i Haskel, uvedene konvencije koje omogućavaju brisanje suvišnih zagrada u lambda izrazima:
 
 @list{
 @li @em{Zagrade oko lambda izraza ne zapisujemo.} Kada unosimo neki izraz u @em{GHCi}, tada nije neophodno da postavljamo zagradu koja obuhvata celokupan izraz. Isto važi i kada u kodu definišemo neki lambda izraz. Na primer, umesto @code{s = (f 20)} pišemo @code{f = f 20}.
 @li @em{Aplikacija ima veći prioritet u odnosu na apstrakciju.} Praktično to znači da telo lambda funkcije nije neophodno postavljati u posebne zagrade. Na primer umesto @code{\x -> (f x)} pišemo @code{\x -> f x}.
-@li @em{Aplikacija lambda izraza je levo-asocijativna.} To znači da se izraz oblika @code{((M N) P)} može zapisati kao @code{M N P}. Induktivnim argumentom sledi da se i izraz @code{(((M N) P) Q)} može zapisati kao @code{M N P Q}, itd... Na primer, umesto @code{(zbir 22) 33} pišemo samo @code{zbir 22 33}. Sa druge strane, iz izraza @code{f 10 (g 20)} ne možemo obrisati zagrade, jer bismo time dobili izraz koji se interpretira kao @code{((f 10) g) 20}.
-@li @em{Apstrakcija je desno asocijativna.} Npr. umesto @code{\x -> (\y -> x + y)} pišemo @code{\x -> \y -> x + y}.
+@li @em{Aplikacija lambda izraza je levoasocijativna.} To znači da se izraz oblika @code{((M N) P)} može zapisati kao @code{M N P}. Induktivnim argumentom sledi da se i izraz @code{(((M N) P) Q)} može zapisati kao @code{M N P Q}, itd... Na primer, umesto @code{(zbir 22) 33} pišemo samo @code{zbir 22 33}. Sa druge strane, iz izraza @code{f 10 (g 20)} ne možemo obrisati zagrade, jer bismo time dobili izraz koji se interpretira kao @code{((f 10) g) 20}.
+@li @em{Apstrakcija je desnoasocijativna.} Npr. umesto @code{\x -> (\y -> x + y)} pišemo @code{\x -> \y -> x + y}.
 @li @em{Višestruke apstrakcije se mogu svesti pod jednu lambdu.} Na primer umesto @code{\x -> \y -> x + y} pišemo samo @code{\x y -> x + y}. Obratite pažnju da parametri funkcije moraju međusobno biti razdvojeni razmakom.
 }
 
-@problem{Primenom navedenih pravila, pojednostaviti lambda izraz @ccode{(\x -> (\y -> ((f x) (g y))))}}
-{@p Pre svega, zagrade oko celog lambda izraza mogu se obrisati, čime se dobija
+@example{
+@p Pojednostavimo lambda izraz @ccode{(\x -> (\y -> ((f x) (g y))))}.
+@p Pre svega, zagrade oko celog lambda izraza mogu se obrisati, čime se dobija
 @ccode{\x -> (\y -> ((f x) (g y)))}.
 Višestruka apstrakcija može se svesti pod jednu apstrakciju, čime se dobija
 @ccode{\x y -> ((f x) (g y))}.
@@ -23,9 +24,44 @@ Kako je aplikacija levo asocijativna, levi par zagrada se može obrisati
 @ccode{\x y -> f x (g y)}
 }
 
+@p Osim pravila o zagradama u lambda izrazima, koristi se i jedno pravilo koje se odnosi na zagrade u tipovima. Ovo pravilo kaže da je @code{->} desno-asocijativan operator, odnosno da @code{a -> (b -> c)} može pisati kao @code{a -> b -> c}. 
+
+@example{
+@p Pogledajmo tipove @code{Int -> (Char -> Bool)} i @code{(Int -> Char) -> Bool}. Gledano kao na nizove simbola, razlika između ova dva tipa je samo raspored zagrada. Ali tipovi nam govore mnogo o ovim funkcijama!
+
+@p Neka je @code{f :: Int -> (Char -> Bool)}. Tada primenom @code{f} na neku vrednost @code{n :: Int} dobijamo funkciju @code{f n :: Char -> Bool}. Funkciju @code{f n} možemo zatim da primenimo vrednost @code{b :: Bool}, i dobijemo vrednost tipa @code{Char}. Dakle, @code{f} možemo da shvatimo kao binarnu funkciju koja uzima jednu @code{Int} i jednu @code{Char} vrednost. Tip ove funkije, po gorepomenutom pravilu, možemo da napišemo i kao @code{Int -> Char -> Bool}
+
+@p Neka je @code{g :: (Int -> Char) -> Bool}. Funkciju @code{g} možemo da primenimo samo na neku drugu funkciju @code{h :: Int -> Char} i time dobijemo vrednost tipa @code{Char}. Dakle @code{g} je funkcija "jednog argumenta"@note{Svaka funkcija u Haskelu je funkcija jednog argumenta. Ali zbog karijevanja, funkcije čiji tip je oblika @code{a1 -> (a2 -> b)} možemo da nazivamo funkcijama dva argumenta, itd...}.
+}
+
+@example{
+@p U prethodnij lekciji, u zadatku 7 se tražilo da se napiše funkcija @ccode{primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))} koja uzima jednu funkciju @code{f :: Int -> Bool}, jedan uređen par tipa @code{(Int, Int)} i vraća uređen par koji se dobija primenom @code{f} na svaku koordinatu uređenog para. Rešenje do kog smo došli je 
+
+@codeBlock{
+primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))
+primeni = (\f -> (\par -> (f (fst par), f (snd par))))
+}
+
+@p Navedena lambda je oblika @ccode{(\f -> (\par -> ...))}. Pre svega, možemo se osloboditi zagrada oko celog izraza, a zatim svesti dvostruku apstrakciju pod jednu lambdu.
+
+@p Tip funkcije je oblika  @code{a -> (b -> c)}, pa možemo ukloniti jedan par zagrada.
+
+@p Dobijeni kod je nešto čitljiviji:
+
+@codeBlock{
+primeni :: (Int -> Bool) -> (Int, Int) -> (Bool, Bool)
+primeni = \f par -> (f (fst par), f (snd par))
+}{Iz ovog koda ne možemo ukloniti više zagrada}
+}
+@todo{dodati referencu}
+
+@problem{
+Uraditi ponovo zadatke iz prethodne lekcije korsteći što manje zagrada u kodu.
+}
+
 @section{@em{If then else}}
 
-@p Jedna od osnovnih stvari koje svaki imperativni programski jezik mora da poseduje je sposobnost promene toka izvršavanja u zavisnosti od stanja u kom se nalazi. Tako i funkcionalni jezici moraju posedovati način na koji se evaluacija izraza može izmeniti u zavisnosti od neke vrednosti. Ovakve promene toka nazivamo @def{grananje}.
+@p Jedna od osnovnih mogućnosti koju svaki programski jezik mora posedovati je sposobnost promene toka izvršavanja programa u zavisnosti od stanja u kom se nalazi. Ovakvu promenu toka nazivamo @def{grananje}.
 
 @p Izraz @em{if then else} je najjednostavniji primer grananja u Haskelu@note{Izraz u potpunosti odgovara trenarnom operatoru @code{? :} koji je prisutan u mnogim imperativnim jezicima.}. Sintaksa za ovu konstrukciju ima oblik @code{if t then a else b}, gde je @code{t} neki logički izraz kojeg nazivamo @em{uslov}, a @code{a} i @code{b} izrazi istog tipa. Izraz @code{if t then a else b} se evaluira u @code{a} ako se @code{t} evaluira u @code{True}, a u suprotnom u @code{b}. Sledeći primer ilustruje korišćenje @em{if then else} konstrukcije:
 
@@ -53,7 +89,7 @@ ghci> daLiJepozitivan 3
 @li Povratne vrednosti za oba slučaja moraju biti istog tipa (u suprotnom izraz bi imao različit tip u zavisnosti od vrednosti uslova).
 }
 
-@problem{Bez korišćenja ugrađene funkcije @code{max}, implementirati funkciju @code{maks :: Int -> Int -> Int} koja nalazi maksimum dva broja.}
+@problem{Bez korišćenja ugrađene funkcije @code{max}, implementirati funkciju @code{max' :: Int -> Int -> Int} koja nalazi maksimum dva broja.}
 {@codeBlock{
 max' :: Int -> Int -> Int
 max' = \x y -> if x > y then x else y 
@@ -119,9 +155,9 @@ opisZemljotresa r
   | (r >= 7.0) && (r < 8.0) = "Velik"
   | (r >= 8.0) && (r < 10.0) = "Razarajući"
   | r >= 10 = "Epski"
-}{Ako pozovemo @code{opisZemljotresa 5.6}, tada će uslov @code{(r >= 5.0) && (r < 6.0)} biti zadovoljen zbog čega će se @code{opisZemljotresa 5.6} evaluirati @code{"Srednji"}.}
+}{Ako pozovemo @code{opisZemljotresa 5.6}, tada će uslov @code{(r >= 5.0) && (r < 6.0)} biti zadovoljen zbog čega će se @code{opisZemljotresa 5.6} evaluirati @code{"Srednji"}. Ova funkcija nije totalna, jer nijedan slučaj ne odgovara negativnoj vrednosti @code{r}.}
 
-@p U prethodnom primeru možemo primetiti da uslove možemo pojednostaviti. Naime kako su uslovi poređani redom po jačini zemljotresa, možemo se osloboditi dela uslova kojim se proverava da je jačina zemljotresa jača od nekog intenziteta@note{Povratna vrednost funkcija je ona koja odgovara prvom zadovoljenom uslovu.}. Stoga funkciju @code{opisZemljotresa} možemo i ovako definisati
+@p U prethodnom primeru možemo primetiti da uslove možemo pojednostaviti. Naime kako su uslovi poređani redom po jačini zemljotresa, možemo se osloboditi dela uslova kojim se proverava da je jačina zemljotresa jača od nekog intenziteta@note{Jer  je povratna vrednost funkcije definisane sa @em{guards} sintaksom ona koja odgovara prvom zadovoljenom uslovu.}. Stoga funkciju @code{opisZemljotresa} možemo i ovako definisati
 
 @codeBlock{
 opisZemljotresa :: Double -> [Char]
@@ -135,7 +171,7 @@ opisZemljotresa r
   | r < 8.0 = "Velik"
   | r < 10.0 = "Razarajući"
   | r >= 10 = "Epski"
-}{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden.}
+}{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden. Dodaat je i uslov koji u slučaju negativnog argumenta vraća nisku @code{"Greška"}.}
 
 @p Primetimo da je i u ovom (kao i u prethodnom primeru) na poslednjem mestu postavljen slučaj koji je zadovoljen kada svi ostali slučajevi nisu@note{U suprotnom, funkcija ne bi bila totalna, i došlo bi do izuzetka za neke od argumenata}. Zbog toga, za poslednji uslov ne mora se stavljati nikakav izraz, već je dovoljno postaviti konstantu @code{True}, i tada će poslednji uslov "uhvatiti" sve što nije uhvaćeno sa prethodnim uslovima. Uobičajeno je da se na kraju @em{guards}-a postavi konstanta @code{otherwise} koja je ime za vrednost @code{True}@note{Zaista, u @em{GHCi}-u proverite da je @code{otherwise == True}.}:
 
@@ -153,7 +189,18 @@ opisZemljotresa r
 }
 }
 
-@problem{Definisati funkciju @code{max3 :: Int -> Int -> Int -> Int} sa @em{guards} sintaksom.}
+@problem{Definisati funkciju @code{max3 :: Int -> Int -> Int -> Int} sa @em{guards} sintaksom, koja vraća najveću od tri celobrojne vrednosti.}{
+
+@p Jendo od mogućih rešenja bi bilo:
+
+@codeBlock{
+maks3 :: Int -> Int -> Int -> Int
+maks3 x y z
+  | x <= z && y <= z = z
+  | x <= y && z <= y = y
+  | otherwise        = x
+}
+}
 
 @section{Podudaranje oblika}
 
@@ -269,7 +316,7 @@ s [x, y] = x + y
 s _ = 1
 }
 
-@p Kao što vidimo, podudaranjem oblika liste @em{dekonstruisali} smo neke moguće oblike argumenta funkcije. Na primer, u trećoj liniji definisali smo funkciju u slučaju kada je njen argument jednočlana lista @code{[x]}. Imenom @code{x} ovde smo "vezali" član te jednočlane liste. Slično, u narednoj lini koda, dekonstruisali smo dvočlane liste. U ovom slučaju, prvi element je predstavljen imenom @code{x} a drugi element imenom @code{y}.
+@p Kao što vidimo, podudaranjem oblika liste @em{dekonstruisali} smo neke moguće oblike argumenta funkcije. U trećoj liniji definisali smo funkciju u slučaju kada je njen argument jednočlana lista @code{[x]}. Imenom @code{x} ovde smo "vezali" član te jednočlane liste. Slično, u narednoj liniji koda, dekonstruisali smo dvočlane liste. U ovom slučaju, prvi element je predstavljen imenom @code{x} a drugi element imenom @code{y}.
 
 @p Moguće je takođe koristi činjenicu da se lista poput @code{[x, y, z]} može predstaviti kao @code{x:[y,z]} ili @code{x:y:[z]} ili @code{x:y:z:[]}. Tako je prethodni primer moguće napisati i kao
 

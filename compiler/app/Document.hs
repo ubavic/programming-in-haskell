@@ -13,7 +13,7 @@ data Block = Section P Reference
     | Paragraph P 
     | CodeBlock Text (Maybe P)
     | Terminal Text (Maybe P)
-    | Figure Text P Reference
+    | Figure Text (Maybe P) Reference
     | Problem P [Block] Reference
     | List [P]
     | Example [Block] Reference

@@ -297,7 +297,7 @@ class Show a where
 newtype Racionalan = R (Int, Int) deriving (Show)
 }
 
-@p Kod ovakvog automatskog instaciranja, @code{show} funkcija će kreirati nisku koja liči veoma na samo kod sa kojim je konstruisana vrednost.
+@p Kod ovakvog automatskog instaciranja, @code{show} funkcija će kreirati nisku koja liči veoma na sam kod s kojim je konstruisana vrednost.
 
 @terminal{
 ghci> a = R (2, 5)
@@ -322,6 +322,41 @@ ghci> show a
 "2/3"
 ghci> a
 2/3
+}
+}
+
+@p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku, pa je i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definicju klase.
+
+@p Zgodno je ipak znati za funkciju @code{read :: Read a => a -> String} koja se može koristiti sa instancama klase @code{Read}.
+
+@example{
+@p Ugrađeni tipovi poput numeričkih su instance klase @code{Read}. Stoga, sa @code{read} funkcijom možemo pročitati vrednost iz niske.
+
+@terminal{
+ghci> read "233"
+*** Exception: Prelude.read: no parse
+}
+
+@p Razlog zašto smo dobili izuzetak je taj zato što interpreter ne kakva vrednost je zapisana u nici. Tip funkcije @code{read} je @code{Read a => String -> a}. Vidimo da je kodomen parametrizovan, što znači da tip izraza @code{read "233"} @em{a priori} može da bude bilo koji tip klase @code{Read}. Stoga je potrebno deklarisati tip izraza @code{read "233"}:
+
+@terminal{
+ghci> read "233" :: Int
+233
+ghci> read "233" :: Float
+233.0
+ghci> read "-233" :: Double
+-233
+}
+
+@p Mnogi drugi tipovi su takođe instance klase @code{Read}:
+
+@terminal{
+ghci> read "True" :: Bool
+True
+ghci> read "[1,2,3,4]" :: [Int]
+[1,2,3,4]
+ghci> read "(42,'a')" :: (Int, Char)
+(42,'a')
 }
 }
 

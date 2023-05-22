@@ -146,6 +146,11 @@ figcaption {
     color: #333;
 }
 
+figure img {
+    margin: 0 auto;
+    width: 100%;
+}
+
 pre {
     font-size: 1em;
     padding: 0.5em 0.5em;

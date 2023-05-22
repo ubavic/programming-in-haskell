@@ -40,7 +40,7 @@ figure :: Parser Block
 figure = label "figure" $ do
         cmd "figure" <* space
         path <- argument text <* space
-        description <- argument captionText <* space
+        description <- option Nothing (Just <$> argument captionText)<* space
         return $ Figure path description 0
 
 codeBlock :: Parser Block

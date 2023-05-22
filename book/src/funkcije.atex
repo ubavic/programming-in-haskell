@@ -2,20 +2,16 @@
 
 @p Pojam funkcije u Haskel jeziku ima izvesne sličnosti sa pojmom funkcije u imperativnim jezicima poput @em{C}-a ili Jave, ali izvesne razlike. Dok se u navedenim jezicima funkcija shvata kao niz instrukcija koje je potrebno izvršiti, u Haskelu funkcija predstavlja pravilnost po kojoj se od neke vrednost dobija druga vrednost. Drugim rečima u Haskelu funkcije predstavljaju transformacije vrednosti. Ovo shvatanje se podudara sa matematičkom definicijom funkcije.
 
-@p Takođe, dok je u imperativnim jezicima pojam funkcije razdvojen od pojma podatka (te je teško ili nemoguće vršiti sa funkcijama ono što je moguće vršiti sa podacima), u Haskelu je granica između ova dva pojma mnogo tanja. U Haskelu, funkcija je još samo jedna vrednost koja je sadržana u odgovarajućem tipu. I kao što vrednosti tipa @code{Int} mogu transformisati aritmetičkim operacijama, ili vrednosti tipa @code{Bool} logičkim operacijama, tako se i funkcije mogu transformisati odgovarajućim operacijama...
+@p Takođe, dok je u imperativnim jezicima pojam funkcije razdvojen od pojma podatka (te je teško ili nemoguće vršiti sa funkcijama ono što je moguće vršiti sa podacima), u Haskelu je granica između ova dva pojma mnogo tanja. U Haskelu, svaka funkcija je samo jedna vrednost koja je sadržana u odgovarajućem tipu. I kao što vrednosti tipa @code{Int} mogu transformisati sa odgovarajućim funkcijama, ili vrednosti tipa @code{Bool} sa logičkim operacijama i funkcijama, tako se i funkcije mogu transformisati sa odgovarajućim funkcijama...
 
 @section{Pojam funkcije i tip funkcije}
 
-@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @code{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridruži vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
+@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @code{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridružuje vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
 
-@todo{Ubaciti sliku}
-
-@p Za funkciju tipa @m{A \to B} često kažemo da preslikava (slika, transformiše) skup @m{A} u skup @m{B}.
+@p Za funkciju tipa @m{A \to B} često kažemo da @em{preslikava} (@em{slika}, @em{transformiše}) skup @m{A} u skup @m{B}.  Za izraz @m{f(x)} kažemo da predstavlja @em{primenu funkcije} @m{f} @em{na vrednost} @m{x}.
 
 @example{
-@p Funkcija @m{s\colon \mathbb N \to \mathbb N} definisana sa izrazom @m{s(x)=x + 1} svakom prirodnom broju pridružuje naredni prirodni broj tj. važi @m{s(0)=1}, @m{s(1)=2}, @m{s(2)=3} itd...
-
-@p Domen i kodomen ove funkcije je skup prirodnih brojeva @m{\mathbb N}.
+@p Funkcija @m{s\colon \mathbb N \to \mathbb N} definisana sa izrazom @m{s(x)=x + 1} svakom prirodnom broju pridružuje naredni prirodni broj tj. važi @m{s(0)=1}, @m{s(1)=2}, @m{s(2)=3} itd... Domen i kodomen ove funkcije je skup prirodnih brojeva @m{\mathbb N}.
 }
 
 @example{
@@ -26,8 +22,16 @@
 
 @p Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{a -> b} predstavlja kolekciju svih funkcija koje tip @code{a} preslikavaju tip @code{b}. Naravno, činjenicu da funkcija @code{f} poseduje tip @code{a -> b} označavamo sa @code{f :: a -> b}.
 
+
+@figure{3_1}{Na ilustraciji vidimo dva tipa @code{C} i @code{D}, čije vrednosti su predstavljene kao tačkice. Neku funkciju @code{f} tipa @code{C -> D}, možemo zamisliti kao strelice koje vrednosti tipa @code{C} "povezuju" sa vrednostima tipa @code{D}. Na ilustraciji je radi preglednosti prikazana samo jedna takva strelica, ona koja vrednost @code{x} povezuje sa @code{f x}. Naravno, po definiciji pojma funkcije, svaka vrednost iz @code{C} mora biti povezana sa nekom vrednošću iz @code{D}.}
+
+
 @example{
 @p Funkcija @code{not} svakoj logičkoj vrednosti dodeljuje njenu negaciju koja je takođe logička vrednost. Prema tome, funkcija @code{not} ima tip @code{Bool -> Bool}.
+}
+
+@example{
+@p Funkcija @code{even}, predefinisana u @em{GHCi}-ju, svakom celom broju dodeljuje logičku vrednost u zavisnosti da li je taj broj paran. Prema tome, tip funkcije @code{even} je@note{Ovo nije u potpunosti tačno, ali ćemo detalje ostaviti za kasnije.} @code{Int -> Bool}. Isto važi i za funkciju @code{odd} koja proverava da li je broj neparan. 
 }
 
 @p Za razliku od imperativnih jezika, funkcije u Haskelu uvek moraju da poseduju kodomen. Drugim rečima, primena funkcije na vrednost mora i sama da predstavlja vrednost nekog tipa. U imperativnim jezicima neretko koristimo @code{void} funkcije koje nemaju povratnu vrednost. Takve funkcije ne postoje u Haskelu.
@@ -47,7 +51,7 @@ Matematičkom notacijom zapisano, navedeni izraz predstavlja funkciju @m{g(x) = 
 g = (\x -> (2 * x))
 }{Primer validne definicije funkcije u @code{.hs} datoteci.}
 
-@p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima zgodnije je reći @em{primena funkcije na vrednost}.} je na neke vrednosti. Kao što smo rekli, da bi se funkcija primenila na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
+@p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima zgodnije je reći @em{primena funkcije na vrednost}.} je na neke vrednosti. Da bi funkciju primenili na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
 
 @terminal{
 ghci> g 10
@@ -169,7 +173,7 @@ head :: [a] -> a
 }
 
 @example{
-@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu iz @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugo uređenog para. Opšti tip uređenog para je @code{(a, b)} i ovaj tip je domen funkcije @code{fst}. Kako je domen funkcije @code{(a, b)} tada je njen kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Kao što smo rekli, imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}. Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}.
+@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu iz @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugo uređenog para. Opšti tip uređenog para je @code{(a, b)} i ovaj tip je domen funkcije @code{fst}. Kako je domen funkcije @code{(a, b)} tada je njen kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}. Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}.
 }
 
 @problem{Kog tipa je funkcija @code{reverse} koja obrće listu?}

@@ -10,7 +10,11 @@
 
 @section{Tip @code{Bool}}
 
-@p Tip @code{Bool} predstavlja kolekciju koja sadrži dve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}. Nad logičkim vrednostima moguće je vršiti naredne logičke operacije:
+@p Tip @code{Bool} predstavlja kolekciju koja sadrži dve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}.
+
+@figure{2_1}
+
+@p Nad logičkim vrednostima moguće je vršiti naredne logičke operacije:
 
 @list{
 @li @em{Konjunkcija} (@em{i}) @code{p && q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako logičke vrednosti @code{p} i @code{q} imaju vrednost @code{True}.
@@ -63,7 +67,11 @@ True
 
 @section{Tipovi @code{Int} i @code{Integer}}
 
-@p Tip @code{Int} predstavlja kolekciju celobrojnih vrednosti koje se mogu predstaviti u procesorskoj reči, odnosno u 32 ili 64 bita@note{Specifikacija Haskel jezika garantuje da je vrednost tipa @code{Int} predstavljena sa barem 30 bitova}. Nad vrednostima tipa @code{Int} moguće je vršiti naredne operacije i funkcije:
+@p Tip @code{Int} predstavlja kolekciju celobrojnih vrednosti koje se mogu predstaviti u procesorskoj reči, odnosno u 32 ili 64 bita@note{Specifikacija Haskel jezika garantuje da je vrednost tipa @code{Int} predstavljena sa barem 30 bitova}.
+
+@figure{2_2}
+
+@p Nad vrednostima tipa @code{Int} moguće je vršiti naredne operacije i funkcije:
 
 @subsection{@code{+} i @code{*}}
 
@@ -184,6 +192,8 @@ ghci> pi * r**2
 
 @p U kodu, lista se konstruiše tako što se između uglastih zagrada navedu vrednosti međusobno razdvojene zarezima. Na primer, lista od prva četiri prirodna broja može da se definiše kao @code{[0, 1, 2, 3]}. Razmaci oko elemenata i zagrada nisu od bilo kakvog značaja.@note{Prema tome, navedeni primer može da se zapiše i kao @code{[0,1,2&nbsp;&nbsp;,3 ]} itd..} @def{Prazna lista} se zapisuje kao @code{[]}.
 
+@figure{2_3}{Tip @code{[Bool]} sadrži beskonačno mnogo vrednosti, čak i ako tip @code{Bool} sadrži samo dve.}
+
 @p Za označavanje tipa liste koristi se specijalna sintaksa. Ako je data lista elemenata tipa @code{a} tada ta lista ima tip koji se označava sa @code{[a]}@note{Kad god govorimo o nekom opštem tipu, a ne nekom konkretnom tipu, koristićemo ime koje započinje malim a ne velikim slovom.}. Na primer, lista elemenata tipa @code{Int} poseduje tip @code{[Int]}. 
 
 @codeBlock{
@@ -249,7 +259,6 @@ ghci> 1 ++ [2,3,4,5]
     • When checking the inferred type
         it :: forall a. (Num a, Num [a]) => [a]
 }{Česta greška je da se element nadovezuje na početak sa operatorom @code{++} ili da se liste spajaju pomoću operatora @code{:}.}
-@todo{Popraviti ovo!}
 
 @p Liste predstavljaju strukturu podataka koja se najčešće koristi u Haskelu. Zbog toga postoje mnoge funkcije koje uzimaju ili vraćaju liste. Sa mnogim takvim funkcijama upoznaćemo se u glavi @em{Liste}. Za sada navodimo samo naredne funkcije:
 
@@ -373,6 +382,8 @@ ghci> show [1,  2, 3]
 @p Liste sadrže proizvoljan broj elemenata istog tipa. Suprotno tome, uređene @m{n}-torke sadrže fiksiran broj elemenata ne nužnog istog tipa. Uređene @m{n}-torke se konstruišu navođenjem vrednosti odvojenih zarezima između zagrada @code{( )}. Tip uređene @m{n}-torke je uređene @m{n}-torka odgovarajućih tipova.
 
 @p Na primer, @code{("More!", True, 100.0)} je jedna uređena trojka koja sadrži nisku, logičku vrednost i @code{Float}. Ova uređena trojka ima tip @code{([Char], Bool, Float)}.
+
+@figure{2_4}
 
 @p Najznačajnije uređene @m{n}-torke su svakako uređene dvojke koje češće nazivamo @def{uređeni parovi}. Nad svakim uređenim parom možemo pozvati funkciju @code{fst} i @code{snd} koje redom vraćaju prvu i drugu koordinatu uređenog para.
 

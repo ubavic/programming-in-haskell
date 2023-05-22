@@ -49,13 +49,15 @@ ghci> (+) 4 3
 
 @p Šta se dešava kada imamo kombinujemo operatore istog prioriteta? Štaviše, šta se dešava kada koristimo samo jedan operator? Da li možemo iz izraza @m{(2 + 4) + 6} da obrišemo zagrade? Naravno da možemo, jer izrazi @m{(2 + 4) + 6} i @m{2 + (4 + 6)} daju potpuno isti rezultat.
 
-@p Za neki operator @m{\star} kažemo da je @def{asocijativan} ako važi @eq{(a \star b)\star c = a \star (b\star c)} za sve vrednosti @m{a,b,c} na koje operator može da deluje. Kao što smo ustanovili, operator sabiranja @m{+} je asocijativan operator, a takav je i operator množenja @m{\cdot}.
+@p Za neki operator @m{\star} kažemo da je @def{asocijativan} ako važi @eq{(a \star b)\star c = a \star (b\star c)} za sve vrednosti @m{a,b,c} na koje operator može da deluje. 
+
+@example{@p Operator sabiranja @m{+} je asocijativan operator, a takav je i operator množenja @m{\cdot}.}
 
 @example{
-@p Nije svaki operator asocijativan. Operator deljenja @m{/} nije, jer izraz @m{1 / (2 / 3)} ima drugačiju vrednost od izraza @m{(1 / 2) / 3}. Prema tome, izraz @m{1 / 2 / 3} je potrebno pažljivo interpretitirati@note{U matematici, konvencija je da se izračunavanje izraza vrši s leva na desno, ako je izraz sačeinje od operatora istog prioriteta. Prema tome, u matematici izraz @m{1/2/3} označava @m{(1/2)/3}}.
+@p Nije svaki operator asocijativan. Operator deljenja @m{/} nije, jer izraz @m{1 / (2 / 3)} ima drugačiju vrednost od izraza @m{(1 / 2) / 3}. Prema tome, izraz @m{1 / 2 / 3} je potrebno pažljivo interpretitirati@note{U matematici, konvencija je da se izračunavanje izraza vrši s leva na desno, ako je izraz sačeinje od operatora istog prioriteta.  U matematici izraz @m{1/2/3} označava @m{(1/2)/3}}.
 }
 
-@p Korišćenjem osobine asocijativnosti i konvenicje o priroritetu možemo se soloboditi mnogih zagrada u izrazima. Prema tome, jasno je zašto se ova dva pojma odnose i na operatore u Haskelu.
+@p Korišćenjem osobine asocijativnosti i konvenicje o priroritetu možemo se soloboditi mnogih zagrada u izrazima. Jasno je zašto se ova dva pojma odnose i na operatore u Haskelu.
 
 @p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{9}. Prioritet @code{10} je rezervisan za aplikaciju funkcija na vrednost.
 
@@ -337,6 +339,14 @@ ks fs = foldl (.) id fs
 }
 }
 
+@problem{
+Dati primer tipa @m{X} i funkcije @m{f \colon X \to X} takve da važi @eq{f = f \circ f = f \circ f \circ f = \cdots}
+}
+
+@problem{
+Dati primer tipa @m{X} i funkcije @m{f \colon X \to X} takve da važi @eq{f \ne f \circ f, \qquad  f = f \circ f \circ f.}
+}
+
 @problem{Kog je tipa izraz @code{. (.)}?}
 
 @problem{Kog je tipa izraz @code{(.) (.)}?}
@@ -357,7 +367,7 @@ f $ a = f a
 
 @p Naravno, ušteda od jednog karaktera koju smo ostavrili na prethodnom primeru nije vredna uvođenja posebnog operatora. Ali operator @code{$} se može iskoristiti u mnogim drugim situacijama.
 
-@example{@p Ako bismo želeli da niz funkicja @code{f1}, @code{f2}, @code{f3}, @code{f4} primenimo jednu za drugom, prvi pokušaj bi verovatno bio
+@example{@p Ako bismo želeli da niz funkcija @code{f1}, @code{f2}, @code{f3}, @code{f4} primenimo jednu za drugom, prvi pokušaj bi verovatno bio
 @codeBlock{
 f4 (f3 (f2 (f1 x)))
 }{Primetimo da ne možemo izostaviti zagrade iz navedenog izraza, jer je aplikacija levo asocijativna te se izraz @code{f4 f3 f2 f1 x} tumači kao @code{(((f4 f3) f2) f1) x} (što u ovom slučaju nema smisla).}
