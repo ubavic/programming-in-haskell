@@ -36,7 +36,7 @@ zbir n
 \end{aligned}
 }
 
-@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} koja je totalna (definisana je za sve vrednosti domena):
+@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} koja je totalna:
 
 @codeBlock{
 zbir n

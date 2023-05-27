@@ -22,7 +22,7 @@
 @li @em{Disjunkcija} (@em{ili}) @code{p || q} dve logičke vrednosti @code{p} i @code{q} je logička vrednost koja ima vrednost @code{True} ako barem jedna od vrednosti @code{p} i @code{q} ima vrednost @code{True}.
 }
 
-@p Koristeći ove dve operacije i zagrade, možemo kreirati logičke izraze proizvoljne složenosti. 
+@p Koristeći ove dve operatore i zagrade, možemo kreirati logičke izraze proizvoljne složenosti. 
 
 @terminal{
 ghci> True || False
@@ -31,9 +31,9 @@ ghci> ((True && False) || False) && (True || True)
 False
 }{Kao i aritmetičke izraze, @em{GHCi} će i logičke izraze pokušati da @em{svede} na jednu vrednost.}
 
-@p Uz navedene binarne operacije koristimo i unarnu operaciju @code{not} koja negira logičku vrednost. Ova unarna operacija je jedna funkcija@note{Zapravo, i logičke operacije @code{&&} i @code{||} su funkcije zapisane u infiksnom obliku. Više o tome kasnije.}, te je stoga ovde dobro mesto da kažemo par reči o pozivanju funkcija u Haskelu.
+@p Uz navedene binarne operatore koristimo i @em{funkciju} @code{not} koja negira logičku vrednost@note{Zapravo, i operatori (poput @code{&&} i @code{||}) su funkcije zapisane u takozvanom @em{infiksnom zapisu}. Više o tome kasnije.}. Ovde je dobro mesto da kažemo par reči o funkcijama u Haskelu, jer funkcije predstavljaju osnovni koncept ovog jezika.
 
-@p Funkcije su vrednosti kao što su to i brojevi ili logičke vrednosti. Na primer, sa imenom @code{not} je označena funkcija koja negira logičku vrednost koja joj je prosleđena. Da bi smo "pozvali" funkciju @code{not} potrebno je da nakon imena funkcije napišemo logičku vrednost koju želimo da negiramo. Za razliku od drugih jezika, u Haskelu ime funkcije i argument razdvajamo razmakom, a ne zagradom:
+@p Funkcije su vednosti koje "tranformišu" neke druge vrednosti, odnosno od nekih vrednosti prave nove vrednosti. Na primer, sa imenom @code{not} je označena funkcija koja negira logičku vrednost koja joj je prosleđena, tj. @code{True} "pretvara" u @code{False} a @code{False} u @code{True}. Da bi smo "pozvali" funkciju @code{not} potrebno je da nakon imena funkcije napišemo logičku vrednost koju želimo da negiramo. Za razliku od drugih jezika, u Haskelu ime funkcije i argument razdvajamo razmakom, a ne zagradom:
 
 @terminal{
 ghci> not True
@@ -52,7 +52,7 @@ False
 
 @p Zagrade postavljamo oko izraza da bismo uspostavili poredak kojim je potrebno evaluirati izraz. U prethodnom primeru postavili smo zagrade oko logičkog izraza @code{not True}, da bismo bili sigurni da se celokupan izraz neće protumačiti kao @code{not (True || False)}@note{Na prvi pogled izraz @code{not True || False} bi mogao da se shvati i kao @code{(not True) || False} ali i kao @code{not (True || False)}.}. Ali kao što u aritmetici imamo konvenciju o prioritetu računskih operacija, tako i u Haskelu imamo niz pravila koja se tiču prioriteta raznih operatora i poziva funkcija. Za sada je važno znati da primena funkcije na vrednost ima @em{najveći} prioritet. Prema tome, izraz @code{not True || False} se tumači kao @code{(not True) || False}, baš kao što se se aritmetički izraz @m{5\cdot 4 + 7} tumači kao @m{(5\cdot 4) + 7} a ne kao @m{5 \cdot (4 + 7)}.
 
-@p Osim primene logičkih operacija, logičke vrednosti možemo da poredimo sa operatorom @code{==} odnosno @code{/=}, koji utvrđuje da li su vrednosti iste odnosno različite. Rezultati ovih poređenja su takođe logičke vrednosti:
+@p Osim logičkih operatora, logičke vrednosti možemo da poredimo sa operatorima @code{==} i @code{/=}, koji utvrđuju da li su vrednosti iste odnosno različite. Rezultati ovih poređenja su takođe logičke vrednosti:
 
 @terminal{
 ghci> p = True
@@ -130,13 +130,15 @@ ghci> 7^(-2)
 @p Vrednosti tipa @code{Int} takođe možemo porediti sa operatorima @code{==} i @code{/=}. Ali možemo koristiti i operatore @code{<}, @code{<=}, @code{>} i @code{>=} koji upoređuju brojeve po veličini. Rezultat svih navedenih operacija je logička vrednost:
 
 @terminal{
+ghci> 6 == 3 * 2
+True
 ghci> 2 < 3
 True
 ghci> 2 >= 3
 False
 }
 
-@p U Haskelu nije dozvoljeno porediti tipove različitog tipa sa operatorima @code{==} i @code{/=}. U jezicima poput Javaskripta, poređenje poput @code{True == 1} bi bilo validno (i tačno), dok u Haskelu takvo poređenje dovodi do greške:
+@p U Haskelu nije dozvoljeno porediti tipove različitog tipa sa operatorima @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. U jezicima poput Javaskripta, poređenje poput @code{True == 1} bi bilo validno (i tačno), dok u Haskelu takvo poređenje dovodi do greške:
 
 @terminal{
 ghci> True == 1
@@ -190,7 +192,7 @@ ghci> pi * r**2
 
 @p U Haskelu @def{liste} su strukture podataka koje predstavljaju uređenu kolekciju elemenata nekog tipa. U jednoj listi se ne mogu naći dve vrednosti različitog tipa.@note{Zbog toga za liste kažemo da su @em{homogene} strukture podataka.}
 
-@p U kodu, lista se konstruiše tako što se između uglastih zagrada navedu vrednosti međusobno razdvojene zarezima. Na primer, lista od prva četiri prirodna broja može da se definiše kao @code{[0, 1, 2, 3]}. Razmaci oko elemenata i zagrada nisu od bilo kakvog značaja.@note{Prema tome, navedeni primer može da se zapiše i kao @code{[0,1,2&nbsp;&nbsp;,3 ]} itd..} @def{Prazna lista} se zapisuje kao @code{[]}.
+@p U kodu, lista se konstruiše navođenjem vrednosti između uglastih zagrada, međusobno razdvojih zarezima. Na primer, lista od prva četiri prirodna broja može da se definiše kao @code{[0,1,2,3]}. Razmaci oko elemenata i zagrada nisu od bilo kakvog značaja.@note{Prema tome, navedeni primer može da se zapiše i kao @code{[0,   1,2 ,3 ]} itd..} @def{Prazna lista} se zapisuje kao @code{[]}.
 
 @figure{2_3}{Tip @code{[Bool]} sadrži beskonačno mnogo vrednosti, čak i ako tip @code{Bool} sadrži samo dve.}
 
@@ -339,9 +341,9 @@ ghci> 'a' < 'ш'
 True
 }
 
-@p Terminom @def{niske} nazivamo liste karaktera. Niske se mogu koristiti za prezentovanje tekstualnih vrednosti@note{Postoje još neki tipovi koji mogu prezentovati tekstualne vrednosti, ali ih nećemo spominjati ovde.}. Na primer, pozdrav @em{Hello!} se u Haskelu predstavlja kao lista @code{['H', 'e', 'l', 'l', 'o', '!']}.  Srećom, niske se mogu zapisati i prostim navođenjem karaktera između dvostrukih navodnika potpuno isto sintaksi u ostalim programskim jezicima. Tako se pozdrav @em{Hello!} može konstruisati i kao @code{"Hello!"}:
+@p Terminom @def{niske} nazivamo liste karaktera. Niske se mogu koristiti za prezentovanje tekstualnih vrednosti@note{Postoje još neki tipovi koji mogu prezentovati tekstualne vrednosti, ali ih nećemo spominjati ovde.}. Na primer, pozdrav @em{Hello!} se u Haskelu predstavlja kao lista @code{['H', 'e', 'l', 'l', 'o', '!']}.  Srećom, niske se mogu zapisati i prostim navođenjem karaktera između dvostrukih navodnika potpuno isto sintaksi u ostalim programskim jezicima. Tako se niska @em{Hello!} može konstruisati i kao @code{"Hello!"}:
 
-@codeBlock{
+@terminal{
 ghci> "Hello" == ['H', 'e', 'l', 'l', 'o', '!']
 True
 }{Poređenjem uviđamo da dva navedena načina konstrukcije niski daju istu vrednost.}
@@ -423,7 +425,7 @@ ghci> snd (5, 'C')
 
 @example{
 
-@p Kako  @code{Bool}, @code{Int} i @code{Char} pripadaju klasi @code{Show}, sve vrednosti ovih tipova možemo kovertovati u niske koristeći istu funkciju @code{show}:
+@p Kako  @code{Bool}, @code{Int} i @code{Char} pripadaju klasi @code{Show}, sve vrednosti ovih tipova možemo pretvoriti u niske koristeći istu funkciju @code{show}:
 
 @terminal{
 ghci> show True
@@ -437,9 +439,20 @@ ghci> show 'a'
 
 @p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo koristeći operacije @code{+}, @pre{-}, @code{*}. Međutim, od navedenih tipova, samo @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
 
-@p Kao što smo gore istakli ako neki tip @code{a} pripada klasi @code{Eq}, tada i tip @code{[a]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu upoređivati sa @code{==} i @code{/=}, tada se i liste tog tipa mogu upoređivati sa @code{==} i @code{/=}. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{t} pripada nekoj od ovih klasa, tada i @code{[t]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
+@p Kao što smo gore istakli ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
-@p Za uređene @m{n}-torke važi sličan princip. Ako tipovi @code{a}, @code{b}, ... @code{t} pripadaju klasi @code{Eq}, tada i tip @code{(a, b,..., t)} pripada klasi @code{Eq}. Ovo takođe važi i za klase @code{Ord} i @code{Show}.
+@example{
+@p Kako @code{Int} pripada klasi @code{show}, sledi da i tipovi @code{[Int]} i @code{[[Int]]} pripadaju istoj klasi.
+
+@terminal{
+ghci> show [1,2,3]
+"[1,2,3]"
+ghci> show [[1,2],[3,4],[5,6]]
+"[[1,2],[3,4],[5,6]]"
+}
+}
+
+@p Za uređene @m{n}-torke važi sličan princip. Ako tipovi @code{A}, @code{B}, ... @code{T} pripadaju klasi @code{Eq}, tada i tip @code{(A, B,..., T)} pripada klasi @code{Eq}. Ovo takođe važi i za klase @code{Ord} i @code{Show}.
 
 @example{
 @p Već znamo da vrednosti tipa @code{Int} i @code{Char} možemo da poredimo sa @code{==}:

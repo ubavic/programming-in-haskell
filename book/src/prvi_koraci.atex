@@ -16,23 +16,17 @@
 
 @p Uz instaliran @em{GHC} potreban Vam je još samo i editor koda. Naravno, svaki editor koda može se koristiti u svrhu pisanja Haskel koda. Moja preporuka je @url{VS Code}{https://code.visualstudio.com/} sa instaliranim ekstenzijama @url{Haskell}{https://marketplace.visualstudio.com/items?itemName=haskell.haskell} i @url{Haskell Syntax Highlighting}{https://marketplace.visualstudio.com/items?itemName=justusadam.language-haskell}.
 
-@p Ipak, za prve korake u Haskelu nije čak ni potrebno instalirati kompajler lokalno, već je sasvim dovoljno koristiti neko od onlajn razvojnih okruženja, kao što je @url{Replit}{https://replit.com/languages/haskell}@note{Ako koristite @em{Replit} okruženje obratite pažnju na to da automatko čuvanje datoteka ponekad kasni. Stoga je ponekad neophodno uneti ili obrisati nekoliko praznih redova da bi se izmene u datoteci sačuvale.}. Registovani korinici Replita mogu da koriste menadžere paketa @em{Stack} i @em{Cabal}, dok neregistrovani korisnici mogu da koriste samo kompajler @em{GHC} i interpreter @em{GHCi}. Pristup programu @em{GHCi} je sasvim dovoljan za praćenje velikog dela ove knjige, stoga možete bez problema koristiti Replit okruženje kao neregistrovan korisnik. 
+@p Ipak, za prve korake u Haskelu nije čak ni potrebno instalirati kompajler lokalno, već je sasvim dovoljno koristiti neko od onlajn razvojnih okruženja, kao što je @url{Replit}{https://replit.com/languages/haskell}.
 
 @section{Struktura Haskel koda}
 
-@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se imenima (labelama) pridružuju vrednosti nekog izraza:
-
-@codeBlock{
-ime = izraz
-}
-
-@p Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
+@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se imenima (labelama) pridružuju vrednosti nekog izraza. Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
 
 @codeBlock{
 dana_u_nedelji = 7
 
 sati_u_danu = 24
-}
+}{U ovoj datoteci, imenu @code{dana_nedelji} odnosno @code{sati_u_danu} je pridružena vrednost @code{7} odnosno @code{24}.}
 
 @p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova, brojeve kao i karaktere @code{_} i @code{'}.
 

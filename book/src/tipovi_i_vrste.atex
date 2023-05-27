@@ -36,7 +36,7 @@ f2 () = False
 
 @section{Tipski sinonimi}
 
-@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{a1}, @code{a2}, ... @code{an} možemo napraviti odgovarajući tip uređenih ntorki @code{(a1, a2, ... an)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer funkcija koja sabira tri trodimenzionalna vektora ima tip @ccode{(Float, Float, Float) -> (Float, Float, Float) -> (Float, Float, Float)}}.
+@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{a1}, @code{a2}, ... @code{an} možemo napraviti odgovarajući tip uređenih ntorki @code{(a1, a2, ... an)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira tri dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
 
 @p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Sinonim se definiše sa dekleracijom poput naredne:
 
@@ -221,7 +221,7 @@ sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y
 @p Kao što vidimo, svaki numerički tip (@code{Int}, @code{Float}, @code{Double}) zahteva posebnu definiciju odgovarajućeg tipa vektora, što dovodi do toga da imamo mnogo međusobno sličnih definicja.
 }
 
-@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smilsu, apstrkatni tipovi predstavljaju funkciju čiji su argumenti i vrednosti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promeljive@note{Ovaka definicija podesća na podudaranje oblika kod "običnih" funkcija.}.
+@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smilsu, apstraktni tipovi predstavljaju funkciju čiji su argumenti i vrednosti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promeljive@note{Ovaka definicija podesća na podudaranje oblika kod "običnih" funkcija.}.
 
 @example{
 @p Za jednobraznu konstrukciju trodimenzionalnih vektora, možemo koristiti naredni apstraktni tip
@@ -246,13 +246,13 @@ sumVecDouble' (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 }
 }
 
-@p Nije nužno da apstraktan tip zavisi samo od jednog parametra, ili da ne sadrži 'konstante' u sebi. Na primer, sledeći apstraktni tip je u potpunosti validan
+@p Nije nužno da apstraktan tip zavisi samo od jednog parametra, ili da ne sadrži konstantne tipove u sebi. Na primer, sledeći apstraktni tip je u potpunosti validan
 
 @codeBlock{
-data MyType a b c = MkMyType (a, [b], Int -> c)
-}{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{MyType Char Bool Float} predstavlja tip @code{(Char, [Bool], Int -> Float)}.}
+data A a b c = MkA (a, [b], Int -> c)
+}{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{A Char Bool Float} predstavlja tip @code{(Char, [Bool], Int -> Float)}.}
 
-@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipovi. U tom smilsu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{MyType} je konstruktor tipa, a @code{MkMyType} konstruktor vrednosti.
+@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipovi. U tom smilsu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
 
 @section{Vrste}
 
@@ -282,7 +282,7 @@ Tip @code{AbsType} uzima jedan konkretan tip i konstruiše konkretan tip, pa je 
 @p Uzmimo primer apstraktnog tipa iz prošle sekcije
 
 @codeBlock{
-data MyType a b c = MkMyType (a, [b], Int -> c)
+data A a b c = MkA (a, [b], Int -> c)
 }
 
 @p Navedeni apstraktni tip ima vrstu @code{* -> (* -> (* -> *))} koja se naravno jednostavno zapisuje kao @ccode{* -> * -> * -> *}. 
