@@ -46,7 +46,7 @@ True
 @p Funkcija @code{not} vraća novu logičku vrednost, te stoga tu vrednost možemo kombinovati ponovo u složenijim logičkim izrazima:
 
 @terminal{
-ghci>(not True) || False
+ghci> (not True) || False
 False
 }
 

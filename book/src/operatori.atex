@@ -1,6 +1,6 @@
 @chapter{Operatori}
 
-@p Iako možda nismo ni svesni, funkcije koristimo još od najranijih dana matematičkog obrzovanja. Operacije sabiranja, oduzimanja, množenja i deljenja su zapravo funkcije od dve promenljive. Tako na primer, operacija sabiranja koju označavamo simbolom @m{+} je funkcija koja svakom paru brojeva pridružuje njihov zbir. Za razliku od većine ostalih funkcija od dve promenljive, primena funkcije @m{+} na vrednosti @m{x} i @m{y}, ne označava se sa @m{+(x, y)}, već sa @m{x+y}. Glavni razlog je naravno istorijski: simbol @m{+} je ušao u upotrebnu pre nego što se pojam funkcije pojavio. Ali postoji i praktičan razlog: zapis @m{x+y} je jednostavniji (pa samim tim i čitljiviji) od zapisa @m{+(x, y)}. Slično važi i za simbole @m{-}, @m{\times}, @m{\colon} koji takođe predstavljaju funkcije dve promenljive.
+@p Iako možda nismo ni svesni, funkcije koristimo još od najranijih dana matematičkog obrazovanja. Operacije sabiranja, oduzimanja, množenja i deljenja su zapravo funkcije od dve promenljive. Tako na primer, operacija sabiranja koju označavamo simbolom @m{+} je funkcija koja svakom paru brojeva pridružuje njihov zbir. Za razliku od većine ostalih funkcija od dve promenljive, primena funkcije @m{+} na vrednosti @m{x} i @m{y}, ne označava se sa @m{+(x, y)}, već sa @m{x+y}. Glavni razlog je naravno istorijski: simbol @m{+} je ušao u upotrebnu pre nego što se pojam funkcije pojavio. Ali postoji i praktičan razlog: zapis @m{x+y} je jednostavniji (pa samim tim i čitljiviji) od zapisa @m{+(x, y)}. Slično važi i za simbole @m{-}, @m{\times}, @m{\colon} koji takođe predstavljaju funkcije dve promenljive.
 
 @p Notaciju pri kojoj ime funkcije navodimo između argumenata funkicje, nazivamo @em{infiksna notacija}. Za razliku od toga, notaciju u kojoj se ime funkcije navodi pre argumenta, naziva se @em{prefiksna notacija}@note{Postoji takođe i @em{postfiksna notacija} u kojoj se ime funkcije navodi nakon argumenta. Postfiksna notacija se znatno ređe koristi. Notacija za faktorijel @m{n!} je u postfiksnom obliku.}. Do sada, sve funkcije koje smo definisali u Haskelu smo koristili isključivo u prefiksnoj notaciji (npr. @code{f x y}).
 
@@ -41,7 +41,7 @@ ghci> (+) 4 3
 
 @section{Prioritet i asocijativnost}
 
-@p Korišćenjem operatora dobijamo nove vrednosti na koje ponovo možemo delovati s operatorima. Na primer, rezultat zbira @m{1+2} možemo pomnožiti sa @m{5}, a izraz koji odgovara ovom postupku je @m{(1 + 2) \cdot 5}. U datom izrazu, kao i uvek, zagrade označavaju @em{podziraz} koji je potrebno izračunati prvo.
+@p Korišćenjem operatora dobijamo nove vrednosti na koje ponovo možemo delovati s operatorima. Na primer, rezultat zbira @m{1+2} možemo pomnožiti sa @m{5}, a izraz koji odgovara ovom postupku je @m{(1 + 2) \cdot 5}. U datom izrazu, kao i uvek, zagrade označavaju @em{podizraz} koji je potrebno izračunati prvo.
 
 @p Zagrade su neophodne da bi se tačno preneo izraz. Ako bismo iz prethodnog primera obrisali zagrade, dobili bismo izraz @m{1 + 2 \cdot 5}. U zavisnosti od toga kojim redom vršimo računske operacije, od ovog izraza možemo da dobijemo vrednost @m{11} ili @m{15}. Naravno ovde grešku nećemo napraviti jer znamo za konvenciju o prioritetu računskih operacija koja govori da je množenje potrebno izvršiti pre sabiranja kada zagradama drugačije nije naznačeno. Pomenutom konvencijom je ustanovljen @def{prioritet} operatora. Za operator @m{\cdot} kažemo da ima @def{veći} (ili @def{viši}) prioritet od operatora @code{+}.
 
@@ -398,7 +398,8 @@ zipWith ($) [f, g, h] [1, 2, 3]
 
 @p Za funkciju @code{map} se kaže da @em{podiže} funkcije tipa @code{a -> b} do funkcija tipa @code{[a] -> [b]}. Zaista, kada @code{map} apliciramo na @code{f :: a -> b}, dobijamo vrednost tipa @code{[a] -> [b]}. Zbog toga što se @code{map} izuzetno često koristi u kodu, ova funkcija poseduje i operatorski oblik @code{<$>}@note{Zapravo @code{<$>} je funkcija @code{fmap :: (a -> b) -> M a -> M b} koja se može koristiti za podizanje u kontekstu mnogih struktura podataka (a ne samo lista). Funkcija @code{map} je samo specijalan slučaj funkcije @code{fmap}. Više o tome kasnije...}. Sa leve strane operatora se navodi funkcija, a sa desne strane lista. 
 
-@example{@p Ako smo do sada koristili @code{map}, ne bi trebalo da imamo problema sa @code{<$>}.
+@example{
+@p Ako smo do sada koristili @code{map}, ne bi trebalo da imamo problema sa @code{<$>}.
 
 @terminal{
 ghci> (*2) <$> [1 .. 10]

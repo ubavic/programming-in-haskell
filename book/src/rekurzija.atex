@@ -9,16 +9,16 @@
 @problem{Napisati funkciju @code{zbir :: Int -> Int} koja vraća zbir prvih @code{n} prirodnih brojeva.}
 
 @p Funkciju @code{zbir} je lako implementirati u nekom imperativnom jeziku pomoću jedne petlje. Međutim, u Haskelu ne postoji pojam petlje, te moramo iskoristiti tehniku rekurzije. To podrazumeva da pri nalaženju rešenja koristimo rešenje istog problema manje složenosti. Konkretno u ovom slučaju prilikom nalaženja zbira brojeva koristimo zbir manje brojeva. Ako napišemo izraz za zbir, rešenje će nam se samo ukazati:
-@eq{\mathtt{zbir \; n = 1 + 2 + \cdots + (n-1) + n}}
+@ccode{zbir n = 1 + 2 + ... + (n - 1) + n}
 Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir prvih @code{n - 1} brojeva. Stoga se rešenje u kodu samo nameće:
 
-@codeBlock{zbir n = zbir (n - 1) + n}
+@ccode{zbir n = zbir (n - 1) + n}
 
-@p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo prva 4 broja i dodati 5 na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati 4 na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj, slučaj u kom ne koristimo rekurzivnu definiciju, nazivamo @em{bazni slučaj}. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
+@p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo zbir prva 4 prirodna broja i dodati @code{5} na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati @code{4} na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (zbir nula prirodnih brojeva - prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj, slučaj u kom ne koristimo rekurzivnu definiciju, nazivamo @em{bazni slučaj}. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
 
 @codeBlock{
 zbir n
-    | n == 0 = 0
+    | n == 0    = 0
     | otherwise = zbir (n - 1) + n
 }{Ovde možete i koristiti @em{if then else} notaciju da bi ste definisali @code{zbir} u jednoj liniji.}
 
@@ -68,7 +68,7 @@ paran :: Int -> Bool
 paran n = 0 == mod n 2
 }{Izraz @code{0 == mod x 2} ima vrednost @code{True} ako je @code{n} paran broj, prema tome ovde nama potrebe da koristimo @em{if then else}.}
 
-@p Ovaj problem možemo da rešimo i rekurzivno. Za broj @code{0} znamo da je paran, i ta činjenica će nam predstavljati bazu rekurzije. Za svaki drugi prirodan broj @m{n} znamo da je paran ako i samo ako je @code{n-1} neparan. Stoga možemo definisati dve funkcije @code{paran} i @code{neparan} koje će se međusobno pozivati:
+@p Problem možemo rešiti i rekurzivno. Znamo da je broj @code{0} paran, i ta činjenica predstavlja bazu rekurzije. Za svaki drugi prirodan broj @code{n} znamo da je paran ako i samo ako je @code{n - 1} neparan. Stoga možemo definisati dve funkcije @code{paran} i @code{neparan} koje će se međusobno pozivati:
 
 @codeBlock{
 paran :: Int -> Bool

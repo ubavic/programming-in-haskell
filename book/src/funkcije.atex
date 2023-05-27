@@ -85,22 +85,24 @@ ghci> (\x -> (2 * x)) 10
 
 @p Ako je data matematička funkcija @m{f(x)=2*x}, tada se postupak nalaženja vrednosti @m{f(10)} sastoji u tome da se svako pojavljivanje promenljive @m{x} u izrazu @m{2*x} zameni sa argumentom @m{10}. Time se dobija izraz @m{2*10} koji može direktno da se izračuna. Analognim postupkom redeksi se mogu svesti na neku vrednost koja u sebi ne sadrži redeks.
 
-@p Na primer, da bi evaluirao redeks @code{(\x -> (2 * x)) 10}, @em{GHCi} program zamenjuje vrednost @code{10} u telo lambda funkcije čime se dobija @code{2 * 10}. Nakon toga @em{GHCi} će sračunati @code{2 * 10} koristeći postupke koji više ne spadaju u domen lambda računa@note{Iako se aritmetika može implementirati u @m{\lambda} računu, u Haskelu se aritmetika izvršava na nivou hardvera.}. 
-
-@p Opisani postupak nazivamo @def{beta redukcija}. Tačnije beta redukcija je zamena redeksa @code{(\x -> a) b} sa izrazom koji se dobije kada se u @code{a} sva pojavljivanja imena @code{x} zamene sa @code{b}. Primetimo da se postupkom beta redukcije početak lambda izraza, @code{\x ->}, uklanja.
-
 @example{
-@p Demonstrirajmo beta redukciju na još jednom primeru. Neka je dat redeks @eq{\bigg( \backslash \mathtt x \rightarrow \Big(\big((\backslash \mathtt y \rightarrow (\mathtt y + 1)) \, \mathtt x\big) * \mathtt x \Big) \bigg) \, 10} Ovaj redeks je zanimljiv, zato što se u telu lambda funkcije nalazi druga lambda funkcija. Beta redukcijom vrednost @pre{10} zamenjujemo umesto @code{x} u telu "veće" lambda funkcije@note{Bojom smo istakli delove početnoog izraza koji su zamenjeni. Rezultat beta redukcije je smao drugi izraz.}
-@eq{\bigg( \backslash {\color{#BB2222} \mathtt x} \rightarrow \Big(\big((\backslash \mathtt y \rightarrow \mathtt (y + 1)) \, \mathtt {\color{#BB2222} x} \big) * \mathtt {\color{#BB2222} x} \Big) \bigg) \, {\color{#CC2222} 10}} @eq{\big(((\backslash \mathtt y \rightarrow ( \mathtt y + 1)) \, 10 ) * 10 \big)} U rezultatu beta redukcije imamo redeks @pre{(\y -> (y+1)) 10} koji takođe možemo da redukujemo, pri čemu ostatak izraza ostaje nepromenjen: @eq{\big(((\backslash {\color{#BB2222} \mathtt y} \rightarrow ({\color{#BB2222} \mathtt y} + 1)) \, {\color{#CC2222} 10} ) * 10 \big)} @eq{\big((((10 + 1))) * 10 \big)} Višestruke zagrade ne igraju ulogu, te smo došli do izraza @pre{((10 + 1) * 10)} koji se direktno računa do vrednosti @pre{110}.
+@p Da bi evaluirao redeks @code{(\x -> (2 * x)) 10}, @em{GHCi} u telu lambda funkcije zamenjuje @code{x} sa @code{10}, čime se dobija @code{2 * 10}. Izraz @code{2 * 10} se zatim sračunava na nivou hardvera.
 }
 
-@p Postavlja se pitanje, da li je poredak evaluacije redeksa bi važan? Da li bismo isti rezultat dobili i da smo prvo izvršili beta redukciju unutrašnjeg redeksa a zatim i spoljašnjeg? To možemo lako proveriti.
+
+@p Opisani postupak nazivamo @def{beta redukcija}. Tačnije beta redukcija je zamena redeksa @code{(\x -> a) b} sa izrazom koji se dobije kada se izrazu @code{a} sva pojavljivanja imena @code{x} zamene sa izrazom @code{b}. Pritom se početak lambda izraza, @code{\x ->}, uklanja.
 
 @example{
-@p @em{Nastavak prethodnog primera}. Beta redukcija unutrašnjeg redeksa je@note{Beta redukcijom dozvoljeno je i ime jednog parametra zameniti sa imenom drugog parametra.}: @eq{\bigg( \backslash \mathtt x \rightarrow \Big(\big((\backslash {\color{#BB2222} \mathtt y} \rightarrow \mathtt ({\color{#BB2222} \mathtt y} + 1)) \, {\color{#CC2222} \mathtt x}\big) * \mathtt x \Big) \bigg) \, 10} @eq{\big( \backslash \mathtt x \rightarrow ((\mathtt x + 1) * \mathtt x ) \big) \, 10} Vršenjem još jedne beta redukcije dobijamo isti izraz kao malopre @eq{((10 + 1) * 10 )} 
+@p Neka je dat redeks @ccode{(\x -> (((\y -> (y + 1)) x) * x)) 10}. Ovaj redeks je zanimljiv, zato što se u telu lambda funkcije nalazi druga lambda funkcija. Beta redukcijom vrednost @pre{10} zamenjujemo umesto @code{x} u telu "veće" lambda funkcije @ccode{(((\y -> (y + 1)) 10) * 10)} U rezultatu beta redukcije imamo redeks @code{(\y -> (y+1)) 10} koji takođe možemo da redukujemo, pri čemu ostatak izraza ostaje nepromenjen: @ccode{((((10 + 1))) * 10)}. Višestruke zagrade ne igraju ulogu, te smo došli do izraza @pre{((10 + 1) * 10)} koji se direktno računa do vrednosti @pre{110}.
 }
 
-@p Kao što vidimo, poredak vršenja lambda redukcije nije uticao na krajnju vrednost. Ali ovo nije slučaj samo sa ovim primerom, već sa svim lambda izrazima! Ova osobina je poznata kao @def{konfluentnost}.
+@p Postavlja se pitanje, da li je poredak evaluacije redeksa važan? Da li bismo isti rezultat dobili i da smo prvo izvršili beta redukciju unutrašnjeg redeksa a zatim i spoljašnjeg?
+
+@example{
+@p @em{Nastavak prethodnog primera}. Beta redukcijom unutrašnjeg redeksa izraza u  @ccode{(\x -> (((\y -> (y + 1)) x) * x)) 10} dobijamo izraz  @ccode{(\x -> ((x + 1) * x)) 10}. Vršenjem još jedne beta redukcije dobijamo isti izraz kao malopre @ccode{((10 + 1) * 10)}. Kao što vidimo, poredak vršenja lambda redukcije nije uticao na krajnju vrednost!
+}
+
+@p Osobina da poredak vršenja beta redukcije ne utiče na krajnu vrednost je poznata kao @def{konfluentnost}. Iako neće za svaki izraz važiti konfluentnost, često ipak hoće. Više o tome ćemo reći kasnije...
 
 @section{Tip funkcije}
 
@@ -216,7 +218,7 @@ ghci> ljubav ("Marija", "Marijana")
 @p U @em{GHCi} okruženju možemo da se uverimo da funkcija ispravno računa aritmetičku sredinu:
 
 @terminal{
-ghci>(aritm 8) 10
+ghci> (aritm 8) 10
 9
 }
 
@@ -244,11 +246,11 @@ zapremina :: Double -> (Double -> (Double -> Double))
 zapremina = (\a -> (\b -> (\c -> (a * b * c))))
 }}
 
-@section{Karijevanje*}
+@section{Karijevanje}
 
 @p U prethodnoj sekciji prikazana su dva načina (dve tehnike) definisanja funkcija dva argumenta. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(a, b) -> c} dok druga tehnika daje funkciju tipa @code{a -> (b -> c)}. 
 
-@p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkcije tipa @code{(a, b) -> c} u funkcije tipa @code{a -> (b -> c)}! Ovakva transformacija se naziva @def{karijevanje} po američkom logičaru Haskel Kariju. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
+@p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkcije tipa @code{(a, b) -> c} u funkcije tipa @code{a -> (b -> c)}! Ovakva transformacija se naziva @def{karijevanje}@note{Eng. @em{currying}. po Haskel Kariju}. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
 
 @p Kog tipa je funkcija @code{k}? Funkcija @code{k} uzima funkciju tipa @code{(a, b) -> c} i vraća funkciju tipa @code{a -> (b -> c)}. Stoga je tip ove funkcije @code{((a, b) -> c) -> (a -> (b -> c))}. 
 
