@@ -4,12 +4,6 @@ const addNoteEventListeners = () => {
         const id = counter.textContent;
         const note = document.getElementById(`note${id}`);
 
-        note.addEventListener('mouseover', _ => counter.style.color = '#a22');
-        note.addEventListener('mouseleave', _ => counter.style.color = 'initial');
-
-        counter.addEventListener('mouseover', _ => note.childNodes[0].style.color = '#a22');
-        counter.addEventListener('mouseleave', _ => note.childNodes[0].style.color = '');
-
         counter.addEventListener('click', _ => {
             if (window.innerWidth < 750) {
                 note.style.display = 'block';

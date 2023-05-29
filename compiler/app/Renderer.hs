@@ -37,9 +37,8 @@ instance HTMLRenderer P where
 
 
 instance HTMLRenderer Block where
-    render (Section name ref) = h2 ! A.id (stringValue id) $ a ! A.href (stringValue $ '#' : id) $ mark >> render name
+    render (Section name ref) = h2 ! A.id (stringValue id) $ a ! A.href (stringValue $ '#' : id) $ render name
         where id = "S" <> show ref
-              mark = span ! A.class_ "ref" $ string $ "§" ++ show ref ++ " "
     render (Subsection name) = h3 $ render name
     render (Paragraph ps) = 
         p (render ps) >> sequence_ notes
@@ -70,7 +69,7 @@ instance HTMLRenderer Block where
         ) ! A.class_ "problem" ! A.id (stringValue $ "p" <> show ref)
         where anchor = (a ! A.class_ "ref" ! A.href (stringValue $ "#p" <> show ref) $ string $ "Zadatak " <> show ref <> ".") >> " "
     render (Example ps ref) =
-        div ! A.class_ "example" $ anchor >> mapM_ render ps
+        div ! A.class_ "example" ! A.id (stringValue $ "example" <> show ref) $ anchor >> mapM_ render ps
         where anchor = (a ! A.class_ "ref" ! A.href (stringValue $ "#example" <> show ref) $ string $ "Primer " <> show ref <> ".") >> " "
     render (List items) = ol $ mapM_ (li . render) items
     render (Todo _) = pure ()
