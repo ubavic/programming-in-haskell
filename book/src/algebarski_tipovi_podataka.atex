@@ -2,11 +2,11 @@
 
 @p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj glavi predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicije tipa @code{T} sada će počinjati sa@ccode{data T = ...}, a umesto @code{...} sada ćemo imati više konstruktora.
 
-@p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaja @def{algebarski tipovi podataka}.
+@p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaju @def{algebarski tipovi podataka}.
 
 @section{Proizvod}
 
-@p Proizvod dva tipa @code{A} i @code{B} je tip čije vrednosti odgovaraju kobinacijama vrednosti tipova @code{A} i @code{B}. Proizvod tipova u Haskelu se jednostavno konstruiše na sledeći način:
+@p Proizvod dva tipa @code{A} i @code{B} je tip čije vrednosti odgovaraju kombinacijama vrednosti tipova @code{A} i @code{B}. Proizvod tipova u Haskelu se jednostavno konstruiše na sledeći način:
 
 @codeBlock{
 data P = MkP A B
@@ -110,7 +110,7 @@ data T = K
 data SlovoIliBroj = Slovo Char | Broj Int deriving (Show)
 }
 
-@p Sada postoje dva konstruktora koja konstrišu vrednosti tipa @code{SlovoIliBroj}. 
+@p Sada postoje dva konstruktora koja konstrišu vrednosti:
 
 @terminal{
 ghci> a1 = Slovo 'a'
@@ -177,7 +177,14 @@ data MojeBoje = Crna | Bela | Crvena | Plava | Zelena | Zuta
 data MozdaBroj = SamoBroj Float | Nista 
 }
 
-@p Tip @code{MozdaBroj} je koristan kad god hoćemo da radimo u programu sa nekim vrednostima koje možda nisu ni zadate. Na primer, ako očitvamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti realnom vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu tempraturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temerature 0°C od neispravnih.
+@p Tip @code{MozdaBroj} je koristan kad god hoćemo da radimo u programu sa nekim vrednostima koje možda nisu ni zadate.
+
+
+@example{
+@p Ako očitvamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti @code{Float} vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu tempraturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temperature 0°C od neispravnih.
+
+@p Stoga je u ovom slučaju zgodno koristiti @code{MozdaBroj} tip za prezentovnje očitavanja senzora. Vrednost poput @code{SamoBroj 2} označava da je temperatura zaista 2°C, dok vrednost @code{Nista} označava da do očitavanja nije došlo.  
+}
 
 @p Sa @code{MozdaBroj} vrednostima nije lako raditi kao sa @code{Float} vrednostima, ali nije ni preteško napisati funkcije koje su nam potrebne:
 
@@ -190,7 +197,10 @@ apsolutnaRazlika _ _ = Nista
 
 @codeBlock{
 podeli :: MozdaBroj -> MozdaBroj -> MozdaBroj
-podeli (SamoBroj x) (SamoBroj y) = if y == 0 then Nista else SamoBroj $ x / y
+podeli (SamoBroj x) (SamoBroj y) = 
+    if y == 0
+        then Nista
+        else SamoBroj $ x / y
 podeli _ _ = Nista
 }{Neke funkije sy takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethonoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
 
@@ -212,6 +222,8 @@ data Mozda t = Samo t | Nista
 @codeBlock{
 data Maybe t = Just t | Nothing
 }
+
+@todo{Records}
 
 @todo{Algebra tipova}
 

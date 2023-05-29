@@ -62,9 +62,9 @@ obimKruga :: Krug -> Double
 obimKruga (Krug (x, y, r)) = 2 * pi * r 
 }{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
 
-@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli da primenimo jedinstvenu funkciju na svaki tip figure@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na verdnost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
+@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli da primenimo jedinstvenu funkciju @code{obim} na svaki tip figure@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na vrednost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
 
-@p Da bi mogli da korstimo jedinstvenu funkciju @code{povrsina} sa sva tri tipa, definisaćemo klasu @code{Figura}. Ova klasa će obuhvatati tipove @code{Pravuganik}, @code{Trougao} i @code{Krug}. Pošto za sada želimo da nad svakim tipom iz klase @code{Figura} funkciju @code{obim}, ispod dekleracije klase ćemo navesti samo jednu dekleraciju tipa. 
+@p Da bi mogli da korstimo jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Ova klasa će obuhvatati tipove @code{Pravuganik}, @code{Trougao} i @code{Krug}. Pošto za sada želimo da nad svakim tipom iz klase @code{Figura} funkciju @code{obim}, ispod dekleracije klase ćemo navesti samo jednu dekleraciju tipa. 
 
 @codeBlock{
 class Figura a where
@@ -112,7 +112,7 @@ ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definicju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci morama da implementiramo funkciju @code{povrsina}. Površinu pravugaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiot Heronovu formulu. Kompletan kod sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definicju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu pravugaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where
@@ -273,7 +273,7 @@ class (Eq a) => Ord a where
 @p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
 
 @codeBlock{
-class (Eq a) => Ord a where
+instance Ord Racionalan where
   compare (R (a, b)) (R (c, d)) = compare (a * d) (c * b)
 }{U implementaciji smo iskoristili činjenicu da je odnos između brojeva @m{a/b} i @m{c/d} isti kao odnos između brojeva @m{a\cdot d} i @m{c \cdot b}.}
 }

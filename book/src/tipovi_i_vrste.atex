@@ -8,15 +8,15 @@
 
 @p Tip koji sadrži jednu vrednost označavamo sa @code{()} i nazivamo @def{jedinični tip}@note{@em{unit type}}. Jedinu vrednost ovog tipa označavamo takođe sa @code{()}. Dakle @code{() :: ()}.
 
-@p Svaka funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data funkcija @code{f :: () -> a}, za neki tip @code{a}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{a}.
+@p Svaka funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
 
-@p Sa druge strane, ako je data funkcija @code{g :: a -> ()}, tada za svaku vrednost @code{x :: a} mora važiti @code{g x = ()} (jer je @code{()} jedina vrednost kodomena). Za svaki tip @code{a} važi da postoji @em{samo jedna} funkcija tip @code{a -> ()}, i ta funkcija je definisana sa @ccode{\_ -> ()}.
+@p Sa druge strane, ako je data funkcija @code{g :: A -> ()}, tada za svaku vrednost @code{x :: A} mora važiti @code{g x = ()} (jer je @code{()} jedina vrednost kodomena). Stoga, za svaki tip @code{A} važi da postoji @em{samo jedna} funkcija tipa @code{A -> ()}, i ta funkcija je definisana sa @ccode{\_ -> ()}.
 
 @p Tip koji ne sadrži nijednu vrednost označava se sa @code{Void} i nazivamo ga @def{prazan tip}@note{@em{void type}}.
 
-@p Posmatrajmo funkciju @code{s :: T -> Void}, gde je @code{T} neki proizvoljan tip. Za @code{x :: T}, @code{s x} mora biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{T} nije neprazan. Prema tome, jedina funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
+@p Posmatrajmo sada funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} mora biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
 
-@p Sa druge strane, za svaki tip @code{a}, postoji jedinstvena funkcija@note{Takva funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> a}. Ali kako je nemoguće konstuisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
+@p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena funkcija@note{Takva funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstuisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
 
 @p Primetiomo da tip @code{Void} ne odgovara pojmu @pre{void} koji se može naći u drugim programskim jezicima popout C-a, C++-a, Jave. U takvim programskim jezicima, @pre{void} se koristi za funkcije čija povratna vrednost nas ne interesuje. Prema tome, takav pojam odgovara jediničnom tipu u Haskelu@note{Videćemo kasnije da se tip @code{()} u Haskelu koristi kad nas ne interesuje povratna vrednost funkcije. Obično su takve funkcije on koje imaju propratne efekte...}.
 

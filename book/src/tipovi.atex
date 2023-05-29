@@ -8,7 +8,7 @@
 
 @p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove glave ćemo se upoznati sa nekim osnovnim tipovima u Haskelu, kao i operacijama i funkcijama koje se mogu koristiti sa ovim tipovima.
 
-@section{Tip @code{Bool}}
+@section{Tip @em{Bool}}
 
 @p Tip @code{Bool} predstavlja kolekciju koja sadrži dve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}.
 
@@ -65,7 +65,7 @@ ghci> p /= q
 True
 }
 
-@section{Tipovi @code{Int} i @code{Integer}}
+@section{Tipovi @em{Int} i @em{Integer}}
 
 @p Tip @code{Int} predstavlja kolekciju celobrojnih vrednosti koje se mogu predstaviti u procesorskoj reči, odnosno u 32 ili 64 bita@note{Specifikacija Haskel jezika garantuje da je vrednost tipa @code{Int} predstavljena sa barem 30 bitova}.
 
@@ -149,7 +149,7 @@ ghci> True == 1
       In an equation for ‘it’: it = True == 1
 }
 
-@subsection{Tip @code{Integer}}
+@subsection{Tip @em{Integer}}
 
 @p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @pre{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da prezentuje baš proizvoljno veliki broj. Ograničenja ovog tipa su data radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
 
@@ -174,7 +174,7 @@ ghci> b^70
 
 @p Pri radu sa tipom @code{Integer} trebalo bi imati na umu da su aritmetičke operacije nad ovim tipom značajno sporije nego nad @code{Int} tipom. Razlog tome je što se aritmetičke operacije sa @code{Int} odbijaju na nivou hardvera, što nije slučaj i sa tipom @code{Integer}.
 
-@section{Tipovi @code{Float} i @code{Double}}
+@section{Tipovi @em{Float} i @em{Double}}
 
 @p Za reprezentovanje realnih brojeva koriste se tipovi @code{Float} i @code{Double} koji realan broj prezentuju u skladu sa @em{IEEE 754} standardom. Jedina razlika između ova dva tipa je u tome što @code{Float} koristi jednostruku tačnost (32 bita) a @code{Double} dvostruku tačnost (64 bita). Kako moderne arhitekture računara podjednako dobro podržavaju računske operacije u jednostrukoj i dvostrukoj tačnosti, preporučeno je da se uvek koristi @code{Double}.
 
@@ -313,7 +313,7 @@ ghci> [1,2,3] == [2,3,1]
 False
 }
 
-@section{Tipovi @code{Char} i @code{[Char]}}
+@section{Karakteri i niske}
 
 @p Vrednosti tipa @code{Char} su karakteri kodirani @em{Unicode} standardom. U samom kodu, karakteri se navode između jednostrukih navodnika:
 
