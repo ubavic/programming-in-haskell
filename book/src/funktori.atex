@@ -8,9 +8,9 @@
 
 @subsection{Motivacija}
 
-@p U jednoj od prethodnih lekcija, obradili smo @code{Maybe :: * -> *} apstraktni tip. Kao što smo videli, @code{Maybe a} je tip koji osim vrednosti tipa @code{a} sadrži i vrednost @code{Nothing} koja predstavlja odsustvo vrednosti. 
+@p U jednoj od prethodnih lekcija, obradili smo @code{Maybe :: * -> *} apstraktni tip. Kao što smo videli, @code{Maybe A} je tip koji osim vrednosti tipa @code{A} sadrži i vrednost @code{Nothing} koja predstavlja odsustvo vrednosti. 
 
-@p Zamislimo da od neke funkcije dobijamo vrednost tipa @code{Maybe Float}@note{Naveli smo ranije takav primer sa temperaturnim senzorom. Međutim primer može biti bilo koji podatak koji se dobija iz spoljnog sveta: očitavanje sa senzora, korisnički unos, selekcija iz baze, @em{http} zahtev ka serveru, itd... Svaka od ovih aktivnosti nam može vratiti neku konkretnu vrednost ili @code{Nothing} koja označava da je došlo do greške. I zaista, mnoge funkcije u Haskel bibliotekama vraćaju @em{možda-vrednosti}.}. Ako želimo dalje da obrađujemo ovu vrednost, deluje da se moramo osloboditi @code{Maybe} "omotača". Ako želimo da vrednost unutar @code{Just} konstruktora pomnožimo sa dva, možemo napisati ovakvu funkciju:
+@p Zamislimo da od neke funkcije dobijamo vrednost tipa @code{Maybe Float}@note{Naveli smo ranije takav primer sa temperaturnim senzorom. Međutim primer može biti bilo koji podatak koji se dobija iz spoljnog sveta: očitavanje sa senzora, korisnički unos, selekcija iz baze, @em{http} zahtev ka serveru, itd... Svaka od ovih aktivnosti nam može vratiti neku konkretnu vrednost ili vrednost @code{Nothing} koja označava da je došlo do greške. I zaista, mnoge funkcije u Haskel bibliotekama vraćaju @em{možda-vrednosti}.}. Ako želimo dalje da obrađujemo vrednost, moramo se osloboditi @code{Maybe} "omotača":
 
 @codeBlock{
 dupliraj :: Maybe Float -> Float
@@ -33,9 +33,9 @@ dupliraj' (Just a) = 2 * a
 dupliraj' Nothing = Nothing
 }{Funkcija @code{dupliraj'} je totalna i ispravno obrađuje vrednost @code{Nothing} (bolje reći, prosleđuje je). }
 
-@p Primetimo da je kodomen funkcije @code{dupliraj'} ponovo možda-tip. Dakle, ako smo mislili da vrednost dobijenu primenom funkcije @code{dupliraj} prosledimo nekoj narednoj funkciji@note{Ovde kodomen @code{A} predstavlja neki tip koji nam nije važan.} @code{f :: Float -> A}, tada moramo na sličan način definisati i funkciju @code{f' :: Maybe Float -> Maybe A}. Zaista, već smo ustanovili da verovatno ne želimo funkciju tipa @code{Maybe Float -> A} jer se takvom funkcijom gubimo informaciju koju možda-tip pruža. Stoga je potrebno svaku funkciju definisati u "možda-obliku", baš kao @code{dupliraj} i @code{dupliraj'}.
+@p Primetimo da je kodomen funkcije @code{dupliraj'} ponovo možda-tip. Dakle, ako smo mislili da vrednost dobijenu primenom funkcije @code{dupliraj} prosledimo nekoj narednoj funkciji @code{f :: Float -> A}, tada moramo na sličan način definisati i funkciju @code{f' :: Maybe Float -> Maybe A}. Zaista, već smo ustanovili da verovatno ne želimo funkciju tipa @code{Maybe Float -> A} jer se takvom funkcijom gubimo informaciju koju možda-tip pruža. Stoga je potrebno svaku funkciju definisati u "možda-obliku", baš kao @code{dupliraj} i @code{dupliraj'}.
 
-@p Na prvi pogled sve je u redu, jer je takve funkcije neznatno teže definisatis. Ali kako budemo razvijali sve veći program, primetićemo da pišemo mnogo koda na potpuno isti način. Od funkcija tipa @code{A -> B} kreiraćemo funkcije tipa @code{Maybe A -> Maybe B}, kodom poput sledećeg:
+@p Na prvi pogled sve je u redu, jer je takve funkcije neznatno teže definisati. Ali kako budemo razvijali sve veći program, primetićemo da pišemo mnogo koda na potpuno isti način. Od funkcija tipa @code{A -> B} kreiraćemo funkcije tipa @code{Maybe A -> Maybe B}, kodom poput sledećeg:
 
 @codeBlock{
 g' :: Maybe A -> Maybe B
@@ -43,7 +43,7 @@ g' (Just a) =  Just (g a)
 g' Nothing = Nothing
 }{Ovde je @code{g:: A -> B} neka proizvoljna (i totalna) funkcija}
 
-@p Navedeni postupak je jednostavan, ali neprijatan za ponavljanje. Ponavljanje koda je loše iz mnogih objektivnih razloga. Zbog toga želimo da konstruišemo jednu funkciju višeg reda koja će nas osloboditi zamornog kopiranja koda. Ta funkcija će kao parametar imati funkciju @code{f :: a -> b} a vratiće funkciju tipa @code{Maybe a -> Maybe b}. Na osnovu opisa nije teško napisati definiciju:
+@p Navedeni postupak je jednostavan, ali neprijatan za ponavljanje. Zbog toga želimo da konstruišemo jednu funkciju višeg reda koja će nas osloboditi zamornog kopiranja koda. Ta funkcija će kao parametar imati funkciju @code{f :: a -> b} a vratiće funkciju tipa @code{Maybe a -> Maybe b}. Na osnovu opisa nije teško napisati definiciju:
 
 @codeBlock{
 maybeMap :: (a -> b) -> Maybe a -> Maybe b 
@@ -62,11 +62,11 @@ dupliraj'' = maybeMap (2*)
 
 @p Kada radimo sa više funkcija, tada @code{maybeMap} možemo da iskoristimo sa operatorm kompozicije. Umesto da posebno od @code{f :: A -> B} i @code{g :: B -> C} definišemo odgovarajuće funkcije @code{f' :: Maybe A -> Maybe B} i @code{g' :: Maybe B -> Maybe C}, možemo jednostavno da @code{maybeMap} primenimo na @code{g . f}: @ccode{maybeMap (g . f) :: Maybe A -> Maybe C}. Ova kompozicija se mogla zapisati i kao @ccode{maybeMap g . maybeMap f}. Zaista @code{maybeMap (g . f)} primenjena na vrednost @code{Just x} je po definiciji @code{Just (g (f x))}, a @code{maybeMap g . maybeMap f} primenjena na vrednost @code{Just x} je @ccode{maybeMap g (maybeMap f (Just x))} odnosno @code{maybeMap g (Just (f x))}, odnosno @code{Just (g (f x))}. I analogno se dokazuje jednakost i za @code{Nothing} vrednost@note{Dokažite!}.
 
-@p Funkcija @code{maybeMap} ima još jednu zanmljivu osobinu: naime, važi jednakost @ccode{(maybeMap id) v = v} za svaku vrednost @code{v}@note{Zaista @code{(maybeMap id) (Just x)} je po definiciji @code{(Just (id x))}, odnosno @code{Just x}. Sa druge strane, @code{(maybeMap id) Nothing} je @code{Nothing}.}. Odavde sledi da je @code{maybeMap id} upravo funkcija @code{id}@note{Naravno, ako se @code{id} instancira u funkciju tipa @code{A -> A}, tada @code{maybeMap id} ima tip @code{Maybe A -> Maybe A}.}!
+@p Funkcija @code{maybeMap} ima još jednu zanmljivu osobinu: naime, važi jednakost @ccode{(maybeMap id) v = v} za svaku vrednost @code{v :: Maybe A}@note{Zaista @code{(maybeMap id) (Just x)} je po definiciji @code{(Just (id x))}, odnosno @code{Just x}. Sa druge strane, @code{(maybeMap id) Nothing} je @code{Nothing}.}. Odavde sledi da je @code{maybeMap id} upravo identička funkcija na @code{Maybe A}!
 
 @p Opisane osobine funkcije @code{maybeMap} već smo videli ranije u drugom kontekstu: funkcija @ccode{map :: (a -> b) -> [a] -> [b]} primenjuje datu funkciju na svaki element date liste i vraća dobijeno listu. Ali @code{map} možemo takođe da shvatimo kao @em{podizanje} funkcije tipa @code{a -> b} u funkciju tipa @code{[a] -> [b]}. Takođe, za funkciju @code{map} važe iste osobine: kompozicija @code{map g . map f} je ista kao kompozicija @code{map (g . f)}@note{Ovo je obrađeno u jednom od zadataka u sekciji o @code{map} funkciji.}, i @code{map id} je identička funkcija.
 
-@p Vidimo da je funkcija @code{map} potpuno analogna funkciji @code{maybeMap}, s tim što se @code{maybeMap} odnosi na apstraktni tip @code{Maybe :: * -> *} dok se @code{map} odnosi na apstraktni tip @code{[] :: * -> *}. Oba navedena tipska konstruktora možemo da shvatimo kao funkcije koje od nekog tipа @code{A} prave tip strukturea koje sadrže vrednosti (ili vrednost) tipa @code{A}. Zaista vrednost tipa @code{Maybe A} se može shvatiti kao struktura koja sadrži jednu ili nijednu vrednost tipa @code{A}, a vrednost tipa @code{[A]} se može shvatiti kao struktura koja sadrži proizvoljno mnogo vrednosti tipa @code{A}.
+@p Vidimo da je funkcija @code{map} analogna funkciji @code{maybeMap}, s tim što se @code{maybeMap} odnosi na apstraktni tip @code{Maybe :: * -> *} dok se @code{map} odnosi na apstraktni tip @code{[] :: * -> *}. Oba navedena tipska konstruktora možemo da shvatimo kao funkcije koje od nekog tipа @code{A} prave tip strukture koje sadrže vrednosti (ili vrednost) tipa @code{A}@note{Vrednost tipa @code{Maybe A} se može shvatiti kao struktura koja sadrži jednu ili nijednu vrednost tipa @code{A}, a vrednost tipa @code{[A]} se može shvatiti kao struktura koja sadrži proizvoljno mnogo vrednosti tipa @code{A}.}. Ogovarajće funkcije @code{map} i @code{maybeMap} omogućuju primenu neke funkcije na vrednosti koje su "upakovane" u ovim strukturama.
 
 @p Kad god imamo kolekciju tipova i odgovarajućih funkcija koji imaju isto osobine, zgodno je da te tipove skupimo u jedinstvenu klasu, a odgovarajuće funkcije predstavimo zajedničkim imenom. Upravo zato uvodimo @code{Functor} klasu.
 
@@ -133,7 +133,7 @@ Nothing
 }
 
 @example{
-@p Apstraktni tip @code{(,) :: * -> * -> *} ne može biti funktor, jer ne poseduje odgovarajuću vrstu. Ali prcijalnom aplikacijom na neki tip @code{T} dobijamo apstrakti tip @code{(,) T :: * -> *} koji može biti funktor. Upravo je u modulu @pre{base} na taj način definisana instanca @code{Functor ((,) a)} za svaki tip @code{a}:
+@p Apstraktni tip @code{(,) :: * -> * -> *} ne može biti funktor, jer ne poseduje odgovarajuću vrstu. Ali parcijalnom aplikacijom na neki tip @code{T} dobijamo apstrakti tip @code{(,) T :: * -> *} koji može biti funktor. Upravo je na taj način definisana instanca @code{Functor ((,) a)} za svaki tip @code{a}:
 
 @codeBlock{
 instance Functor ((,) a) where
@@ -243,7 +243,6 @@ Nothing
 
 @codeBlock{
 class Functor f => Applicative f where
-    @@{ -# MINIMAL pure, ((<*>) | liftA2) #- @@}
     pure :: a -> f a
 
     (<*>) :: f (a -> b) -> f a -> f b
@@ -257,6 +256,8 @@ class Functor f => Applicative f where
 
     (<*) :: f a -> f b -> f a
     (<*) = liftA2 const
+
+    @@{ -# MINIMAL pure, ((<*>) | liftA2) #-@@}
 }
 
 
