@@ -6,21 +6,29 @@
 
 @section{Pojam funkcije i tip funkcije}
 
-@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @code{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridružuje vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
+@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @m{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridružuje vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
 
 @p Za funkciju tipa @m{A \to B} često kažemo da @em{preslikava} (@em{slika}, @em{transformiše}) skup @m{A} u skup @m{B}.  Za izraz @m{f(x)} kažemo da predstavlja @em{primenu funkcije} @m{f} @em{na vrednost} @m{x}.
 
+@p Dve funkcije @m{f_1} i @m{f_2} smatramo za jednake ako imaju isti domen, isti kodomen, i ako je @m{f_1(x) = f_2(x)} za svako @m{x} iz domena funkcije.
+
 @example{
-@p Funkcija @m{s\colon \mathbb N \to \mathbb N} definisana sa izrazom @m{s(x)=x + 1} svakom prirodnom broju pridružuje naredni prirodni broj tj. važi @m{s(0)=1}, @m{s(1)=2}, @m{s(2)=3} itd... Domen i kodomen ove funkcije je skup prirodnih brojeva @m{\mathbb N}.
+@p Neka je @m{\mathbb N = \{0, 1, 2, \dots\}} skup prirodnih brojeva. Funkcija @m{s\colon \mathbb N \to \mathbb N} definisana sa izrazom @m{s(x)=x + 1} svakom prirodnom broju pridružuje naredni prirodni broj tj. važi @m{s(0)=1}, @m{s(1)=2}, @m{s(2)=3} itd... Domen i kodomen ove funkcije je skup prirodnih brojeva @m{\mathbb N}.
+}
+
+@example{
+@p Funkcija @m{c \colon \mathbb N \to \mathbb N} definisana sa @m{c(x) = 1} svakom prirodnom broju pridružuje isti broj - broj @m{1}. Za funkciju @m{c} kažemo da je @def{konstantna funkcija} jer je njena vrednost konstantne bez obrzira na vrednost @m{x}.
 }
 
 @example{
 @p Neka je @m{P} skup svih tačaka jedne ravni, a @m{T} skup svih duži te ravni. Definišmo funkciju @m{s} koja svakoj duži iz @m{T} pridružuje središte te duži. Domen funkcije @m{s} je @m{T}, kodomen je @m{P}, a tip je @m{T \to P}.
 }
 
-@p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja pridružuje vrednostima tipa @code{a} vrednosti tipa @code{b} označava se sa @code{a -> b}.
+@example{
+@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @code{i} preslikava svaku vrednost u samu sebe. Funkciju @code{i} nazivamo @def{identička funkcija} na skupu @m{X}.
+}
 
-@p Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{a -> b} predstavlja kolekciju svih funkcija koje tip @code{a} preslikavaju tip @code{b}. Naravno, činjenicu da funkcija @code{f} poseduje tip @code{a -> b} označavamo sa @code{f :: a -> b}.
+@p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja pridružuje vrednostima tipa @code{A} vrednosti tipa @code{B} označava se sa @code{A -> B}. Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{A -> B} predstavlja kolekciju svih funkcija koje tip @code{A} preslikavaju tip @code{B}.
 
 
 @figure{3_1}{Na ilustraciji vidimo dva tipa @code{C} i @code{D}, čije vrednosti su predstavljene kao tačkice. Neku funkciju @code{f} tipa @code{C -> D}, možemo zamisliti kao strelice koje vrednosti tipa @code{C} "povezuju" sa vrednostima tipa @code{D}. Na ilustraciji je radi preglednosti prikazana samo jedna takva strelica, ona koja vrednost @code{x} povezuje sa @code{f x}. Naravno, po definiciji pojma funkcije, svaka vrednost iz @code{C} mora biti povezana sa nekom vrednošću iz @code{D}.}
@@ -35,6 +43,14 @@
 }
 
 @p Za razliku od imperativnih jezika, funkcije u Haskelu uvek moraju da poseduju kodomen. Drugim rečima, primena funkcije na vrednost mora i sama da predstavlja vrednost nekog tipa. U imperativnim jezicima neretko koristimo @code{void} funkcije koje nemaju povratnu vrednost. Takve funkcije ne postoje u Haskelu.
+
+@problem{
+Neka je @m{B} skup koji sadrži dve vrednosti. Koliko postoji funkcija tipa @m{B \to B}? Koje su to funkcije?
+}
+
+@problem{
+Neka je @m{U} skup koji sadrži jednu vrednost. Koliko postoji funkcija tipa @m{\mathbb N \to U}?  Koliko postoji funkcija tipa @m{U \to \mathbb N}?
+}
 
 @section{Lambda izrazi}
 
@@ -79,7 +95,9 @@ ghci> (\x -> (2 * x)) 10
 20
 }{Primena funkcije na vrednost bez prethodnog imenovanja te funkcije. Ovo ilustruje zašto se lambda funkcije nazivaju i @em{anonimne funkcije}}
 
-@p Izraz oblika @code{(\x -> a) b} naziva se @def{redeks}. Primer redeksa je upravo @code{(\x -> (2 * x)) 10} ali i @code{g 10} jer je @code{g} po definiciji @code{(\x -> (2 * x))}. Za razliku od prethodnog primera @code{'a' 'b'}, redeks predstavlja smislenu aplikaciju funkcije na vrednost.
+@p Izraz oblika @code{(\x -> a) b}, gde su @code{a} i @code{b} proizvoljni lambda izrazi, naziva se @def{redeks}.
+
+@p Primer redeksa je upravo @code{(\x -> (2 * x)) 10} ali i @code{g 10} jer je @code{g} po definiciji @code{(\x -> (2 * x))}. Za razliku od izraza @code{'a' 'b'}, svaki redeks predstavlja smislenu aplikaciju funkcije na vrednost.
 
 @section{Beta redukcija}
 
@@ -93,7 +111,7 @@ ghci> (\x -> (2 * x)) 10
 @p Opisani postupak nazivamo @def{beta redukcija}. Tačnije beta redukcija je zamena redeksa @code{(\x -> a) b} sa izrazom koji se dobije kada se izrazu @code{a} sva pojavljivanja imena @code{x} zamene sa izrazom @code{b}. Pritom se početak lambda izraza, @code{\x ->}, uklanja.
 
 @example{
-@p Neka je dat redeks @ccode{(\x -> (((\y -> (y + 1)) x) * x)) 10}. Ovaj redeks je zanimljiv, zato što se u telu lambda funkcije nalazi druga lambda funkcija. Beta redukcijom vrednost @pre{10} zamenjujemo umesto @code{x} u telu "veće" lambda funkcije @ccode{(((\y -> (y + 1)) 10) * 10)} U rezultatu beta redukcije imamo redeks @code{(\y -> (y+1)) 10} koji takođe možemo da redukujemo, pri čemu ostatak izraza ostaje nepromenjen: @ccode{((((10 + 1))) * 10)}. Višestruke zagrade ne igraju ulogu, te smo došli do izraza @pre{((10 + 1) * 10)} koji se direktno računa do vrednosti @pre{110}.
+@p Neka je dat redeks @ccode{(\x -> (((\y -> (y + 1)) x) * x)) 10}. Ovaj redeks je zanimljiv, zato što se u telu lambda funkcije nalazi druga lambda funkcija. Beta redukcijom vrednost @pre{10} zamenjujemo umesto @code{x} u telu "veće" lambda funkcije @ccode{(((\y -> (y + 1)) 10) * 10)} U rezultatu beta redukcije imamo redeks @code{(\y -> (y+1)) 10} koji takođe možemo da redukujemo, pri čemu ostatak izraza ostaje nepromenjen: @ccode{((((10 + 1))) * 10)}. Višestruke zagrade ne igraju ulogu, te smo došli do izraza @code{((10 + 1) * 10)} koji se direktno računa do vrednosti @code{110}.
 }
 
 @p Postavlja se pitanje, da li je poredak evaluacije redeksa važan? Da li bismo isti rezultat dobili i da smo prvo izvršili beta redukciju unutrašnjeg redeksa a zatim i spoljašnjeg?
@@ -125,7 +143,7 @@ h :: [Int] -> Int
 h = (\x -> (head x + 1))
 }{Aplikacija ima najveći prioritet te se izraz @code{head x + 1} tumači kao @code{(head x) + 1}.}
 
-@p Možemo se uveriti u tip funkcije @code{h} koristeći @pre{:type} naredbu u @em{GHCi} okruženju:
+@p U @em{GHCi} okruženju sa @pre{:type} naredbom možemo proveravati i tipove funkcija: 
 
 @terminal{
 ghci> :type h
@@ -133,7 +151,10 @@ h :: [Int] -> Int
 }
 }
 
-@p Zanimljivo je primetiti šta se dešava sa tipom funkcije kada se funkcija primeni na vrednost. Pre svega, Haskel će proveriti da li se tip te vrednosti i domen funkcije podudaraju. Ako to nije slučaj, tada će doći do @def{tipske greške}. Na primer, ako primenimo funkciju @code{h} na jedan broj, dobićemo grešku:
+@p Zanimljivo je primetiti šta se dešava sa tipom funkcije kada se funkcija primeni na vrednost. Pre svega, Haskel će proveriti da li se tip te vrednosti i domen funkcije podudaraju. Ako to nije slučaj, tada će doći do @def{tipske greške}.
+
+@example{
+@p Ako primenimo funkciju @code{h :: [Int] -> Int} na broj, dobićemo grešku:
 
 @terminal{
 ghci> h 2
@@ -142,9 +163,12 @@ ghci> h 2
     • In the first argument of ‘h’, namely ‘2’
       In the expression: h 2
       In an equation for ‘it’: it = h 2
-}{Naravno, razlog ove greške je taj što se funkcija @code{h} "očekuje" vrednost tipa @code{[Int]} a ne @code{Int}.}
+}
 
-@p Ako nije došlo do tipske greške, tada primena funkcija na neku vrednost predstavlja dobro formiran izraz. Pritom ako je funkcija @code{f} tipa @code{a -> b}, a vrednost @code{v} tipa @code{a}, tada je @code{f v} predstavlja vrednost tipa @code{b}. Beta redukcijom moguće je odrediti tačnu vrednost izraza @code{f v}, ali i bez redukcije znamo da ta vrednost poseduje tip @code{b}.
+@p Naravno, razlog ove greške je taj što se funkcija @code{h} "očekuje" vrednost tipa @code{[Int]} a ne @code{Int}. Domen funkcije @code{h} je @code{[Int]}, i stoga se ona može primenjivati samo na vrednosti koje poseduju ovaj tip.
+}
+
+@p Ako nije došlo do tipske greške, tada primena funkcija na neku vrednost predstavlja @def{dobro tipiziran izraz}. Pritom ako je funkcija @code{f} tipa @code{a -> b}, a vrednost @code{v} tipa @code{a}, tada je @code{f v} predstavlja vrednost tipa @code{b}. Beta redukcijom moguće je odrediti tačnu vrednost izraza @code{f v}, ali i bez redukcije znamo da ta vrednost poseduje tip @code{b}.
 
 @example{
 @p Funkcija @code{h} iz prethodnog primera poseduje tip @code{[Int] -> Int}. Aplikacija @code{h [1,2,3]} poseduje tip @code{Int}:
@@ -168,7 +192,7 @@ ghci> :type head
 head :: [a] -> a
 }
 
-@p Iz navedenog vidimo da je domen funkcije @code{head} listu bilo kog tipa, što se označava sa @code{[a]}. Ovde, @code{a} predstavlja @def{tipsku promenljivu}@note{Umesto slova @code{a} moglo je biti iskorišćeno i bilo koje drugo slovo, ali pritom se to slovo mora pojaviti i u domenu i u kodomenu.}, odnosno proizvoljan tip. Kako funkcija @code{head} vraća prvi član liste tipa @code{[a]} tako njena povratna vrednost mora biti @code{a}.
+@p Vidimo da je domen funkcije @code{head} tip lista bilo kog tipa, što se označava sa @code{[a]}. Ovde, @code{a} predstavlja @def{tipsku promenljivu}@note{Umesto slova @code{a} moglo je biti iskorišćeno i bilo koje drugo slovo, ali pritom se to slovo mora pojaviti i u domenu i u kodomenu. Primetimo da tipske promenljive, za razliku od konkretnih tipova, počinju malim slovima.}, odnosno proizvoljan tip. Kako funkcija @code{head} vraća prvi član liste tipa @code{[a]} tako njena povratna vrednost mora biti @code{a}.
 
 @example{
 @p Ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}@note{Proverite!}.
@@ -209,7 +233,7 @@ ghci> ljubav ("Marija", "Marijana")
 
 @p Pozivanje ovako definisane funkcije podseća na pozivanje funkcija u imperativnim jezicima, ali primećujemo da smo mi u prethodnoj glavi funkcije poput @code{mod} pozivali sa @code{mod 7 3} a ne sa @code{mod (7, 3)}. Takođe možemo da primetimo da iako funkciji prosleđujemo dva podatka, funkcija @code{ljubav} suštinski uzima samo jednu vrednost tipa @code{(String, String)}.
 
-@p Lambda račun, koji je osmišljen pola veka pre Haskela, je zamišljen kao minimalan formalni sistem i kao takav takav ne poseduje pojam uređene @code{n}-torke. Umesto toga, funkcije sa više parame1tra u lambda računu se realizuju uz pomoć 'trika'. Naime: da bi dobili funkciju @code{f} od više parametra, kreiraćemo funkciju @code{f} od jednog parametra čija povratna vrednost je druga funkcija. Na taj način, rezultat @code{(f x)} možemo da primenimo na neku vrednost. Ako je rezultat i ove primene funkcija, tada taj rezultat možemo da primenimo na sledeću vrednost i tako dalje.
+@p Lambda račun, koji je osmišljen pola veka pre Haskela, je zamišljen kao minimalan formalni sistem i kao takav takav ne poseduje pojam uređene @code{n}-torke. Umesto toga, funkcije sa više parametara u lambda računu se realizuju uz pomoć 'trika'. Naime: da bi dobili funkciju @code{f} od više parametra, kreiraćemo funkciju @code{f} od jednog parametra čija povratna vrednost je druga funkcija. Na taj način, izraz @code{(f x)} predstavlja novu funkciju koju možemo da primenimo na neku vrednost. Ako je rezultat i ove primene funkcija, tada taj rezultat možemo da primenimo na sledeću vrednost i tako dalje.
 
 
 @example{
@@ -236,9 +260,9 @@ ghci> aritm 20 100
 
 @p Kog tipa je funkcija @code{aritm}? Za trenutak pretpostavimo da su parametri @code{x} i @code{y} tipa @code{Double}@note{Zapravo, za ovako napisano definiciju kompajler će zaključiti da su @code{x} i @code{y} tipa @code{Frac a => a}, ali to nas ne brine trenutno.}. Funkcija @code{aritm} uzima vrednost tipa @code{Double} i vraća neku funkciju, nazovimo je @code{g}. Funkcija @code{g} uzima i vraća vrednost tipa @code{Double} te je njen tip @code{Double -> Double}. Sada možemo da zaključimo da funkcija @code{aritm} poseduje tip @code{Double -> (Double -> Double)} jer uzima vrednost tipa @code{Double} i vraća vrednost tipa @code{Double -> Double}.
 
-@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo sa funkcijama koje uzimaju jedan argument, kao što smo i napomenuli ranije. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @pre{a1 -> (a2 -> ( ... -> (aN -> b))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametra funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @pre{a1 -> (a2 -> ( ... -> (aN -> b))} na vrednost tipa @code{a1} dobija se funkcija tipa @pre{a2 -> (a3 -> ... -> (aN -> b))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @pre{a3 -> ... -> (aN -> b)}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
+@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametra funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} na vrednost tipa @code{a1} dobija se funkcija tipa @ccode{a2 -> (a3 -> (... -> (aN -> b)))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @ccode{a3 -> (... -> (aN -> b))}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
 
-@p Funkcija koja "uzima" ili "vraća" neku drugu funkciju naziva se @def{funkcija višeg reda}. Mnogi programski jezici nemaju podršku za funkcije višeg reda, ali kao što ćemo uvideti kroz mnogobrojne primer u Haskelu ovaj pojam je sasvim prirodan.
+@p Funkcija koja "uzima" ili "vraća" neku drugu funkciju naziva se @def{funkcija višeg reda}. Mnogi programski jezici nemaju podršku za funkcije višeg reda, ali kao što vidimo, u Haskelu je ovaj pojam je sasvim prirodan.
 
 @problem{Napisati funkciju @code{zapremina :: Double -> (Double -> (Double -> Double))} koja na osnovu tri argumenta računa zapreminu kvadra čije su dužine stranica zadate tim argumentima.}
 {@codeBlock{

@@ -117,6 +117,71 @@ fib n
 }{Aplikacija argumenta ima veći prioritet od aritmetičkih operacija, te se @code{fib (n - 1) + fib (n - 2)} interpretira kao @code{(fib (n - 1)) + (fib (n - 2))}. Iz istog razloga ne možemo pisati samo @code{fib n - 1 + fib n - 2}, jer se to interpretira kao @code{(fib n) - 1 + (fib n) - 2}
 }
 
+@section{Euklidov algoritam}
+
+@p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka. Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
+
+@p Kao što samo ime kaže, @em{najveći zajednički delilac} (@em{NZD}) prirodnih brojeva @m{a} i @m{b} je prirodni broj @m{d} takav da deli @m{a} i @m{b}, i pritom je @m{d} najveći broj sa takvom osobinom. 
+
+@example{
+@p Najveći zajednički delilac brojeva @m{15} i @m{9} je @m{3}. Najveći zajednički delilac brojeva @m{8} i @m{32} je @m{8}.
+}
+
+@p Euklidov algoritam se zasniva na veoma jednostavnoj činjenici: Ako je @m{d} NZD brojeva @m{a} i @m{b}, pri čemu je @m{a \gt b}, tada je @m{d} NZD brojeva @m{b} i @m{a - b}. Zaista, @m{d} deli razliku @m{a - b} jer deli i umanjenik i umanjilac, pa @m{d} jeste zajednički delilac brojeva @m{b} i @m{a - b}. Broj @m{d} je najveći broj koji deli i @m{b} i @m{a - b}, jer ako bi postojao još veći broj @m{d'} koji deli i @m{b} i @m{a - b} tada bi @m{d'} delio i brojeve @m{b} i @m{a = (a -b) + b}, a već znamo da je @m{d} najveći takav broj.
+
+@p Dakle, ako je @m{a > b} tada je dovoljno naći @em{NZD} od @m{b} i @m{a - b}. Ako je @m{a < b} tada je po istom argumentu dovoljno naći @em{NZD} od @m{a} i @m{b - a}. A ako je @m{a = b} tada je @em{NZD} od @m{a} i @m{b} jednak baš broju @m{a}, jer je svaki broj deljiv samim sobom i ni jedan veći broj ga ne deli. Rekurzivna implementacija je sada u potpunosti jasna:
+
+@codeBlock{
+nzd :: Int -> Int -> Int
+nzd a b
+    | a == b  = a
+    | a >  b  = nzd (a - b) b
+    | a <  b  = nzd a (b - a)
+}
+
+@example{
+@p Nađimo @em{NZD} brojeva @m{15} i @m{9}. Izraz @code{nzd 15 9} se svodi
+@ccode{nzd (15 - 9) 9 = nzd 6 9} koji se dalje svodi na
+@ccode{nzd 6 (9 - 6) = nzd 3 3 = 3}
+}
+
+@example{
+@p Nađimo @em{NZD} brojeva @m{8} i @m{32}. Izraz @code{nzd 8 32} se svodi
+@ccode{nzd 8 (32 - 8) = nzd 8 24} koji se svodi na
+@ccode{nzd 8 (24 - 8) = nzd 8 16} koji se svodi na
+@ccode{nzd 8 (16 - 8) = nzd 8 8 = 8}.
+Primetimo da smo više puta za redom oduzimali isti broj (@m{8}) od @m{32}.
+}
+
+@p Navedeni primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo nefeikasno rekurzivno pozivali funkciju, možemo da podelimo argumene po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
+
+@p Neka je @m{r} ostatak deljenja @m{a} sa @m{b}. Ako je @m{r} nula, to znači da je @m{a} deljivo sa @m{b}, pa  sledi da je @em{NZD} ova dva broja bаš @m{b}. U suprotnom, dovoljno je potražiti @em{NZD} brojeva @m{b} i @m{r}. Ovo nas dovodi do narednog koda:
+
+@codeBlock{
+nzd' :: Int -> Int -> Int
+nzd' a b = if r == 0 then b else nzd' b r
+    where r = mod a b
+}
+
+@example{
+@p Nađimo još jednom @em{NZD} brojeva @m{8} i @m{32}. Kako je @code{mod 8 32 = 8}, izraz @code{nzd' 8 32} se svodi na izraz @ccode{nzd' 8 8} koji se direktno svodi na vrednost @code{8}.
+}
+
+@problem{Skakavac @em{A} se nalazi u koordinatnom početku brojevne prave, a skakavac @em{B} se nalazi u tački @m{p}, gde je @m{p} prirodan broj. Kretanje oba skakavca je ograničeno samo brojevnu pravu, i pritom @em{A} uvek skače @m{m} jedinica (levo ili desno), a @em{B} uvek skače @m{n} jedinica (takođe, levo ili desno). Brojevi @m{m} i @m{n} su takođe prirodni. Napisati funkciju @ccode{susret :: Int -> Int -> Int -> Bool} koja na osnovu tri prirodna broja @m{p}, @m{m} i @m{n} određuje da li je moguće da se skakavci ikad susretnu u jednoj tački.}{
+@p Oba skakavca se mogu nalaziti samo u celobrojnim tačkama. Pretpostavimo da su se nakon @m{\mu} skokova skakavaca @em{A} i @m{\nu} skokova skakavaca @em{B}, dva skakavca susrela u celom broju @m{z}. Tada važi @m{z = \mu m = p + \nu n,} odnosno @eq{p = \mu m - \nu n.} Neka je @m{d} @em{NZD} brojeva @m{m} i @m{n}. Ako važi navednena jednakost, tada @m{d} mora deliti broj @m{p}. Obratno, ako @m{d} deli @m{p} tada Bezuovom stavu garantuje gornju jednakost za neke @m{\mu} i @m{\nu}. Dakle, skakavci se mogu susresti, ako i samo ako @m{d} deli @m{p}.
+
+@p Neophodno je razmotriti još specijalne slučajeve. Ako su i @m{m} i @m{n} jednaki nuli, tada se skakavci mogu susresti samo ako su već u istoj tački. Ako je samo @m{m} jednak nuli, tada se skakavci mogu susresti samo ako @m{n} deli početnu razdaljinu @m{p}. I slično važi ako je samo @m{n} jednak nuli.
+
+@codeBlock{
+susret :: Int -> Int -> Int -> Bool
+susret p 0 0 = p == 0
+susret p m 0 = mod p m == 0
+susret p 0 n = mod p n == 0
+susret p m n = mod p (gcd n m) == 0
+}
+}
+
+
 @todo{Napisati o šetnji po mreži i hanojskom kulama}
 
 @section{Zadaci}

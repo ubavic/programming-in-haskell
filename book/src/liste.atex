@@ -79,20 +79,21 @@ ghci> ['a', 'c' .. 'w']
 
 @p Da bi neki tip mogao da se koristi sa opsezima, mora da pripda tipskoj klasi @code{Enum}. Ova klasa sadrži sve tipove čije vrednosti se mogu enumersati. Svaki tip @code{a} iz @code{Enum} klase mora da implementira funkcije @code{fromEnum :: a -> Int} i @code{toEnum :: Int -> a} koje redom kodiraju i dekodiraju vrednosti tog tipa kroz cele brojeve. Vrednosti dobijene ovim kodiranjem korsite se za konstrukciju opsega.
 
-@p Tip @code{Char} pripada klasi @code{Enum}. Funkcija @code{fromEnum} primenjena na karakter vraća poziciju tog karaktera u @em{Unicode} tabeli. Stoga kada napišemo raspon @code{['a', 'c' .. 'g']}, taj raspon se "protumači" kao raspon @code{[fromEnum 'a', fromEnum 'c' ..  fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
+@example{
+@p Tip @code{Char} pripada klasi @code{Enum}. Funkcija @code{fromEnum} primenjena na karakter vraća poziciju tog karaktera u @em{Unicode} tabeli.
 
-@eq{
-\begin{CD}
-\texttt{['a','c'..'g']} @>>> \texttt{[97,99..103]}\\
-@VVV @VVV\\
-\texttt{"aceg"} @<<< \texttt{[97,99,101,103]}
-\end{CD}
+@terminal{
+ghci> fromEnum 'a'
+97
+ghci> toEnum 100 :: Char
+'d'
+}{Kako je @code{toEnum} tipa @code{Int -> a} kompahler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklaristai tip izraza. Više o ovome kasnije...}
 }
 
-@p U nekoj od narednih glava, biće više rečeno o klasi @code{Enum}.
+@p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @code{[fromEnum 'a', fromEnum 'c' ..  fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
 
 
-@problem{Napisati funkciju @code{velikoSlovo :: Char -> Bool} koja proverava da li je uneto latinično veliko.}
+@problem{Napisati funkciju @code{velikoSlovo :: Char -> Bool} koja proverava da li je uneto slovo veliko latinično.}
 {@p Možemo iskoristi funkciju @code{elem} koja proverava da li element pripada listi.
 @codeBlock{
 velikoSlovo :: Char -> Bool

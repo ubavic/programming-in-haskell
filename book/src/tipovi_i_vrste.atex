@@ -235,14 +235,21 @@ newtype Vec a = MkVec (a, a, a)
 @p Tipovi iz prethodnog primera nam nisu više neophodni, i sada možemo da koristimo @code{Vec Int}, @code{Vec Float} i @code{Vec Double}:
 
 @codeBlock{
-sumVecInt' :: Vec Int -> Vec Int -> Vec Int
-sumVecInt' (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecInt :: Vec Int -> Vec Int -> Vec Int
+sumVecInt (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 
-sumVecFloat' :: Vec Float -> Vec Float -> Vec Float
-sumVecFlaot' (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecFloat :: Vec Float -> Vec Float -> Vec Float
+sumVecFlaot (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 
-sumVecDouble' :: Vec Double -> Vec Double -> Vec Double
-sumVecDouble' (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecDouble :: Vec Double -> Vec Double -> Vec Double
+sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+}
+
+@p I dalje se nismo umanjili broj definicija funkcija, ali možemo primetiti da je karakteristično za tipove @code{Int}, @code{Float} i @code{Double} to što se vrednosti ovih tipova mogu sabirati. Sva tri navedena tipa pripadaju @code{Num} klasi, pa možemo tri definicije zameniti sa jednom:
+
+@codeBlock{
+sumVec :: Num a -> Vec a -> Vec a -> Vec a
+sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 }
 }
 
