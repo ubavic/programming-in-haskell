@@ -381,11 +381,13 @@ ghci> show [1,  2, 3]
 
 @section{Uređene @m{n}-torke}
 
-@p Liste sadrže proizvoljan broj elemenata istog tipa. Suprotno tome, uređene @m{n}-torke sadrže fiksiran broj elemenata ne nužnog istog tipa. Uređene @m{n}-torke se konstruišu navođenjem vrednosti odvojenih zarezima između zagrada @code{( )}. Tip uređene @m{n}-torke je uređene @m{n}-torka odgovarajućih tipova.
+@p Liste sadrže proizvoljan broj elemenata istog tipa. Suprotno tome, uređene @m{n}-torke sadrže fiksiran broj elemenata ne nužnog istog tipa. Uređene @m{n}-torke se konstruišu navođenjem vrednosti odvojenih zarezima između zagrada @code{( )}. Tip uređene @m{n}-torke je uređena @m{n}-torka odgovarajućih tipova.
 
-@p Na primer, @code{("More!", True, 100.0)} je jedna uređena trojka koja sadrži nisku, logičku vrednost i @code{Float}. Ova uređena trojka ima tip @code{([Char], Bool, Float)}.
+@example{
+@p Vrednost @code{("Pozdrav!", True, 100.0)} je jedna uređena trojka koja sadrži nisku, logičku vrednost i @code{Float}. Ova uređena trojka ima tip @code{([Char], Bool, Float)}.
+}
 
-@figure{2_4}
+@figure{2_4}{Vrednosti tipa @code{(A, B)} možemo elegantno predstaviti u pravugaonom rasporedu u kom vrste odgovaraju tipu @code{A} a kolone tipu @code{B}. U ovom slučaju broj kolona (a i vrsta) je izuzetno veliki, pa ne možemo predstaviti sve vrednosti na ilustraciji.}
 
 @p Najznačajnije uređene @m{n}-torke su svakako uređene dvojke koje češće nazivamo @def{uređeni parovi}. Nad svakim uređenim parom možemo pozvati funkciju @code{fst} i @code{snd} koje redom vraćaju prvu i drugu koordinatu uređenog para.
 
@@ -396,12 +398,16 @@ ghci> snd (5, 'C')
 'C'
 }{Funkcije @code{fst} i @code{snd} se mogu koristiti za "izvlačenje" prve i druge koordinate uređenog para.}
 
-@p Uređene trojke, četvorke, itd. se ređe koriste, te za njih ne postoje funkcije poput @code{fst} i @code{snd}. U narednim sekcijama ćemo videti kako možemo konstruisati odgovarajuće funkcije. 
+@p Uređene trojke, četvorke, itd. se ređe koriste, te za njih ne postoje funkcije poput @code{fst} i @code{snd}. U narednim sekcijama ćemo videti kako možemo sami konstruisati odgovarajuće funkcije.
 
 @p Poredak tipova u tipu uređene @m{n}-torke je važan: tip @code{(Int, Char)} nije isti kao tip @code{(Char, Int)}. Takođe broj pojavljivanja nekog tipa uređenoj @m{n}-torci je bitan: tip  @code{(Int, Int, Char)} nije isti kao tip @code{(Int, Char)}.
 
 @problem{Koliko vrednosti sadrži tip @code{(Bool, Bool)}?}
-{@p Navedeni tip sadrži četiri vrednosti: @code{(True, True)}, @code{(True, False)}, @code{(False, True)} i @code{(False, False)}.}
+{
+@p Navedeni tip sadrži četiri vrednosti: @code{(True, True)}, @code{(True, False)}, @code{(False, True)} i @code{(False, False)}.
+}
+
+@problem{Ako tipovi @code{A1}, @code{A2}, @code{A3}... sadrže redom @m{n_1}, @m{n_2}, @m{n_3}... vrednosti, koliko vrednosti sadrži tip @code{(A1, A2, ...., An)}?}
 
 @section{Tipske klase}
 

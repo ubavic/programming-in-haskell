@@ -65,7 +65,7 @@ ghci> [0.1, 0.3 .. 1]
 
 @p Opsezi dozvoljavaju samo definisanje aritmetičkih progresija. Za definisanje geometrisjke (ili neke druge progresije), korisnik će morati sam da implementira odgovarajuće funkcije.
 
-@p Međutim, opsezi mogu da se koriste i sa tipovima koji nisu numerički. Na primer, opsezi karaktera su često korisni
+@p Međutim, rasponi mogu da se koriste i sa tipovima koji nisu numerički. Na primer, rasponi karaktera su često korisni
 
 @terminal{
 ghci> ['A' .. 'W']
@@ -77,7 +77,7 @@ ghci> ['a', 'c' .. 'w']
 }{Lista karaktera je naravno niska te se @code{['a', 'b', 'c', 'd']} prikazuje kao @code{"abcd"} u terminalu.}
 
 
-@p Da bi neki tip mogao da se koristi sa opsezima, mora da pripda tipskoj klasi @code{Enum}. Ova klasa sadrži sve tipove čije vrednosti se mogu enumersati. Svaki tip @code{a} iz @code{Enum} klase mora da implementira funkcije @code{fromEnum :: a -> Int} i @code{toEnum :: Int -> a} koje redom kodiraju i dekodiraju vrednosti tog tipa kroz cele brojeve. Vrednosti dobijene ovim kodiranjem korsite se za konstrukciju opsega.
+@p Da bi neki tip mogao da se koristi sa rasponima, mora pripadati tipskoj klasi @code{Enum}. Ova klasa sadrži sve tipove čije vrednosti se mogu enumersati. Svaki tip @code{a} iz @code{Enum} klase mora da implementira funkcije @code{fromEnum :: a -> Int} i @code{toEnum :: Int -> a} koje redom kodiraju i dekodiraju vrednosti tog tipa kroz cele brojeve. Vrednosti dobijene ovim kodiranjem korsite se za konstrukciju opsega.
 
 @example{
 @p Tip @code{Char} pripada klasi @code{Enum}. Funkcija @code{fromEnum} primenjena na karakter vraća poziciju tog karaktera u @em{Unicode} tabeli.
@@ -87,10 +87,10 @@ ghci> fromEnum 'a'
 97
 ghci> toEnum 100 :: Char
 'd'
-}{Kako je @code{toEnum} tipa @code{Int -> a} kompahler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklaristai tip izraza. Više o ovome kasnije...}
+}{Kako je @code{toEnum} tipa @code{Int -> a} kompajler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklaristai tip izraza. Više o ovome kasnije...}
 }
 
-@p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @code{[fromEnum 'a', fromEnum 'c' ..  fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
+@p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @ccode{[fromEnum 'a', fromEnum 'c' ..  fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
 
 
 @problem{Napisati funkciju @code{velikoSlovo :: Char -> Bool} koja proverava da li je uneto slovo veliko latinično.}
@@ -511,7 +511,7 @@ Implementirati funkciju @code{dekartovProzivod} koja vraća "Dekartov proizvod d
 }
 
 @problem{
-Naći sve početke data liste. Na primer @code{poceci [1, 2, 3]} bi trebalo da nam vrati @code{[[], [1], [1, 2], [1, 2, 3]]}.
+Naći sve početke date liste. Na primer @code{poceci [1, 2, 3]} bi trebalo da nam vrati @code{[[], [1], [1, 2], [1, 2, 3]]}.
 }
 
 @problem{
@@ -519,7 +519,7 @@ Napisati funkciju @code{kodiraj :: String -> [(Char, Int)]} koja kodira nisku ta
 }
 
 @problem{
-Napisati funkciju @code{rotate :: Int -> [a] -> [a]} koja "rotira" listu tako što svaki element pomera za @code{n} koraka u levo: @code{rotate 1 ['a', 'b', 'c', 'd']} daje @code{['b', 'c', 'd', 'a']}, a @code{rotate 2 ['a', 'b', 'c', 'd']} daje @code{['c', 'd', 'a', 'b']}, itd...
+Napisati funkciju @code{rotiraj :: Int -> [a] -> [a]} koja "rotira" listu tako što svaki element pomera za @code{n} mesta u levo, pri čemu se elementi sa kraja liste vraćaju na početak: @code{rotiraj 1 "ABCD"} daje @code{"BCDA"}, a @code{rotiraj 2 "ABCD"} daje @code{"CDAB"}, itd...
 }
 
 
