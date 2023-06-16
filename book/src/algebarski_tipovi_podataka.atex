@@ -152,14 +152,13 @@ uMetre x = x
 @p Tip @code{Duzina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno razlčite vrednosti, iako se svaka od ovih vrednosti dobiila primenom konstruktora na @code{1 :: Int}
 }
 
-
 @subsection{Suma jediničnih tipova}
 
-@p Ovakva konstrukcija nije mnogo korisna sama po sebi, ali je veoma korisna kada se koristi unutar suma. Na primer, sada lako (i logično) možemo da predstavimo tipove sa konačno mnogo članova (takozvane @em{enumeracije}):
+@p Jedinični tipovi nisu mnogo korisni sami po sebi, ali su veoma korisni kada se koriste unutar sume. Na primer, sada lako (i logično) možemo da predstavimo tipove sa konačno mnogo članova (takozvane @em{enumeracije}):
 
 @codeBlock{
 data Pol = Musko | Zensko
-}{tipovi nisu jedinični (npr. @code{ZnakKarte} sadrži 4 vrednosti), ali su dobijeni sumom jedničnih tipova.}
+}
 
 @codeBlock{
 data ZnakKarte = Herc | Karo | Tref | Pik
@@ -168,6 +167,15 @@ data ZnakKarte = Herc | Karo | Tref | Pik
 @codeBlock{
 data MojeBoje = Crna | Bela | Crvena | Plava | Zelena | Zuta
 }
+
+@p Do sada smo se sureli sa više tipova koji su suma jediničnih tipova (a da to nismo ni znali):
+
+@list{
+    @li Logički tip @code{Bool} je definisan kao suma jediničnih tipova @code{True} i @code{False}.
+    @li Tip @code{Ordering} je definisan kao suma jediničnih tipova @code{LT}, @code{EQ} i @code{GT}. Podsećamo da se vrednosti ovog tipa koriste kao rezultati poređenja.
+}
+
+@problem{Kreirati alegbarski tip @code{Ruka}, koji može predstavljati @em{papir}, @em{kamen} ili @em{makaze}. Kreirati funkciju @code{uporedi :: Ruka -> Ruka -> Ordering} koja određuje poredak među različitim rukama.}
 
 @section{Možda tip}
 
@@ -178,7 +186,6 @@ data MozdaBroj = SamoBroj Float | Nista
 }
 
 @p Tip @code{MozdaBroj} je koristan kad god hoćemo da radimo u programu sa nekim vrednostima koje možda nisu ni zadate.
-
 
 @example{
 @p Ako očitvamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti @code{Float} vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu tempraturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temperature 0°C od neispravnih.
@@ -193,7 +200,6 @@ apsolutnaRazlika :: MozdaBroj -> MozdaBroj -> MozdaBroj
 apsolutnaRazlika (SamoBroj x) (SamoBroj y) = SamoBroj $ abs $ x - y
 apsolutnaRazlika _ _ = Nista
 }{Fuknkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga smisla vratiti samo vrednost @code{Nista}}
-
 
 @codeBlock{
 podeli :: MozdaBroj -> MozdaBroj -> MozdaBroj
@@ -222,6 +228,8 @@ data Mozda t = Samo t | Nista
 @codeBlock{
 data Maybe t = Just t | Nothing
 }
+
+@p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.  
 
 @todo{Records}
 
