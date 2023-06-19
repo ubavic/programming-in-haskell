@@ -1,22 +1,67 @@
 @chapter{Liste}
 
-@p Liste u Haskelu su homegene strukture podataka, što znači da mogu sadržati vrednosti samo jednog tipa (npr. samo brojeve ili samo logičke vrednosti). Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada:
+@p Liste u Haskelu su homegene strukture podataka, što znači da mogu sadržati vrednosti samo jednog tipa (npr. samo brojeve ili samo logičke vrednosti). Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[x1, x2, x3, x4, x5]}.
+
+
+@section{Funkcije za rad sa listama}
+
+@p U prethodnim lekcijama već smo se upoznali sa nekim funkcijama za rad sa listama:
 
 @list{
-@li @code{(:) :: a -> [a] -> [a]} nadovezuje element na početak liste
 @li @code{(++) :: [a] -> [a] -> [a]} spaja dve liste
 @li @code{length :: [a] -> Int} vraća dužinu liste
-@li @code{elem :: Eq a => a -> [a] -> Bool} ispituje da li se element nalzi u listi
+@li @code{elem :: Eq a => a -> [a] -> Bool} ispituje da li se element nalazi u listi
 @li @code{reverse :: [a] -> [a]} obrće poredak elemena u listi
-@li @code{head :: [a] -> a} vraća prvi element liste. Ako je lista prazna dolazi do izuzetka.
+@li @code{head :: [a] -> a} vraća prvi element liste. Ako je lista prazna dolazi do izuzetka
 @li @code{init :: [a] -> a} vraća sve elemente osim poslednjeg. Ako je lista prazna dolazi do izuzetka
-@li @code{tail :: [a] -> a} vraća sve lemente osim prvog. Ako je lista prazna dolazi do izuzetka
-@li @code{last :: [a] -> a} vrača poslednji element. Ako je lista prazna dolazi do izuzetka
+@li @code{tail :: [a] -> a} vraća sve elemente osim prvog. Ako je lista prazna dolazi do izuzetka
+@li @code{last :: [a] -> a} vraća poslednji element. Ako je lista prazna dolazi do izuzetka
+}
+
+@p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porditi sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
+
+@p @em{Prelude} obezbeđuje još neke funkcije za rad sa listama karaktera:
+
+@list{
+@li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od jedne nikse dobijaju "reči".
+@li @code{unwords :: [[Char]] -> [Char]} spaja listu niski u jedinstvenu nisku dodavajući razmak između. Na primer: @code{unwords ["boža", "zvani", "pub"]} nam daje @code{"boža zvani pub"}.
+@li @code{lines :: [Char] -> [[Char]]} rastavlja nisku na linije, vršeći prelom na karakteru za novi red @code{'\n'}.
+@li @code{unlines :: [[Char]] -> [Char]} spaja listu niski u jedinstvenu nisku, dodavajući @code{'\n'} između.
+}
+
+@p Ovde je zgodno napomenuti kako se u Haskel kodu mogu navesti niske u više redova. Neophodno je na kraju i početku svake linije koja pripada nisci dodati znak @code{\}, osim u prvoj i poslednjoj na mestima gde je @pre{"}:
+
+@codeBlock{
+pesma :: [Char]
+pesma = "Ti, međutim, rasteš, uz zornjaču jasnu,\
+\sa Avalom plavom, u daljini, kao breg.\
+\Ti treperiš, i kad ovde zvezde gasnu,\
+\i topiš, ko Sunce, i led suza, i lanjski sneg." 
+}
+
+@p Ipak, ovako definisana niska @em{neće} sadržati karaktere za novi red! Neophodno ih je ručno dodati na svakom mestu:
+
+@codeBlock{
+pesma :: [Char]
+pesma = "Ti, međutim, rasteš, uz zornjaču jasnu,\n\
+\sa Avalom plavom, u daljini, kao breg.\n\
+\Ti treperiš, i kad ovde zvezde gasnu,\n\
+\i topiš, ko Sunce, i led suza, i lanjski sneg.\n" 
+}
+
+@p Ako u @em{GHCi} interpreteru evaluiramo vrednost @code{pesma}, niska će se ispisati unutar dvostrukih navodnika u jednoj (ali dugačkoj) liniji terminala@note{Takođe, u zavisnosti od verzije @em{GHCi} programa, može se desiti da slova koja ne pripadaju engleskom alfabetu (@em{đ}, @em{ž}, @em{ć} i @em{č}) budu zamenjena odgovarajućim kodovima.}. Probajte i uverite se sami. Zbog toga je zgodno iskoristi metod @code{putStr} koji sadržaj ispisuje u terminal onako kao bismo i očekivali:
+
+@terminal{
+ghci> putStr pesma
+Ti, međutim, rasteš, uz zornjaču jasnu,
+sa Avalom plavom, u daljini, kao breg.
+Ti treperiš, i kad ovde zvezde gasnu,
+i topiš, ko Sunce, i led suza, i lanjski sneg.
 }
 
 @section{Rasponi}
 
-@p Neretko se u programiranju javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @code{1} do @m{n} ili liste brojeva od @m{-n} do @code{n} itd... Iako nije teško implementirati rekurzivne funkcije koje nav vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{Eng. ranges.} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg broja liste, između kojih se postavljaju dve (spojene) tačke. Naredni primeri ilistruju sintaksu raspona:
+@p Neretko se javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @m{1} do @m{n} ili liste brojeva od @m{-n} do @m{n} itd... Iako nije teško implementirati rekurzivne funkcije koje vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{Eng. @em{ranges}} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg elementa liste, između kojih se postavljaju dve (spojene) tačke. Naredni primeri ilustruju sintaksu raspona:
 
 @terminal{
 ghci> a = [1 .. 10]
@@ -29,7 +74,7 @@ ghci> [10 .. 1]
 }{Ako je poslednji element manji od prvog, tada će biti konstruisana prazna lista.}
 
 
-@p Sa rasponima je moguće konstruisati i liste u kojima je korak različit od @code{1}. U tom slučaju, potrebno je navesti i drugi član liste na osnovu koga će korak biti izračunat.
+@p Sa rasponima je moguće konstruisati i liste u kojima je korak različit od @m{1}. U tom slučaju, potrebno je navesti i drugi član liste na osnovu koga će korak biti izračunat.
 
 @terminal{
 ghci> [1, 3 .. 11]
@@ -40,14 +85,14 @@ ghci> [1, 5 .. 11]
 [1,5,9]
 }{Primetimo u poslednjem primeru da lista uključuje sve brojeve aritmetičke progresije manje @code{11}. Dakle, gornja granica respona ne mora biti uključena u listu.}
 
-@p Navođenjem koraka progresije moguće le lako konstruistai liste i koje su opadajuće
+@p Navođenjem koraka progresije moguće je lako konstruisati liste i koje su opadajuće:
 
 @terminal{
 ghci> [10, 9 .. 1]
 [10,9,8,7,6,5,4,3,2,1]
 }
 
-@p Rasponi se takođe mogu koristiti i sa racionalnim brojevima
+@p Rasponi se takođe mogu koristiti i sa racionalnim brojevima:
 
 @terminal{
 ghci> [1.0 .. 5.0]
@@ -138,7 +183,7 @@ Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, 
 
 
 @example{
-@p Često se u programiranju javlja potreba da se odredi da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodnsika :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodnsika} je naravno tehnika rekurzije.
+@p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodnsika :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodnsika} je naravno tehnika rekurzije.
 
 @p Pretpostavimo da su nam date dve neprazne niske @code{igla} i @code{seno}@note{U literaturi je uobičajno da se niske imenuju @em{igla} i @em{seno}, jer to jasno sugreše u kojoj od niska očekujemo da se nalazi druga niska.}, i da se pitamo da li se @code{igla} sadrži u nisci @code{seno}. Tada postoje dve mogućnosti:
 
@@ -327,7 +372,7 @@ Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.
 
 @subsection{Zip}
 
-@p Često je potrebno upariti dve liste član po član. Za uparivanje se kotisti funkcija @ccode{zip :: [a] -> [b] -> [(a, b)]} koja uparuje dve liste u listu uređenih parova. Pritom dužina liste parova je jednaka dužini kraćoj od prosleđenih lista.
+@p Za uparivanje dve liste član-po-član u listu parova koristi se funkcija @ccode{zip :: [a] -> [b] -> [(a, b)]}. Pritom dužina liste parova je jednaka dužini kraćoj od prosleđenih lista.
 
 @example{
 @p Funkcija @code{zip} se često koristi za "numerisanje" članova neke liste. Tako možemo lako numerisati listu dana u nedelji:
@@ -365,7 +410,7 @@ ghci> numerisaniDani = zipWith f [1 .. 7] dani
 
 @problem{Reimplementirati funkciju @code{zip} koristeći funkciju @code{zipWith}.}
 
-@problem{Reimplementirati funkciju @code{zipWit} koristeći funkcije @code{zip} i @code{map}.}
+@problem{Reimplementirati funkciju @code{zipWith} koristeći funkcije @code{zip} i @code{map}.}
 
 @section{Neki primeri}
 

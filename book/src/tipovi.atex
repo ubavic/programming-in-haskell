@@ -170,7 +170,7 @@ ghci> a^70
 254007274765394321
 ghci> b^70
 143503601609868434285603076356671071740077383739246066639249
-}{Broj @m{254007274765394321} je velik ali nije jednak @m{7^{70}}. Evaluacija koda @code{b^7} daje tačnu vrednost.}
+}{Broj @m{254007274765394321} je velik ali nije jednak @m{7^{70}}. Evaluacija koda @code{b^70} daje tačnu vrednost.}
 
 @p Pri radu sa tipom @code{Integer} trebalo bi imati na umu da su aritmetičke operacije nad ovim tipom značajno sporije nego nad @code{Int} tipom. Razlog tome je što se aritmetičke operacije sa @code{Int} odbijaju na nivou hardvera, što nije slučaj i sa tipom @code{Integer}.
 

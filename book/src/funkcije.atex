@@ -408,7 +408,7 @@ zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))
 zbir = (\u -> (\v -> (fst u + fst v, snd u + snd v)))
 }}
 
-@problem{Funkcija @code{max :: Ord a => a -> a -> a} uzima dve vrednosti i vraća veću od vrednosti. Napisati program @code{max3 :: Ord a => a -> a -> a -> a} koja vraća maksimum tri vrednosti.}
+@problem{Funkcija @ccode{max :: Ord a => a -> (a -> a)} uzima dve vrednosti i vraća veću od vrednosti. Napisati funkciju @code{max3 :: Ord a => a -> (a -> (a -> a))} koja vraća maksimum tri vrednosti. Naravno @code{Ord =>} je klasno ograničenje koja nam govori da tipska promenljiva @code{a} pripada klasi @code{Ord}, te se vrednosi ovog tipa mogu porediti sa @code{<}, @code{>}, @code{<=} i @code{>=}.}
 {@p Ako su nam date vrednosi @code{x}, @code{y} i @code{z} tada ćemo prvo naći veću od vrednosi @code{x} i @code{y} a zatim ćemo tu veću vrednost da uporedimo sa @code{z}:
 @codeBlock{
 max3 :: Ord a => a -> a -> a -> a
