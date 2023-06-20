@@ -101,25 +101,29 @@ neparan n = not (paran (n - 2))
 
 @section{Fibonačijev niz}
 
-@p Fibonačijev niz je dobro poznati niz prirodnih brojeva, koji se konstruiše po sledećem prinicpu:
+@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio kljigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila namenjena kao priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera, Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do raultata, ali se ispostavilo da je broj parava zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Ispostavlja se da je broj zečeva na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
 
-@p Prva dva člana Fibonačijevog niza su @code{1} i @code{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
+@p Danas @em{Fibonačijev niz} nema mnogo veze za zečevima, a konstruiše po sledećem prinicpu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
 
 @p Po navedenom principu, treći član Fibonačijevog niza je @m{2} (jer je @m{2 = 1 + 1}), četvrti član je @m{3} (jer je @m{3 = 1 + 2}), peti član je @m{5} (jer je @m{5 = 2 + 3}), šesti član je @m{8} (jer je @m{8 = 3 + 5}), i tako dalje...
 
-@p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća n-ti Fibonačijev broj je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)}@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{\mathtt n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
+@p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća @m{n}-ti Fibonačijev broj (@m{n}-ti element Fibonačijevog niza) je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)} te je stoga potrebno navesti dva bazna slučaja@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
 
 @codeBlock{
 fib n
-    | n == 1 = 0 
-    | n == 2 = 1
+    | n == 1    = 1 
+    | n == 2    = 1
     | otherwise = fib (n - 1) + fib (n - 2)
-}{Aplikacija argumenta ima veći prioritet od aritmetičkih operacija, te se @code{fib (n - 1) + fib (n - 2)} interpretira kao @code{(fib (n - 1)) + (fib (n - 2))}. Iz istog razloga ne možemo pisati samo @code{fib n - 1 + fib n - 2}, jer se to interpretira kao @code{(fib n) - 1 + (fib n) - 2}
+}{Aplikacija argumenta ima veći prioritet od aritmetičkih operacija, te se @code{fib (n - 1) + fib (n - 2)} interpretira kao @code{(fib (n - 1)) + (fib (n - 2))}. Iz istog razloga ne možemo pisati samo @code{fib n - 1 + fib n - 2}, jer se to interpretira kao @code{(fib n) - 1 + (fib n) - 2.}
+}
+
+@problem{
+Takozani @em{Tribonačijev niz} se konstriše na sledeći način: prva tri člana Tribonačijevog niza su @m{1}. Svaki naredni član Tribonačijevog niza je zbir prethodna tri člana. Implementirati funkciju koja računa @m{n}-ti element Tribonačijev broj.
 }
 
 @section{Euklidov algoritam}
 
-@p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka. Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
+@p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka (algoritama). Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
 
 @p Kao što samo ime kaže, @em{najveći zajednički delilac} (@em{NZD}) prirodnih brojeva @m{a} i @m{b} je prirodni broj @m{d} takav da deli @m{a} i @m{b}, i pritom je @m{d} najveći broj sa takvom osobinom. 
 
@@ -181,8 +185,46 @@ susret p m n = mod p (gcd n m) == 0
 }
 }
 
+@section{Hanojske kule}
 
-@todo{Napisati o šetnji po mreži i hanojskom kulama}
+@p Francuski matematičar Edvard Lukas@note{Inače, upravo je Lukas dao ime Fibonačijevom nizu kog smo obradili gore.} je krajem devetnaestog veka smislio igru koja je danas poznata kao @em{Hanojske kule}@note{Iako su od samog početka igru pratile mistične priče o poreklu u budističkim hramovima Dalekog istoka, za sada nema nikakavog dokaza o takvom poreklu.}. 
+
+@p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa, koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine koje označavamo sa @m{D_1,..., D_n}. Diskovi su probušeni u centru tako da se štap može provuću kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
+
+@p Za osobu nije teško da sama dođe do rešenja nakon malo početnog igranja. Ali je na prvi pogled veoma teško napisati program koji formira rešenje za proizvoljan broj diskova.
+
+@p Prvo ćemo utvrditi kako želimo da prezentujemo rešenje, i koji ulazni parameti su potrebni. Rešenje možemo predstaviti kao listu poteza, od kojih je svaki potez uređen par karaktera koji označavaju štap sa kog i štap na koji prebacujemo disk. Na primer, uređen par @code{('A', 'B')} predstavlja potez u kom se sa prvi disk sa štapa @m{A} prebacuje na štap @m{B}. Sa druge strane, rešenje zadatka zavisi samo od broja diskova @m{n}. Stoga, naš zadatak je da napišemo funkciju @ccode{kule :: Int -> (Char, Char)} koja pronalazi jedno rešenje@note{Primetimo da rešenje nije jedinstveno. Igru možemo odigrati na mnogo načina.}.
+
+@example{
+@p Lista @ccode{[('A', 'B'), ('A', 'C'), ('B', 'C')]} predstavlja rešenje slučaja kada za @m{n = 2}. 
+}
+
+@p Naravno, problem ćemo rešiti rekurzivno. Kako problem suštinski zavisi samo od broja diskova, rekurziju ćemo vršiti po @m{n}. U najednostavnijem slučaju, kad je @m{n=1}, jasno je da je rešenje jednočlana lista @code{[('A', 'C')]}, tj. par koji se sastoji od početnog i krajnjeg diska. Pretpostavimo zato da je @m{n>1} i da znamo da rešimo slučajeve za manje diskova. Tada možemo postupiti na sledeći način: prvih @m{n-1} diskova ćemo prebaciti sa početnog na pomoćni (@m{B}) štap, zatim ćemo prebaciti najveći disk sa početnog na krajnji, i na kraju ćemo pomeriti @m{n-1} diskova sa pomoćnog na krajni štap. Ova strategija je prikazana na narednoj ilustraciji.
+
+
+@p Kao što vidimo u rekurzivnom koraku @m{n-1} diskova prebacujemo prvo sa štapa @m{A} na štap @m{B}. Stoga za rekurzivni poziv, osim broja diskova, mora biti navedeno i sa kog štapa i na koji štap se diskovi prebacuju. Naravno, rešenje ne može koristiti samo dva štapa@note{Osim u trivijalnom slučaju kada se prebacuje jedan disk.}, već se mora iskoristiti i onaj treći štap kao pomoćni. Stoga funkcija za rekurzivno pronalaženje rešenja uzima četiri parametra: broj diskova, početni štap, krajnji štap i pomoćni štap. Ova rekurzivna funkcija će imati potpis @ccode{pomeri :: Int -> Char -> Char -> Char -> [(Char, Char)]}.
+Ako je funkcija @code{pomeri} implementirana, tada "glavnu" funkciju @code{kule} možemo jednostavno implementirati:
+@codeBlock{
+kule :: Int -> (Char, Char)
+kule n = pomeri n 'A' 'C' 'B'
+}{Rešenje početnog problema su potezi koji pomeraju @m{n} diskova sa @m{A} na @m{C}.}
+
+@p Potrebno je još implementirati funkciju @code{pomeri}, ali to je sasvim jednostavno ako uzmemo u obzir opis rešenja koje smo izložili:
+
+@codeBlock{
+pomeri :: Int -> Char -> Char -> Char -> [(Char, Char)]
+pomeri 1 pocetak kraj _       = [(pocetak, kraj)]
+pomeri n pocetak kraj pomocni = p1 ++ [(pocetak, kraj)] ++ p2
+    where
+        p1 = pomeri (n - 1) pocetak pomocni kraj
+        p2 = pomeri (n - 1) pomocni kraj pocetak
+}
+
+@problem{
+Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matematičkom indukcijom da dokažete pravilnost?
+}
+
+@todo{Šetnji po mreži}
 
 @section{Zadaci}
 
