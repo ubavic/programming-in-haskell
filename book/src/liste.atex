@@ -166,7 +166,7 @@ Implementirati funkciju @code{proizvod :: [Int] -> Int} koja pronalazi proizvod 
 }
 
 @example{
-@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekuzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkicije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
+@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekuzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkcije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
 
 @codeBlock{
 last' :: [a] -> a

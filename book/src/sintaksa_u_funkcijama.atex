@@ -97,7 +97,7 @@ max' = \x y -> if x > y then x else y
 
 @section{@em{Guards}}
 
-@p @def{Guards}@note{eng. čuvari, stražari} je naziv za sintaksu koja omogućava testiranje više uslova. Svaki od uslova je logički izraz koji se navodi nakon vertikalne crte @code{|}, a nakon uslova potrebno je staviti i (povratnu) vrednost funkcije.
+@p @def{Guards} je naziv za sintaksu koja omogućava testiranje više uslova. Svaki od uslova je logički izraz koji se navodi nakon vertikalne crte @code{|}, a nakon uslova potrebno je staviti i (povratnu) vrednost funkcije.
 
 @p @em{Guards} sintaksa može se koristiti samo pri definisanju funkcije (za razliku of @em{if then else} sintakse, @em{guards} ne predstavlja izraz). Opšti oblik guards sintakse bi bio@note{Ovakva definicija funkcije podseća na narednu matematičku sintaksu @eq{f(x)=
   \begin{cases}

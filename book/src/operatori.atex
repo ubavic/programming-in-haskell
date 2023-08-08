@@ -24,7 +24,9 @@ ghci> :type (&&)
 (&&) :: Bool -> Bool -> Bool
 }
 
-@p Da bi smo @code{:type} naredbu da iskoristimo sa operatorom, neophodno je da ime tog operatora postavimo u zagrada. Zapravo, postavljanjem imena proizvoljnog operatora u zagrade dobijamo prefiksnu funkciju:
+@p Da bi smo iskoristili naredbu @code{:type} sa operatorom (kao u gornjem primeru), neophodno je da ime tog operatora postavimo u zagrade.
+
+@p Zapravo, postavljanjem imena proizvoljnog operatora u zagrade dobijamo prefiksnu funkciju:
 
 @terminal{
 ghci> (&&) True False
@@ -43,9 +45,9 @@ ghci> (+) 4 3
 
 @p Korišćenjem operatora dobijamo nove vrednosti na koje ponovo možemo delovati s operatorima. Na primer, rezultat zbira @m{1+2} možemo pomnožiti sa @m{5}, a izraz koji odgovara ovom postupku je @m{(1 + 2) \cdot 5}. U datom izrazu, kao i uvek, zagrade označavaju @em{podizraz} koji je potrebno izračunati prvo.
 
-@p Zagrade su neophodne da bi se tačno preneo izraz. Ako bismo iz prethodnog primera obrisali zagrade, dobili bismo izraz @m{1 + 2 \cdot 5}. U zavisnosti od toga kojim redom vršimo računske operacije, od ovog izraza možemo da dobijemo vrednost @m{11} ili @m{15}. Naravno ovde grešku nećemo napraviti jer znamo za konvenciju o prioritetu računskih operacija koja govori da je množenje potrebno izvršiti pre sabiranja kada zagradama drugačije nije naznačeno. Pomenutom konvencijom je ustanovljen @def{prioritet} operatora. Za operator @m{\cdot} kažemo da ima @def{veći} (ili @def{viši}) prioritet od operatora @code{+}.
+@p Zagrade su neophodne da bi se tačno preneo izraz. Ako bismo iz prethodnog primera obrisali zagrade, dobili bismo izraz @m{1 + 2 \cdot 5}. U zavisnosti od toga kojim redom vršimo računske operacije, od ovog izraza možemo da dobijemo vrednost @m{11} ili @m{15}. Naravno ovde grešku nećemo napraviti jer znamo za konvenciju o prioritetu računskih operacija koja govori da je množenje potrebno izvršiti pre sabiranja kada zagradama drugačije nije naznačeno. Pomenutom konvencijom je ustanovljen @def{prioritet} operatora. Za operator @m{\cdot} kažemo da ima @def{veći} (ili @def{viši}) prioritet od operatora @m{+}, odnosno za @m{+} kažemo da ima @def{manji} (ili @def{niži}) prioritet od operatora @m{\cdot}.
 
-@p Dakle, upostavljenjem prioriteta operatora, možemo se osloboditi nekih parova zagrada bez brige da ćemo izgubiti originalno značenje. Na primer, iz izraza @m{1 + (2 \cdot 5)} možemo obristai zagrade, ali ne i izraza @m{(1 + 2) \cdot 5} jer bismo time dobili drugačiju vrednost.
+@p Dakle, upostavljenjem prioriteta operatora, možemo se osloboditi nekih parova zagrada bez brige da ćemo izgubiti namereno značenje izraza. Na primer, iz izraza @m{1 + (2 \cdot 5)} možemo obristai zagrade, ali ne i izraza @m{(1 + 2) \cdot 5} jer bismo time dobili drugačiju vrednost.
 
 @p Šta se dešava kada imamo kombinujemo operatore istog prioriteta? Štaviše, šta se dešava kada koristimo samo jedan operator? Da li možemo iz izraza @m{(2 + 4) + 6} da obrišemo zagrade? Naravno da možemo, jer izrazi @m{(2 + 4) + 6} i @m{2 + (4 + 6)} daju potpuno isti rezultat.
 
@@ -77,8 +79,8 @@ ghci> (+) 4 3
 
 @list{
     @li Ime operatora mora da se satoji samo od znakova @pre{!#$%&*+./<=>?@@@\^|-~:}
-    @li Ime operatora ne sme biti: @code{..}, @code{:}, @code{::} @code{=}, @code{\}, @code{|}, @code{<-} @code{->} @code{@@@}, @code{~}, @code{=>}.
-    @li Ime operatora ne sme da počinje sa @code{:}.
+    @li Ime operatora ne sme biti: @code{..}, @code{:}, @code{::}, @code{=}, @code{\}, @code{|}, @code{<-}, @code{->}, @code{@@@}, @code{~}, @code{=>}.
+    @li Ime operatora ne sme počinjati sa @code{:}.
 }
 
 @p Operatori se mogu definisati kao i ostale funkcije, pri čemu se ime operatora mora predstaviti u prefikson obliku, postavljanjem u zagrade. Moguće je koristiti podudaranje oblika pri čemu se operator postavlja infiksno i bez zagrada.
@@ -91,9 +93,9 @@ ghci> (+) 4 3
 @codeBlock{
 (|-|) :: Bool -> Bool -> Bool
 (|-|) = \x y -> x /= y
-}{Zagrade @code{()} nisu deo imena operatora, već su služe za predstavljanje operatora u prefiksnom obliku.}
+}{Zagrade @code{()} nisu deo imena operatora, već služe za predstavljanje operatora u prefiksnom obliku.}
 
-@p Naravno, u prethodnom kodu možemo iskoristiti podudaranje oblika kao i do sada:
+@p Moguće je takođe i iskoristiti podudaranje oblika:
 
 @codeBlock{
 (|-|) :: Bool -> Bool -> Bool
@@ -107,9 +109,9 @@ ghci> (+) 4 3
 x |-| y = x /= y
 }
 
-@p Sve tri navedene definicje su u potpunosti iste. Poslednji oblik definicije je najprirodniji pa se i najčešće koristi.
+@p Sve tri navedene definicije su u potpunosti iste. Poslednji oblik definicije je najprirodniji pa se i najčešće koristi.
 
-@p Učitavanjem bilo koje od definicjija u @em{GHCi} možemo koristiti novi logički operator
+@p Učitavanjem bilo koje od definicjija u @em{GHCi} možemo koristiti novi logički operator:
 
 @terminal{
 ghci> True |-| False
@@ -118,6 +120,8 @@ ghci> True |-| True
 False
 }
 }
+
+@problem{Definisati operator logičke implikacije @ccode{(==>) :: Bool -> Bool -> Bool}. Implikacija @m{p\Rightarrow q} je netačna ako i samo ako je @code{p} tačno a @code{q} netačno.} 
 
 @p Moguće je deklarisati i prioritet operatora i asocijativnost takozvanim @em{infix} dekleracijama. Ova dekleracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja manjeg od @code{9}, koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da operator nije ni jedno ni drugo.
 

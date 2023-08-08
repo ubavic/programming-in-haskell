@@ -264,7 +264,7 @@ class (Eq a) => Ord a where
 
 @p Definicje operatora @code{<}, @code{>}, @code{>=} koriste operator @code{<=} i prilično su jasne. Jasne su i definicije binarnih funkcija @code{min} i @code{max} koje takođe koriste operator @code{<=}. Operator @code{<=} je definisan preko funkcije @code{compare}. Funkcija @code{compare} preko funkcije @code{<=}. Kao i kod klase @code{Eq}, i ovde imamo slučaj beskonačne rekurzije kroz definicije. Stoga je potrebno, i dovoljno, u instanci definisati samo jednu od funkcija @code{<=} ili @code{comapre}.
 
-@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkicije (u tom slučaju te definicje instance će potisnuti definicje u definicji klase), ali za tako nečim gotovo nikad nema potrebe.
+@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicje instance će potisnuti definicje u definicji klase), ali za tako nečim gotovo nikad nema potrebe.
 
 @example{
 @p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
@@ -297,7 +297,7 @@ newtype Racionalan = R (Int, Int) deriving (Show)
 @p Kod ovakvog automatskog instaciranja, @code{show} funkcija će kreirati nisku koja liči veoma na sam kod s kojim je konstruisana vrednost.
 
 @terminal{
-ghci> a = R (2, 5)
+ghci> a = R (2, 3)
 ghci> show a
 "R (2,3)"
 ghci> a
@@ -314,7 +314,7 @@ instance Show Racionalan where
 @p Prikazivanje vrednosti je sada smislenije:
 
 @terminal{
-ghci> a = R (2, 5)
+ghci> a = R (2, 3)
 ghci> show a
 "2/3"
 ghci> a
@@ -322,7 +322,7 @@ ghci> a
 }
 }
 
-@p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku, pa je i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definicju klase.
+@p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definicju klase.
 
 @p Zgodno je ipak znati za funkciju @code{read :: Read a => a -> String} koja se može koristiti sa instancama klase @code{Read}.
 
@@ -369,17 +369,70 @@ class Num a where
   negate :: a -> a
   abs :: a -> a
   signum :: a -> a
+  fromInteger :: Integer -> a 
 }
 
-@p Klasa @code{Fractional} je podklasa klase @code{Num}:
+@p Ova klasa propisuje tri operatora @code{+}, @code{- } i @code{*} za koje je jasno šta predstavljaju. Funkcija @code{negate} negira vrednost (daje inverz u odnosu na sabiranje). Funkcija @code{abs} daje apsolutnu vrednost, dok @code{signum} daje znak. Funkcija @code{fromInteger} prevodi vrednost tipa @code{Integer}@note{Setimo se, @code{Integer} je tip koji predstavlja celobrojne vrednosti u proizvoljnoj preciznosti} u vrednost instance.
+
+@p Klasa @code{Fractional} je podklasa klase @code{Num} koja dozvoljava i deljenje vrednosti:
 
 @codeBlock{
 class Num a => Fractional a where
   (/) :: a -> a -> a
   recip :: a -> a
-}{@code{recip} je funkcija koja dodljuje broj njegovu recipročnu vrednost.}
+  fromRational :: Rational -> a
+  @@{ -# MINIMAL fromRational, (recip | (/)) #-@@}
+}
 
-@p Razlika klase @code{Fractional} u odnosu na klasu @code{Num} je ta što tipovi klase @code{Fractional} dozvoljavaju deljenje. Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama @em{prstena} i @em{polja}.
+@p Funkcija @code{fromRational} transormiše vrednost tipa @code{Rational} u vrednost instance. Do sada tip @code{Rational} nismo spominjali, ali u pitanju je tip koji se koristi za prezentovanje racionalnih brojeva u proizvoljnoj tačnosti.
 
+@p Funkcija @code{recip} daje recipročnu vrednost broja@note{Recipročna vrednost vrednosti @m{x} je vrednost @m{y} takva da je @m{xy=1}. U kontekstu @code{Fractional} klase, smatra se da važi @ccode{x * y = fromRational 1}, iako to nije propisano standardom.}. Dovoljno je implementirati samo jednu od funkcija @code{(/)} i  @code{recip}, jer su one u definiciji klase definisane jedna preko druge:
+
+@codeBlock{
+recip x = 1 / x
+x / y   = x * recip y
+}
+
+@p Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama @em{prstena} i @em{polja}.
+
+@example{
+@p Uvedimo tip @code{Racionalan} u navedene klase. Imajući na umu zakone poput @eq{\frac{a}{b} \pm \frac{c}{d} = \frac{ad\pm cb}{cd} \qquad \frac{a}{b} \cdot \frac{c}{d} = \frac{ab}{cd} \qquad  \left\lvert\frac{a}{b}\right\rvert=\frac{\lvert a\rvert}{\lvert b\rvert}} kodiranje je veoma jednostavno:
+
+@codeBlock{
+instance Num Racionalan where
+  (R (a, b)) + (R (c, d)) = R (a*d + c*b, c*d)
+  (R (a, b)) - (R (c, d)) = R (a*d - c*b, c*d)
+  (R (a, b)) * (R (c, d)) = R (a*d + c*b, c*d)
+  negate (R (a, b)) = R (negate a, b)
+  abs (R (a, b)) = R (abs a, abs b)
+  signum (R (a, b)) = signum a * signum B
+  fromInteger n = R (fromIntegral a, fromIntegral b)
+}
+
+@p instanciranje @code{Fractional Racionalan} je još jednostavnije, jer je dovoljno implementirati samo dve funkcije
+ 
+@codeBlock{
+instance Fractional Racionalan where
+  recip (R (a, b)) = R (b, a)
+  fromRational r = R (numerator r, denominator r) 
+}{Funkcije @code{numerator} i @code{denominator} su funkcije kojima se može pristupiti brojiocu i imeniocu vrednosti tipa @code{Rational}.}
+}
+
+@p Jasno je da tipovi poput @code{Int}, @code{Integer}, @code{Float}, @code{Double} i @code{Rational} pripadaju klasi @code{Num}. Od navedenih tipova, samo prva dva ne pripadaju klasi @code{Fractional}. Iako deluje da su samo ovakvi tipovi instance ovih klasa, @code{Num} i @code{Fractional} mogu sadržati još mnoge zanimljive primere što pokazuju naredni zadaci.
+
+@problem{Definisati tip kompleksnih brojeva sa @ccode{newtype Kompleksan = K (Int, Int)}. Instancirati @code{Num Kompleksan} i @code{Fractional Kompleksan}. Apsolutnu vrednost implementirati kao normu kompleksnog broja, a znak kompleksnog broja implementirati tako da važi @ccode{abs z * signum z = z}.}
+
+@p U narednim zadacima, funkcije @code{abs} i @code{signum} implementirati proizvoljno.
+
+@problem{Definisati tip @code{Z4} koji predstavlja skup ostataka pri deljenju sa @m{4} tj @eq{\mathbb Z_4 = \{0, 1, 2, 3\}.} Ovaj tip definisati kao @ccode{newtype Z4 = Z4 Int}. Instacirati @code{Num Z4} pri čemu voditi računa da se sve operacije vrše po modulu @m{4.} Na primer @m{3 + 2 =_4 1} i @m{2 \cdot 2 =_4 0}.
+}
+
+@problem{Analogno prethodnom zadatku kreirati tip @code{Z5} koji prezentuje @eq{\mathbb Z_5 = \{0, 1, 2, 3, 4\},} i instancirati @code{Num Z5}.
+Kreirati (sa ili bez računara) tablicu množenja za u skupu @m{\mathbb Z_5} (naravno, u odnosu na množenje modulo @m{5}). Utvrditi da je množenje u @m{\mathbb Z_5} @em{regularno} tj. da je proizvod dva nenula elementa uvek različit od nule (iz prethodnog primera vidimo da to ne važi za @m{\mathbb Z_4}).
+Koristeći ovu činjenicu, definisati recipročnu vrednost svakog elementa iz @m{\mathbb Z_5} i instancirati @code{Fractional Z5}}
+
+@problem{
+Definisati tip za predstavljanje polinoma sa celobrojnim koeficijentima kao @ccode{newtype Polinom = Polinom [Int]}. Uvesti ovaj tip u klase @code{Eq}, @code{Show} i @code{Num}.
+}
 
 @todo{Automatska derivacija klasa}

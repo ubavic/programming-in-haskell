@@ -76,7 +76,7 @@ Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba
 
 @p Sličnost nije slučajna, uređene @m{n}-torke jesu proizvodi tipova. Na primer, uređen par je @em{apstraktni} tip definisan sa @ccode{data (,) a b = (,) a b}. Slično su definisane i druge uređene @m{n}-torke @ccode{data (,,) a b c = (,,) a b c}, @ccode{data (,,,) a b c d = (,,,) a b c d} i tako dalje. Primetimo da tipovi i konstruktori imaju isto ime!
 
-@p Haskel kompajler da se ovaj konstruktor upotrebljava na malo drugačiji način, pa možemo pisati @code{(1, 'a')} umesto @code{(,) 1 'a'}.
+@p Haskel kompajler dozvoljava da se ovaj konstruktor upotrebljava na malo drugačiji način, pa se može pisati @code{(1, 'a')} umesto @code{(,) 1 'a'}.
 
 @p Koliko god ovo delovalo čudno, možemo se zaista uveriti da @code{(,)} jeste jedno ime koje dele konstruktor tipa i konstruktor vrednosti:
 
@@ -176,6 +176,8 @@ data MojeBoje = Crna | Bela | Crvena | Plava | Zelena | Zuta
 }
 
 @problem{Kreirati alegbarski tip @code{Ruka}, koji može predstavljati @em{papir}, @em{kamen} ili @em{makaze}. Kreirati funkciju @code{uporedi :: Ruka -> Ruka -> Ordering} koja određuje poredak među različitim rukama.}
+
+@problem{Kreirati algebarski tip @code{Dan} čije vrednosti prezentuju dane u nedelji.}
 
 @section{Možda tip}
 
