@@ -163,7 +163,7 @@ ghci> a
 
 @p Razlog nastanka greške je taj što program @em{GHCi} ne zna kako da ispiše vrednost tipa @code{MyBool}. Za ispisivanje svih vrednosti, @em{GHCi} koristi @code{show} funkciju koja je deklarisana u @code{Show} klasi tipova. Kako tip @code{MyBool} nije instanca ove klase, @em{GHCi} ne može da iskoristi funkciju @code{show} sa vrednostima tipa @code{MyBool}.
 
-@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno glavi @em{Klase tipova}. Srećom, u ovom slučaju Haskel može instaciranje automatski da uradi. Dovoljno je samo da nakon definicje tipa dopišemo @code{deriving Show}.
+@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno glavi @em{Klase tipova}. Srećom, u ovom slučaju Haskel može instaciranje automatski da uradi. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
 
 @codeBlock{
 newtype MyBool = MkMyBool Bool deriving Show

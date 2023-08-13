@@ -135,7 +135,7 @@ ghci> toEnum 100 :: Char
 }{Kako je @code{toEnum} tipa @code{Int -> a} kompajler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklaristai tip izraza. Više o ovome kasnije...}
 }
 
-@p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @ccode{[fromEnum 'a', fromEnum 'c' ..  fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
+@p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @ccode{[fromEnum 'a', fromEnum 'c' .. fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
 
 
 @problem{Napisati funkciju @code{velikoSlovo :: Char -> Bool} koja proverava da li je uneto slovo veliko latinično.}
@@ -450,7 +450,7 @@ sifrujKarakter k = snd (head sifrovano)
     sifrovano = filter (\par -> fst par == k) sifra
 }{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parave čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{sifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{sifrujKarakter 'A' = 'D'}.}
 
-@p Funkcija @code{sifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{sifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalinih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head sifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste  @code{sifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
+@p Funkcija @code{sifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{sifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalinih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head sifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{sifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
 
 @codeBlock{
 sifrujKarakter :: Char -> Char

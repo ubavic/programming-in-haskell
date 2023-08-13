@@ -8,7 +8,7 @@
 
 @p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @m{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridružuje vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
 
-@p Za funkciju tipa @m{A \to B} često kažemo da @em{preslikava} (@em{slika}, @em{transformiše}) skup @m{A} u skup @m{B}.  Za izraz @m{f(x)} kažemo da predstavlja @em{primenu funkcije} @m{f} @em{na vrednost} @m{x}.
+@p Za funkciju tipa @m{A \to B} često kažemo da @em{preslikava} (@em{slika}, @em{transformiše}) skup @m{A} u skup @m{B}. Za izraz @m{f(x)} kažemo da predstavlja @em{primenu funkcije} @m{f} @em{na vrednost} @m{x}.
 
 @p Dve funkcije @m{f_1} i @m{f_2} smatramo za jednake ako imaju isti domen, isti kodomen, i ako je @m{f_1(x) = f_2(x)} za svako @m{x} iz domena funkcije.
 
@@ -49,7 +49,7 @@ Neka je @m{B} skup koji sadrži dve vrednosti. Koliko postoji funkcija tipa @m{B
 }
 
 @problem{
-Neka je @m{U} skup koji sadrži jednu vrednost. Koliko postoji funkcija tipa @m{\mathbb N \to U}?  Koliko postoji funkcija tipa @m{U \to \mathbb N}?
+Neka je @m{U} skup koji sadrži jednu vrednost. Koliko postoji funkcija tipa @m{\mathbb N \to U}? Koliko postoji funkcija tipa @m{U \to \mathbb N}?
 }
 
 @section{Lambda izrazi}
@@ -117,7 +117,7 @@ ghci> (\x -> (2 * x)) 10
 @p Postavlja se pitanje, da li je poredak evaluacije redeksa važan? Da li bismo isti rezultat dobili i da smo prvo izvršili beta redukciju unutrašnjeg redeksa a zatim i spoljašnjeg?
 
 @example{
-@p @em{Nastavak prethodnog primera}. Beta redukcijom unutrašnjeg redeksa izraza u  @ccode{(\x -> (((\y -> (y + 1)) x) * x)) 10} dobijamo izraz  @ccode{(\x -> ((x + 1) * x)) 10}. Vršenjem još jedne beta redukcije dobijamo isti izraz kao malopre @ccode{((10 + 1) * 10)}. Kao što vidimo, poredak vršenja lambda redukcije nije uticao na krajnju vrednost!
+@p @em{Nastavak prethodnog primera}. Beta redukcijom unutrašnjeg redeksa izraza u @ccode{(\x -> (((\y -> (y + 1)) x) * x)) 10} dobijamo izraz @ccode{(\x -> ((x + 1) * x)) 10}. Vršenjem još jedne beta redukcije dobijamo isti izraz kao malopre @ccode{((10 + 1) * 10)}. Kao što vidimo, poredak vršenja lambda redukcije nije uticao na krajnju vrednost!
 }
 
 @p Osobina da poredak vršenja beta redukcije ne utiče na krajnu vrednost je poznata kao @def{konfluentnost}. Iako neće za svaki izraz važiti konfluentnost, često ipak hoće. Više o tome ćemo reći kasnije...

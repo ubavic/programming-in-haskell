@@ -341,7 +341,7 @@ ghci> 'a' < 'ш'
 True
 }
 
-@p Terminom @def{niske} nazivamo liste karaktera. Niske se mogu koristiti za prezentovanje tekstualnih vrednosti@note{Postoje još neki tipovi koji mogu prezentovati tekstualne vrednosti, ali ih nećemo spominjati ovde.}. Na primer, pozdrav @em{Hello!} se u Haskelu predstavlja kao lista @code{['H', 'e', 'l', 'l', 'o', '!']}.  Srećom, niske se mogu zapisati i prostim navođenjem karaktera između dvostrukih navodnika potpuno isto sintaksi u ostalim programskim jezicima. Tako se niska @em{Hello!} može konstruisati i kao @code{"Hello!"}:
+@p Terminom @def{niske} nazivamo liste karaktera. Niske se mogu koristiti za prezentovanje tekstualnih vrednosti@note{Postoje još neki tipovi koji mogu prezentovati tekstualne vrednosti, ali ih nećemo spominjati ovde.}. Na primer, pozdrav @em{Hello!} se u Haskelu predstavlja kao lista @code{['H', 'e', 'l', 'l', 'o', '!']}. Srećom, niske se mogu zapisati i prostim navođenjem karaktera između dvostrukih navodnika potpuno isto sintaksi u ostalim programskim jezicima. Tako se niska @em{Hello!} može konstruisati i kao @code{"Hello!"}:
 
 @terminal{
 ghci> "Hello" == ['H', 'e', 'l', 'l', 'o', '!']
@@ -375,7 +375,7 @@ ghci> show 2
 "2"
 ghci> show True
 "True"
-ghci> show [1,  2, 3]
+ghci> show [1, 2, 3]
 "[1,2,3]"
 }{Obratite pažnju da niska @code{"2"} nije isto što i vrednost @code{2}. I slično za ostale navedene primere. Ako je neke vrednosti moguće "prikazati" sa @code{show} funkcijom, tada je i listu takvih vrednosti moguće "prikazati" sa @code{show} funkcijom. Lista će uvek biti prikazana na kanonski način (bez razmaka između elemenata), bez obzira kako smo tu listu konstruisali u kodu.}
 
@@ -411,27 +411,26 @@ ghci> snd (5, 'C')
 
 @section{Tipske klase}
 
-@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija (ili operacija) nad tipovima te klase. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija (i operatora) nad tipovima te klase. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
-@p Za razliku od vrednosti koje mogu pripadati samo jednom tipu, tipovi mogu da se nalaze u više klasa (ili nijednoj).
+@p Za razliku od vrednosti koje pripadaju samo jednom tipu, tipovi mogu se istovremeno nalaziti u više klasa (ili nijednoj).
 
-@p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} operatora i funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.
+@p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.
 
 @p Navedenu apstraktnu definiciju ćemo približiti kroz primere klasa koje su predefinisane u Haskel jeziku:
 
 @list{
-@li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show}.
+@li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show} koja vrednost pretvara u nisku.
 @li Klasa @code{Eq} je klasa svih tipova čije vrednosti se mogu porediti sa operatorima @code{==} i @code{/=}.
-@li Klasa @code{Ord} je klasa svih tipova čije vrednosti se mogu porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}. Klasa @code{Ord} je po definiciji jedna podklasa klase @code{Eq}. Drugim rečima svaka instanca klase @code{Ord} mora biti instanca i klase @code{Eq}.
-@li Klasa @code{Num} je klasa svih tipova nad kojima se mogu pozivati operacije @code{+}, @pre{-}, @code{*}.
-@li Klasa @code{Fractional} je podklasa klase @code{Num} koja sadrži tipove nad kojima se može pozivati operacija @code{/}.
+@li Klasa @code{Ord} je klasa svih tipova čije vrednosti se mogu porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}.
+@li Klasa @code{Num} je klasa svih tipova čije vrednosti se mogu kombinovati sa operatorima @code{+}, @pre{-}, @code{*}.
+@li Klasa @code{Fractional} je @em{podklasa} klase @code{Num} koja sadrži tipove nad kojima se može pozivati operacija @code{/}.
 }
 
 @p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}. To znači da vrednosti ovih tipova možemo da poredimo sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=} kao i da pretvaramo u niske sa funkcijom @code{show}.
 
 @example{
-
-@p Kako  @code{Bool}, @code{Int} i @code{Char} pripadaju klasi @code{Show}, sve vrednosti ovih tipova možemo pretvoriti u niske koristeći istu funkciju @code{show}:
+@p Kako @code{Bool}, @code{Int} i @code{Char} pripadaju klasi @code{Show}, sve vrednosti ovih tipova možemo pretvoriti u niske koristeći funkciju @code{show}:
 
 @terminal{
 ghci> show True
@@ -443,7 +442,7 @@ ghci> show 'a'
 }
 }
 
-@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo koristeći operacije @code{+}, @pre{-}, @code{*}. Međutim, od navedenih tipova, samo @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
+@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo sa operatorima @code{+}, @pre{-}, @code{*}. Tipovi @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
 
 @p Kao što smo gore istakli ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
@@ -498,28 +497,30 @@ False
 
 @section{Zaključivanje tipova}
 
-@p Kao što smo već naveli @em{GHC} kompajler (skoro) uvek može da zaključi tip izraza. Zbog toga često nije neophodno navoditi tipske dekleracije u izvornim datotekama.@note{Ipak, uvek je dobro navesti tipove svih definicija, jer je takav kod znatno čitljiviji.} 
+@p @em{GHC} kompajler (skoro) uvek može da zaključi tip izraza. Zbog toga često nije neophodno navoditi tipske dekleracije u izvornim datotekama.@note{Ipak, uvek je dobro navesti tipove svih definicija, jer je takav kod znatno čitljiviji.} 
 
 @p Zaključivanje tipova nam takođe omogućava da u @em{GHCi} okruženju proverimo tipove izraza. To možemo uraditi pomoću naredbe @pre{:type} nakon koje navodimo izraz čiji tip nas interesuje:
 
 @terminal{
-ghci> :type [True, True, False]
-[True, True, False] :: [Bool]
-ghci> :type [True, True, False] !! 1
-a !! 1 :: Bool
-ghci> :type length [True, True, False]
-length [True, True, False] :: Int
+ghci> :type [True, False]
+[True, False] :: [Bool]
+ghci> :type [True, False] !! 1
+[True, False] !! 1 :: Bool
+ghci> :type length [True, False]
+length [True, False] :: Int
 ghci> :type (True, 'a')
 (Bool, Char) 
-}{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 2}, itd...}
+}{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 0}, itd...}
 
-@p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numerički konstanti:
+@p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celokunog izraza @code{[Bool]}. Da bismo razumeli proces zaključivanja tipa izraza @code{length [True, False]}, neophodno je da razumemo pojam @em{tipa funkcije} što će biti prikazano u narednoj lekciji.
+
+@p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numeričkih konstanti:
 
 @terminal{
 ghci> :type 2
 2 :: Num a => a
 }
 
-@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Izraz @code{2} može da predstavlja vrednost tipa @code{Int}, @code{Integer}, @code{Float} ili @code{Double}. Međutim svi ovi tipovi, pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}. Takav tip se označava sa @code{Num a => a}. Deo tipa koji se nalazi pre znaka @code{=>} naziva se @def{klasno ograničenje}.
+@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Izraz @code{2} može predstavljati vrednost tipa @code{Int}, @code{Integer}, @code{Float} ili @code{Double}. Međutim svi ovi tipovi, pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}. Takav tip se označava sa @code{Num a => a}. Deo tipa koji se nalazi pre znaka @code{=>} naziva se @def{klasno ograničenje}.
 
-@p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, stoga ne može biti @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor, već klasno ograničenje koje nam sugeriše da se radi o tipu koji može da predstavlja racionalne brojeve.
+@p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, te ne može biti tipa @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i kao @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor već klasno ograničenje.

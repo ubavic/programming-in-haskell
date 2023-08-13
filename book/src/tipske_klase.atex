@@ -71,7 +71,7 @@ class Figura a where
   obim :: a -> Double
 }{Dekleracije koje klasa pruža moraju biti nazubljene za jedan nivo (barem jedan razmak), u odnosu na liniju @code{class ...}. }
 
-@p Linijom @code{class ...} započinje se blok definicje klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve liije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
+@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve liije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
 
 @p Tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 
@@ -92,7 +92,7 @@ instance Figura Trougao where
 
 instance Figura Krug where
   obim (Krug (x, y, r)) = 2 * pi * r
-}{Definicije funkcija su u potpunosti iste kao definicje funkcija @code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}.}
+}{Definicije funkcija su u potpunosti iste kao definicije funkcija @code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}.}
 
 @p Linijom @code{instance ... } započinje se blok definicija funkcija. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
@@ -262,9 +262,9 @@ class (Eq a) => Ord a where
 
 @p Tip @code{Ordering} je tip koji sadržati tri vrednosti @code{LT}, @code{EQ}, @code{GT} koje označavaju rezultat poređenja dve vrednosti. Vrednost @code{compare a b} je @code{LT}, @code{EQ}, @code{GT} ako je vrednost @code{a} strogo manja, jednaka, strogo veća od vrednosti @code{b}.
 
-@p Definicje operatora @code{<}, @code{>}, @code{>=} koriste operator @code{<=} i prilično su jasne. Jasne su i definicije binarnih funkcija @code{min} i @code{max} koje takođe koriste operator @code{<=}. Operator @code{<=} je definisan preko funkcije @code{compare}. Funkcija @code{compare} preko funkcije @code{<=}. Kao i kod klase @code{Eq}, i ovde imamo slučaj beskonačne rekurzije kroz definicije. Stoga je potrebno, i dovoljno, u instanci definisati samo jednu od funkcija @code{<=} ili @code{comapre}.
+@p Definicije operatora @code{<}, @code{>}, @code{>=} koriste operator @code{<=} i prilično su jasne. Jasne su i definicije binarnih funkcija @code{min} i @code{max} koje takođe koriste operator @code{<=}. Operator @code{<=} je definisan preko funkcije @code{compare}. Funkcija @code{compare} preko funkcije @code{<=}. Kao i kod klase @code{Eq}, i ovde imamo slučaj beskonačne rekurzije kroz definicije. Stoga je potrebno, i dovoljno, u instanci definisati samo jednu od funkcija @code{<=} ili @code{comapre}.
 
-@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicje instance će potisnuti definicje u definicji klase), ali za tako nečim gotovo nikad nema potrebe.
+@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicije instance će potisnuti definicije u definicji klase), ali za tako nečim gotovo nikad nema potrebe.
 
 @example{
 @p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
@@ -284,17 +284,17 @@ class Show a where
   show :: a -> String
 }{Ovde nismo naveli kompletnu definicju klase, ali je dovoljno znati da minimalno instanciranje @code{Show} klase podrazumeva samo implementaciju funkcije @code{show}.}
 
-@p Klasa @code{Show} je neophodna za ispisivanje vrednosti u @em{GHCi} okruženju. Do sada smo koristili @code{deriving (Show)} konstrukciju koja je omogućavala da se neki tip podatka, automatski pridruži @code{Show} klasi. Od sada znamo kako to možemo i sami da uradimo.
+@p Klasa @code{Show} je neophodna za ispisivanje vrednosti u @em{GHCi} okruženju. Do sada smo koristili @code{deriving (Show)} konstrukciju koja je omogućavala da se tip automatski pridruži @code{Show} klasi tj . da se @em{izvede} instanca. Sada znamo kako možemo implementirati sopstvene instance.
 
 @example{
 
-@p Ako želimo da automatski instanciramo @code{Show Racionalan}, dovoljno je definiciju tipa promenimo u sledeću:
+@p Ako želimo da izvedemo @code{Show Racionalan}, dovoljno je definiciju tipa promenimo u sledeću:
 
 @codeBlock{
 newtype Racionalan = R (Int, Int) deriving (Show)
 }
 
-@p Kod ovakvog automatskog instaciranja, @code{show} funkcija će kreirati nisku koja liči veoma na sam kod s kojim je konstruisana vrednost.
+@p Pri izvođenju, @code{show} funkcija će kreirati nisku koja liči veoma na sam kod s kojim je konstruisana vrednost.
 
 @terminal{
 ghci> a = R (2, 3)
@@ -304,7 +304,7 @@ ghci> a
 R (2,3)
 }{Kada u @em{GHCi} unesemo neki izraz, taj izraz će se evaluirati, i dobijena vrednost će se prikazati kao niska dobijena primenom @code{show} funkcije.}
 
-@p Za tip @code{Racionalan} je bolje implementirati posedbnu @code{show} funkciju, a ne koristiti automatsko izvođenje. U tom slučaju treba ukloniti @code{deriving (Show)}, a dodati instancu @code{Show Racionalan}:
+@p Za tip @code{Racionalan} je bolje implementirati posedbnu @code{show} funkciju, i ne koristiti izvođenje. U tom slučaju treba ukloniti @code{deriving (Show)}, a dodati instancu @code{Show Racionalan}:
 
 @codeBlock{
 instance Show Racionalan where
