@@ -22,12 +22,12 @@ instance K T where
 
 @section{Jedan primer}
 
-@p Gotovo da nema uvodne knjige o programiranju u nekom jeziku koja ne sadrži primer sa geometrisjkim figurama poput pravugaonika, trougla i kruga. Implementirati strukture koje predstavljaju figure i funkcije koje računaju obim i površinu figura je jednostavno u svakom popularnom jeziku, ali može da pozluži za odličnu ilustraciju mnogobrojnih pojedinosti nekog programskog jezika. Nama će poslužiti da ilustrujemo zašto su klase tipova korisne.  
+@p Gotovo da nema uvodne knjige o programiranju u nekom jeziku koja ne sadrži primer sa geometrisjkim figurama poput pravougaonika, trougla i kruga. Implementirati strukture koje predstavljaju figure i funkcije koje računaju obim i površinu figura je jednostavno u svakom popularnom jeziku, ali može da pozluži za odličnu ilustraciju mnogobrojnih pojedinosti nekog programskog jezika. Nama će poslužiti da ilustrujemo zašto su klase tipova korisne.  
 
 @p Prvo ćemo definisati tri tipa podatka koji predstavljaju figure u Dekartovoj ravni:
 
 @list{
-  @li Svaki pravuganik se može odrediti sa jednim temenom, širinom i visinom (jednostavnosti radi, pretpostavljamo da su stranice pravuganika paralelne sa koordinatnim osama). Kako teme možemo predstaviti sa dve kooridnate, ceo kvadrat možemo predstaviti sa četiri @code{Double} vrednosti.
+  @li Svaki pravougaonik se može odrediti sa jednim temenom, širinom i visinom (jednostavnosti radi, pretpostavljamo da su stranice pravougaonika paralelne sa koordinatnim osama). Kako teme možemo predstaviti sa dve koordinate, ceo kvadrat možemo predstaviti sa četiri @code{Double} vrednosti.
   @li Trougao je u potpunosti određen sa tri temena. Prema tome, za predstavljanje trougla nam je potrebna struktura podataka koja sadrži šest @code{Double} vrednosti.
   @li Krug je određen centrom i poluprečnikom. Stoga struktura koja predstavlja krug sadrži tri @code{Double} vrednosti.
 }
@@ -35,7 +35,7 @@ instance K T where
 @p Kada znamo šta strukture sadrže, lako ih je implementirati kao uređene @m{n}-torke:
 
 @codeBlock{
-newtype Pravuganik = Pravuganik (Double, Double, Double, Double)
+newtype Pravougaonik = Pravougaonik (Double, Double, Double, Double)
   deriving Show
 
 newtype Trougao = Trougao (Double, Double, Double, Double, Double, Double)
@@ -48,8 +48,8 @@ newtype Krug = Krug (Double, Double, Double)
 @p Implementacija funkcija koje računaju obim navedenih figura je takođe jednostavna:
 
 @codeBlock{
-obimPravuganika :: Pravuganik -> Double
-obimPravuganika (Pravuganik (x, y, a, b)) = 2 * (a + b)
+obimPravougaonika :: Pravougaonik -> Double
+obimPravougaonika (Pravougaonik (x, y, a, b)) = 2 * (a + b)
 
 obimTrougla :: Trougao -> Double
 obimTrougla (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
@@ -62,7 +62,7 @@ obimKruga :: Krug -> Double
 obimKruga (Krug (x, y, r)) = 2 * pi * r 
 }{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
 
-@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli da primenimo jedinstvenu funkciju @code{obim} na svaki tip figure@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na vrednost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
+@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli da primenimo jedinstvenu funkciju @code{obim} na svaki tip figure@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na vrednost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
 
 @p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo funkciju @code{obim} u definiciji klase ćemo navesti samo jednu dekleraciju tipa. 
 
@@ -75,13 +75,13 @@ class Figura a where
 
 @p Tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 
-@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, potrebno je tipove @code{Pravuganik}, @code{Trougao} i @code{Krug} učininiti instancama klase @code{Figura}.
+@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, potrebno je tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učininiti instancama klase @code{Figura}.
 
 @p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instacinaranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
 
 @codeBlock{
-instance Figura Kvadrat where
-  obim (Kvadrat (x, y, a, b)) = 2 * (a + b)
+instance Figura Pravougaonik where
+  obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
 
 instance Figura Trougao where
   obim (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
@@ -92,7 +92,7 @@ instance Figura Trougao where
 
 instance Figura Krug where
   obim (Krug (x, y, r)) = 2 * pi * r
-}{Definicije funkcija su u potpunosti iste kao definicije funkcija @code{obimPravuganika}, @code{obimTrougla}, @code{obimKruga}.}
+}{Definicije funkcija su u potpunosti iste kao definicije funkcija @code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}.}
 
 @p Linijom @code{instance ... } započinje se blok definicija funkcija. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
@@ -104,15 +104,15 @@ instance Figura Krug where
 ghci> trougao = Trougao (0, 0, 1, 0, 0, 1)
 ghci> obim trougao
 3.414213562373095
-ghci> kvadrat = Pravuganik (0, 0, 2, 2)
-obim kvadrat
+ghci> pravougaonik = Pravougaonik (0, 0, 2, 2)
+obim pravougaonik
 8.0
 ghci> krug = Krug (0, 0, 10)
 ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definicju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu pravugaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definicju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu Pravougaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where
@@ -120,10 +120,10 @@ class Figura a where
   povrsina :: a -> Double
 
 
-instance Figura Kvadrat where
-  obim (Kvadrat (x, y, a, b)) = 2 * (a + b)
+instance Figura Pravougaonik where
+  obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
 
-  povrsina (Kvadrat (x, y, a, b)) = a * b
+  povrsina (Pravougaonik (x, y, a, b)) = a * b
 
 
 instance Figura Trougao where
@@ -189,7 +189,7 @@ instance Eq Racionalan where
     (Racionalan (a, b)) /= (Racionalan (c, d)) = a * d /= c * b
 }
 
-@p Ponivnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost da poredimo vrednosti tipa @code{Racionalan}:
+@p Ponovnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost da poredimo vrednosti tipa @code{Racionalan}:
 
 @terminal{
 ghci> a = R (1, 2)

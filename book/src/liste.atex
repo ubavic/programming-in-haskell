@@ -350,7 +350,7 @@ ghci> foldr f 0 [5, 4, 3, 2, 1]
 @p Prethodih izraz je ekvivalentan izrazu @ccode{f 5 (f 4 (f 3 (f 2 (f 1 0))))} koji je naravno ekvivalentan izrazu @ccode{5 + (4 + (3 + (2 + (1 + 0))))}
 }
 
-@p Uz funkciju @code{foldr} koristi se i @code{foldl} koja "presavija" listu sa leva. Naravno, kada koristimo @em{komutativnu} operaciju, dobijamo isti rezultat sa @code{foldl} i @code{foldr} funkcijama. Ali za nekomutatine operacije, rezultati će se uglavno razlikovati:
+@p Uz funkciju @code{foldr} koristi se i @code{foldl} koja "presavija" listu sa leva. Naravno, kada koristimo @em{komutativnu} operaciju, dobijamo isti rezultat sa @code{foldl} i @code{foldr} funkcijama. Za nekomutativne operacije rezultati će se uglavnom razlikovati:
 
 @terminal{
 ghci> g = \a b -> a / b
@@ -412,130 +412,6 @@ ghci> numerisaniDani = zipWith f [1 .. 7] dani
 
 @problem{Reimplementirati funkciju @code{zipWith} koristeći funkcije @code{zip} i @code{map}.}
 
-@section{Neki primeri}
-
-@subsection{Cezarova šifra}
-
-@p Po rimskom istoričaru Svetoniju, Julije Cezar je šifrovao vojne poruke tako što bi slovo @em{A} zamenio slovom @em{D}, slovo @em{B} slovom @em{E}, slovo @em{C} slovom @em{F}, i tako dalje, zamenjujući svako slovo latinskog alfabeta sa slovom koje se nalazi tri mesta nakon tog slova. Na primer, reč @em{CLEOPATRA} bi pri ovom šifrovanju postala @em{FOHRSDYVD}@note{Za ovaj primer smo koristili rimski alfabet koji ne sadrži @em{J}, @em{U} i @em{W}. Nadalje koristimo engleski alfabet.}. Onaj ko bi primio poruku, dešifrovao bi poruku tako što bi uradio sličnu zamenu, ali ovog puta zamenjujući svako slovo sa slovom koje se u alfabetu nalazi tri mesta pre. Iako Cezar nije prvi iskoristio ovakvu šifru, danas šifra nosi ime po njemu. Štaviše, pod istim imenom nazivaju se šifre koje "pomeraju" slova za @m{n} mesta, gde @m{n} ne mora biti baš @m{3}.
-
-@p Za implementaciju Cezarove šifre prvo ćemo konstruisati listu parova odgovarajućih karaktera (svaki par će sadržati slovo i šifrovano slovo). To možemo učiniti sa @code{zip} funkcijom
-
-@codeBlock{
-sifra :: [(Char, Char)]
-sifra = zip ['A' .. 'Z'] ['D' .. 'Z']
-}
-
-@p Navedenim kodom smo uparili listu @code{['A' .. 'Z']} sa listom @code{['D' .. 'Z']}. Time dobijamo listu koja redom sadrži parove @code{('A','D')},  @code{('B','E')}, @code{('C','F')}, itd.. Međutim, kako @code{['A' .. 'Z']} ima 26, a @code{['D' .. 'Z']} samo 23 člana, lista @code{sifra} će imati samo 23 člana, i slova @code{'X'}, @code{'Y'} i @code{'Z'} neće imati para. 
-
-@p Da bismo prevazišli problem, na kraj liste @code{['D' .. 'Z']} dodaćemo karaktere @code{['A', 'B', 'C']}. Na ovaj način @code{'X'} će se šifrovati u (upariti sa) @code{'A'}, @code{'Y'} u @code{'B'} i @code{'Z'} u @code{'C'}.
-
-@codeBlock{
-sifra :: [(Char, Char)]
-sifra = zip ['A' .. 'Z'] (['D' .. 'Z'] ++ ['A', 'B', 'C'])
-}
-
-@terminal{
-ghci> sifra
-[('A','D'),('B','E'),('C','F'),('D','G'),('E','H'),('F','I'),('G','J'),('H','K'),('I','L'),
-('J','M'),('K','N'),('L','O'),('M','P'),('N','Q'),('O','R'),('P','S'),('Q','T'),('R','U'),
-('S','V'),('T','W'),('U','X'),('V','Y'),('W','Z'),('X','A'),('Y','B'),('Z','C')]
-}
-
-@p Sada listu @code{sifra} možemo da iskoristimo da šifrujemo pojedinačne karaktere. Ideja je sledeća: za dati karakter @code{k :: Char}, iz liste @code{sifra} uzećemo par čija prva koordinata je jednaka vrednosti @code{k}. Šifrovan karakter će biti druga koordinata tog para. Za pronalazak odgovarajućeg para, koristimo funkciju @code{filter}.
-
-@codeBlock{
-sifrujKarakter :: Char -> Char
-sifrujKarakter k = snd (head sifrovano)
-  where
-    sifrovano = filter (\par -> fst par == k) sifra
-}{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parave čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{sifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{sifrujKarakter 'A' = 'D'}.}
-
-@p Funkcija @code{sifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{sifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalinih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head sifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{sifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
-
-@codeBlock{
-sifrujKarakter :: Char -> Char
-sifrujKarakter k
-  | null sifrovano = k
-  | otherwise      = snd (head sifrovano)
-  where
-    sifrovano = filter (\par -> fst par == k) sifra
-}
-
-@p Šifrovana niska dobija se primenom funkcije @code{sifrujKarakter} na svaki karakter te niske:
-
-@codeBlock{
-sifruj :: [Char] -> [Char]
-sifruj niska = map sifrujSlovo niska
-}
-
-@terminal{
-ghci> sifruj "NAPAD NA GALE VECERAS U OSAM"
-"QDSDG QD JDOH YHFHUDV X RVDP"
-}{Pošto se razmak @code{' '} ne nalazi u listi @code{sifra}, važi @code{sifrujKarakter ' ' = ' '}. Samim tim, prilikom šifrovanja razmaci se čuvaju.}
-
-@p Funkcija koja dešifruje poruku je potpuno analogna funkciji koja je šifruje, samo što je uloga koordinata obrnuta. Pretragu vršimo po drugoj koordinati, a vraćmo prvu:
-
-@codeBlock{
-desifrujKarakter :: Char -> Char
-desifrujKarakter k
-  | null desifrovano = k
-  | otherwise      = fst (head desifrovano)
-  where
-    desifrovano = filter (\par -> snd par == k) sifra
-
-desifruj :: [Char] -> [Char]
-desifruj niska = map desifrujSlovo niska
-}
-
-@problem{
-Implementirati Cezarovu šifru sa proizvoljnim pomerajem @m{n}.
-}
-
-
-@problem{
-Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tajne poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljavmo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
-}
-
-@subsection{Određen integral}
-
-@p Otkiriće diferencijlanog i integralnog računa je jedno od najzačajnih trenutaka u istoriji nauke. Navedni matematički aparati su neophodni za formulaciju mnogih prirodnih fenomena: od kretanja elektorna do kretanja galaksija. Svakako, ova tematika je van opsega ove knjige, ali ovde možemo da prikažemo kako se elegantno može implementirati formula za aprikismaciju određenih integrala.
-
-@p Određeni integral funkcije @m{f\colon \mathbb R \to \mathbb R} na intervalu @m{[a,b]}, označava se sa @eq{\int\limits_a^b f(x)\,\mathrm dx} i može se shvatitii kao površina između grafika funkcije @m{f} i @m{x} ose@note{Pri čemu se ta površina uzima sa negativnim predznakom na oblastima gde je @m{f(x) < 0}.}. Integral, tj. površina, može se aproksimirati @em{Rimanovom sumom}, odnsno sumom površina malih pravuganika koji aproksimiraju površinu ispod grafika.
-
-@figure{4_integral}{Aproksimacija površine ispod grafika funkcije @m{f} nizom pravugaonika. Iako nije neophodno da svi pravugaonici budu iste širine, mi ćemo algoritam implementirati tako da su svi iste širine, baš kao na ovoj ilustraciji.}
-
-@p Rimanova suma se može zapisati kao
-@eq{I = \sum\limits_{i=0}^{n} f\left(x_i\right) \left(x_{i+1} - x_i\right),}
-gde je @eq{a = x_0 < x_1 < \cdots < x_{n} < x_{n+1} = b} niz tačaka koje dele interval @m{[a,b]}. Navedene podeone tačke se mogu uzeti proizvoljno, ali što ih više ima to će kvadratići biti uži, a samim tim će aproksimacija površine biti tačnija.
-
-@p Lako možemo implementirati funkciju @ccode{int :: (Double -> Double) -> Double -> Double -> Double} koja računa određen integral neke fukcije @code{f :: Float -> Float}. Prvi paramtar funkcije @code{int} je funkcija @code{f}, drugi početak intervala a treći kraj intervala. povratna vrednost je aproksimacija određenomintegrala Rimanovom sumom.
-
-@p Listu podeonih tačaka možemo formirati korišćenjem izlistavanja. Ako su @code{a} i @code{b} krajevi intervala, a @code{d} neki dovoljno mali broj, tada lista @code{[a, a + d .. b]} predstavlja podelu intervala @m{[a,b]}. Primenom funkcije @code{f} na svaki element date liste, dobijamo listu visina pravuganika: @ccode{map f [a, a + d .. b]}. Množenjem svake od ovih visina sa širinom intervala, odnosno sa @code{d}, dobijamo listu površina pravuganika: @ccode{map (\h -> h * d) (map f [a, a + d .. b])}. Na kraju, dovoljno je da površine saberemo:
-@ccode{sum (map (\h -> h * d) (map f [a, a + d .. b]))}.
-
-@p Kompletna implementacija funkcije @code{int} je 
-
-@codeBlock{
-int :: (Double -> Double) -> Double -> Double -> Double
-int f a b = sum povrsine
-    where
-        povrsine = map (\h -> h * d) (map f [a, a + d .. b])
-        d = (b - a) / 200
-}{U ovoj implementaciji uzeto je da je @code{d} jednak @m{200}-tom delu intrvala @m{[a, b]}. Prime tome, lista podenih tačaka će sadržati @m{200} elemenata. Za veću preciznost, dovoljno je uvećati konstantu @code{200}.}
-
-@example{
-@p U @em{GHCi} okruženju je dostupna funkcija @code{sin} kao i konstanta @code{pi}. Ako učitamo implementaciju funkcije @code{int} možemo da izračunamo integral sinusa na intervalu @m{[0,\pi]}:
-
-@terminal{
-ghci> int sin 0 pi
-1.9999588764792144
-}
-}
-
-@problem{
-Koriseći činjenicu da je @eq{\sum\limits_{i=0}^{n} (f\left(x_i\right) \cdot d) = d \cdot \sum\limits_{i=0}^{n} f\left(x_i\right),}
-pojednostaviti kod funkcije @code{int}.
-}
 
 @section{Zadaci}
 
@@ -565,11 +441,13 @@ Napisati funkciju @code{kodiraj :: String -> [(Char, Int)]} koja kodira nisku ta
 
 @problem{
 Napisati funkciju @code{rotiraj :: Int -> [a] -> [a]} koja "rotira" listu tako što svaki element pomera za @code{n} mesta u levo, pri čemu se elementi sa kraja liste vraćaju na početak: @code{rotiraj 1 "ABCD"} daje @code{"BCDA"}, a @code{rotiraj 2 "ABCD"} daje @code{"CDAB"}, itd...
+}{
+@p @em{Pomoć:} Implementirati pomoćnu funkciju koja rotira listu za jedan element. Opštu funkciju implementirati rekurzijom po broju rotiranja koristeći pomoćnu funkciju.
 }
 
 
 @problem{
-Implementirati funkciju @ccode{srednjaVrednost :: [Float] -> Float} koja računa srednju vrednost liste. Implementirati funkciju @ccode{disperzija :: [Float] -> Folat} koja računa disperziju vrednosti liste.
+Implementirati funkciju @ccode{srednjaVrednost :: [Float] -> Float} koja računa srednju vrednost liste. Implementirati funkciju @ccode{disperzija :: [Float] -> Float} koja računa disperziju vrednosti liste.
 }
 
 @problem{

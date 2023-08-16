@@ -342,7 +342,7 @@ rep :: [a] -> a
 rep (_:xs) = xs
 }{Džokere bi trebalo koristiti kad god je to moguće, jer poboljšavaju čitljivost koda tako što umanjuju broj vezanih imena.}
 
-@p Dobro je naglasiti da pri podudaranju oblika nije moguće navesti oblik koji sadrži operator @code{++} (na primer ne možemo uhvatiti dvočlanu listu sa @code{[x] ++ [y]}). Razlog zašto je operator @code{:} moguće koristiti, a @code{++} ne, postaće jasan u jednoj od narednih glava.
+@p Dobro je naglasiti da pri podudaranju oblika nije moguće navesti oblik koji sadrži operator @code{++} (na primer ne možemo uhvatiti dvočlanu listu sa @code{[x] ++ [y]}). Razlog zašto je operator @code{:} moguće koristiti, a @code{++} ne, postaće jasan u jednoj od narednih lekcija.
 
 @p Osim lista, i uređene @m{n}-torke se mnogu dekonstruisati podudaranjem oblika. 
 

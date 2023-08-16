@@ -1,6 +1,6 @@
 @chapter{Prvi koraci}
 
-@p Naredna glava sadrži informacije neophodne za razumevanje svih ostalih glava. Ako neku glavu ne bi trebalo da preskočite u ovoj knjizi, to je definitivno ova glava. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
+@p Naredna lekcija sadrži informacije neophodne za razumevanje svih ostalih lekcija. Ako neku lekciju ne bi trebalo da preskočite, to je definitivno ova. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
 
 @p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda.
 
@@ -75,9 +75,7 @@ sati_u_nedelji = dana_nedelji * sati_u_nedelji
 @li @em{Interpretacijom koda}. Uz pomoć programa @em{GHCi} moguće je učitati definicije u interaktivno okruženje i evaluirati te definicije.
 }
 
-@p Iz određenih razloga koji će biti pojašnjeni kasnije, definisanje imena @code{main} zahteva poznavanje nešto naprednijeg programiranja u Haskelu. Stoga će demonstracija kompilacije programa biti odložena za neku narednu glavu, a do tada ćemo koristiti isključivo @em{GHCi} program.
-
-@todo{Linkovati glavu}
+@p Iz određenih razloga koji će biti pojašnjeni kasnije, definisanje imena @code{main} zahteva poznavanje nešto naprednijeg programiranja u Haskelu. Stoga će demonstracija kompilacije programa biti odložena za neku narednu lekciju, a do tada ćemo koristiti isključivo @em{GHCi} program.
 
 @p Rad u programu @em{GHCi} zahteva da prvo sačuvamo prethodni primer u datoteku sa ekstenzijom @code{.hs}. Na primer, neka je to datoteka @code{prviProgram.hs}. Zatim je potrebno da otvorimo terminal i promenimo aktivni direktorijum tog terminala u direktorijum u kom se nalazi datoteka @code{prviProgram.hs}. Nakon toga možemo pokrenuti @pre{ghci} program@note{Ako koristite @em{repl.it} web okruženje, dovoljno je da samo pokrenete komandu @pre{ghci} u terminalu koji se nalazi sa desne strane editora koda. Editor koda koji se nalazi na levoj strani prikazuje kôd koji se nalazi u datoteci @code{main.hs}. }. Nakon pokretanja komande @pre{ghci} komande pojaviće se tekst poput sledećeg:
 

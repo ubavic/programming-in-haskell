@@ -6,7 +6,7 @@
 
 @p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave (koji su statički tipizirani kao i Haskel) neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler (skoro) uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip (većine) vrednosti. 
 
-@p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove glave ćemo se upoznati sa nekim osnovnim tipovima u Haskelu, kao i operacijama i funkcijama koje se mogu koristiti sa ovim tipovima.
+@p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove lekcije upoznaćemo se sa nekim osnovnim tipovima u Haskelu, kao i operacijama i funkcijama koje se mogu koristiti sa ovim tipovima.
 
 @section{Tip @em{Bool}}
 
@@ -75,7 +75,7 @@ True
 
 @subsection{@code{+} i @code{*}}
 
-@p Sa sabiranjem i množenjem brojeva smo se već upoznali u prethodnoj glavi. Ovi operatori se ponašaju isto kao i svim drugim programskim jezicima ili u svakodnevnoj aritmetici.
+@p Sa sabiranjem i množenjem brojeva smo se već upoznali u prethodnoj lekciji. Ovi operatori se ponašaju isto kao i svim drugim programskim jezicima ili u svakodnevnoj aritmetici.
 
 @subsection{@code{-}}
 
@@ -262,7 +262,7 @@ ghci> 1 ++ [2,3,4,5]
         it :: forall a. (Num a, Num [a]) => [a]
 }{Česta greška je da se element nadovezuje na početak sa operatorom @code{++} ili da se liste spajaju pomoću operatora @code{:}.}
 
-@p Liste predstavljaju strukturu podataka koja se najčešće koristi u Haskelu. Zbog toga postoje mnoge funkcije koje uzimaju ili vraćaju liste. Sa mnogim takvim funkcijama upoznaćemo se u glavi @em{Liste}. Za sada navodimo samo naredne funkcije:
+@p Liste predstavljaju strukturu podataka koja se najčešće koristi u Haskelu. Zbog toga postoje mnoge funkcije koje uzimaju ili vraćaju liste. Sa mnogim takvim funkcijama upoznaćemo se u lekciji @em{Liste}. Za sada navodimo samo naredne funkcije:
 
 @list{
 @li @code{length} vraća dužinu prosleđene liste.
@@ -271,7 +271,7 @@ ghci> 1 ++ [2,3,4,5]
 @li @code{init} vraća sve elemente prosleđene liste osim poslednjeg. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
 @li @code{tail} vraća sve elemente prosleđene liste osim prvog. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
 @li @code{reverse} vraća prosleđenu listu u obrnutom smeru.
-@li @code{elem} je funkcija od dva parametra koja proverava da li se prvi argument nalazi u listi prosleđenoj kao drugi argument. Rezultat provere je logička vrednost.
+@li @code{elem} je funkcija od dva parametara koja proverava da li se prvi argument nalazi u listi prosleđenoj kao drugi argument. Rezultat provere je logička vrednost.
 }
 
 @terminal{

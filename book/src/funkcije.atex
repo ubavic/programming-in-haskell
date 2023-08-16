@@ -214,9 +214,9 @@ povrsinaKruga = (\r -> (pi * r ** 2))
 
 @section{Funkcije više promenljiva}
 
-@p Do sada je prikazano kako se mogu definisati funkcije samo sa jednim parametrom, ali su u prethodnoj glavi korišćene funkcije sa dva parametra (kao što je funkcija @code{mod} koja određuje ostatak pri deljenju ili funkcija @code{elem} koja ispituje da li se element nalazi u listi). Postavlja se pitanje kako se ovakve funkcije definišu?
+@p Do sada je prikazano kako se mogu definisati funkcije samo sa jednim parametrom, ali su u prethodnoj lekciji korišćene funkcije sa dva parametara (kao što je funkcija @code{mod} koja određuje ostatak pri deljenju ili funkcija @code{elem} koja ispituje da li se element nalazi u listi). Postavlja se pitanje kako se ovakve funkcije definišu?
 
-@p Pažljivi čitalac koji se seća sadržaja prethodne glave mogao je sam da konstruiše funkcije sa dva parametra. Naime, u prethodnoj sekciji smo videli kako se uređeni parovi mogu konstruisati. Prema tome, ako želimo funkciji da prosledimo dve vrednosti, dovoljno je da napišemo funkciju koja uzima jedan uređen par@note{Kada bismo znali kako da pristupimo članovima uređene trojke, četvorke itd... tada bismo na sličan način mogli da definišemo i "funkcije sa više paramatra". Međutim, to će biti prikazano tek u narednoj glavi.}.
+@p Pažljivi čitalac koji se seća sadržaja prethodne lekcije mogao je sam da konstruiše funkcije sa dva parametara. Naime, u prethodnoj sekciji smo videli kako se uređeni parovi mogu konstruisati. Prema tome, ako želimo funkciji da prosledimo dve vrednosti, dovoljno je da napišemo funkciju koja uzima jedan uređen par@note{Kada bismo znali kako da pristupimo članovima uređene trojke, četvorke itd... tada bismo na sličan način mogli da definišemo i "funkcije sa više parametara". Međutim, to će biti prikazano tek u narednoj lekciji.}.
 
 @codeBlock{
 ljubav :: (String, String) -> String
@@ -231,9 +231,9 @@ ghci> ljubav ("Marija", "Marijana")
 "Marija voli Marijana!"
 }
 
-@p Pozivanje ovako definisane funkcije podseća na pozivanje funkcija u imperativnim jezicima, ali primećujemo da smo mi u prethodnoj glavi funkcije poput @code{mod} pozivali sa @code{mod 7 3} a ne sa @code{mod (7, 3)}. Takođe možemo da primetimo da iako funkciji prosleđujemo dva podatka, funkcija @code{ljubav} suštinski uzima samo jednu vrednost tipa @code{(String, String)}.
+@p Pozivanje ovako definisane funkcije podseća na pozivanje funkcija u imperativnim jezicima. Ali primetimo da smo mi u prethodnoj lekciji funkcije poput @code{mod} pozivali sa @code{mod 7 3} a ne sa @code{mod (7, 3)}. Takođe možemo da primetimo da iako funkciji prosleđujemo dva podatka, funkcija @code{ljubav} suštinski uzima samo jednu vrednost tipa @code{(String, String)}.
 
-@p Lambda račun, koji je osmišljen pola veka pre Haskela, je zamišljen kao minimalan formalni sistem i kao takav takav ne poseduje pojam uređene @code{n}-torke. Umesto toga, funkcije sa više parametara u lambda računu se realizuju uz pomoć 'trika'. Naime: da bi dobili funkciju @code{f} od više parametra, kreiraćemo funkciju @code{f} od jednog parametra čija povratna vrednost je druga funkcija. Na taj način, izraz @code{(f x)} predstavlja novu funkciju koju možemo da primenimo na neku vrednost. Ako je rezultat i ove primene funkcija, tada taj rezultat možemo da primenimo na sledeću vrednost i tako dalje.
+@p Lambda račun, koji je osmišljen pola veka pre Haskela, je zamišljen kao minimalan formalni sistem i kao takav takav ne poseduje pojam uređene @code{n}-torke. Umesto toga, funkcije sa više parametara u lambda računu se realizuju uz pomoć 'trika'. Naime: da bi dobili funkciju @code{f} od više parametara, kreiraćemo funkciju @code{f} od jednog parametra čija povratna vrednost je druga funkcija. Na taj način, izraz @code{(f x)} predstavlja novu funkciju koju možemo da primenimo na neku vrednost. Ako je rezultat i ove primene funkcija, tada taj rezultat možemo da primenimo na sledeću vrednost i tako dalje.
 
 
 @example{
@@ -249,7 +249,7 @@ ghci> (aritm 8) 10
 @p Zašto je funkcija pozvana na ovaj način? Pogledajmo samu definicije funkcije @code{aritm}. Izraz @code{aritm 8} predstavlja jedan redeks. Beta redukcijom ovaj redeks se svodi na @ccode{(\y -> ((8+y)/2))}. Ali ovaj rezultat je ponovo jedna funkcija, stoga je možemo primeniti na vrednost @code{10}. Aplikacija @ccode{(\y -> ((8+y)/2)) 10} se beta-redukuje u izraz @code{(8 + 10)/2} koji se zatim sračunava u vrednost @code{9}.
 }
 
-@p Ipak, aplikacija @code{(aritm 8) 10} ne izgleda baš u potpunosti isto kao aplikacija @code{mod 7 2} koju smo videli u prethodnoj glavi. Razlog tome je što u Haskelu aplikacija (primena funkcije na argument) je levo asocijativna operacija što znači da se izraz @code{(f x) y} može jednostavnije zapisati kao @code{f x y}. I zaista, ako se vratimo na prethodni primer, možemo se uveriti u to:
+@p Ipak, aplikacija @code{(aritm 8) 10} ne izgleda baš u potpunosti isto kao aplikacija @code{mod 7 2} koju smo videli u prethodnoj lekciji. Razlog tome je što u Haskelu aplikacija (primena funkcije na argument) je levo asocijativna operacija što znači da se izraz @code{(f x) y} može jednostavnije zapisati kao @code{f x y}. I zaista, ako se vratimo na prethodni primer, možemo se uveriti u to:
 
 @terminal{
 ghci> aritm 8 10
@@ -260,7 +260,7 @@ ghci> aritm 20 100
 
 @p Kog tipa je funkcija @code{aritm}? Za trenutak pretpostavimo da su parametri @code{x} i @code{y} tipa @code{Double}@note{Zapravo, za ovako napisano definiciju kompajler će zaključiti da su @code{x} i @code{y} tipa @code{Frac a => a}, ali to nas ne brine trenutno.}. Funkcija @code{aritm} uzima vrednost tipa @code{Double} i vraća neku funkciju, nazovimo je @code{g}. Funkcija @code{g} uzima i vraća vrednost tipa @code{Double} te je njen tip @code{Double -> Double}. Sada možemo da zaključimo da funkcija @code{aritm} poseduje tip @code{Double -> (Double -> Double)} jer uzima vrednost tipa @code{Double} i vraća vrednost tipa @code{Double -> Double}.
 
-@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametra funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} na vrednost tipa @code{a1} dobija se funkcija tipa @ccode{a2 -> (a3 -> (... -> (aN -> b)))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @ccode{a3 -> (... -> (aN -> b))}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
+@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametara funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} na vrednost tipa @code{a1} dobija se funkcija tipa @ccode{a2 -> (a3 -> (... -> (aN -> b)))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @ccode{a3 -> (... -> (aN -> b))}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
 
 @p Funkcija koja "uzima" ili "vraća" neku drugu funkciju naziva se @def{funkcija višeg reda}. Mnogi programski jezici nemaju podršku za funkcije višeg reda, ali kao što vidimo, u Haskelu je ovaj pojam je sasvim prirodan.
 
@@ -334,7 +334,7 @@ uncurry :: (a -> b -> c) -> ((a, b) -> c)
 @section{Zadaci}
 
 @problem{
-Rešenja @m{x_1} i @m{x_2} kvadratne jednačine @m{ax^2+bx+c=0} su data sa @em{kvadratnom formulom} @eq{x_{1,2} = \frac{-b\pm\sqrt{b^2-4ac}}{2a}.} Implementirati funkciju @ccode{resenja :: Double -> (Double -> (Double -> (Double, Double)))} koja za tri prosleđena parametra @m{a}, @m{b} i @m{c} vraća uređeni par rešenja koja su dobijena putem navedene formule. Pretpostaviti da će koeficijenti biti tako zadati da su sve računske operacije definisane.
+Rešenja @m{x_1} i @m{x_2} kvadratne jednačine @m{ax^2+bx+c=0} su data sa @em{kvadratnom formulom} @eq{x_{1,2} = \frac{-b\pm\sqrt{b^2-4ac}}{2a}.} Implementirati funkciju @ccode{resenja :: Double -> (Double -> (Double -> (Double, Double)))} koja za tri prosleđena argumenta @m{a}, @m{b} i @m{c} vraća uređeni par rešenja koja su dobijena putem navedene formule. Pretpostaviti da će koeficijenti biti tako zadati da su sve računske operacije definisane.
 }
 
 @problem{
@@ -362,7 +362,7 @@ ghci> primeni paran (2, 7)
 
 }
 
-@p Za naredne zadatke neophodno je podsetiti se funkcija za rad sa listama iz prethodne glave: @code{length}, @code{head}, @code{last}, @code{init}, @code{tail}, @code{reverse}, @code{elem}.
+@p Za naredne zadatke neophodno je podsetiti se funkcija za rad sa listama iz prethodne lekcije: @code{length}, @code{head}, @code{last}, @code{init}, @code{tail}, @code{reverse}, @code{elem}.
 
 @problem{
 Napisati funkciju @code{inicijali :: [Char] -> ([Char] -> [Char])} koja od dve niske koje predstavlaju ime i prezime pravi inicijale. Na primer @code{inicijali "Nikola" "Tesla"} daje @code{"N.T."}. Pretpostaviti da su obe niske neprazne.

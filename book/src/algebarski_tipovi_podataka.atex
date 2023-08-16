@@ -1,6 +1,6 @@
 @chapter{Algebarski tipovi podataka}
 
-@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj glavi predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicije tipa @code{T} sada će počinjati sa@ccode{data T = ...}, a umesto @code{...} sada ćemo imati više konstruktora.
+@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicije tipa @code{T} sada će počinjati sa@ccode{data T = ...}, a umesto @code{...} sada ćemo imati više konstruktora.
 
 @p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaju @def{algebarski tipovi podataka}.
 
@@ -101,7 +101,7 @@ data T = K
 
 @section{Suma}
 
-@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednosti tipova @code{A} i @code{B}. Suma tipova se vrši navođenjem više konstruktora razdvojenih vertikalnom crtom. Svaki od konstruktora predstavlja konstruktor proizvoda, i može imati proizvoljno mnogo argumenata.
+@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednostima tipova @code{A} i @code{B}. Suma tipova može se shavati kao unija dva tipa. Suma tipova se vrši navođenjem više konstruktora razdvojenih vertikalnom crtom. Svaki od konstruktora predstavlja konstruktor proizvoda, i može imati proizvoljno mnogo argumenata.
 
 @example{
 @p Tip @code{SlovoIliBroj} koji sadrži i slova i brojeve može se konstruisati kao
@@ -110,7 +110,7 @@ data T = K
 data SlovoIliBroj = Slovo Char | Broj Int deriving (Show)
 }
 
-@p Sada postoje dva konstruktora koja konstrišu vrednosti:
+@p Sada postoje dva konstruktora koja konstruišu vrednosti:
 
 @terminal{
 ghci> a1 = Slovo 'a'
@@ -121,7 +121,7 @@ ghci> :t a2
 a2 :: SlovoIliBroj
 }{Vrednosti @code{a1} i @code{a2} imaju isti tip, iako predstavljaju razlčite oblike podataka.}
 
-@p Konstruktore koristimo i sa podudaranjem oblika. Svaka vrednost tipa @code{SlovoIliBroj} može biti li oblika @code{Slovo x} ili oblika @code{Broj x}:
+@p Konstruktore koristimo i sa podudaranjem oblika. Svaka vrednost tipa @code{SlovoIliBroj} može biti ili oblika @code{Slovo x} ili oblika @code{Broj x}:
 
 @codeBlock{
 daLiJeSlovo :: SlovoIliBroj -> Bool
@@ -130,7 +130,7 @@ daLiJeSlovo (Broj x) = False
 }
 }
 
-@p Moguće je "sabrati" više tipova od jednom, odnosno navesti više od dva konstruktora.
+@p Moguće je "sabrati" više tipova istovremeno, odnosno navesti više od dva konstruktora.
 
 @example{
 @p Sledeći tip označava dužinu u različitim mernim jednicama

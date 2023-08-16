@@ -163,7 +163,7 @@ ghci> a
 
 @p Razlog nastanka greške je taj što program @em{GHCi} ne zna kako da ispiše vrednost tipa @code{MyBool}. Za ispisivanje svih vrednosti, @em{GHCi} koristi @code{show} funkciju koja je deklarisana u @code{Show} klasi tipova. Kako tip @code{MyBool} nije instanca ove klase, @em{GHCi} ne može da iskoristi funkciju @code{show} sa vrednostima tipa @code{MyBool}.
 
-@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno glavi @em{Klase tipova}. Srećom, u ovom slučaju Haskel može instaciranje automatski da uradi. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
+@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno u lekciji @em{Klase tipova}. Srećom, u ovom slučaju Haskel može instaciranje automatski da uradi. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
 
 @codeBlock{
 newtype MyBool = MkMyBool Bool deriving Show
@@ -193,10 +193,10 @@ newtype Usd = MkUsd Double
 
 @p Ograničenja poput opisanih ne deluju mnogo korisna kada se posmatraju mali programi. Ali sa programima s milionskim brojem linija ovakva ograničenja značajno "umanjuju brigu" pri menjanju koda. Na primer, promena funkcija koje koriste tip @code{Eur} neće uopšte uticati na funkcije koje koriste tip @code{Usd}.
 
-@p Naravno, razdvajanje valuta ima smisla samo na onom delu programa koji različito obrađuje svote u evrima i dolarima (u ovom slučaju to može biti obračunavanje poreza koji je specifičan za valutu, i sl.). Deo logike koji je isti za obe valute, ne treba duplirati. Izbegavanje dupliranja koda se može postići sa tipskim klasama, što će biti prikazano u narednoj glavi.
+@p Naravno, razdvajanje valuta ima smisla samo na onom delu programa koji različito obrađuje svote u evrima i dolarima (u ovom slučaju to može biti obračunavanje poreza koji je specifičan za valutu, i sl.). Deo logike koji je isti za obe valute, ne treba duplirati. Izbegavanje dupliranja koda se može postići sa tipskim klasama, što će biti prikazano u narednoj lekciji.
 }
 
-@p Takođe, @code{newtype} konstrukcija je specijalan slučaj jedne opštije, i mnogo korisnije konstrukcije, kojoj je posvećena glava @em{Algebarski tipovi podataka}.
+@p Takođe, @code{newtype} konstrukcija je specijalan slučaj jedne opštije, i mnogo korisnije konstrukcije, kojoj je posvećena lekcija @em{Algebarski tipovi podataka}.
 
 @section{Apstraktni tipovi}
 

@@ -246,7 +246,7 @@ umesto dosadašnjeg @ccode{map (\x -> x * 2) xs}.
 
 @section{Neki važni operatori}
 
-@p Osim aritmetičkih, logičkih i operatora nad listama, Haskel programi sadrže obilje drugih operatora (od kojih mnogi nisu prisutni u drugim jezicima). Haskel programeri vole da koriste razne operatore jer time skraćuju programe i direktnije prenose ideju o tome šta odrđene funkcije rade. Neke od tih operatora ćemo predstaviti u nastavku ove glave, dok ćemo ostale obraditi u narednim glavama. 
+@p Osim aritmetičkih, logičkih i operatora nad listama, Haskel programi sadrže obilje drugih operatora (od kojih mnogi nisu prisutni u drugim jezicima). Haskel programeri vole da koriste razne operatore jer time skraćuju programe i direktnije prenose ideju o tome šta odrđene funkcije rade. Neke od tih operatora ćemo predstaviti u nastavku ove glave, dok ćemo ostale obraditi u narednim lekcijama. 
 
 @subsection{Operator kompozicije}
 
