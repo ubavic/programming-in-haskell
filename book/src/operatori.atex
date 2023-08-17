@@ -56,7 +56,7 @@ ghci> (+) 4 3
 @example{@p Operator sabiranja @m{+} je asocijativan operator, a takav je i operator množenja @m{\cdot}.}
 
 @example{
-@p Nije svaki operator asocijativan. Operator deljenja @m{/} nije, jer izraz @m{1 / (2 / 3)} ima drugačiju vrednost od izraza @m{(1 / 2) / 3}. Prema tome, izraz @m{1 / 2 / 3} je potrebno pažljivo interpretitirati@note{U matematici, konvencija je da se izračunavanje izraza vrši s leva na desno, ako je izraz sačeinje od operatora istog prioriteta. U matematici izraz @m{1/2/3} označava @m{(1/2)/3}}.
+@p Nije svaki operator asocijativan. Operator deljenja @m{/} nije, jer izraz @m{1 / (2 / 3)} ima drugačiju vrednost od izraza @m{(1 / 2) / 3}. Prema tome, izraz @m{1 / 2 / 3} je potrebno pažljivo interpretirati@note{U matematici, konvencija je da se izračunavanje izraza vrši s leva na desno, ako je izraz sačeinje od operatora istog prioriteta. U matematici izraz @m{1/2/3} označava @m{(1/2)/3}}.
 }
 
 @p Korišćenjem osobine asocijativnosti i konvenicje o priroritetu možemo se soloboditi mnogih zagrada u izrazima. Jasno je zašto se ova dva pojma odnose i na operatore u Haskelu.
@@ -317,6 +317,15 @@ ghci> k2 = duzina . paran
       In the expression: duzina . paran
       In an equation for ‘k2’: k2 = duzina . paran
 }}
+
+
+@problem{
+Neka je @code{f :: A -> B} i @code{g :: B -> C -> D}. Da li je @code{g . f} dobro tipiziran izraz? Ako jeste, koji je njegov tip?
+}
+
+@problem{
+Neka je @code{f :: A -> B -> C} i @code{g :: C -> D}. Da li je @code{g . f} dobro tipiziran izraz? Ako jeste, koji je njegov tip?
+}
 
 @problem{
 Neka su @code{p} i @code{q} dve funkcije tipa @code{a -> Bool}. Zašto su @ccode{filter p . filter q} i @ccode{filter (\x -> p x && q x)} iste funkcije?
