@@ -4,6 +4,7 @@
     --serif-font-stack: 'Lora', DejaVu Serif, Georgia, serif;
     --sans-font-stack: 'Lucida Grande', Geneva, Verdana, sans-serif;
     --mono-font-stack: 'Fira Code', Consolas, Monaco, monospace;
+    --color-text: #000;
     --color-gray-1: #333;
     --color-gray-2: #666;
     --color-gray-3: #999;
@@ -14,7 +15,6 @@
     --color-violet-3: #9e6eda;
     --color-violet-4: #caaaf1;
     --color-violet-5: #e6d5fc;
-    --color-note-ref: #a22;
     --border-radius: 3px;
     --main-width: 42rem;
     --left-main-margin: calc((100vw - var(--main-width))/2);
@@ -30,6 +30,7 @@ body {
     font-family: var(--serif-font-stack);
     margin: 0;
     font-size: 1.1rem;
+    color: var(--color-text);
 }
 
 #titleHeading {
@@ -112,7 +113,7 @@ h2 a:visited,
 h3 a,
 h3 a:visited {
     text-decoration: none;
-    color: black;
+    color: var(--color-text);
 }
 
 footer {
@@ -333,7 +334,7 @@ aside {
         box-sizing: border-box;
         z-index: 10;
         left: var(--main-padding);
-        color: #000;
+        color: var(--color-text);
         box-shadow: 0 0 10px #0003;
         cursor: pointer;
     }
@@ -373,8 +374,81 @@ aside {
 
     .terminal {
         box-shadow: none;
-        border: 1px solid black;
-        background-color: #f9f9f9;
+        border: none;
+        background-color: var(--color-gray-4) !important;
+        color: black;
         break-inside: avoid;
+    }
+}
+
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f9f9f9;
+        --color-background: #101010;
+    }
+
+    body {
+        background-color: var(--color-background);
+    }
+
+    a,
+    a:visited,
+    #index a,
+    #index a:visited {
+        color: var(--color-text);
+    }
+
+    a:hover,
+    #index a:hover {
+        color: var(--color-gray-4);
+    }
+
+    pre {
+        background-color: #191919;
+        border: none;
+    }
+
+    .example,
+    .problem {
+        background: #151515;
+        border: none;
+    }
+
+    .sh-constructor {
+        color: hsl(225, 100%, 70%);
+    }
+
+    .sh-number {
+        color: hsl(0, 100%, 70%);
+    }
+
+    .sh-comment {
+        color: hsl(0, 0%, 70%);
+    }
+
+    .sh-string {
+        color: hsl(33, 100%, 70%);
+    }
+
+    .terminal {
+        background-color: #090909;
+        box-shadow: none;
+        color: #fff;
+    }
+
+    aside {
+        color: var(--color-gray-3);
+    }
+
+    figcaption {
+        color: var(--color-gray-3);
+    }
+
+    nav {
+        background-image: none;
+        background-color: var(--color-violet-1);
+        text-shadow: none;
+        box-shadow: none;
     }
 }
