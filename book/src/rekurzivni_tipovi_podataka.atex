@@ -6,7 +6,7 @@
 
 @section{Liste}
 
-@p Konstruisaćemo tip @code{ListaBrojeva} čije vrednosti su liste s celobrojnim vrednostima@note{Već znamo da je to @code{[Int]}, ali ignorišimo to za trenutak.}. Tip @code{ListaBrojeva} mora sadržati vrednost prazne liste, liste sa jednim elementom, liste sa dva elementa, liste sa tri elementa itd... Prazna lista se može predstaviti sa nularnim konstruktorom @code{PraznaListaBrojeva}. Lista sa jednim elementom se može predstaviti sa unarnim konstruktorom @code{Lista1 Int}, lista sa dva elmenta sa binarnim konstruktorom @code{Lista2 Int Int}, i tako dalje... Uzimajući ova razmatranja u obzir, dolazimo do naivne ideje o konstrukciju tipa @code{ListaBrojeva} kao sume konstruktora različite arnosti:
+@p Konstruisaćemo tip @code{ListaBrojeva} čije vrednosti su liste s celobrojnim vrednostima@note{Već znamo da je to @code{[Int]}, ali ignorišimo to za trenutak.}. Tip @code{ListaBrojeva} mora sadržati vrednost prazne liste, liste sa jednim elementom, liste sa dva elementa, liste sa tri elementa itd... Prazna lista se može predstaviti sa nularnim konstruktorom. Lista sa jednim elementom se može predstaviti sa unarnim konstruktorom, lista sa dva elmenta sa binarnim konstruktorom, i tako dalje... Uzimajući ova razmatranja u obzir, dolazimo do naivne ideje o konstrukciju tipa @code{ListaBrojeva} kao sume konstruktora različite arnosti:
 
 @codeBlock{
 data ListaBrojeva =
@@ -17,14 +17,14 @@ data ListaBrojeva =
     | Lista4 Int Int Int Int 
 }{Obratite pažnju da je ovo samo suma različitih konstruktora, prelomljena u više redova radi preglednosti}
 
-@p Odmah uočavamo problem: s definicijom poput ove nikad ne možemo obuhvatiti sve liste. Koliko god mi konstruktora napravili, uvek će postojati potreba za još dužom listom. Zbog toga moramo iskoristiti rekurzivnu konstrukciju. Lista može biti prazna lista, ili može biti lista koja je nastala spajanjem nekog elementa na početak već postojeće liste. Zbog toga, i tip lista konstruišemo kao sumu dva konstruktora: jedan konstruktor predstavlja praznu listu, dok drugi konstruktor nadovezuje element na listu manje dužine:
+@p Odmah uočavamo problem: s definicijom poput navedene nikad ne možemo obuhvatiti sve liste. Koliko god mi konstruktora napravili, uvek će postojati potreba za još dužom listom. Zbog toga moramo iskoristiti rekurzivnu konstrukciju. Lista može biti prazna lista, ili može biti lista koja je nastala spajanjem nekog elementa na početak već postojeće liste. Zbog toga, i tip lista konstruišemo kao sumu dva konstruktora: jedan konstruktor predstavlja praznu listu, dok drugi konstruktor nadovezuje element na listu manje dužine:
 
 @codeBlock{
 data ListaBrojeva = DodajBroj Int ListaBrojeva | PraznaListaBrojeva
 }
 
 @example{
-@p Sada lako možemo da predstavimo svaku listu. Na primer, listu od tri elementa @code{1}, @code{2}, @code{3} možemo konstruisti kao @ccode{DodajBroj 1 (DodajBroj 2 (DodajBroj 3 PraznaListaBrojeva))}.
+@p Listu od tri elementa @code{1}, @code{2}, @code{3} možemo konstruisti kao @ccode{DodajBroj 1 (DodajBroj 2 (DodajBroj 3 PraznaListaBrojeva))}.
 }
 
 @p Da bi smo mogli da prikazujemo vrednosti tipa @code{ListaBrojeva} u konzoli, pridružićemo tip @code{ListaBrojeva} klasi @code{Show}:
@@ -48,7 +48,7 @@ ghci> x
 
 @p Zgodno je implementirati mnoge funkcije za rad za tipom @code{ListaBrojeva}. Kako je i sama priroda tipa rekurzivna, i ove funkcije će biti (uglavnom) rekurzivne.
 
-@p Dužinu prazne liste je lako pronaći. Dužina prazne liste je @code{0}, a dužina liste nastale spajenjem nekog elementa na listu @code{xs} je za jedan veća od dužine liste @code{xs}.
+@p Dužinu liste je lako pronaći. Dužina prazne liste je @code{0}, a dužina liste nastale dodavanjem broja na listu @code{xs} je za jedan veća od dužine liste @code{xs}.
 
 @codeBlock{
 dužina :: ListaBrojeva -> Int
@@ -81,16 +81,16 @@ Kreirati tip @code{ListaBrojeva2} čije vrednosti su liste celobrojnih vrednosti
 }
 
 @problem{
-Za tip @code{ListaBrojeva} implementirati funkciju @ccode{parni :: ListaBrojeva -> ListaBrojeva} koja uklanja neparne elemente iz liste.
+Implementirati funkciju @ccode{parni :: ListaBrojeva -> ListaBrojeva} koja uklanja neparne elemente iz liste.
 }
 
 @problem{
-Za tip @code{ListaInt} implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaBrojeva} koja primenjuje prosleđenu funkciju na svaki elment liste.
+Implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaBrojeva} koja primenjuje prosleđenu funkciju na svaki elment liste.
 }
 
 @subsection{Apstraktni tip lista}
 
-@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da bismo sa istom sličnom konstukcijom mogli da definišemo druge tipove lista:
+@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da bismo sa istom sličnom konstukcijom mogli definisati i druge tipove lista:
 
 @codeBlock{
 data ListaChar = DodajChar Char ListaChar | PraznaListaChar
@@ -98,13 +98,13 @@ data ListaChar = DodajChar Char ListaChar | PraznaListaChar
 data ListaBool = DodajBool Bool ListaBool | PraznaListaBool
 }
 
-@p S Ovakvim pristupom za svaki tip moraćemo da definišemo dogovarajući tip lista, što ni malo nije zgodno. Zbog toga, definisaćemo jedan apstraktan tip podataka @code{Lista :: * -> *} čiji parametar označava tip vrednosti sadržanih u listi. Definicija liste ostaje gotovo ista, ali se umesto konkretnog tipa pojavljuje tipski parametar @code{a}:
+@p Ovakvim pristupom za svaki tip mormo definisati odgovarajući tip lista, što ni malo nije zgodno. Zbog toga, definisaćemo jedan apstraktan tip podataka @code{Lista :: * -> *} čiji parametar označava tip vrednosti sadržanih u listi. Definicija liste ostaje gotovo ista, ali se umesto konkretnog tipa pojavljuje tipski parametar @code{a}:
 
 @codeBlock{
 data Lista a = Dodaj a (Lista a) | PraznaLista
-}{Nakon konstuktora @code{Dodaj} moraju biti navedeni konkretni parametri, te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je utvrđena homegenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstuktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
+}{Nakon konstuktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstrakti), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homegenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstuktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
 
-@p Sa apstraktnim tipom se lako mogu predstaviti liste vrednosti bilo kog tipa. Na primer, sada @code{Lista Int} predstavlja tip koji odgovara tipu @code{ListaInt} od malopre, a  @code{Lista Bool} odgovara tipu @code{ListaBool} od malopre. Primetimo da sada konstruktori @code{Dodaj}, @code{PraznaLista} imaju isto ime za sve tipove, što dodatno olakšava zapis.
+@p Sa apstraktnim tipom se lako mogu predstaviti liste vrednosti bilo kog tipa. Na primer, sada @code{Lista Int} predstavlja tip koji odgovara tipu @code{ListaBrojeva} od malopre, a  @code{Lista Bool} odgovara tipu @code{ListaBool} od malopre. Primetimo da sada konstruktori @code{Dodaj}, @code{PraznaLista} imaju isto ime za sve tipove, što dodatno olakšava zapis.
 
 @terminal{
 ghci> x = Dodaj 'a' (Dodaj 'b' PraznaLista)
@@ -119,7 +119,7 @@ Lista Bool
 
 @codeBlock{
 dužina :: Lista a -> Int
-dužina PraznaListaInt = 0
+dužina PraznaLista = 0
 dužina (Dodaj _ xs) = 1 + dužina xs  
 
 spoji :: Lista a -> Lista a -> Lista
@@ -135,7 +135,7 @@ obrni (Dodaj x xs) = spoji (obrni xs) x
 Za tip @code{Lista a} implementirati funkcije koje odgovaraju funkcijama @code{filter}, @code{map}, @code{zip} i @code{fold}.
 }
 
-@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implemenatcija te funkcije za tip @code{ListaInt}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri dekleraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
+@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implemenatcija te funkcije za tip @code{ListaBrojeva}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri dekleraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
 
 @codeBlock{
 instance Show a => Show (Lista a) where
@@ -166,7 +166,7 @@ data [] a = [] | a : ([] a)
 
 @p @def{Stablo} je rekurzivna struktura podataka sačinjena od @em{čvorova}, u kojoj svaki čvor sadrži @em{vrednost} i nekoliko manjih stabala (od kojih neka mogu biti prazna). Specijalno, @def{binarno stablo} je stablo u kom svaki čvor sadrži vrednost i dva manja stabla@note{Koja pritom mogu biti prazna}.
 
-@p Tip binarnog stabla koje sadrži u sebi vrednosti tipa @code{Int} možemo kreirati na sledeći način: prazno stablo ćemo kreirati sa nularnim konstruktorom @code{PraznoStablo}, dok ćemo čvorove kreirati sa konstruktorom @code{Cvor}. Konstruktor @code{Cvor} zavisi od tri parametara: vrednosti tipa @code{Int}, kao i od dve vrednosti tipa @code{StabloInt}:
+@p Tip binarnog stabla koje sadrži u sebi vrednosti tipa @code{Int} možemo kreirati na sledeći način: prazno stablo ćemo kreirati sa nularnim konstruktorom @code{PraznoStablo}, dok ćemo čvorove kreirati sa konstruktorom @code{Cvor}. Konstruktor @code{Cvor} zavisi od tri parametara: vrednosti tipa @code{Int}, kao i od dve vrednosti tipa @code{StabloBrojeva}:
 
 @codeBlock{
 data StabloBrojeva =
