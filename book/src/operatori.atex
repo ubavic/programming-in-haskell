@@ -13,7 +13,7 @@
 @list{
 @li @em{Aritmetički operatori} @code{+}, @pre{-}, @code{*}, @code{/}, @code{^}
 @li @em{Logički operatori} @code{&&}, @code{||}
-@li @em{Operatori poređenja} @code{==}, @code{/=}
+@li @em{Operatori poređenja} @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=}
 @li @em{Nizovni operatori} @code{:}, @code{++}, @code{!!}
 }
 
@@ -210,7 +210,7 @@ Definisati operator @code{!+ :: (Float, Float) -> (Float, Float) -> (Float, Floa
 @terminal{
 ghci> 2 `elem` [1,2,3]
 True
-ghci>'m' `elem` "Beograd"
+ghci> 'm' `elem` "Beograd"
 False
 }
 

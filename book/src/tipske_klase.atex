@@ -62,7 +62,7 @@ obimKruga :: Krug -> Double
 obimKruga (Krug (x, y, r)) = 2 * pi * r 
 }{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
 
-@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli da primenimo jedinstvenu funkciju @code{obim} na svaki tip figure@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na vrednost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
+@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli primeniti jedinstvenu funkciju @code{obim} na svaku figuru@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na vrednost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
 
 @p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo funkciju @code{obim} u definiciji klase ćemo navesti samo jednu dekleraciju tipa. 
 
@@ -181,7 +181,7 @@ ghci> a == b
       In an equation for ‘it’: it = a == b
 }
 
-@p Da bismo mogli da poredimo vrednosti tipa @code{Racionalan}, uvećemo ovaj tip u klasu @code{Eq}:
+@p Da bismo mogli da poredimo vrednosti tipa @code{Racionalan}, instaniraćemo @code{Eq Racionalan}:
 
 @codeBlock{
 instance Eq Racionalan where
@@ -189,7 +189,7 @@ instance Eq Racionalan where
     (Racionalan (a, b)) /= (Racionalan (c, d)) = a * d /= c * b
 }
 
-@p Ponovnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost da poredimo vrednosti tipa @code{Racionalan}:
+@p Ponovnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost poređenja vrednosti tipa @code{Racionalan}:
 
 @terminal{
 ghci> a = R (1, 2)
@@ -201,9 +201,9 @@ False
 }
 }
 
-@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo deklaristai tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim nasvesti minimalan skup funkcija koje programer mora definisati za svaku instancu.
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo deklarisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim navesti minimalni skup funkcija koje moraju biti definisane u instanci@note{Pritom, taj skup neophodnih definicja ne mora bita jedinstven...}.
 
-@p Konkretno, puna definicija klase @code{Eq} je@note{Gore smo malo lagali kada smo naveli definiciju klase @code{Eq}}:
+@p Konkretno, puna definicija klase @code{Eq} je@note{Gore smo naveli izmenjenu definiciju klase @code{Eq}, radi jednostavnosti}:
 
 @codeBlock{
 class Eq a where
@@ -214,9 +214,9 @@ class Eq a where
   @@{ -# MINIMAL (==) | (/=) #-@@}
 }
 
-@p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma instrukcija}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati.
+@p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati. Kroz naredne primere upoznaćemo se detaljnije sa sintaksom pragme @em{MINIMAL}.
 
-@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
+@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{\=}, a @code{\=} kao negaciju @code{==}, tada bi svako poređenje dovoelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
 
 @example{
 @p @em{Nastavak prethodnog primera}. Za instacu @code{Racionalan}, dovoljno je napisati sledeće

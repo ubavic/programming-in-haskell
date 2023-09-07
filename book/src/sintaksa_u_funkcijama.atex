@@ -194,8 +194,8 @@ opisZemljotresa r
 @p Jendo od mogućih rešenja bi bilo:
 
 @codeBlock{
-maks3 :: Int -> Int -> Int -> Int
-maks3 x y z
+max3 :: Int -> Int -> Int -> Int
+max3 x y z
   | x <= z && y <= z = z
   | x <= y && z <= y = y
   | otherwise        = x

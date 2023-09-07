@@ -287,18 +287,12 @@ class Functor f => Applicative f where
 
 @p Kao smo nagovestili, kao i u slučaju @code{fmap} funkcije, funkcije @code{Applicative} klase moraju zadovoljavati neke zakonitosti. Ove zakonitosti se odnose na @code{<*>} i @code{pure}, ali se mogu formulisati i za @code{liftA2} i @code{pure}. Zakoni su sledeći:
 
-
 @list{
     @li @code{pure id <*> v = v}.
     @li @code{u <*> pure y = pure ($ y) <*> u}.
     @li @code{pure (.) <*> u <*> v <*> w = u <*> (v <*> w)}.
     @li @code{pure f <*> pure x = pure (f x)}.
 }
-
-
-
-@todo{Monade}
-
 
 
 
