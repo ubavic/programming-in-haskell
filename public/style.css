@@ -10,11 +10,6 @@
     --color-gray-3: #999;
     --color-gray-4: #bbb;
     --color-gray-5: #eee;
-    --color-violet-1: #2b2342;
-    --color-violet-2: #633A96;
-    --color-violet-3: #9e6eda;
-    --color-violet-4: #caaaf1;
-    --color-violet-5: #e6d5fc;
     --border-radius: 3px;
     --main-width: 42rem;
     --left-main-margin: calc((100vw - var(--main-width))/2);
@@ -342,6 +337,10 @@ aside {
     sup .counter {
         cursor: pointer;
     }
+
+    .katex-display {
+        overflow-x: auto;
+    }
 }
 
 @media print {
@@ -379,17 +378,21 @@ aside {
         color: black;
         break-inside: avoid;
     }
+
+    .example,
+    .problem {
+        break-inside: avoid;
+    }
 }
 
-
-@media (prefers-color-scheme: dark) {
+@media screen and (prefers-color-scheme: dark) {
     :root {
         --color-text: #f9f9f9;
-        --color-background: #101010;
+        --color-background: #150c1f;
     }
 
     body {
-        background-color: var(--color-background);
+        background-color: #141217;
     }
 
     a,
@@ -405,7 +408,7 @@ aside {
     }
 
     pre {
-        background-color: #191919;
+        background-color: #1A1A1A;
         border: none;
     }
 
@@ -447,8 +450,14 @@ aside {
 
     nav {
         background-image: none;
-        background-color: var(--color-violet-1);
+        background-color: #241d39;
         text-shadow: none;
         box-shadow: none;
+    }
+}
+
+@media screen and (max-width: 750px) and (prefers-color-scheme: dark) {
+    aside {
+        background-color: #111;
     }
 }
