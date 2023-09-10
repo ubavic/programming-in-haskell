@@ -294,6 +294,20 @@ class Functor f => Applicative f where
     @li @code{pure f <*> pure x = pure (f x)}.
 }
 
+@subsection{Liste kao aplikativni funktori}
+
+@p Da bi @code{[] :: * -> *} postato Aplikativni funktor, potrebno je samo definisati funkciju @code{pure :: a -> [a]} i jednu od funkcija @code{(<*>) :: [a -> b] -> [a] -> [b]} ili @code{liftA2 :: [a -> b -> c] -> [a] -> [b] -> c}. Posmatajući samo tipove navedenih funkcija, možemo dati mnogo različitih definicija funkcija. Međutim, ako se osvrnemo na četiri gorenevedena zakona, uvidećemo da dolazimo do jedinstvih definicja.
+
+@p Funkciju @code{pure} uzima vrednost nekon neodređenog tipa @code{a} i vraća vrednost tipa @code{[a]}. Kako je tip u potpunosti neodređen (nije ograničen nekom tipskom klasom), ne možemo mnogo što šta uraditi sa vrednošću. Stoga smo ograničeni samo na sledeće definicje:
+
+@list{
+    @li @code{pure x = []}
+    @li @code{pure x = [x]}
+    @li @code{pure x = [x, x]}, @code{pure x = [x, x, x]} i tako dalje 
+}
+
+@p Ako se osvrenemo na četvrti zakon aplikativnih funktora, uvidećemo da definicije navedene pod trećom tačkom nisu zadovoljavajuće. Na primer, ako je @code{pure x = [x, x]}, tada po četvrtom zakonu mora važiti @ccode{[f, f] <*> [x x] = [f x, f x]}
+
 
 
 

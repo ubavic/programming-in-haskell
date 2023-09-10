@@ -36,7 +36,7 @@ zbir n
 \end{aligned}
 }
 
-@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} koja je totalna:
+@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} tako da vraća @code{0} za negativne argumente:
 
 @codeBlock{
 zbir n
@@ -101,7 +101,7 @@ neparan n = not (paran (n - 2))
 
 @section{Fibonačijev niz}
 
-@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio kljigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila namenjena kao priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera, Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do raultata, ali se ispostavilo da je broj parava zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Ispostavlja se da je broj zečeva na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
+@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio kljigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila namenjena kao priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera, Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do raultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Ispostavlja se da je broj zečeva na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
 
 @p Danas @em{Fibonačijev niz} nema mnogo veze za zečevima, a konstruiše po sledećem prinicpu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
 
@@ -225,6 +225,51 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 }
 
 @todo{Šetnji po mreži}
+
+
+@section{Totalne i parcijalne funkcije}
+
+@p Po matematičkoj definiciji funkcije, vrednost @code{f(x)} mora biti definisana za svako @code{x} koje pripada domenu funkcije @code{f}. Tako na primer, funkcija @code{f(x)=1/x} ne može za domen imati ceo skup realnih brojeva @m{\mathbb R}, već u najboljem slučaju@note{Naravno mi možemo definisati ovu funkciju na bilom kom podskupu od @m{\mathbb R} koji ne sadrži nulu. Funkcija je u potpunosti određena kada su navedeni njen domen i kodomen. kao i definicija.} @m{\mathbb R\setminus\{0\}}. Slično, funkcija korenovanja @code{s(x)=\sqrt{x}} može za domen imati samo skup pozitivnih brojeva.
+
+@p U računarstvu je malo drugačije. Funkcija tipa @code{A -> B} u Haskelu ne mora biti definisana za sve vrednosti tipa @code{A}. To smo videli na primeru prve definicje funkcije koja sabira aritmetičku sumu @m{1 + \cdots + n}:
+
+@codeBlock{
+zbir n
+    | n == 0    = 0
+    | otherwise = zbir (n - 1) + n
+}
+
+@p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju. Prema tome, možemo reći da @code{zbir x} nije definisano za svaku vrednost @code{x :: Int}. Funkciju koja nije definsana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Dakle pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
+
+@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledni bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje ne-rekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nećemo obraditi sve moguće oblike argumenta:
+
+@codeBlock{
+p :: Int -> Int
+p 0 = 1
+}{Funkicja @code{p} je definisana samo za argument @code{0}.}
+
+@terminal{
+Prelude> p 10
+*** Exception: <interactive>:3:1-16: Non-exhaustive patterns in function p
+}{Pokretanje @code{p x} za bilo koju vrednost @code{x} različiti od @code{0} dovodi do izuzetka.}
+
+@def{Izuzetak} je stanje programa koje označava da je došlo do greške@note{Izuzeci se kreiraju uz pomoć @code{error :: [Char] -> a} funkcije koja se zbog prozvoljnog domena može postaviti u bilo koji izraz. Niska koja se prosleđuje ovoj funkcije je poruka koja će biti ispisana pri izuzetku. Ako tokom izvršavanja programa dođe do evaluacije funkcije @code{error}, tada će izvršavanje programa biti prekinuto, a poruka prosleđena @code{error} funkciji ispisana u terminalu.}, i ne predstavlja validnu vrednost. 
+
+
+@p Postavlja se pitanje, zašto dozvoljavamo da radimo samo parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kre Zašto, na primer, ne možemo u sistemu tipova da izrazimo 
+
+U primerima koje smo videli u ovoj lekciji, lako je bilo zaključiti za koje argumente će funkcija ući u beskonačnu petlju, jer su primeri bili jednostavni. Međutim u opštem slučaju 
+
+@codeBlock{
+f :: Int -> Int -> Int -> Int
+f x y z 
+    | f 0 _ _ = 1
+    | f 1 y z = y * z
+    | f x y 0 = if x < 0 then f (x - y) x y else f x y (z + 2 * x)
+    | f x y z = if x * y < 10
+        then f (x + 2) (y + 3) (z + 5)
+        else f (mod x 2) (mod y 3) (mod z 5)
+}
 
 @section{Zadaci}
 
