@@ -426,6 +426,64 @@ ghci> (*2) <$> [1 .. 10]
 @p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve stane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}. Operator @code{<$>} je desnoasocijativan, pa se poslednja jednakost može zapisati kao @ccode{g <$> f <$> xs = (g . f) <$> xs}.
 }
 
+
+@section{Određen integral}
+
+@p @em{U nastavku je dat jedan primer koji nije neophodan za razumevanje ostatka knjige. Primer zahteva određena predznanja iz matematike.}
+
+@p Otkiriće diferencijlanog i integralnog računa je jedno od najzačajnih trenutaka u istoriji nauke. Navedni matematički aparati su neophodni za formulaciju mnogih prirodnih fenomena: od kretanja elektorna do kretanja galaksija. Svakako, ova tematika je van opsega ove knjige, ali ovde možemo da prikažemo kako se elegantno može implementirati formula za aprikismaciju određenih integrala.
+
+@p Određeni integral funkcije @m{f\colon \mathbb R \to \mathbb R} na intervalu @m{[a,b]}, označava se sa @eq{\int\limits_a^b f(x)\,\mathrm dx} i može se shvatitii kao površina između grafika funkcije @m{f} i @m{x} ose@note{Pri čemu se ta površina uzima sa negativnim predznakom na oblastima gde je @m{f(x) < 0}.}. Integral, tj. površina, može se aproksimirati @em{Rimanovom sumom}, odnsno sumom površina malih pravuganika koji aproksimiraju površinu ispod grafika.
+
+@figure{4_integral}{Aproksimacija površine ispod grafika funkcije @m{f} nizom pravugaonika. Iako nije neophodno da svi pravugaonici budu iste širine, mi ćemo algoritam implementirati tako da su svi iste širine, baš kao na ovoj ilustraciji.}
+
+@p Rimanova suma se može zapisati kao
+@eq{I = \sum\limits_{i=0}^{n} f\left(x_i\right) \left(x_{i+1} - x_i\right),}
+gde je @eq{a = x_0 < x_1 < \cdots < x_{n} < x_{n+1} = b} niz tačaka koje dele interval @m{[a,b]}. Navedene podeone tačke se mogu uzeti proizvoljno, ali što ih više ima to će kvadratići biti uži, a samim tim će aproksimacija površine biti tačnija.
+
+@p Lako možemo implementirati funkciju @ccode{int :: (Double -> Double) -> Double -> Double -> Double} koja računa određen integral neke fukcije @code{f :: Float -> Float}. Prvi paramtar funkcije @code{int} je funkcija @code{f}, drugi početak intervala a treći kraj intervala. povratna vrednost je aproksimacija određenomintegrala Rimanovom sumom.
+
+@p Listu podeonih tačaka možemo formirati korišćenjem izlistavanja. Ako su @code{a} i @code{b} krajevi intervala, a @code{d} neki dovoljno mali broj, tada lista @code{[a, a + d .. b]} predstavlja podelu intervala @m{[a,b]}. Primenom funkcije @code{f} na svaki element date liste, dobijamo listu visina pravuganika: @ccode{map f [a, a + d .. b]}. Množenjem svake od ovih visina sa širinom intervala, odnosno sa @code{d}, dobijamo listu površina pravuganika: @ccode{map (\h -> h * d) (map f [a, a + d .. b])}. Na kraju, dovoljno je da površine saberemo:
+@ccode{sum (map (\h -> h * d) (map f [a, a + d .. b]))}.
+
+@p Kompletna implementacija funkcije @code{int} je 
+
+@codeBlock{
+int :: (Double -> Double) -> Double -> Double -> Double
+int f a b = sum povrsine
+    where
+        povrsine = map (\h -> h * d) (map f [a, a + d .. b])
+        d = (b - a) / 200
+}{U ovoj implementaciji uzeto je da je @code{d} jednak @m{200}-tom delu intrvala @m{[a, b]}. Prime tome, lista podenih tačaka će sadržati @m{200} elemenata. Za veću preciznost, dovoljno je uvećati konstantu @code{200}.}
+
+@example{
+@p U @em{GHCi} okruženju je dostupna funkcija @code{sin} kao i konstanta @code{pi}. Ako učitamo implementaciju funkcije @code{int} možemo da izračunamo integral sinusa na intervalu @m{[0,\pi]}:
+
+@terminal{
+ghci> int sin 0 pi
+1.9999588764792144
+}
+}
+
+@p Koristeći operatore i sekcije, prethodnu definiciju možemo elegantnije da napišemo. Umesto @code{map} funkcije možemo iskoristiti operator podizanja @code{<$>}. Umesto lambda izraza @code{\h -> h * d}, možemo koristiti sekciju @code{(*d)}. A umesto @code{sum (map g ys)}, možemo iskoristiti @code{$} i osloboditi se zagrada: @code{sum $ map g ys}. Sve navedeno nas dovodi do naredne definicije:
+
+@codeBlock{
+int :: (Double -> Double) -> Double -> Double -> Double
+int f a b = sum $ map (* d) <$> (f <$> [a, a + d .. b])
+    where d = (b - a) / 200
+}
+
+@problem{
+Koriseći činjenicu da je @eq{\sum\limits_{i=0}^{n} (f\left(x_i\right) \cdot d) = d \cdot \sum\limits_{i=0}^{n} f\left(x_i\right),}
+dodatno pojednostaviti kôd funkcije @code{int}.
+}{
+@codeBlock{
+int :: (Double -> Double) -> Double -> Double -> Double
+int f a b = d * (sum $ f <$> [a, a + d .. b])
+    where d = (b - a) / 200
+}
+}
+
 @section{Zaključak}
 
 @p Kreiranje operatora je moćna tehnika koju malo programskih jezika poseduje. Korišćenje operatora kao svih ostalih funkcija, kao i @em{ad hoc} transformisanje operatora u prefiksne funkcije i obrnuto, su tehnike koje još manje jezika poseduje. Nesumnjivo je da navedene osobine dozvoljavaju Haskel programeru veliku ekspresivnost.

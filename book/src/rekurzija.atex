@@ -17,6 +17,7 @@ Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir pr
 @p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo zbir prva 4 prirodna broja i dodati @code{5} na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati @code{4} na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (zbir nula prirodnih brojeva - prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj, slučaj u kom ne koristimo rekurzivnu definiciju, nazivamo @em{bazni slučaj}. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
 
 @codeBlock{
+zbir :: Int -> Int
 zbir n
     | n == 0    = 0
     | otherwise = zbir (n - 1) + n
@@ -39,6 +40,7 @@ zbir n
 @p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} tako da vraća @code{0} za negativne argumente:
 
 @codeBlock{
+zbir :: Int -> Int
 zbir n
     | n <= 0 = 0
     | otherwise = zbir (n - 1) + n
@@ -101,15 +103,16 @@ neparan n = not (paran (n - 2))
 
 @section{Fibonačijev niz}
 
-@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio kljigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila namenjena kao priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera, Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do raultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Ispostavlja se da je broj zečeva na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
+@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio kljigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do raultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Zapravo, na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
 
-@p Danas @em{Fibonačijev niz} nema mnogo veze za zečevima, a konstruiše po sledećem prinicpu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
+@p Danas definicija @em{Fibonačijevog niza} nema mnogo veze za zečevima, a niz se konstruiše po sledećem prinicpu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
 
 @p Po navedenom principu, treći član Fibonačijevog niza je @m{2} (jer je @m{2 = 1 + 1}), četvrti član je @m{3} (jer je @m{3 = 1 + 2}), peti član je @m{5} (jer je @m{5 = 2 + 3}), šesti član je @m{8} (jer je @m{8 = 3 + 5}), i tako dalje...
 
-@p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća @m{n}-ti Fibonačijev broj (@m{n}-ti element Fibonačijevog niza) je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)} te je stoga potrebno navesti dva bazna slučaja@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
+@p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća @m{n}-ti Fibonačijev broj (@m{n}-ti element Fibonačijevog niza) je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)} te je stoga potrebno navesti dva bazna slučaja@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista, za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
 
 @codeBlock{
+fib :: Int -> Int
 fib n
     | n == 1    = 1 
     | n == 2    = 1
@@ -226,12 +229,47 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 
 @todo{Šetnji po mreži}
 
+@section{Složenost rekurzivnih algoritama}
+
+@p Lepota rekurzivnih algoritama leži u tome što programer na jednostavan način može implementirati komplikovane funkcionalnosti. Programiranje baznog slučaja i rekurzivnog koraka su dovoljni da bi se i naizgled nemogući problemi jednostavno rešili. Osim što su rekurzivne funkcije jednostavne za programiranje, one su često i značajno čitljivije (što je donekle i povezano). Primeri i zadaci koji su navedeni u ovoj lekciji bi trebalo da demonstriraju tu elegantnost.
+
+@p Ipak, elgantnost rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.
+
+@example{
+@p Neka je @m{S_n = 1 + \cdots n}. Ako ovu sumu raspišemo u dva reda, pri čemu ćemo u jednoj sumi obrnuti poredak sabiraka, dobijamo sledeću šemu @eq{\begin{array}{lllll}1  &+2 &+ \cdots &+(n-1) &+ n\\ n &+ (n-1) &+\cdots &+2 &+1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva čiji je zbir @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
+
+@p Dobijeni rezultat možemo iskoristiti za alternativnu implementaciju funkcije @code{zbir}:
+
+@codeBlock{
+zbir' :: Int -> Int
+zbir' n = div (n * (n+1)) 2
+}{Možemo ignoristati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
+
+@p Navedena alternativna definicja nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, što povlači da je potreno izračunat @code{zbir (n-1)}, i tako dalje sve do @code{zbir 1}.}, vreme za izručunavanje @code{zbir' n} ne zavisi od @code{n}, jer je u pitanju nekoliko računskih operacija koje se izvršavaju u nekoliko procesorskih taktova.
+}
+
+@example{
+@p Gore su navedene dve definicije funkcije koja računa parnost broja. Prva funkcija se izvršava u konstantnom vremenu, jer procesor u jednom ciklusu može da podeli dva broja sa ostatkom. Naredna, rekurzivna, definicija funkcije zahteva @code{n} rekurzivnih poziva za izračunavanje izraza @code{paran n}
+}
+
+@example{
+@p Metodama linearne algebre moguće je dokazati da je @m{n}-ti član @m{F_n} Fibonačijevog niza dat sa @eq{F_n = \frac{1}{\sqrt 5} \left(\left(\frac{1+\sqrt 5}{2}\right)^n - \left(\frac{1-\sqrt 5}{2}\right)^n\right).} Ova formula se može iskoristiti za nerekurzivnu definiciju funkcije @code{fib}:
+@codeBlock{
+fib' :: Int -> Int
+fib' n = round ((a^n - b^n)/t)
+    where t = sqrt 5
+          a = (1 + t)/2
+          b = (1 - t)/2
+}{Ugrađena funkcija @code{round} zaokružuje @code{Float} broj u @code{Int}.}
+}
+
+@p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih. Često su potrebna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristipiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicje? Odgovor na ovo pitanje je nemoguće dati, jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je često odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Kada se algoritam savlada rekurzivnom tehnikom, često nerekurzivno rešenje postane mnogo jasnije.
 
 @section{Totalne i parcijalne funkcije}
 
-@p Po matematičkoj definiciji funkcije, vrednost @code{f(x)} mora biti definisana za svako @code{x} koje pripada domenu funkcije @code{f}. Tako na primer, funkcija @code{f(x)=1/x} ne može za domen imati ceo skup realnih brojeva @m{\mathbb R}, već u najboljem slučaju@note{Naravno mi možemo definisati ovu funkciju na bilom kom podskupu od @m{\mathbb R} koji ne sadrži nulu. Funkcija je u potpunosti određena kada su navedeni njen domen i kodomen. kao i definicija.} @m{\mathbb R\setminus\{0\}}. Slično, funkcija korenovanja @code{s(x)=\sqrt{x}} može za domen imati samo skup pozitivnih brojeva.
+@p Po matematičkoj definiciji funkcije, vrednost @m{f(x)} mora biti definisana za svako @m{x} koje pripada domenu funkcije @m{f}. Tako na primer, funkcija @m{f(x)=1/x} ne može za domen imati ceo skup realnih brojeva @m{\mathbb R}, već u najboljem slučaju@note{Naravno mi možemo definisati ovu funkciju na bilo kom podskupu od @m{\mathbb R} koji ne sadrži nulu. Funkcija je u potpunosti određena kada su navedeni njen domen, kodomen, i pravilo pridruživanja.} @m{\mathbb R\setminus\{0\}}. Slično, funkcija korenovanja @m{s(x)=\sqrt{x}} može za domen imati samo skup pozitivnih brojeva.
 
-@p U računarstvu je malo drugačije. Funkcija tipa @code{A -> B} u Haskelu ne mora biti definisana za sve vrednosti tipa @code{A}. To smo videli na primeru prve definicje funkcije koja sabira aritmetičku sumu @m{1 + \cdots + n}:
+@p U računarstvu je malo drugačije. Funkcija tipa @code{A -> B} u Haskelu ne mora biti definisana za sve vrednosti tipa @code{A}. To smo videli na primeru prve definicije funkcije koja sabira aritmetičku sumu @m{1 + \cdots + n}:
 
 @codeBlock{
 zbir n
@@ -239,9 +277,11 @@ zbir n
     | otherwise = zbir (n - 1) + n
 }
 
-@p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju. Prema tome, možemo reći da @code{zbir x} nije definisano za svaku vrednost @code{x :: Int}. Funkciju koja nije definsana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Dakle pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
+@p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju. Prema tome, izraz @code{zbir x} nije definisan za svaku vrednost @code{x :: Int}.
 
-@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledni bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje ne-rekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nećemo obraditi sve moguće oblike argumenta:
+@p Funkciju koja nije definsana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Prema tome, pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
+
+@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledni bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje ne-rekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nisu obrađene svi mogući oblici argumenta:
 
 @codeBlock{
 p :: Int -> Int
@@ -253,23 +293,11 @@ Prelude> p 10
 *** Exception: <interactive>:3:1-16: Non-exhaustive patterns in function p
 }{Pokretanje @code{p x} za bilo koju vrednost @code{x} različiti od @code{0} dovodi do izuzetka.}
 
-@def{Izuzetak} je stanje programa koje označava da je došlo do greške@note{Izuzeci se kreiraju uz pomoć @code{error :: [Char] -> a} funkcije koja se zbog prozvoljnog domena može postaviti u bilo koji izraz. Niska koja se prosleđuje ovoj funkcije je poruka koja će biti ispisana pri izuzetku. Ako tokom izvršavanja programa dođe do evaluacije funkcije @code{error}, tada će izvršavanje programa biti prekinuto, a poruka prosleđena @code{error} funkciji ispisana u terminalu.}, i ne predstavlja validnu vrednost. 
+@p @def{Izuzetak} je stanje programa koje označava da je došlo do greške@note{Izuzeci se kreiraju uz pomoć @code{error :: [Char] -> a} funkcije koja se zbog prozvoljnog domena može postaviti u bilo koji izraz. Niska koja se prosleđuje ovoj funkcije je poruka koja će biti ispisana pri izuzetku. Ako tokom izvršavanja programa dođe do evaluacije funkcije @code{error}, tada će izvršavanje programa biti prekinuto, a poruka prosleđena @code{error} funkciji ispisana u terminalu.}, i ne predstavlja validnu vrednost. 
 
+@p Postavlja se pitanje, zašto jezik poput Haskela dozvoljava da radimo sa parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kreirati programski jezik koji ne bi sadržao parcijalne funkcije a koji bi i dalje bio dovoljno ekspresivan za izražavanje svakog algoritma.
 
-@p Postavlja se pitanje, zašto dozvoljavamo da radimo samo parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kre Zašto, na primer, ne možemo u sistemu tipova da izrazimo 
-
-U primerima koje smo videli u ovoj lekciji, lako je bilo zaključiti za koje argumente će funkcija ući u beskonačnu petlju, jer su primeri bili jednostavni. Međutim u opštem slučaju 
-
-@codeBlock{
-f :: Int -> Int -> Int -> Int
-f x y z 
-    | f 0 _ _ = 1
-    | f 1 y z = y * z
-    | f x y 0 = if x < 0 then f (x - y) x y else f x y (z + 2 * x)
-    | f x y z = if x * y < 10
-        then f (x + 2) (y + 3) (z + 5)
-        else f (mod x 2) (mod y 3) (mod z 5)
-}
+@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajave kada rekurzivni algoritam može ući u beskonačnu petlju, a zatim obezbediti da beskonačne petlje nikad ne dođe.
 
 @section{Zadaci}
 

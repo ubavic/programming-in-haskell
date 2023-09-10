@@ -271,7 +271,7 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Apstraktni tipovi jesu funkcije koje tipove preslikavaju u tipove. Ali kao i sa svim preslikavanjima, potrebno je biti pažljiv pri primeni funkcija na vrednost.
 
-@p Vratimo se za tenutak korak u nazad, i posvatrajmo vrednsti sa kojim smo navikli da radimo. Sistem tipova nam govori nema smisla primeniti funkciju tipa @code{Int -> Int} na vrednost tipa @code{Char}. Još manje smisla ima primena vrednosti tipa @code{Bool} na vrednost tipa @code{Int}, jer prva vrednost nije čak ni funkcija.
+@p Vratimo se za tenutak korak u nazad, i posmatrajmo vrednosti. Sistem tipova nam govori nema smisla primeniti funkciju tipa @code{Int -> Int} na vrednost tipa @code{Char}. Još manje smisla ima primena vrednosti tipa @code{Bool} na vrednost tipa @code{Int}, jer prva vrednost nije čak ni funkcija.
 
 @p Iz istih razloga potrebno je klasifikovati tipove i apstraktne tipove na sličan način kao što su vrednosti klasifikovane u tipove. Drugim rečima, potrebno je uvesti pojam "tipa" za tipove@note{Klase tipova jesu kolekcije tipova, ali su nedovoljne za klasifikaciju koja nam je potrebna. Klase tipova nisu disjunktne (jedan isti tip može pripadati različitim klasama), a nama su ovde potrebne disjunktne kolekcije.}. Ovakav "tip tipa" nazivamo @def{vrsta}@note{@em{kind}}.
 

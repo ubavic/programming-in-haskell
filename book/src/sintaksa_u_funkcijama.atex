@@ -63,7 +63,7 @@ Uraditi ponovo zadatke iz prethodne lekcije korsteći što manje zagrada u kodu.
 
 @p Jedna od osnovnih mogućnosti koju svaki programski jezik mora posedovati je sposobnost promene toka izvršavanja programa u zavisnosti od stanja u kom se nalazi. Ovakvu promenu toka nazivamo @def{grananje}.
 
-@p Izraz @em{if then else} je najjednostavniji primer grananja u Haskelu@note{Izraz u potpunosti odgovara trenarnom operatoru @code{? :} koji je prisutan u mnogim imperativnim jezicima.}. Sintaksa za ovu konstrukciju ima oblik @code{if t then a else b}, gde je @code{t} neki logički izraz kojeg nazivamo @em{uslov}, a @code{a} i @code{b} izrazi istog tipa. Izraz @code{if t then a else b} se evaluira u @code{a} ako se @code{t} evaluira u @code{True}, a u suprotnom u @code{b}. Sledeći primer ilustruje korišćenje @em{if then else} konstrukcije:
+@p Izraz @em{if then else} je najjednostavniji primer grananja u Haskelu@note{Izraz u potpunosti odgovara trenarnom operatoru @code{? :} koji je prisutan u mnogim imperativnim jezicima.}. Sintaksa za ovu konstrukciju ima oblik @ccode{if t then a else b}, gde je @code{t} neki logički izraz kog nazivamo @em{uslov}, a @code{a} i @code{b} izrazi istog tipa. Izraz @code{if t then a else b} se evaluira u @code{a} ako se @code{t} evaluira u @code{True}, a u suprotnom u @code{b}. Sledeći primer ilustruje korišćenje @em{if then else} konstrukcije:
 
 @terminal{
 ghci> if 5 > 0 then "5 je pozitivan broj" else "5 nije pozitivan broj"
@@ -191,7 +191,7 @@ opisZemljotresa r
 
 @problem{Definisati funkciju @code{max3 :: Int -> Int -> Int -> Int} sa @em{guards} sintaksom, koja vraća najveću od tri celobrojne vrednosti.}{
 
-@p Jendo od mogućih rešenja bi bilo:
+@p Jedno od mogućih rešenja bi bilo:
 
 @codeBlock{
 max3 :: Int -> Int -> Int -> Int
