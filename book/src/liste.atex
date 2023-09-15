@@ -145,6 +145,84 @@ velikoSlovo :: Char -> Bool
 velikoSlovo c = elem c ['A' .. 'W'] 
 }}
 
+@section{Podudaranje oblika liste}
+
+@p Tehnika podudaranja oblika je veoma korisna pri radu sa listama. Tada lako možemo da uhvatimo praznu, jednočlanu, dvočlanu listu, itd... ili da rastavimo listu na glavu i rep. 
+
+@example{
+@p Funkciju koja proverava da li je lista celih brojeva prazna@note{Ovo je naravno funkcija @code{null}}, možemo definisati na sledeći način:
+
+@codeBlock{
+prazan :: [Int] -> Bool
+prazan [] = True
+prazan x = False
+}{Slučaj prazne liste je uhvaćen sa oblikom @code{[]}, dok su svi ostali slučajevi obuhvaćeni generičkim promenljivom @code{x}.}
+
+@p Neophodno je obuhvatiti sve moguće oblike promenljive. Ako se neki od oblika izostavi, definisana funkcija neće biti totalna, i za neke od argumenata će doći do izuzetka:
+
+@codeBlock{
+prazan' :: [Int] -> Bool
+prazan' [] = True
+}
+
+@terminal{
+ghci> prazan' [1, 2, 3]
+*** Exception: main.hs:3:1-15: Non-exhaustive patterns in function prazan'
+}
+}
+
+@p Na primer, ako želimo da napišemo funkciju @code{s :: [Int] -> Int} koja praznoj listi dodeljuje @m{0}, jednočlanoj listi dodeljuje element te liste, dvočlanoj listi dodeljuje zbir dva elementa, a svim ostalim listama dodeljuje @m{1}, korišćenjem @em{guards} sintakse dobijamo naredni kod:
+
+@codeBlock{
+s :: [Int] -> Int
+s xs 
+  | xs == [] = 0
+  | len xs == 1 = xs !! 0
+  | len xs == 2 = xs !! 0 + xs !! 1
+  | otherwise = 1
+}
+
+@p Korišćenjem podudaranja oblika dobijamo elegantniji kod:
+
+@codeBlock{
+s :: [Int] -> Int
+s [] = 0
+s [x] = x
+s [x, y] = x + y
+s _ = 1
+}
+
+@p Kao što vidimo, podudaranjem oblika liste @em{dekonstruisali} smo neke moguće oblike argumenta funkcije. U trećoj liniji definisali smo funkciju u slučaju kada je njen argument jednočlana lista @code{[x]}. Imenom @code{x} ovde smo "vezali" član te jednočlane liste. Slično, u narednoj liniji koda, dekonstruisali smo dvočlane liste. U ovom slučaju, prvi element je predstavljen imenom @code{x} a drugi element imenom @code{y}.
+
+@p Moguće je takođe koristi činjenicu da se lista poput @code{[x, y, z]} može predstaviti kao @code{x:[y,z]} ili @code{x:y:[z]} ili @code{x:y:z:[]}. Tako je prethodni primer moguće napisati i kao
+
+@codeBlock{
+s :: [Int] -> Int
+s [] = 0
+s (x:[]) = x
+s (x:y:[]) = x + y
+s _ = 1
+}
+
+
+@example{
+@p Funkcija koja vraća rep liste (sve element osim prvog), može se definisati na sledeći način:
+
+@codeBlock{
+rep :: [a] -> a
+rep (x:xs) = xs
+}{Operator @code{:} nadovezuje element na početak @em{liste}. Prema tome @code{x} je prvi element, a @code{xs} predstavlja ostatak liste. Primetimo da ova funkcija nije totalna jer nije definisana za slučaj prazne liste.}
+
+@p Zapravo, pošto nas u navedenom kodu vrednost @code{x} ne interesuje, funkciju možemo definisati i sa džokerom:
+
+@codeBlock{
+rep :: [a] -> a
+rep (_:xs) = xs
+}{Džokere bi trebalo koristiti kad god je to moguće, jer poboljšavaju čitljivost koda tako što umanjuju broj vezanih imena.}
+}
+
+@p Dobro je naglasiti da pri podudaranju oblika nije moguće navesti oblik koji sadrži operator @code{++} (na primer ne možemo uhvatiti dvočlanu listu sa @code{[x] ++ [y]}). Razlog zašto je operator @code{:} moguće koristiti, a @code{++} ne, postaće jasan u jednoj od narednih lekcija.
+
 @section{Rekurzija nad listama}
 
 @p Korišćenje operatora @code{:} je posebno korisno kada želimo listu podeliti na @em{glavu} i @em{rep}, odnosno prvi element i ostatak liste.

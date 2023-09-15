@@ -301,31 +301,31 @@ punaAdresa (MkOsoba _ _ _ mesto adresa)
 @p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicja tipa promeni nakon što su funkcije napisane. Tada je potremno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
 }
 
-@p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definicju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
+@p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definicju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime - @def{labela}, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
 
 @p Nastavljajući priču iz prošlog primera, možemo definisati tip @code{Osoba} kao zapis:
 
 @codeBlock{
 data Osoba = MkOsoba @@{
-    ime :: String
-    prezime :: String
-    godinaRođenja :: Int
-    mestoStanovaja :: String
-    adresaStanovanja :: String
+    ime :: String,
+    prezime :: String,
+    godinaRođenja :: Int,
+    mestoStanovaja :: String,
+    adresaStanovanja :: String,
 @@}
 }
 
-@p Vrednosti tipa @code{Osba} je i dalje moguće konstruisati navođenjem vrednosti nakon konstruktora, ali je moguće i iskorititi sintaksu za zapise:
+@p Vrednosti tipa @code{Osoba} je i dalje moguće konstruisati navođenjem vrednosti nakon konstruktora, ali je moguće i iskorititi sintaksu za zapise:
 
 @codeBlock{
 osoba1 = MkOsoba "Petar" "Petrović" 2000 "Beograd" "Njegoševa"
 
 osoba2 = MkOsoba @@{
-    ime = "Jovana"
-    prezime = "Jovanović"
-    godinaRođenja = 1990
-    mestoStanovaja = "Novi Sad"
-    adresaStanovanja = "Zmaj Jovina"
+    ime = "Jovana",
+    prezime = "Jovanović",
+    godinaRođenja = 1990,
+    mestoStanovaja = "Novi Sad",
+    adresaStanovanja = "Zmaj Jovina",
 @@}
 }{Korišćenjem sintakse za zapise, programer nije u obavezi da ispoštuje redosled koordinata, ali mora navesti vrednosti za svaku koordinatu.}
 
@@ -338,6 +338,24 @@ ghci> ime osoba1
 "Petar"
 ghci> ime osoba 2
 "Jovana"
+}
+
+@p Prema tome, labele zapisa se koriste poput getera u objektno orijentisanim jezicima@note{Na primer, kôd @code{ime osoba2} odgovara nečemu što bi se Javi/C++-u napisalo kao @code{osoba2.ime}.}. Što se tiče promene vrednosti koordinate (odnosno setera), to se može izvrštiti navođenjem labele sa novom vrednošću koordinate:
+
+@terminal{
+ghci> ime osoba1
+"Petar"
+ghci> osoba3 = osoba1@@{ime = "Miloš"@@}
+ghci> ime osoba3
+"Miloš"
+}{Vrednosti kordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
+
+@p Pri poklapanju šablona, moguće je "uhvatiti" samo labele koje su potrebne. Tako bi se funkcija od malopre mogla ovako napisati:
+
+@codeBlock{
+punaAdresa :: Osoba -> String
+punaAdresa (MkOsoba @@{mestoStanovaja = mesto, adresaStanovanja = adresa@@})
+    = mesto ++ ", " ++ adresa
 }
 
 @todo{Algebra tipova}
