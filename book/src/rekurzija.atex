@@ -236,7 +236,7 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 @p Ipak, elgantnost rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.
 
 @example{
-@p Neka je @m{S_n = 1 + \cdots n}. Ako ovu sumu raspišemo u dva reda, pri čemu ćemo u jednoj sumi obrnuti poredak sabiraka, dobijamo sledeću šemu @eq{\begin{array}{lllll}1  &+2 &+ \cdots &+(n-1) &+ n\\ n &+ (n-1) &+\cdots &+2 &+1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva čiji je zbir @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
+@p Neka je @m{S_n = 1 + \cdots + n}, suma koju smo posmatrali na početku ove lekcije. Ako navedenu sumu raspišemo u dva reda, pri čemu ćemo u drugom redu obrnuti poredak sabiraka, dobijamo sledeću šemu @eq{\begin{array}{lllll}1  &+2 &+ \cdots &+(n-1) &+ n\\ n &+ (n-1) &+\cdots &+2 &+1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva čiji je zbir @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
 
 @p Dobijeni rezultat možemo iskoristiti za alternativnu implementaciju funkcije @code{zbir}:
 
@@ -245,7 +245,7 @@ zbir' :: Int -> Int
 zbir' n = div (n * (n+1)) 2
 }{Možemo ignoristati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
 
-@p Navedena alternativna definicja nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, što povlači da je potreno izračunat @code{zbir (n-1)}, i tako dalje sve do @code{zbir 1}.}, vreme za izručunavanje @code{zbir' n} ne zavisi od @code{n}, jer je u pitanju nekoliko računskih operacija koje se izvršavaju u nekoliko procesorskih taktova.
+@p Navedena alternativna definicja nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}.}, vreme za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je funckija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u procesorskih taktova.
 }
 
 @example{

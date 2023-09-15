@@ -18,7 +18,7 @@ data P = MkP A B
 @p Vektor dvodimenzionalne ravni možemo definsati kao proizvod tipova @code{Float} i @code{Float} na sledeći način:
 
 @codeBlock{
-data Vektor2D = Vektor Float Float deriving (Show)
+data Vektor = Vektor Float Float deriving (Show)
 }
 
 @p Vrednosti se konstrišu sa konstruktorom:
@@ -30,12 +30,12 @@ ghci> v = Vektor 2 1
 @p Konstruktor se koristi i za dekonstrukciju vrednosti sa tehnikom podudaranja oblika:
 
 @codeBlock{
-duzinaVektora :: Vektor -> Float
-duzinaVektora (Vektor x y) = sqrt (x**2 + y**2)
+dužinaVektora :: Vektor -> Float
+dužinaVektora (Vektor x y) = sqrt (x**2 + y**2)
 }
 
 @terminal{
-ghci> duzinaVektora v
+ghci> dužinaVektora v
 2.23606797749979
 }
 }
@@ -110,7 +110,7 @@ data T = K
 data SlovoIliBroj = Slovo Char | Broj Int deriving (Show)
 }
 
-@p Sada postoje dva konstruktora koja konstruišu vrednosti:
+@p Sada postoje dva konstruktora vrednosti:
 
 @terminal{
 ghci> a1 = Slovo 'a'
@@ -121,7 +121,7 @@ ghci> :t a2
 a2 :: SlovoIliBroj
 }{Vrednosti @code{a1} i @code{a2} imaju isti tip, iako predstavljaju razlčite oblike podataka.}
 
-@p Konstruktore koristimo i sa podudaranjem oblika. Svaka vrednost tipa @code{SlovoIliBroj} može biti ili oblika @code{Slovo x} ili oblika @code{Broj x}:
+@p Konstruktore koristimo sa podudaranjem oblika. Svaka vrednost tipa @code{SlovoIliBroj} može biti ili oblika @code{Slovo x} ili oblika @code{Broj x}, te podudaramo takve oblike:
 
 @codeBlock{
 daLiJeSlovo :: SlovoIliBroj -> Bool
@@ -136,21 +136,23 @@ daLiJeSlovo (Broj x) = False
 @p Sledeći tip označava dužinu u različitim mernim jednicama
 
 @codeBlock{
-data Duzina = Metar Float | Milja Float | SvetlosnaSekunda Float
+data Dužina = Metar Float | Milja Float | SvetlosnaSekunda Float
                 deriving (Show)
 }
 
-@p Za tip @code{Duzina} možemo da definišemo ovakvu funkciju konverzije:
+@p Za tip @code{Dužina} možemo da definišemo ovakvu funkciju konverzije:
 
 @codeBlock{
-uMetre :: Duzina -> Duzina
+uMetre :: Dužina -> Dužina
 uMetre (Milja x) = Metar (1609.344 * x)
 uMetre (SvetlosnaSekunda x) = Metar (299792458 * x)
 uMetre x = x
 }
 
-@p Tip @code{Duzina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno razlčite vrednosti, iako se svaka od ovih vrednosti dobiila primenom konstruktora na @code{1 :: Int}
+@p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno razlčite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Int}
 }
+
+@p Napomenimo da poredak konstruktora u sumi nije od značaja. Tako na primer, definicija @ccode{data SlovoIliBroj = Slovo Char | Broj Int} definiše isti@note{Tačnije, svaka od ove dve definicije se može zameniti sa onom drugom u kodu, i ostatak koda neće morati da se promeni.} tip kao i definicija @code{data SlovoIliBroj = Broj Int | Slovo Char}. Za razliku od toga, u proizvodima poredak tipova je bitan. Tako na primer, definicija @ccode{data SlovoIBroj = SIB Int Char} je sasvim različita od definicije@note{Ove dve definicije su naravno ekvivalentne u smislu da mogu predstaviti vrednosti koje su u jednoznačnoj korenspodenciji. Međutim, ako se jedna od ove dve definicije zameni sa drugom, ta zamena će zahtevati i promenu ostatka koda (na svim mestima u kodu gde su iskoroišćeni konstruktori).} @ccode{data SlovoIBroj = SIB Char Int}
 
 @subsection{Suma jediničnih tipova}
 
@@ -199,15 +201,15 @@ data Dan = Ponedeljak
     | Petak
     | Subota
     | Nedelja 
-}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neohodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicja nije podeljena na vipše delova sa praznim linijama.}
+}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neohodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicja nije podeljena na više delova sa praznim linijama.}
 }
 
-@section{Možda tip}
+@section{Možda-tip}
 
-@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bili kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstrusati kao sumu tipova @code{Float} i jediničnog tipa @code{Nista}:
+@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bili kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstrusati kao sumu tipa @code{Float} i jediničnog tipa @code{Ništa}:
 
 @codeBlock{
-data MoždaBroj = SamoBroj Float | Nista 
+data MoždaBroj = SamoBroj Float | Ništa 
 }
 
 @p Tip @code{MoždaBroj} je koristan kad god hoćemo da radimo u programu sa nekim vrednostima koje možda nisu ni zadate.
@@ -215,7 +217,7 @@ data MoždaBroj = SamoBroj Float | Nista
 @example{
 @p Ako očitvamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti @code{Float} vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu tempraturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temperature 0°C od neispravnih.
 
-@p Stoga je u ovom slučaju zgodno koristiti @code{MoždaBroj} tip za prezentovnje očitavanja senzora. Vrednost poput @code{SamoBroj 2} označava da je temperatura zaista 2°C, dok vrednost @code{Nista} označava da do očitavanja nije došlo.
+@p Stoga je u ovom slučaju zgodno koristiti @code{MoždaBroj} tip za prezentovnje očitavanja senzora. Vrednost poput @code{SamoBroj 2} označava da je temperatura zaista 2°C, dok vrednost @code{Ništa} označava da do očitavanja nije došlo.
 }
 
 @p Sa @code{MoždaBroj} vrednostima nije lako raditi kao sa @code{Float} vrednostima, ali nije ni preteško napisati funkcije koje su nam potrebne:
@@ -223,19 +225,19 @@ data MoždaBroj = SamoBroj Float | Nista
 @codeBlock{
 apsolutnaRazlika :: MoždaBroj -> MoždaBroj -> MoždaBroj
 apsolutnaRazlika (SamoBroj x) (SamoBroj y) = SamoBroj $ abs $ x - y
-apsolutnaRazlika _ _ = Nista
+apsolutnaRazlika _ _ = Ništa
 }{Fuknkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga smisla vratiti samo vrednost @code{Nista}}
 
 @codeBlock{
 podeli :: MoždaBroj -> MoždaBroj -> MoždaBroj
 podeli (SamoBroj x) (SamoBroj y) = 
     if y == 0
-        then Nista
+        then Ništa
         else SamoBroj $ x / y
-podeli _ _ = Nista
+podeli _ _ = Ništa
 }{Neke funkije sy takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethonoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
 
-@p Slično tipu @code{MoždaBroj} možemo konstruisati tip @code{MozdaNiska}:
+@p Slično tipu @code{MoždaBroj} možemo konstruisati@note{Obratite pažnju da u istom modulu nije moguće definisati tip @code{MoždaBroj} i @code{MoždaNiska} jer imaju istoimeni konstruktor @code{Ništa}. Naravno, rešenje je da promenim ime konstruktora u npr @code{NištaNiska} ili @code{BezNiske}. U nastavku ćemo radi jednostavnosti zadržati naziv @code{Ništa}.} tip @code{MoždaNiska}:
 
 @codeBlock{
 data MoždaNiska = SamoNiska String | Ništa
@@ -256,7 +258,87 @@ data Maybe t = Just t | Nothing
 
 @p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
 
-@todo{Records}
+
+@subsection{Totalne funkcije sa možda tipovima}
+
+@p Možda-tipovi se često koriste da bi se parcijalnim funkcijama pridružile odgovarajuće totalne funkcije. Ideja je da se za one vrednosti domena za koje je funkcija nedefinisana, prosto vrati @code{Nothing} vrednost.
+
+@example{
+@p Funkcija @code{head :: [a] -> a} koja vraća glavu niza nije totalna: pozivanje @code{head []} dovodi do izuzetka, jer prazan niz nema glavu. Zbog toga, u jednom od standardnih modula, definisana je funkcija @code{maybeHead}:
+
+@codeBlock{
+maybeHead :: [a] -> Maybe a
+maybeHead []  = Nothing
+maybeHead x:_ = Just x
+}
+
+@p Dakle, ako niz nije prazan @code{maybeHead} će vratiti glavu niza upakovanu u @code{Just}. Ako je niz prazan, @code{maybeHead} će vratiti @code{Nothing}.
+}
+
+@problem{
+Definisati totalne varijante funkcija @code{tail}, @code{init}, @code{last} koristeći možda tipove.
+}
+
+@section{Zapisi}
+
+@p Koliko kod proizvod tipova delovali korisno, u nekim situacijama pristupanje elementima proizvoda može dovesti do glomaznog i nečitljivog koda.
+
+@example{
+@p Na elektronskoj ličnoj karti republike Srbije, su između ostalog sačuvane sledeće niske: ime, prezime, godina rođenja, mesto stanovanja, adresa stanovanja. Ako želimo da formiramo novi tip koji će u sebi sadržati navedene informacije, dolazimo do glomazne definicije:
+
+@codeBlock{
+data Osoba = MkOsoba String String Int String String
+}
+
+@p Funkcije za rad sa ovakvim tipom deluju još gore:
+
+@codeBlock{
+punaAdresa :: Osoba -> String
+punaAdresa (MkOsoba _ _ _ mesto adresa)
+    = mesto ++ ", " ++ adresa
+}
+
+@p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicja tipa promeni nakon što su funkcije napisane. Tada je potremno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
+}
+
+@p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definicju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
+
+@p Nastavljajući priču iz prošlog primera, možemo definisati tip @code{Osoba} kao zapis:
+
+@codeBlock{
+data Osoba = MkOsoba @@{
+    ime :: String
+    prezime :: String
+    godinaRođenja :: Int
+    mestoStanovaja :: String
+    adresaStanovanja :: String
+@@}
+}
+
+@p Vrednosti tipa @code{Osba} je i dalje moguće konstruisati navođenjem vrednosti nakon konstruktora, ali je moguće i iskorititi sintaksu za zapise:
+
+@codeBlock{
+osoba1 = MkOsoba "Petar" "Petrović" 2000 "Beograd" "Njegoševa"
+
+osoba2 = MkOsoba @@{
+    ime = "Jovana"
+    prezime = "Jovanović"
+    godinaRođenja = 1990
+    mestoStanovaja = "Novi Sad"
+    adresaStanovanja = "Zmaj Jovina"
+@@}
+}{Korišćenjem sintakse za zapise, programer nije u obavezi da ispoštuje redosled koordinata, ali mora navesti vrednosti za svaku koordinatu.}
+
+@p Definisanjem tipa @code{Osoba} sintaksom za zapise, zapravo je kreirano šest funkcija @code{ime :: Osoba -> String}, @code{prezime :: Osoba -> String}, @code{godinaRođenja :: Osoba -> Int}, @code{mestoStanovaja :: Osoba -> String}, @code{adresaStanovanja :: Osoba -> String}. Ove funkcije se nazivaju @def{projekcije}, i vraćaju vraćaju odgovarajuće koordinate:
+
+@terminal{
+ghci> :t ime
+ime :: Osoba -> String
+ghci> ime osoba1
+"Petar"
+ghci> ime osoba 2
+"Jovana"
+}
 
 @todo{Algebra tipova}
 

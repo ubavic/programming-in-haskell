@@ -431,7 +431,7 @@ ghci> (*2) <$> [1 .. 10]
 
 @p @em{U nastavku je dat jedan primer koji nije neophodan za razumevanje ostatka knjige. Primer zahteva određena predznanja iz matematike.}
 
-@p Otkiriće diferencijlanog i integralnog računa je jedno od najzačajnih trenutaka u istoriji nauke. Navedni matematički aparati su neophodni za formulaciju mnogih prirodnih fenomena: od kretanja elektorna do kretanja galaksija. Svakako, ova tematika je van opsega ove knjige, ali ovde možemo da prikažemo kako se elegantno može implementirati formula za aprikismaciju određenih integrala.
+@p Otkiriće diferencijlanog i integralnog računa je jedno od najzačajnih trenutaka u istoriji nauke. Navedni matematički aparati su neophodni za formulaciju mnogih prirodnih fenomena: od kretanja elektorna do kretanja galaksija. Svakako, ova tematika je van opsega ove knjige, ali ovde možemo da prikažemo kako se elegantno može implementirati formula za aproksimaciju određenih integrala.
 
 @p Određeni integral funkcije @m{f\colon \mathbb R \to \mathbb R} na intervalu @m{[a,b]}, označava se sa @eq{\int\limits_a^b f(x)\,\mathrm dx} i može se shvatitii kao površina između grafika funkcije @m{f} i @m{x} ose@note{Pri čemu se ta površina uzima sa negativnim predznakom na oblastima gde je @m{f(x) < 0}.}. Integral, tj. površina, može se aproksimirati @em{Rimanovom sumom}, odnsno sumom površina malih pravuganika koji aproksimiraju površinu ispod grafika.
 
