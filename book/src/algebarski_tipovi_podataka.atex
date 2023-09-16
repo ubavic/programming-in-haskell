@@ -259,6 +259,12 @@ data Maybe t = Just t | Nothing
 @p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
 
 
+@problem{Koje vrednosti sadrži tip @code{Maybe Bool}?}
+{Vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}.}
+
+@problem{Koje vrednosti sadrži tip @code{Maybe (Maybe Bool)}?}
+{Kako su vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}, sledi da su vrednosti tipa @code{Maybe (Maybe Bool)} upravo @code{Just (Just True)}, @code{Just (Just False)}, @code{Just (Just Nothing)} i  @code{Nothing}}
+
 @subsection{Totalne funkcije sa možda tipovima}
 
 @p Možda-tipovi se često koriste da bi se parcijalnim funkcijama pridružile odgovarajuće totalne funkcije. Ideja je da se za one vrednosti domena za koje je funkcija nedefinisana, prosto vrati @code{Nothing} vrednost.
@@ -281,24 +287,32 @@ Definisati totalne varijante funkcija @code{tail}, @code{init}, @code{last} kori
 
 @section{Zapisi}
 
-@p Koliko kod proizvod tipova delovali korisno, u nekim situacijama pristupanje elementima proizvoda može dovesti do glomaznog i nečitljivog koda.
+@p Koliko god proizvod tipova delovao korisno, u nekim situacijama pristupanje elementima proizvoda može dovesti do glomaznog i nečitljivog koda.
 
 @example{
-@p Na elektronskoj ličnoj karti republike Srbije, su između ostalog sačuvane sledeće niske: ime, prezime, godina rođenja, mesto stanovanja, adresa stanovanja. Ako želimo da formiramo novi tip koji će u sebi sadržati navedene informacije, dolazimo do glomazne definicije:
+@p Na svakoj elektronskoj ličnoj karti su sačuvane i sledeće niske: ime, prezime, mesto stanovanja, adresa stanovanja, kao i broj koji predstavlja godinu rođenja. Ako formiramo novi tip koji će u sebi sadržati navedene informacije, dolazimo do glomazne definicije:
 
 @codeBlock{
-data Osoba = MkOsoba String String Int String String
-}
+data Osoba = MkOsoba String String String String Int
+}{Primetimo da iz ove definicije ne znamo koja koordinata predstavlja koju informaciju. Jednino znamo da koordinata tipa @code{Int} predstavlja godinu rođenja. Ovu dvosmislenost možemo rešiti pisanjem komentara pored definicije}
 
-@p Funkcije za rad sa ovakvim tipom deluju još gore:
+@p Možemo se odlučiti da prva niska predstavlja ime, druga prezime, treća mesto a četvrta adresu. Tada funkcije za rad sa tipom @code{Osoba} deluju poput sledećih:
 
 @codeBlock{
+punoIme :: Osoba -> String
+punoIme (MkOsoba ime prezime _ _ _)
+    = ime ++ " " ++ prezime
+
 punaAdresa :: Osoba -> String
-punaAdresa (MkOsoba _ _ _ mesto adresa)
-    = mesto ++ ", " ++ adresa
+punaAdresa (MkOsoba _ _ mesto adresa _)
+    = adresa ++ ", " ++ ime
+
+punoletna :: Int -> Osoba -> MyBool
+punoletna trenutnaGodina (MkOsoba _ _ _ _ godinaRođenja)
+    = trenutnaGodina - godinaRođenja >= 18
 }
 
-@p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicja tipa promeni nakon što su funkcije napisane. Tada je potremno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
+@p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicja tipa promeni nakon što su funkcije napisane. Tada je potrebno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
 }
 
 @p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definicju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime - @def{labela}, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
@@ -350,12 +364,20 @@ ghci> ime osoba3
 "Miloš"
 }{Vrednosti kordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
 
-@p Pri poklapanju šablona, moguće je "uhvatiti" samo labele koje su potrebne. Tako bi se funkcija od malopre mogla ovako napisati:
+@p Pri poklapanju šablona, moguće je "uhvatiti" samo labele koje su potrebne. Tako bi se funkcije od malopre mogla ovako napisati:
 
 @codeBlock{
+punoIme :: Osoba -> String
+punoIme (MkOsoba @@{ime = ime, prezime = prezime@@})
+    = ime ++ " " ++ prezime
+
 punaAdresa :: Osoba -> String
 punaAdresa (MkOsoba @@{mestoStanovaja = mesto, adresaStanovanja = adresa@@})
     = mesto ++ ", " ++ adresa
+
+punoletna :: Int -> Osoba -> MyBool
+punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
+    = trenutnaGodina - godinaRođenja >= 18
 }
 
 @todo{Algebra tipova}
@@ -365,9 +387,9 @@ punaAdresa (MkOsoba @@{mestoStanovaja = mesto, adresaStanovanja = adresa@@})
 
 @problem{Kreirati algebarski tip podataka @code{Vektor} koji predstavlja vektor u trodimenzionalnom prostoru (Koristiti @code{Float} tip za koordinate). Kreirati funkcije za sabiranje vektora, množenje vektora skalarem, skalarnog množenja vektora, vektorskog množenja vektora i računanja dužine vektora.}
 
-@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše koverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednui vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algabarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Racun} koji sadži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Racun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Racun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljanu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRacunu:: Racun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
+@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše koverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednui vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algabarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljanu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
 
-@problem{Kreirati tip @code{Tacka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravugaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{povrsina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
+@problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravugaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
 
 @problem{Kreirati tip @code{KompleksanBroj}. Implemenitari funkcije koje sabiraju, oduzimaju, množe i dele kompleksne brojeve.}
 

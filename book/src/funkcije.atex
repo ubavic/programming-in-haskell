@@ -181,9 +181,9 @@ ghci> h [1,2,3]
 }
 }
 
-@p Prosto rečeno, primenom funkcije tipa @code{a -> b} na vrednosti tipa @code{a} "brišemo" @code{a ->} iz tipa@note{Kao što u matematici @m{f} predstavlja funkciju a @m{f(10)} konkretan broj, tako i primena funkcije @code{f :: a -> b} na vrednost @code{v :: a} predstavlja rezultat tipa @code{b}.}.
+@p Prosto rečeno, primenom funkcije tipa @code{A -> B} na vrednosti tipa @code{A} "brišemo" @code{A ->} iz tipa@note{Kao što u matematici @m{f} predstavlja funkciju a @m{f(10)} konkretan broj, tako i primena funkcije @code{f :: A -> B} na vrednost @code{v :: A} predstavlja rezultat tipa @code{B}.}.
 
-@p Često je korisno raditi sa funkcijom čiji domen nije jedan konkretan tip, već ju je moguće koristiti sa više različitih tipova. Na primer, funkciju @code{head} (koja vraća prvi element prosleđene liste), ima smisla primenjivati na liste tipa @code{[Int]}, @code{[Char]}, @code{[Bool]} itd... I zaista, funkciju @code{head} je moguće primeniti na listu bilo kog tipa.
+@p Često je korisno raditi sa funkcijom čiji domen nije jedan konkretan tip, već ju je moguće koristiti sa više različitih tipova. Na primer, funkciju @code{head} (koja vraća prvi element prosleđene liste), ima smisla primenjivati na liste tipa @code{[Int]}, @code{[Char]}, @code{[Bool]} itd...
 
 @p Postavlja se pitanje, kog tipa je funkcija @code{head}? Srećom, odgovor na to pitanje lako možemo naći:
 
@@ -192,10 +192,10 @@ ghci> :type head
 head :: [a] -> a
 }
 
-@p Vidimo da je domen funkcije @code{head} tip lista bilo kog tipa, što se označava sa @code{[a]}. Ovde, @code{a} predstavlja @def{tipsku promenljivu}@note{Umesto slova @code{a} moglo je biti iskorišćeno i bilo koje drugo slovo, ali pritom se to slovo mora pojaviti i u domenu i u kodomenu. Primetimo da tipske promenljive, za razliku od konkretnih tipova, počinju malim slovima.}, odnosno proizvoljan tip. Kako funkcija @code{head} vraća prvi član liste tipa @code{[a]} tako njena povratna vrednost mora biti @code{a}.
+@p Vidimo da je domen funkcije @code{head} tip lista bilo kog tipa, što se označava sa @code{[a]}. Ovde, @code{a} predstavlja @def{tipsku promenljivu}@note{Umesto slova @code{a} moglo je biti iskorišćeno i bilo koje drugo malo slovo, ali pritom se to slovo mora pojaviti i u domenu i u kodomenu. Primetimo da tipske promenljive, za razliku od konkretnih tipova, počinju malim slovima.}, odnosno proizvoljan tip. Kako funkcija @code{head} vraća prvi član liste tipa @code{[a]} tako njena povratna vrednost mora biti @code{a}.
 
 @example{
-@p Ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}@note{Proverite!}.
+@p Ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
 }
 
 @example{
