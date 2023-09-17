@@ -258,12 +258,11 @@ data Maybe t = Just t | Nothing
 
 @p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
 
-
 @problem{Koje vrednosti sadrži tip @code{Maybe Bool}?}
-{Vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}.}
+{@p Vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}.}
 
 @problem{Koje vrednosti sadrži tip @code{Maybe (Maybe Bool)}?}
-{Kako su vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}, sledi da su vrednosti tipa @code{Maybe (Maybe Bool)} upravo @code{Just (Just True)}, @code{Just (Just False)}, @code{Just (Just Nothing)} i  @code{Nothing}}
+{@p Kako su vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}, sledi da su vrednosti tipa @code{Maybe (Maybe Bool)} upravo @code{Just (Just True)}, @code{Just (Just False)}, @code{Just (Just Nothing)} i  @code{Nothing}}
 
 @subsection{Totalne funkcije sa možda tipovima}
 
