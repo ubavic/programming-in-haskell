@@ -194,6 +194,8 @@ susret p m n = mod p (gcd n m) == 0
 
 @p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa, koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine koje označavamo sa @m{D_1,..., D_n}. Diskovi su probušeni u centru tako da se štap može provuću kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
 
+@figure{hanoi1}
+
 @p Za osobu nije teško da sama dođe do rešenja nakon malo početnog igranja. Ali je na prvi pogled veoma teško napisati program koji formira rešenje za proizvoljan broj diskova.
 
 @p Prvo ćemo utvrditi kako želimo da prezentujemo rešenje, i koji ulazni parameti su potrebni. Rešenje možemo predstaviti kao listu poteza, od kojih je svaki potez uređen par karaktera koji označavaju štap sa kog i štap na koji prebacujemo disk. Na primer, uređen par @code{('A', 'B')} predstavlja potez u kom se sa prvi disk sa štapa @m{A} prebacuje na štap @m{B}. Sa druge strane, rešenje zadatka zavisi samo od broja diskova @m{n}. Stoga, naš zadatak je da napišemo funkciju @ccode{kule :: Int -> (Char, Char)} koja pronalazi jedno rešenje@note{Primetimo da rešenje nije jedinstveno. Igru možemo odigrati na mnogo načina.}.
@@ -204,6 +206,7 @@ susret p m n = mod p (gcd n m) == 0
 
 @p Naravno, problem ćemo rešiti rekurzivno. Kako problem suštinski zavisi samo od broja diskova, rekurziju ćemo vršiti po @m{n}. U najednostavnijem slučaju, kad je @m{n=1}, jasno je da je rešenje jednočlana lista @code{[('A', 'C')]}, tj. par koji se sastoji od početnog i krajnjeg diska. Pretpostavimo zato da je @m{n>1} i da znamo da rešimo slučajeve za manje diskova. Tada možemo postupiti na sledeći način: prvih @m{n-1} diskova ćemo prebaciti sa početnog na pomoćni (@m{B}) štap, zatim ćemo prebaciti najveći disk sa početnog na krajnji, i na kraju ćemo pomeriti @m{n-1} diskova sa pomoćnog na krajni štap. Ova strategija je prikazana na narednoj ilustraciji.
 
+@figure{hanoi2}
 
 @p Kao što vidimo u rekurzivnom koraku @m{n-1} diskova prebacujemo prvo sa štapa @m{A} na štap @m{B}. Stoga za rekurzivni poziv, osim broja diskova, mora biti navedeno i sa kog štapa i na koji štap se diskovi prebacuju. Naravno, rešenje ne može koristiti samo dva štapa@note{Osim u trivijalnom slučaju kada se prebacuje jedan disk.}, već se mora iskoristiti i onaj treći štap kao pomoćni. Stoga funkcija za rekurzivno pronalaženje rešenja uzima četiri parametra: broj diskova, početni štap, krajnji štap i pomoćni štap. Ova rekurzivna funkcija će imati potpis @ccode{pomeri :: Int -> Char -> Char -> Char -> [(Char, Char)]}.
 Ako je funkcija @code{pomeri} implementirana, tada "glavnu" funkciju @code{kule} možemo jednostavno implementirati:
@@ -236,7 +239,7 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 @p Ipak, elgantnost rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.
 
 @example{
-@p Neka je @m{S_n = 1 + \cdots + n}, suma koju smo posmatrali na početku ove lekcije. Ako navedenu sumu raspišemo u dva reda, pri čemu ćemo u drugom redu obrnuti poredak sabiraka, dobijamo sledeću šemu @eq{\begin{array}{lllll}1  &+2 &+ \cdots &+(n-1) &+ n\\ n &+ (n-1) &+\cdots &+2 &+1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva čiji je zbir @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
+@p Neka je @m{S_n = 1 + \cdots + n}, suma koju smo posmatrali na početku ove lekcije. Ako članove sume raspišemo u dva reda, pri čemu ćemo u drugom redu obrnuti poredak sabiraka, dobijamo šemu: @eq{\begin{array}{ccccc}1  &2 &\cdots &n-1 & n\\ n &n-1 &\cdots &2 & 1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva koji odgovaraju kolonama, pri čemu je zbir svakog para @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
 
 @p Dobijeni rezultat možemo iskoristiti za alternativnu implementaciju funkcije @code{zbir}:
 
@@ -245,7 +248,7 @@ zbir' :: Int -> Int
 zbir' n = div (n * (n+1)) 2
 }{Možemo ignoristati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
 
-@p Navedena alternativna definicja nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}.}, vreme za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je funckija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u procesorskih taktova.
+@p Navedena alternativna definicja nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}.}, vreme za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je fukcija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u procesorskih taktova.
 }
 
 @example{
@@ -263,21 +266,22 @@ fib' n = round ((a^n - b^n)/t)
 }{Ugrađena funkcija @code{round} zaokružuje @code{Float} broj u @code{Int}.}
 }
 
-@p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih. Često su potrebna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristipiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicje? Odgovor na ovo pitanje je nemoguće dati, jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je često odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Kada se algoritam savlada rekurzivnom tehnikom, često nerekurzivno rešenje postane mnogo jasnije.
+@p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristipiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
 
 @section{Totalne i parcijalne funkcije}
 
-@p Po matematičkoj definiciji funkcije, vrednost @m{f(x)} mora biti definisana za svako @m{x} koje pripada domenu funkcije @m{f}. Tako na primer, funkcija @m{f(x)=1/x} ne može za domen imati ceo skup realnih brojeva @m{\mathbb R}, već u najboljem slučaju@note{Naravno mi možemo definisati ovu funkciju na bilo kom podskupu od @m{\mathbb R} koji ne sadrži nulu. Funkcija je u potpunosti određena kada su navedeni njen domen, kodomen, i pravilo pridruživanja.} @m{\mathbb R\setminus\{0\}}. Slično, funkcija korenovanja @m{s(x)=\sqrt{x}} može za domen imati samo skup pozitivnih brojeva.
+@p Po matematičkoj definiciji funkcije, vrednost @m{f(x)} mora biti definisana za svako @m{x} koje pripada domenu funkcije @m{f}. Tako na primer, funkcija @m{f(x)=1/x} ne može za domen imati ceo skup realnih brojeva @m{\mathbb R}, već u najboljem slučaju@note{Naravno mi možemo definisati ovu funkciju na bilo kom podskupu od @m{\mathbb R} koji ne sadrži nulu. Upravo zbog toga smatramo da je funkcija u potpunosti određena kada su navedeni domen, kodomen, i pravilo pridruživanja.} @m{\mathbb R\setminus\{0\}}. Slično, funkcija korenovanja @m{s(x)=\sqrt{x}} može za domen imati samo podskup skupa pozitivnih brojeva@note{Ovde u potpunosti ignorišemo kompleksne brojeve.}.
 
 @p U računarstvu je malo drugačije. Funkcija tipa @code{A -> B} u Haskelu ne mora biti definisana za sve vrednosti tipa @code{A}. To smo videli na primeru prve definicije funkcije koja sabira aritmetičku sumu @m{1 + \cdots + n}:
 
 @codeBlock{
+zbir :: Int -> Int
 zbir n
     | n == 0    = 0
     | otherwise = zbir (n - 1) + n
 }
 
-@p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju. Prema tome, izraz @code{zbir x} nije definisan za svaku vrednost @code{x :: Int}.
+@p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju, pa samim tim izraz @code{zbir x} nije definisan za svaku vrednost @code{x :: Int}.
 
 @p Funkciju koja nije definsana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Prema tome, pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
 
@@ -297,7 +301,7 @@ Prelude> p 10
 
 @p Postavlja se pitanje, zašto jezik poput Haskela dozvoljava da radimo sa parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kreirati programski jezik koji ne bi sadržao parcijalne funkcije a koji bi i dalje bio dovoljno ekspresivan za izražavanje svakog algoritma.
 
-@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajave kada rekurzivni algoritam može ući u beskonačnu petlju, a zatim obezbediti da beskonačne petlje nikad ne dođe.
+@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajave kada meki rekurzivni algoritam može ući u beskonačnu petlju, a zatim izmenom tog algoritma obezbediti da do beskonačne petlje nikad ne dođe.
 
 @section{Zadaci}
 

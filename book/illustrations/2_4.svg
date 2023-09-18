@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    sodipodi:docname="2_4.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="0.75306869"
-     inkscape:cx="260.93237"
-     inkscape:cy="318.69603"
+     inkscape:zoom="1.5061374"
+     inkscape:cx="285.8305"
+     inkscape:cy="295.45778"
      inkscape:window-width="1920"
      inkscape:window-height="1050"
      inkscape:window-x="0"
@@ -36,7 +36,7 @@
   <defs
      id="defs2" />
   <rect
-     style="fill:#f5f7ff;fill-opacity:1;stroke:#002288;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect286"
      width="401.88174"
      height="402.29031"
@@ -46,17 +46,17 @@
      ry="3" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      x="410.91061"
      y="21.118345"
      id="text1004"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan1002"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
        x="410.91061"
        y="21.118345">(Int,Char)</tspan></text>
   <rect
-     style="fill:#f5f7ff;fill-opacity:1;stroke:#002288;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect406"
      width="59"
      height="402.29031"
@@ -65,7 +65,7 @@
      rx="3"
      ry="3" />
   <rect
-     style="fill:#f5f7ff;fill-opacity:1;stroke:#002288;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect408"
      width="401.88174"
      height="59"
@@ -380,13 +380,13 @@
        y="338.26157">(2,'a')</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      x="66.267502"
      y="24.317434"
      id="text800"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan798"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
        x="66.267502"
        y="24.317434">Int</tspan></text>
   <text
@@ -519,13 +519,13 @@
          y="432.38028">...</tspan></tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      x="489.7146"
      y="544.75513"
      id="text940"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan938"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
        x="489.7146"
        y="544.75513">Char</tspan></text>
   <text

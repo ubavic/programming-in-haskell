@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    sodipodi:docname="2_3.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="2.1299999"
-     inkscape:cx="253.99062"
+     inkscape:cx="253.75588"
      inkscape:cy="130.98592"
      inkscape:window-width="1920"
      inkscape:window-height="1050"
@@ -35,7 +35,7 @@
   <defs
      id="defs2" />
   <rect
-     style="fill:#f5f7ff;fill-opacity:1;stroke:#002288;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      id="rect286"
      width="499"
      height="157.44576"
@@ -45,13 +45,13 @@
      ry="3" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
      x="474.51135"
      y="196.09917"
      id="text1004"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan1002"
-       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#002288;fill-opacity:1;stroke:none;stroke-width:0.529168"
+       style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
        x="474.51135"
        y="196.09917">[Bool]</tspan></text>
   <g
@@ -133,7 +133,7 @@
          transform="matrix(0.9983293,0,0,1.0016735,-80.024944,-3.7668722)"><tspan
            x="311.26163"
            y="120.25683"
-           id="tspan631">[True,False]</tspan></text>
+           id="tspan1">[True,False]</tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';white-space:pre;inline-size:170.129;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
@@ -143,7 +143,7 @@
          transform="matrix(0.9983293,0,0,1.0016735,74.686402,-3.7668722)"><tspan
            x="311.26163"
            y="120.25683"
-           id="tspan633">[False,False]</tspan></text>
+           id="tspan2">[False,False]</tspan></text>
     </g>
   </g>
 </svg>

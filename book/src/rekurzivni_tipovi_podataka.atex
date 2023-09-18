@@ -184,6 +184,8 @@ stablo1 = Čvor 1
 }
 @p predstavlja naredno stablo sa tri čvora:
 
+@figure{tree1}
+
 @p Ovo stablo je sačinjeno od čvora koji sadrži vrednost @m{1} kao i dva manja stabla. Ta dva manja stabla su sačinjena od po jednog čvora koji sadrži vrednost @m{2}, odnosno @m{3}. Ovi čvorovi u sebi sadrže prazna stabla (koje ne predstavlajmo na slikama).
 
 @p Za čvor @m{1} kažemo da je @em{roditelj} čvorova @m{2} i  @m{3}, dok za čvorove @m{2} i @m{3} često kažemo i da su @em{deca} čvora @m{1}. Za jedinstveni čvor koji se nalazi na samom vrhu stabla, ovde je to @m{1}, kažemo da je @em{koren} stabla. Za čvorove koji nemaju decu kažemo da su @em{listovi} stabla: u ovom stablu to su @m{2} i @m{3}.
@@ -203,6 +205,7 @@ stablo2 = Čvor 5
 
 @p predstalja stablo sa šest čvorova:
 
+@figure{tree2}
 
 @p U ovom stablu, @m{5} je koren, a čvorovi @m{2}, @m{4} i @m{8} su listovi. Primetimo da u stablu čvor @m{6} ima samo jedno dete.
 }
@@ -381,8 +384,6 @@ Klasa @code{Functor} definiše i operator @code{<$} kao @code{fmap . const}. Št
 @eq{22 * (1 + 6),}
 @eq{((10+32.3232) * 18) * (333 + 4.04)...}
 
-@p Prva ideja za predstavljanje izraza bi bila da se izraz predstavi kao lista nekih vrednosti. U najednostavnijem pristpu to bi bila lista karatera@note{Dakle izraz bi bio predstavljen kao niska. Npr. izraz @m{2+3} bi bio predstavljen kao @code{"2+3"}}, dok bi nešto napredniji pristup bio predstavljanje izraza kao liste brojeva i operacija @note{U tom slučaju morali bismo napraviti određeni algebarski tip. Na primer, predstavljanje izraza @m{2+3} bi bilo nešto poput @code{[Broj 2, Plus, Broj 3]}}. Ipak ovakva linearna predstavljanja izraza nisu dobra, jer je teško napisati algoritme koji rade sa ovakvim linernim predstavljanjima.
-
 @p Da bismo našli pogodan način predstavljanja matematičkih izraza, za primer pogledajmo rekurzivnu strukturu izraza @eq{(17 + 3) * (10 * (1 + 1)).} Navedeni izraz predstavlja zbir dva manja izraza @m{17 + 3} i @m{10 * (1 + 1)}. Prvi od tih izraza je zbir dva broja, dok je drugi proizvod broja i još manjeg izraza @m{1 + 1}. Na ovom primeru vidimo da su izrazi sačinjeni od manjih izraza ili brojeva koji se kombinuju uz pomoć dve operacije.
 
 @p Navedeno razmatranje nas dovodi do rekurzivne definicje tipa @code{Izraz}. Vrednosti tipa @code{Izraz} konstruisaćemo na tri načina. Prvo, svaki broj za sebe čini izraz. Drugo, ako su data dva izraza, onda je i njihov zbir izraz. Treće, ako su data dva izraza onda je i njihov proizvod izraz:
@@ -398,6 +399,8 @@ data Izraz =
 @p Sada izraz @m{22 * (1 + 6)} možemo da predstavimo sa vrednošću:
 @ccode{Proizvod (Broj 22) (Zbir (Broj 1) (Broj 6))}.
 Ova vrednost se može predstaviti i kao naredno stablo:
+
+@figure{tree3}
 }
 
 @p Kao što vidimo vrednosti tipa @code{Izraz} se mogu shvatiti kao stabla, čiji listovi su brojevi, dok ostali čvorovi predstvaljaju operacije sabiranja ili množenja. Stabla poput ovih nazivamo @def{sintaksna stabla}. Sa sintaksnim stablima se mogu prezentovati matematički izrazi ali izrazi nekog programskog jezika@note{Ili opštije, bilo kog formalnog jezika}, i predstavljaju ključni koncept programe poput kompajlera i interpretera.

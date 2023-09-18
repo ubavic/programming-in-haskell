@@ -31,7 +31,7 @@
 @p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja pridružuje vrednostima tipa @code{A} vrednosti tipa @code{B} označava se sa @code{A -> B}. Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{A -> B} predstavlja kolekciju svih funkcija koje tip @code{A} preslikavaju tip @code{B}.
 
 
-@figure{3_1}{Na ilustraciji vidimo dva tipa @code{C} i @code{D}, čije vrednosti su predstavljene kao tačkice. Neku funkciju @code{f} tipa @code{C -> D}, možemo zamisliti kao strelice koje vrednosti tipa @code{C} "povezuju" sa vrednostima tipa @code{D}. Na ilustraciji je radi preglednosti prikazana samo jedna takva strelica, ona koja vrednost @code{x} povezuje sa @code{f x}. Naravno, po definiciji pojma funkcije, svaka vrednost iz @code{C} mora biti povezana sa nekom vrednošću iz @code{D}.}
+@figure{func}{Na ilustraciji vidimo dva tipa @code{C} i @code{D}, čije vrednosti su predstavljene kao tačkice. Neku funkciju @code{f} tipa @code{C -> D}, možemo zamisliti kao strelice koje vrednosti tipa @code{C} "povezuju" sa vrednostima tipa @code{D}. Na ilustraciji je radi preglednosti prikazana samo jedna takva strelica, ona koja vrednost @code{x} povezuje sa @code{f x}. Naravno, po definiciji pojma funkcije, svaka vrednost iz @code{C} mora biti povezana sa nekom vrednošću iz @code{D}.}
 
 
 @example{
