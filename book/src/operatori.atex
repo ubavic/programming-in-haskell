@@ -111,7 +111,7 @@ x |-| y = x /= y
 
 @p Sve tri navedene definicije su u potpunosti iste. Poslednji oblik definicije je najprirodniji pa se i najčešće koristi.
 
-@p Učitavanjem bilo koje od definicjija u @em{GHCi} možemo koristiti novi logički operator:
+@p Učitavanjem bilo koje od definicija u @em{GHCi} možemo koristiti novi logički operator:
 
 @terminal{
 ghci> True |-| False
@@ -303,7 +303,7 @@ duzina :: [a] -> Int
 duzina xs = length xs 
 }
 
-@p Dve navedene funkcije možemo da komponujemo samo na jedan način. Pokušaj konstukcije kompozicije @code{duzina . paran} dovešće do tipske greške.
+@p Dve navedene funkcije možemo da komponujemo samo na jedan način. Pokušaj konstrukcije kompozicije @code{duzina . paran} dovešće do tipske greške.
 
 @terminal{
 ghci> k1 = paran . duzina

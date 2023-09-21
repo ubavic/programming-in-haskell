@@ -236,7 +236,7 @@ zbir [] = 0
 zbir (x:xs) = x + zbir xs
 }
 
-@p Gornja funkcija je rekurzivna funkcija koja sabira elemente liste tako što nepraznu listu dekonstuiše na glavu (@code{x}) i rep (@code{xs}), a zatim pozove samu sebe za pronalaženje zbira repa. Baza idukcije je slučaj prazne liste, čije je zbir naravno @code{0}.
+@p Gornja funkcija je rekurzivna funkcija koja sabira elemente liste tako što nepraznu listu dekonstruiše na glavu (@code{x}) i rep (@code{xs}), a zatim pozove samu sebe za pronalaženje zbira repa. Baza idukcije je slučaj prazne liste, čije je zbir naravno @code{0}.
 }
 
 @problem{

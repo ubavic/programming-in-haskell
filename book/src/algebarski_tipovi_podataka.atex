@@ -10,9 +10,9 @@
 
 @codeBlock{
 data P = MkP A B
-}{Ovde, @code{P} je naziv definisanog proizvoda, @code{MkP} je konstuktor.}
+}{Ovde, @code{P} je naziv definisanog proizvoda, @code{MkP} je konstruktor.}
 
-@p Svaka vrednost gore definisanog tipa @code{P}, je oblika @code{MkP a b} gde su @code{a :: A} i @code{b :: B} neke vrednosti. Podudaranje oblika dozvoljava da vrednosti tipa @code{P} "dekonstuišemo" na ovaj način.
+@p Svaka vrednost gore definisanog tipa @code{P}, je oblika @code{MkP a b} gde su @code{a :: A} i @code{b :: B} neke vrednosti. Podudaranje oblika dozvoljava da vrednosti tipa @code{P} "dekonstruišemo" na ovaj način.
 
 @example{
 @p Vektor dvodimenzionalne ravni možemo definsati kao proizvod tipova @code{Float} i @code{Float} na sledeći način:
@@ -201,7 +201,7 @@ data Dan = Ponedeljak
     | Petak
     | Subota
     | Nedelja 
-}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neohodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicja nije podeljena na više delova sa praznim linijama.}
+}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neohodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicija nije podeljena na više delova sa praznim linijama.}
 }
 
 @section{Možda-tip}
@@ -243,7 +243,7 @@ podeli _ _ = Ništa
 data MoždaNiska = SamoNiska String | Ništa
 }
 
-@p Konstrukcija tipa je @code{MozdaNiska} je u potpunosti analogna konstrukciji tipa @code{MoždaBroj}. Jasno je da je ovakva konstukcija korisna za bilo koji tip, stoga možemo definisati naredni apstraktni tip
+@p Konstrukcija tipa je @code{MozdaNiska} je u potpunosti analogna konstrukciji tipa @code{MoždaBroj}. Jasno je da je ovakva konstrukcija korisna za bilo koji tip, stoga možemo definisati naredni apstraktni tip
 
 @codeBlock{
 data Možda t = Samo t | Ništa
@@ -259,10 +259,10 @@ data Maybe t = Just t | Nothing
 @p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
 
 @problem{Koje vrednosti sadrži tip @code{Maybe Bool}?}
-{@p Vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}.}
+{@p @code{Just True}, @code{Just False} i @code{Nothing}.}
 
 @problem{Koje vrednosti sadrži tip @code{Maybe (Maybe Bool)}?}
-{@p Kako su vrednosti tipa @code{Maybe Bool} su @code{Just True}, @code{Just False} i @code{Nothing}, sledi da su vrednosti tipa @code{Maybe (Maybe Bool)} upravo @code{Just (Just True)}, @code{Just (Just False)}, @code{Just (Just Nothing)} i  @code{Nothing}}
+{@p @code{Just (Just True)}, @code{Just (Just False)}, @code{Just (Just Nothing)} i  @code{Nothing}}
 
 @subsection{Totalne funkcije sa možda tipovima}
 
@@ -311,10 +311,10 @@ punoletna trenutnaGodina (MkOsoba _ _ _ _ godinaRođenja)
     = trenutnaGodina - godinaRođenja >= 18
 }
 
-@p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicja tipa promeni nakon što su funkcije napisane. Tada je potrebno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
+@p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicija tipa promeni nakon što su funkcije napisane. Tada je potrebno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
 }
 
-@p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definicju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime - @def{labela}, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
+@p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definiciju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime - @def{labela}, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
 
 @p Nastavljajući priču iz prošlog primera, možemo definisati tip @code{Osoba} kao zapis:
 
@@ -349,7 +349,7 @@ ghci> :t ime
 ime :: Osoba -> String
 ghci> ime osoba1
 "Petar"
-ghci> ime osoba 2
+ghci> ime osoba2
 "Jovana"
 }
 

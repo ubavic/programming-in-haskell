@@ -96,9 +96,9 @@ instance Figura Krug where
 
 @p Linijom @code{instance ... } započinje se blok definicija funkcija. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
-@p U bloku definicja, neophodno je definisati sve funkcije koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnje pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
+@p U bloku definicija, neophodno je definisati sve funkcije koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnje pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
 
-@p Nakon učitavanja navedenih definicja u @em{GHCi}, možemo se uveriti da @code{povrsina} može da se primenjuje na razne tipove figura
+@p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da @code{povrsina} može da se primenjuje na razne tipove figura
 
 @terminal{
 ghci> trougao = Trougao (0, 0, 1, 0, 0, 1)
@@ -112,7 +112,7 @@ ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definicju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu Pravougaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu Pravougaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where
@@ -201,7 +201,7 @@ False
 }
 }
 
-@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo deklarisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim navesti minimalni skup funkcija koje moraju biti definisane u instanci@note{Pritom, taj skup neophodnih definicja ne mora bita jedinstven...}.
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo deklarisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim navesti minimalni skup funkcija koje moraju biti definisane u instanci@note{Pritom, taj skup neophodnih definicija ne mora bita jedinstven...}.
 
 @p Konkretno, puna definicija klase @code{Eq} je@note{Gore smo naveli izmenjenu definiciju klase @code{Eq}, radi jednostavnosti}:
 
@@ -264,7 +264,7 @@ class (Eq a) => Ord a where
 
 @p Definicije operatora @code{<}, @code{>}, @code{>=} koriste operator @code{<=} i prilično su jasne. Jasne su i definicije binarnih funkcija @code{min} i @code{max} koje takođe koriste operator @code{<=}. Operator @code{<=} je definisan preko funkcije @code{compare}. Funkcija @code{compare} preko funkcije @code{<=}. Kao i kod klase @code{Eq}, i ovde imamo slučaj beskonačne rekurzije kroz definicije. Stoga je potrebno, i dovoljno, u instanci definisati samo jednu od funkcija @code{<=} ili @code{comapre}.
 
-@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicije instance će potisnuti definicije u definicji klase), ali za tako nečim gotovo nikad nema potrebe.
+@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicije instance će potisnuti definicije u definiciji klase), ali za tako nečim gotovo nikad nema potrebe.
 
 @example{
 @p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
@@ -282,7 +282,7 @@ instance Ord Racionalan where
 @codeBlock{
 class Show a where
   show :: a -> String
-}{Ovde nismo naveli kompletnu definicju klase, ali je dovoljno znati da minimalno instanciranje @code{Show} klase podrazumeva samo implementaciju funkcije @code{show}.}
+}{Ovde nismo naveli kompletnu definiciju klase, ali je dovoljno znati da minimalno instanciranje @code{Show} klase podrazumeva samo implementaciju funkcije @code{show}.}
 
 @p Klasa @code{Show} je neophodna za ispisivanje vrednosti u @em{GHCi} okruženju. Do sada smo koristili @code{deriving (Show)} konstrukciju koja je omogućavala da se tip automatski pridruži @code{Show} klasi tj . da se @em{izvede} instanca. Sada znamo kako možemo implementirati sopstvene instance.
 
@@ -309,7 +309,7 @@ R (2,3)
 @codeBlock{
 instance Show Racionalan where
   show (R (x, y)) = show x ++ "/" ++ show y
-}{Primetimo da u definicji koristimo takođe @code{show} funkciju, ali primenjenu na celobrojne vrednosti. Možemo da kažemo da @code{show} sa leve i desne strane znaka @code{=}, ne predstavljaju iste funkcije.}
+}{Primetimo da u definiciji koristimo takođe @code{show} funkciju, ali primenjenu na celobrojne vrednosti. Možemo da kažemo da @code{show} sa leve i desne strane znaka @code{=}, ne predstavljaju iste funkcije.}
 
 @p Prikazivanje vrednosti je sada smislenije:
 
@@ -322,7 +322,7 @@ ghci> a
 }
 }
 
-@p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definicju klase.
+@p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definiciju klase.
 
 @p Zgodno je ipak znati za funkciju @code{read :: Read a => a -> String} koja se može koristiti sa instancama klase @code{Read}.
 

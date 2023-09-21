@@ -90,7 +90,7 @@ Implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaB
 
 @subsection{Apstraktni tip lista}
 
-@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da bismo sa istom sličnom konstukcijom mogli definisati i druge tipove lista:
+@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da sa sličnom konstrukcijom mogu se definisati i drugi tipovi lista:
 
 @codeBlock{
 data ListaChar = DodajChar Char ListaChar | PraznaListaChar
@@ -98,11 +98,11 @@ data ListaChar = DodajChar Char ListaChar | PraznaListaChar
 data ListaBool = DodajBool Bool ListaBool | PraznaListaBool
 }
 
-@p Ovakvim pristupom za svaki tip mormo definisati odgovarajući tip lista, što ni malo nije zgodno. Zbog toga, definisaćemo jedan apstraktan tip podataka @code{Lista :: * -> *} čiji parametar označava tip vrednosti sadržanih u listi. Definicija liste ostaje gotovo ista, ali se umesto konkretnog tipa pojavljuje tipski parametar @code{a}:
+@p Ovakvim pristupom za svaki tip mormo definisati odgovarajući tip lista, što nije praktično. Zbog toga, definisaćemo jedan apstraktan tip podataka @code{Lista :: * -> *} čiji parametar označava tip vrednosti sadržanih u listi. Definicija liste ostaje gotovo ista, ali se umesto konkretnog tipa pojavljuje tipski parametar @code{a}:
 
 @codeBlock{
 data Lista a = Dodaj a (Lista a) | PraznaLista
-}{Nakon konstuktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstrakti), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homegenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstuktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
+}{Nakon konstruktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstrakti), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homegenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstruktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
 
 @p Sa apstraktnim tipom se lako mogu predstaviti liste vrednosti bilo kog tipa. Na primer, sada @code{Lista Int} predstavlja tip koji odgovara tipu @code{ListaBrojeva} od malopre, a  @code{Lista Bool} odgovara tipu @code{ListaBool} od malopre. Primetimo da sada konstruktori @code{Dodaj}, @code{PraznaLista} imaju isto ime za sve tipove, što dodatno olakšava zapis.
 
@@ -156,9 +156,9 @@ instance Show a => Show (Lista a) where
 data [] a = [] | a : ([] a) 
 }
 
-@p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstuktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sarže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infisknog konstruktora sa odgovarajućim @code{infix} dekleracijama.}, te se navodi između argumenata.
+@p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sarže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infisknog konstruktora sa odgovarajućim @code{infix} dekleracijama.}, te se navodi između argumenata.
 
-@p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i konstukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
+@p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
 
 @section{Stabla}
 
@@ -166,7 +166,7 @@ data [] a = [] | a : ([] a)
 
 @p @def{Stablo} je rekurzivna struktura podataka sačinjena od @em{čvorova}, u kojoj svaki čvor sadrži @em{vrednost} i nekoliko manjih stabala (od kojih neka mogu biti prazna). Specijalno, @def{binarno stablo} je stablo u kom svaki čvor sadrži vrednost i dva manja stabla@note{Koja pritom mogu biti prazna}.
 
-@p Tip binarnog stabla koje sadrži u sebi vrednosti tipa @code{Int} možemo kreirati na sledeći način: prazno stablo ćemo kreirati sa nularnim konstruktorom @code{PraznoStablo}, dok ćemo čvorove kreirati sa konstruktorom @code{Cvor}. Konstruktor @code{Cvor} zavisi od tri parametara: vrednosti tipa @code{Int}, kao i od dve vrednosti tipa @code{StabloBrojeva}:
+@p Tip binarnog stabla koje sadrži u sebi vrednosti tipa @code{Int} možemo kreirati na sledeći način: prazno stablo ćemo kreirati sa nularnim konstruktorom @code{PraznoStablo}, dok ćemo čvorove kreirati sa konstruktorom @code{Čvor}. Konstruktor @code{Čvor} zavisi od tri parametara: vrednosti tipa @code{Int}, kao i od dve vrednosti tipa @code{StabloBrojeva}:
 
 @codeBlock{
 data StabloBrojeva =
@@ -212,7 +212,7 @@ stablo2 = Čvor 5
 
 @p Stabla su pogodne strukture podataka za modelovanje mnogih odnosа koje srećemo u svakodnevnici@note{Na primer, pokušajte da sa stablom predstavite porodično stablo: sve vaše direktne pretke (roditelje, roditelje roditelja, itd...). Uvidećete da je porodično stablo zaista jedno binarno stablo. Isprava zbunjujuće, ali u takvom predstavljanju @em{deca} čvorova će zapravo biti @em{roditelji} osobe...}.
 
-@p Prvo bi bilo zgodno napisati funkciju @code{brojČvorova} koja određuje broj čvorova u stablu@note{Kao što funkcija @code{length} određuje broj elemenata u listi.}. Naravno, funkciju ćemo implementirati rekurzivno, podudaranjem vrednosti po konstruktorima. Broj čvorova u praznom stablu je @m{0}. Broj čvorova u stablu @code{Cvor a l r} je za jedan veći od zbira broja čvorova u podstablima @code{l} i @code{r}:
+@p Prvo bi bilo zgodno napisati funkciju @code{brojČvorova} koja određuje broj čvorova u stablu@note{Kao što funkcija @code{length} određuje broj elemenata u listi.}. Naravno, funkciju ćemo implementirati rekurzivno, podudaranjem vrednosti po konstruktorima. Broj čvorova u praznom stablu je @m{0}. Broj čvorova u stablu @code{Čvor a l r} je za jedan veći od zbira broja čvorova u podstablima @code{l} i @code{r}:
 
 @codeBlock{
 brojČvorova :: StabloBrojeva -> Int
@@ -227,7 +227,7 @@ ghci> brojČvorova stablo2
 6
 }{Vrednosti @code{stablo1} i @code{stablo2} su definisana u prethodnim primerima.}
 
-@p Još jedna numerička karkteristika je @em{visina} stabla koja predstavlja najveći broj koraka od korena stabla do nekog lista. Drugim rečima, visina stabla predstavlja broj "generacija" prisutnih u stablu. Visinu stabla ćemo takođe izračunati rekurzivno: visina praznog stabla je @m{0}, a visina stabla @code{Cvor a l r} je maksimum visina stabala @code{l} i @code{r} uvećan za jedan:
+@p Još jedna numerička karkteristika je @em{visina} stabla koja predstavlja najveći broj koraka od korena stabla do nekog lista. Drugim rečima, visina stabla predstavlja broj "generacija" prisutnih u stablu. Visinu stabla ćemo takođe izračunati rekurzivno: visina praznog stabla je @m{0}, a visina stabla @code{Čvor a l r} je maksimum visina stabala @code{l} i @code{r} uvećan za jedan:
 
 @codeBlock{
 visinaStabla :: StabloBrojeva -> Int
@@ -242,7 +242,7 @@ ghci> visinaStabla stablo2
 3
 }
 
-@p Korisna je i funkcija koja proverava da li se neka vrednost nalazi u stablu@note{Kao što funkcija @code{elem} proverava da li se vrednost nalazi u listi.}. Strategija za pretragu je sledeća: ako čvor sadrži vrednsot koju tražimo, tada se pretraga završava. U suprotnom, pretragu nastavljamo rekurzivno, pretraživajući oba stabla:
+@p Korisna je i funkcija koja proverava da li se neka vrednost nalazi u stablu@note{Kao što funkcija @code{elem} proverava da li se vrednost nalazi u listi.}. Strategija za pretragu je sledeća: ako čvor sadrži vrednost koju tražimo, tada se pretraga završava. U suprotnom, pretragu nastavljamo rekurzivno, pretraživajući oba stabla:
 
 @codeBlock{
 elementStabla :: Int -> StabloBrojeva -> Bool
@@ -287,7 +287,7 @@ Napisati funkciju @ccode{uređeno :: StabloBrojeva -> Bool} koje proverava da li
 @p Stablo @code{stablo2} je uređeno jer je @m{3} veće od @m{2} a manje od @m{4}, @m{6} je manje od @m{8}, a @m{5} je veće @m{3}, @m{2} i @m{4}, i manje od @m{6} i @m{8}. 
 }
 
-@p Uređene stabla su veoma korisna jer se neki algoritmi mogu efikasno implementirati. Na primer, prilikom pretrage uređenog stabla često je potrebno izvršiti značajno manje poređenja: ako tražimo neku vrednost @m{m} u stablu čiji korenski čvor je @m{n} tada je dovoljno nastaviti pretragu samo u levom (odnosno desnom) podstablu ako je @m{m < n} (odnosno ako je @m{m > n}). Oslanjajući se na činjenicu da je korenski čvor veći (odnosno manji) od svih vrednosti u levom (odnosno desnom) podstablu, možemo ignorisati jedno od podstabala. Kod za pretragu uređenog podtabla je sledeći:
+@p Uređene stabla su veoma korisna jer se neki algoritmi mogu efikasno implementirati. Na primer, prilikom pretrage uređenog stabla često je potrebno izvršiti značajno manje poređenja: ako tražimo neku vrednost @m{m} u stablu čiji korenski čvor je @m{n} tada je dovoljno nastaviti pretragu samo u levom (odnosno desnom) podstablu ako je @m{m < n} (odnosno ako je @m{m > n}). Oslanjajući se na činjenicu da je korenski čvor veći (odnosno manji) od svih vrednosti u levom (odnosno desnom) podstablu, možemo ignorisati jedno od podstabala. Kôd za pretragu uređenog podstabla je sledeći:
 
 @codeBlock{
 elementUređenogStabla :: Int -> StabloBrojeva -> Bool
@@ -311,7 +311,7 @@ Implementirati funkciju @ccode{najvećiUređeno :: StabloBrojeva -> Int} koja pr
 
 @subsection{Apstraktni tip stabla}
 
-@p Naravno, u čvorovima stabla korisno je postavljati i vrednosi drugih tipova osim @code{Int}. Stoga je zgodno napraviti apstraktni tip  @code{Stablo :: * -> *} koji će omogućiti uopštenu konstrukciju stabla. Jedini parametar ovog apstraktong tipa, biće tip koji označava tip vrednosti sadržane u čvoru. Gore navedenu rekurzivnu definiciju je potrebno neznatno izmeniti:
+@p Naravno, u čvorovima stabla korisno je postavljati i vrednosi drugih tipova osim @code{Int}. Stoga je zgodno napraviti apstraktni tip  @code{Stablo :: * -> *} koji će omogućiti uopštenu konstrukciju binarnog stabla. Jedini parametar ovog apstraktong tipa, biće tip koji označava tip vrednosti sadržane u čvoru. Gore navedenu rekurzivnu definiciju je potrebno neznatno izmeniti:
 
 @codeBlock{
 data Stablo a = PraznoStablo | Čvor a (Stablo a) (Stablo a)
@@ -386,7 +386,7 @@ Klasa @code{Functor} definiše i operator @code{<$} kao @code{fmap . const}. Št
 
 @p Da bismo našli pogodan način predstavljanja matematičkih izraza, za primer pogledajmo rekurzivnu strukturu izraza @eq{(17 + 3) * (10 * (1 + 1)).} Navedeni izraz predstavlja zbir dva manja izraza @m{17 + 3} i @m{10 * (1 + 1)}. Prvi od tih izraza je zbir dva broja, dok je drugi proizvod broja i još manjeg izraza @m{1 + 1}. Na ovom primeru vidimo da su izrazi sačinjeni od manjih izraza ili brojeva koji se kombinuju uz pomoć dve operacije.
 
-@p Navedeno razmatranje nas dovodi do rekurzivne definicje tipa @code{Izraz}. Vrednosti tipa @code{Izraz} konstruisaćemo na tri načina. Prvo, svaki broj za sebe čini izraz. Drugo, ako su data dva izraza, onda je i njihov zbir izraz. Treće, ako su data dva izraza onda je i njihov proizvod izraz:
+@p Navedeno razmatranje nas dovodi do rekurzivne definicije tipa @code{Izraz}. Vrednosti tipa @code{Izraz} konstruisaćemo na tri načina. Prvo, svaki broj za sebe čini izraz. Drugo, ako su data dva izraza, onda je i njihov zbir izraz. Treće, ako su data dva izraza onda je i njihov proizvod izraz:
 
 @codeBlock{
 data Izraz =
