@@ -84,7 +84,7 @@ paragraph = label "paragraph" $ space >>
         (some . choice $ try <$> [PText <$> text, emphasis, definition, inlineMath, code, cCode, equation, note, url, pre])
 
 text :: Parser Text
-text = label "text" $ T.concat <$> some (choice $ try <$> [nonSpecialChars, spaceChars, specialChar])
+text = label "text" $ T.concat <$> some (choice $ try <$> [nonSpecialChars, spaceChars, specialChar <* space])
         where nonSpecialChars = (\x->T.pack [x]) <$> satisfy (\x -> x /= '{' && x /= '}' && x /= '@' && x/= ' ')
               spaceChars      = space1 *> return " "
 
@@ -150,7 +150,7 @@ todo :: Parser Block
 todo = label "todo" $ cmd "todo" *> (Todo <$> argument text) <* space
 
 specialChar :: Parser Text
-specialChar = label "specialChar" $ cmd "@" *> ((\x->T.pack [x]) <$> choice (try <$> [char '@', char '{', char '}'])) <* space
+specialChar = label "specialChar" $ cmd "@" *> ((\x->T.pack [x]) <$> choice (try <$> [char '@', char '{', char '}']))
 
 argument :: Parser a -> Parser a
 argument x = label "argument" $ between (char '{' <* space) (char '}') x
