@@ -444,6 +444,10 @@ aside {
         color: var(--color-gray-3);
     }
 
+    figure img {
+        filter: invert(1);
+    }
+
     figcaption {
         color: var(--color-gray-3);
     }
