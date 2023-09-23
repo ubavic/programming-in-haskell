@@ -12,7 +12,7 @@
 
 @p Tip @code{Bool} predstavlja kolekciju koja sadrži dve logičke vrednosti: @code{True} i @code{False}@note{Obratite pažnju da imena logičkih vrednosti počinju velikim slovom.}.
 
-@figure{2_1}
+@figure{2_1}{Šematski prikaz tipa @code{Bool}.}
 
 @p Nad logičkim vrednostima moguće je vršiti naredne logičke operacije:
 
@@ -31,7 +31,7 @@ ghci> ((True && False) || False) && (True || True)
 False
 }{Kao i aritmetičke izraze, @em{GHCi} će i logičke izraze pokušati da @em{svede} na jednu vrednost.}
 
-@p Uz navedene binarne operatore koristimo i @em{funkciju} @code{not} koja negira logičku vrednost@note{Zapravo, i operatori (poput @code{&&} i @code{||}) su funkcije zapisane u takozvanom @em{infiksnom zapisu}. Više o tome kasnije.}. Ovde je dobro mesto da kažemo par reči o funkcijama u Haskelu, jer funkcije predstavljaju osnovni koncept ovog jezika.
+@p Uz navedene operacije koristimo i @em{funkciju} @code{not} koja negira logičku vrednost@note{Zapravo, i operatori (operacije) poput @code{&&} i @code{||} su funkcije zapisane u takozvanom @em{infiksnom zapisu}. Više o tome kasnije.}. Ovde je dobro mesto da kažemo par reči o funkcijama u Haskelu, jer funkcije predstavljaju osnovni koncept ovog jezika.
 
 @p Funkcije su vednosti koje "tranformišu" neke druge vrednosti, odnosno od nekih vrednosti prave nove vrednosti. Na primer, sa imenom @code{not} je označena funkcija koja negira logičku vrednost koja joj je prosleđena, tj. @code{True} "pretvara" u @code{False} a @code{False} u @code{True}. Da bi smo "pozvali" funkciju @code{not} potrebno je da nakon imena funkcije napišemo logičku vrednost koju želimo da negiramo. Za razliku od drugih jezika, u Haskelu ime funkcije i argument razdvajamo razmakom, a ne zagradom:
 
@@ -67,7 +67,7 @@ True
 
 @section{Tipovi @em{Int} i @em{Integer}}
 
-@p Tip @code{Int} predstavlja kolekciju celobrojnih vrednosti koje se mogu predstaviti u procesorskoj reči, odnosno u 32 ili 64 bita@note{Specifikacija Haskel jezika garantuje da je vrednost tipa @code{Int} predstavljena sa barem 30 bitova}.
+@p Tip @code{Int} predstavlja kolekciju celobrojnih vrednosti koje se mogu predstaviti u procesorskoj reči, odnosno u 32 ili 64 bita@note{Specifikacija Haskel jezika garantuje da je vrednost tipa @code{Int} predstavljena sa barem 30 bitova. Tačan broj bitova koji se koristi za reprezentovanje vrednosti tipa @code{Int} zavisi od arhitekture na kojoj se izvršava program.}.
 
 @figure{2_2}
 
@@ -272,6 +272,7 @@ ghci> 1 ++ [2,3,4,5]
 @li @code{tail} vraća sve elemente prosleđene liste osim prvog. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
 @li @code{reverse} vraća prosleđenu listu u obrnutom smeru.
 @li @code{elem} je funkcija od dva parametara koja proverava da li se prvi argument nalazi u listi prosleđenoj kao drugi argument. Rezultat provere je logička vrednost.
+@li @code{null} proverava da li prosleđena lista prazna. Rezultat provere je logička vrednost.
 }
 
 @terminal{
@@ -290,6 +291,8 @@ ghci> reverse a
 [60,50,40,30,20,10]
 ghci> elem 10 a
 True
+ghci> null [10, 9, 8, 7]
+False
 }
 
 @p Sa operatorom @code{!!} možemo pristupiti @m{m}-tom elementu liste. Sa leve strane operatora se navodi lista, a sa desne strane vrednost tipa @code{Int}. Elementi su indeksirani od nule. Pokušaj pristupanja indeksu koji je veći od dužine liste dovodi do izuzetka.
@@ -366,6 +369,8 @@ ghci> tail a
 "ello!"
 ghci> reverse a
 "!olleH"
+ghci> null ""
+True
 }{Obratite pažnju na razliku između niske i pojedinačnog karaktera. Na primer funkcija @code{head} vraća prvi element liste, a u ovom primeru to je karakter @code{'a'} (a ne niska @code{"a"}). Karakteri se uvek navode između jednostrukih navodnika, a niske između dvostrukih.}
 
 @p Mnogi tipovi u Haskelu (ali svakako ne svi), dozvoljavaju da se nad njima pozove funkcija @code{show}. Ova funkcija uzima vrednost i vraća nisku koja prezentuje tu vrednost. Na primer:
@@ -377,7 +382,7 @@ ghci> show True
 "True"
 ghci> show [1, 2, 3]
 "[1,2,3]"
-}{Obratite pažnju da niska @code{"2"} nije isto što i vrednost @code{2}. I slično za ostale navedene primere. Ako je neke vrednosti moguće "prikazati" sa @code{show} funkcijom, tada je i listu takvih vrednosti moguće "prikazati" sa @code{show} funkcijom. Lista će uvek biti prikazana na kanonski način (bez razmaka između elemenata), bez obzira kako smo tu listu konstruisali u kodu.}
+}{Niska @code{"2"} nije isto što i vrednost @code{2}, kao što ni logička vrednost @code{True} i niska @code{"True"} nisu isto, itd... Ako je neke vrednosti moguće "prikazati" sa @code{show} funkcijom, tada je i listu tih vrednosti moguće "prikazati" sa @code{show} funkcijom. Lista će uvek biti prikazana na kanonski način (bez razmaka između elemenata), bez obzira kako smo tu listu konstruisali u kodu.}
 
 @section{Uređene @m{n}-torke}
 
@@ -407,34 +412,4 @@ ghci> snd (5, 'C')
 @p Navedeni tip sadrži četiri vrednosti: @code{(True, True)}, @code{(True, False)}, @code{(False, True)} i @code{(False, False)}.
 }
 
-@problem{Ako tipovi @code{A1}, @code{A2}, @code{A3}... sadrže redom @m{n_1}, @m{n_2}, @m{n_3}... vrednosti, koliko vrednosti sadrži tip @code{(A1, A2, ...., An)}?}
-
-@section{Zaključivanje tipova}
-
-@p @em{GHC} kompajler (skoro) uvek može da zaključi tip izraza. Zbog toga često nije neophodno navoditi tipske dekleracije u izvornim datotekama.@note{Ipak, uvek je dobro navesti tipove svih definicija, jer je takav kod znatno čitljiviji.} 
-
-@p Zaključivanje tipova nam takođe omogućava da u @em{GHCi} okruženju proverimo tipove izraza. To možemo uraditi pomoću naredbe @pre{:type} nakon koje navodimo izraz čiji tip nas interesuje:
-
-@terminal{
-ghci> :type [True, False]
-[True, False] :: [Bool]
-ghci> :type [True, False] !! 1
-[True, False] !! 1 :: Bool
-ghci> :type length [True, False]
-length [True, False] :: Int
-ghci> :type (True, 'a')
-(Bool, Char) 
-}{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 0}, itd...}
-
-@p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celokunog izraza @code{[Bool]}. Da bismo razumeli proces zaključivanja tipa izraza @code{length [True, False]}, neophodno je da razumemo pojam @em{tipa funkcije} što će biti prikazano u narednoj lekciji.
-
-@p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numeričkih konstanti:
-
-@terminal{
-ghci> :type 2
-2 :: Num a => a
-}
-
-@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Izraz @code{2} može predstavljati vrednost tipa @code{Int}, @code{Integer}, @code{Float} ili @code{Double}. Međutim svi ovi tipovi, pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}. Takav tip se označava sa @code{Num a => a}. Deo tipa koji se nalazi pre znaka @code{=>} naziva se @def{klasno ograničenje}.
-
-@p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, te ne može biti tipa @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i kao @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor već klasno ograničenje.
+@problem{Ako tipovi @code{A1}, @code{A2} ... @code{Ak} sadrže redom @m{n_1}, @m{n_2} ... @m{n_k} vrednosti, koliko vrednosti sadrži tip @code{(A1, A2, ...., Ak)}?}

@@ -36,6 +36,7 @@
 
 @example{
 @p Funkcija @code{not} svakoj logičkoj vrednosti dodeljuje njenu negaciju koja je takođe logička vrednost. Prema tome, funkcija @code{not} ima tip @code{Bool -> Bool}.
+@figure{function_not}
 }
 
 @example{
@@ -183,27 +184,6 @@ ghci> h [1,2,3]
 
 @p Prosto rečeno, primenom funkcije tipa @code{A -> B} na vrednosti tipa @code{A} "brišemo" @code{A ->} iz tipa@note{Kao što u matematici @m{f} predstavlja funkciju a @m{f(10)} konkretan broj, tako i primena funkcije @code{f :: A -> B} na vrednost @code{v :: A} predstavlja rezultat tipa @code{B}.}.
 
-@p Često je korisno raditi sa funkcijom čiji domen nije jedan konkretan tip, već ju je moguće koristiti sa više različitih tipova. Na primer, funkciju @code{head} (koja vraća prvi element prosleđene liste), ima smisla primenjivati na liste tipa @code{[Int]}, @code{[Char]}, @code{[Bool]} itd...
-
-@p Postavlja se pitanje, kog tipa je funkcija @code{head}? Srećom, odgovor na to pitanje lako možemo naći:
-
-@terminal{
-ghci> :type head
-head :: [a] -> a
-}
-
-@p Vidimo da je domen funkcije @code{head} tip lista bilo kog tipa, što se označava sa @code{[a]}. Ovde, @code{a} predstavlja @def{tipsku promenljivu}@note{Umesto slova @code{a} moglo je biti iskorišćeno i bilo koje drugo malo slovo, ali pritom se to slovo mora pojaviti i u domenu i u kodomenu. Primetimo da tipske promenljive, za razliku od konkretnih tipova, počinju malim slovima.}, odnosno proizvoljan tip. Kako funkcija @code{head} vraća prvi član liste tipa @code{[a]} tako njena povratna vrednost mora biti @code{a}.
-
-@example{
-@p Ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
-}
-
-@example{
-@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu iz @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugo uređenog para. Opšti tip uređenog para je @code{(a, b)} i ovaj tip je domen funkcije @code{fst}. Kako je domen funkcije @code{(a, b)} tada je njen kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}. Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}.
-}
-
-@problem{Kog tipa je funkcija @code{reverse} koja obrće listu?}
-{@p Funkcija @code{reverse} uzima listu bilo kog tipa i vraća listu @em{istog} tipa. Prema tome tip ove funkcije je @code{[a] -> [a]}. Tip funkcije @code{reverse} nije @code{[a] -> [b]} jer tipske promenljive @code{a} i @code{b} mogu predstavljati različite tipove.}
 
 @problem{Napisati funkciju @code{povrsinaKruga :: Double -> Double} koja za zadati poluprečnik kruga vraća njegovu površinu. Konstanta @m{\pi} je dostupna u Haskelu kao @code{pi}.}
 {

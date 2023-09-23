@@ -426,8 +426,7 @@ ghci> (*2) <$> [1 .. 10]
 @p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve stane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}. Operator @code{<$>} je desnoasocijativan, pa se poslednja jednakost može zapisati kao @ccode{g <$> f <$> xs = (g . f) <$> xs}.
 }
 
-
-@section{Određen integral}
+@section{Primer: Određen integral}
 
 @p @em{U nastavku je dat jedan primer koji nije neophodan za razumevanje ostatka knjige. Primer zahteva određena predznanja iz matematike.}
 

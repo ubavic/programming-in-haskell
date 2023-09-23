@@ -28,7 +28,7 @@ dana_u_nedelji = 7
 sati_u_danu = 24
 }{U ovoj datoteci, imenu @code{dana_nedelji} odnosno @code{sati_u_danu} je pridružena vrednost @code{7} odnosno @code{24}.}
 
-@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova, brojeve kao i karaktere @code{_} i @code{'}.
+@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova@note{Ovo uključuje i slova srpske latinice i ćirilice.}, brojeve kao i karaktere @code{_} i @code{'}.
 
 @p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, nije dozvoljeno u jednoj @code{.hs} datoteci imati više definicija sa istim imenom. Naravno, različitim imenima možemo dodeliti iste vrednosti. Takođe, poredak definicija nije bitan.
 
@@ -155,15 +155,15 @@ ghci> a
 @p Na primer, želeli bismo da napišemo izraz kojim računamo površinu kvadra visine @code{10} širine @code{5} i dužine @code{3}. Koristeći formulu @m{P=2(ab + bc + ca)} dobijamo kôd:
 
 @codeBlock{
-povrsina :: Int
-povrsina = 2*(10*5 + 5*3 + 3*10)
+površina :: Int
+površina = 2*(10*5 + 5*3 + 3*10)
 }
 
 @p Navedena definicija je malo nepregledna. Takođe, ako želimo da izračunamo zapreminu nekog drugog kvadra, svaku od dimenzija moramo da promenimo na dva mesta što predstavlja potencijalni izvor greške. Zbog toga ćemo iskoristiti @em{let in} sintaksu da bismo lokalno definisali imena @code{a}, @code{b} i @code{c}@note{Naravno, moguće je i globalno definisati imena @code{a}, @code{b} i @code{c}, ali time nepotrebno rezervišemo ta imena.}:
 
 @codeBlock{
-povrsina :: Int
-povrsina = let a = 10; b = 5; c = 3 in 2*(a*b + b*c + c*a)
+površina :: Int
+površina = let a = 10; b = 5; c = 3 in 2*(a*b + b*c + c*a)
 }
 
 @p Dakle, sa @em{let ... in} konstrukcijom moguće je lokalno definisati jedno ili više imena koja će biti dostupna samo u nekom izrazu. Opšti oblik @em{let ... in} izraza sastoji se od niza definicija koje su razdvojene znakom @code{;}, i nakon čega sledi i izraz u kom želimo da te definicije budu dostupne:
@@ -199,8 +199,8 @@ ime = izraz where ime1 = izraz1; ...; imeN = izrazN
 @p Primer sa površinom kvadra iz prethodne sekcije bi mogao i ovako da se napiše:
 
 @codeBlock{
-povrsina :: Int
-povrsina = 2*(a*b + b*c + c*a) where a = 10; b = 5; c = 3 
+površina :: Int
+površina = 2*(a*b + b*c + c*a) where a = 10; b = 5; c = 3 
 }
 
 @p Za razliku @em{let in} sintakse @em{where} se ne može koristi van definicija:
@@ -248,7 +248,7 @@ ghci> b
 @codeBlock{
 dobradefinicija = 1
 
-  losaDefinicija = 1
+  lošaDefinicija = 1
 }
 
 @p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Phyton} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri kôda su primeri validnog preloma istog izraza:
@@ -279,14 +279,14 @@ a =
 @p Kako i @em{let ... in} sintaksa predstavlja izraz, i taj izraz možemo prelomiti:
 
 @codeBlock{
-povrsina :: Int
-povrsina = let a = 10; b = 5; c = 3
+površina :: Int
+površina = let a = 10; b = 5; c = 3
     in 2*(a*b + b*c + c*a)
 }
 
 @codeBlock{
-povrsina :: Int
-povrsina = let
+površina :: Int
+površina = let
               a = 10; b = 5; c = 3
            in
               2*(a*b + b*c + c*a)
@@ -295,14 +295,14 @@ povrsina = let
 @p Takođe, i @em{where} sintaksu je moguće prelomiti:
 
 @codeBlock{
-povrsina :: Int
-povrsina = 2*(a*b + b*c + c*a)
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
     where a = 10; b = 5; c = 3 
 }
 
 @codeBlock{
-povrsina :: Int
-povrsina = 2*(a*b + b*c + c*a)
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
     where
         a = 10; b = 5; c = 3 
 }{Oba primera su dobro nazubljena}
@@ -311,8 +311,8 @@ povrsina = 2*(a*b + b*c + c*a)
 @p Četvrto pravilo se odnosi na niz definicija u @em{let ... in} i @em{where} sintaksama. Po ovom pravilu, niz je moguće prelomiti u više linija, pri čemu se znaci @code{;} mogu izostaviti. Pri prelomu sve definicije se moraju postaviti tačno jedna ispod druge. Naredni kodovi su dobro nazubljeni:
 
 @codeBlock{
-povrsina :: Int
-povrsina = let
+površina :: Int
+površina = let
             a = 10
             b = 5
             c = 3
@@ -321,16 +321,16 @@ povrsina = let
 
 
 @codeBlock{
-povrsina :: Int
-povrsina = let a = 10
+površina :: Int
+površina = let a = 10
                b = 5
                c = 3
            in 2*(a*b + b*c + c*a)
 }
 
 @codeBlock{
-povrsina :: Int
-povrsina = 2*(a*b + b*c + c*a)
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
     where
         a = 10
         b = 5
@@ -338,8 +338,8 @@ povrsina = 2*(a*b + b*c + c*a)
 }
 
 @codeBlock{
-povrsina :: Int
-povrsina = 2*(a*b + b*c + c*a)
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
     where a = 10
           b = 5
           c = 3 
@@ -349,6 +349,7 @@ povrsina = 2*(a*b + b*c + c*a)
 @p Zapravo, ovakvi blokovi definicija se mogu shvatiti kao male @code{.hs} datoteke. I kao što u @code{.hs} datoteci svaka definicija mora da počne od leve ivice, tako u bloku definicija sve definicije moraju da počnu od iste kolone@note{Ovo objašnjava četvrto pravilo.} (a ta kolona je uspostavljena početkom prve definicije).
 
 @codeBlock{
+w :: Int
 w = 2 * v
     where
         v :: Int
@@ -370,7 +371,7 @@ w = 2 * v
 
 a = 2 * 10 + 1 -- i ovo je komentar
 
-@@{ -
+@@{-
 Ovo
 je
 takođe
