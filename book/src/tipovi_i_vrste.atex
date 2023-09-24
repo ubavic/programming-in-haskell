@@ -254,7 +254,7 @@ sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 @p I dalje se nismo umanjili broj definicija funkcija, ali možemo primetiti da je karakteristično za tipove @code{Int}, @code{Float} i @code{Double} to što se vrednosti ovih tipova mogu sabirati. Sva tri navedena tipa pripadaju @code{Num} klasi, pa možemo tri definicije zameniti sa jednom:
 
 @codeBlock{
-sumVec :: Num a -> Vec a -> Vec a -> Vec a
+sumVec :: Num a => Vec a -> Vec a -> Vec a
 sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 }
 }
@@ -265,7 +265,14 @@ sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 data A a b c = MkA (a, [b], Int -> c)
 }{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{A Char Bool Float} predstavlja tip @code{(Char, [Bool], Int -> Float)}.}
 
-@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipovi. U tom smilsu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
+@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipove. U tom smilsu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
+
+@p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduse, oba abstraktna tipa imaju specificnu sintaksu, koje se razlikuje od onog sto smo gore opisali.
+
+@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obelezava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Mozda ce biti jasnije ako @code{[A]} zapisemo kao @code{[] A}. Pomalo zbunjujuce, ali i konstruktor @em{vrednosti} prazne liste se takodje oznacava sa @code{[]}. Osim tog konstruktora, vrednosti liste se mogu konstruisati i sa @code{:} (koji takodje ima posebnu sintaksu koja dodatno uvodi zabunu)}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tacno @code{[]} definisan, i dodatno cemo razjasniti ovaj tip
+
+@p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno oznacava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi nista drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jezik.
+
 
 @section{Vrste}
 
@@ -300,3 +307,32 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Navedeni apstraktni tip ima vrstu @code{* -> (* -> (* -> *))} koja se naravno jednostavno zapisuje kao @ccode{* -> * -> * -> *}. 
 }
+
+@p I kao sto naredba @code{:type} nam moze reci tip nekog izraza u @em{GHCi}-u, tako i naredba @code{:kind} nam moze reci vrstu nekog tipa.
+
+
+@example{
+@p Nastavimo sa prethofnim primerom u interaktivnom okruzenju:
+@terminal{
+ghci> data A a b c = MkA (a, [b], Int -> c)
+A :: * -> * -> * -> *
+}
+}
+
+@example{
+@p Ako niste do sad verovali, @code{[]} zaista jeste apstraktni tip:
+
+@terminal{
+ghci> :kind []
+* -> *
+}
+}
+
+@example{
+@p I strelica jeste apstraktan tip. Strelica uzima dva konkretna tipa da bi dala konkretan tip:
+@terminal{
+ghci> :kind (->)
+(->) :: * -> * -> *
+}{Obratite paznju da strelica u tipu i strelica u vrsti ne predstavlja istu stvar.}
+}
+

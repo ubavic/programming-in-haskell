@@ -129,13 +129,48 @@ f x = 253 * x + 17
 
 @section{@em{Ad-hoc} polimorfizam}
 
+@ Slobodne tipske promenljive mogu predstvljati bilo koji tip. Ponekad je pozeljno ograniciti tipsku promenljivu na neku specificnu kolekciju tipova. Upravo takva ogranicenja se izrazavaju kroz klase tipova.
+
 @p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Cesto te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
-@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj).
+@example{
+@p U Haskelu je definisana klasa @code{Show} koja poseduje metodu @code{show}. Tipovi poput @code{Int} ili @code{Bool} pripadaju ovoj klasi, i nad njima se moze pozivati funkcija @code{show} koja vrednost nekog tipa predstavlja kao nisku.
+
+@terminal{
+ghci> show True
+"True"  
+ghci> show 2
+"2"
+}
+
+@p Sa druge strane, bilo koji tip funkcija (npr. tip @code{Int -> Bool}) ne pripada ovoja klasi, te izraz poput @code{show (\x -> x == 0)} nije dobro tipiziran.
+}
+
+@example{
+@p Ugradjena klasa @code{Num} predstavlja sve tipove cije vrednosti se mogu sabirati, oduzimati i mnoziti. Izmedju ostalog, tipovi @code{Int}, @code{Integer}, @code{Float} i @code{Double} pripadaju ovoj klasi.
+}
+
+@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Cinjenicu da neki tip @code{T} prikada klasi @code{C}, oznacavamo sa @code{C T}. 
+
+@p Koriscenjem klasa, moguce je ograniciti tipsku promenljivu na neku odredjenu klasu. @def{Tipsko ogranicenje} kojim se promenljiva @code{C} ogranicava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ogranicenja se razdvajaju od tipa sa strelicom @code{=>}. U slucaju da postoji vise ogranicenja, tada se ta ogranicenja navode u obliku uredjene @m{n}-torke.
+
+@example{
+@p Tip @code{Show a => a} oznacava sve tipove koji pripadaju klasi @code{Show}.
+}
+
+@example{
+@p Tip @code{Show a => a -> [Char]} je tip polimorfne funkcije ciji domen je neki tip klase @code{Show}, a kodomen tip niska.
+
+@p Funkcija @code{show} koja vrednost preslikava u nisku ima upravo ovaj tip.
+}
+
+@example{
+@p Tip @code{(Num a, Show b) => a -> b} oznacava tip polimorfne funkcije ciji domen je neki tip iz klase @code{Num}, a kodomen neki tip iz klase @code{Show}.
+}
 
 @p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.
 
-@p Navedenu apstraktnu definiciju ćemo približiti kroz primere klasa koje su predefinisane u Haskel jeziku:
+@p U Haskel programima cesto se koriste naredne klase:
 
 @list{
 @li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show} koja vrednost pretvara u nisku.
@@ -147,22 +182,9 @@ f x = 253 * x + 17
 
 @p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}. To znači da vrednosti ovih tipova možemo da poredimo sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=} kao i da pretvaramo u niske sa funkcijom @code{show}.
 
-@example{
-@p Kako @code{Bool}, @code{Int} i @code{Char} pripadaju klasi @code{Show}, sve vrednosti ovih tipova možemo pretvoriti u niske koristeći funkciju @code{show}:
-
-@terminal{
-ghci> show True
-"True"  
-ghci> show 2
-"2"
-ghci> show 'a'
-"'a'"
-}
-}
-
 @p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo sa operatorima @code{+}, @pre{-}, @code{*}. Tipovi @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
 
-@p Kao što smo gore istakli ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
+@p Ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
 @example{
 @p Kako @code{Int} pripada klasi @code{show}, sledi da i tipovi @code{[Int]} i @code{[[Int]]} pripadaju istoj klasi.
@@ -199,7 +221,7 @@ True
 @p Dva uređena para će biti jednaka samo ako su im jednake prve koordinate i jednake druge koordinate.
 }
 
-@p Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno kasnije.
+@p Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno u lekciji @em{Tipske klase}.
 
 @problem{
 Da li tip @code{[(Int, Char)]} pripada klasi @code{Eq}?
@@ -212,7 +234,6 @@ ghci> [(2,'a')] == [(3,'b'), (2,'a')]
 False
 }
 }
-
 
 @section{Zaključivanje tipova}
 
@@ -233,17 +254,16 @@ ghci> :type (True, 'a')
 
 @p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celokunog izraza @code{[Bool]}. Da bismo razumeli proces zaključivanja tipa izraza @code{length [True, False]}, neophodno je da razumemo pojam @em{tipa funkcije} što će biti prikazano u narednoj lekciji.
 
-@p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numeričkih konstanti:
+@p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numeričkih literala:
 
 @terminal{
 ghci> :type 2
 2 :: Num a => a
 }
 
-@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Izraz @code{2} može predstavljati vrednost tipa @code{Int}, @code{Integer}, @code{Float} ili @code{Double}. Međutim svi ovi tipovi, pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}. Takav tip se označava sa @code{Num a => a}. Deo tipa koji se nalazi pre znaka @code{=>} naziva se @def{klasno ograničenje}.
+@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Literal @code{2} može predstavljati vrednost tipa @code{Int}, @code{Integer}, @code{Float}, @code{Double}, i sl. Svi ovi tipovi pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}, sto se naravno označava sa @code{Num a => a}.
 
 @p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, te ne može biti tipa @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i kao @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor već klasno ograničenje.
-
 
 @todo{Parametričnost}
 
