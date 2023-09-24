@@ -2,7 +2,7 @@
 
 @p @em{Ova lekcija je u fazi prepravke...}
 
-@p Svaki programski jezik je osmišljen sa ciljem da olakša proces programiranja računara: iako se svaki program može napisati u mašinskom jeziku, programeri biraju programske jezike zbog osobina tih jezika koje omogućuju efikasnije programiranje. Osobine koje olakšavaju programranja su zapravo @em{apstrakcije} kojima se nebitne pojedinosti skrivaju i samim tim obezbeđuje lakše izražavanje suštinski ideja o programu@note{Na primer, u mašinskom kodu koriste se različite instrukcije za sabiranje različitih vrsta brojeva (celobrojnih vrednosti, brojeva u pokretnom zarezu, itd...). Sa druge strane, u gotovo svakom programskom jeziku sabiranje svih tipova brojeva se izražava sa operatorom @code{+}. Na taj način, programer se može posvetiti zapisivanju matematičkih izraza, dok kompajler obezbeđuje da se ti matematički izrazi prevedu u ispravan niz instrukcija.}.
+@p Svaki programski jezik je osmišljen sa ciljem da olakša proces programiranja računara, koliko god ovoj iskaz delovao očigledno. Zaista, iako se svaki program može napisati u mašinskom jeziku, programeri biraju programske jezike zbog osobina tih jezika koje omogućuju efikasnije programiranje. Osobine koje olakšavaju programranja su zapravo @em{apstrakcije} kojima se nebitne pojedinosti skrivaju i samim tim obezbeđuje lakše izražavanje suštinski ideja o programu@note{Na primer, u mašinskom kodu koriste se različite instrukcije za sabiranje različitih vrsta brojeva (celobrojnih vrednosti, brojeva u pokretnom zarezu, itd...). Sa druge strane, u gotovo svakom programskom jeziku sabiranje svih tipova brojeva se izražava sa operatorom @code{+}. Na taj način, programer se može posvetiti zapisivanju matematičkih izraza, dok kompajler obezbeđuje da se ti matematički izrazi prevedu u ispravan niz instrukcija.}.
 
 @p Jednoj vrsti apstrakcija posvetićemo ovu lekciju, a na samom početku ćemo pokušati da motivišemo razloge za uvođenje takvih apstrakcija.
 
@@ -29,10 +29,9 @@ f x = 253 * x + 17
 	@li Imena funkciju postaju duža, teža za pamćenje i za pisanje. Problem je posebno izražen kod funkcija više promenljiva.
 	@li Ako se definicija promeni (npr. ako se gorenavedena formula promeni zbog preciznijih eksperimentalnih rezultata), tada je neophodno svaku od formula posebno izmeniti, što predstavlja veliki prostor za greške (i to one greške koje sistem tipove ne može otkriti).
 }
-
 }
 
-@p Prethodni primer je trivijalan, ali demonstrira probleme koji se sreću na velikim projektima bez obzira na programski jezik. Srećom, mnogi jezici su našli rešenja za navedene probleme, pa tako i Haskel. U Haskelu, moguće je definisati vrednosti koje ne pripadaju jednom određenom tipu, već čitavoj kolekciji tipova. Ovakvi tipovi se nazivaju @def{polimorfni tipovi}@note{Naziv potiče od grčkih reči @em{πολύς} (mnogo) i @em{μορφή} (oblik). Prema tome polimorfni tipovi su oni tipovi koji imaj više oblika.}.
+@p Prethodni primer je trivijalan, ali demonstrira probleme koji se sreću na iole većim projektima bez obzira na programski jezik. Srećom, mnogi jezici su našli rešenja za navedene probleme, pa tako i Haskel. U Haskelu, moguće je definisati vrednosti koje ne pripadaju jednom određenom tipu, već čitavoj kolekciji tipova. Ovakvi tipovi se nazivaju @def{polimorfni tipovi}@note{Naziv potiče od grčkih reči @em{πολύς} (mnogo) i @em{μορφή} (oblik). Prema tome polimorfni tipovi su oni tipovi koji imaj više oblika.}.
 
 @example{
 @p Do sada smo već imali prilike da se susretnemo sa polimorfnom vrednošću (vrednošću koja ima polimorfni tip). To je bila prazna lista @code{[]}. Ova vrednost pripada svakom tipu lista. U nastavku ćemo videti kog je tačno tipa @code{[]}. 
@@ -41,7 +40,6 @@ f x = 253 * x + 17
 @example{
 @p Numerički literal (poput npr. @code{2}) može predstvaljati vrednost tipa @code{Int}, @code{Intger}, @code{Float} ili @code{Double}.
 }
-
 
 @p Polimorfnost se u Haskelu obezbeđuje na dva načina: kroz partametarki polimorfizam i kroz @em{ad-hoc} polimorfizam.
 
@@ -55,41 +53,85 @@ f x = 253 * x + 17
 
 @p @def{Parametarski polimorfni tipovi} su oni tipovi koji sadrže @em{slobodne tipske promenljive}. 
 
+@p Najjednostavniji primer vrednosti koja poseduje parametarski polimorfni tip, je konstatna funkcija poput naredne:
 
-@p Često je korisno raditi sa funkcijom čiji domen nije jedan konkretan tip, već ju je moguće koristiti sa više različitih tipova. Na primer, funkciju @code{head} (koja vraća prvi element prosleđene liste), ima smisla primenjivati na liste tipa @code{[Int]}, @code{[Char]}, @code{[Bool]} itd...
+@codeBlock{
+konstantnoTačno :: a -> Bool
+konstantnoTačno = \x -> True
+}
 
-@p Postavlja se pitanje, kog tipa je funkcija @code{head}? Srećom, odgovor na to pitanje lako možemo naći:
+@p Navedenom definicijom, definisano je zapravo beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada mozemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
 
-@terminal{
-ghci> :type head
+@p Nesto slozeniji primer funkcije sa parametraski polimorfnim tipom je identicka funkcija, definisana u @em{Preude}-u kao @code{id}:
+
+@codeBlock{
+id :: a -> a
+id = \x -> x
+}
+
+@p Tip identičke funkcije sadrzi tipsku promeljivu i u domenu i u kodomenu. Kad god se u tipu na vise mesta mesta pojavljuje ptomenljiva sa istim imenom, tada sva pojavljivanja te promenljive odeređuju isti tip. Stoga, funkcija @code{id} predstavlja funkciju tipa @code{Int -> Int} ili funkciju tipa @code{[Char] -> [Char]} i stako dalje, ali ne moze predstavljati funkciju tipa @code{Bool -> Float}. Sam tip @code{a -> a} ukazuje na to da domen i kodomen funkcije moraju biti isti tipovi, prema tome @code{id True} ili @code{id False} mogu predstavljati samo vrednosti tipa @code{Bool}.
+
+@p Prethodno navedene funkcije su bile trivijalne. Ipak, polimorfne funkcije su izuzetno korisne, i mi smo ih zapravo već koristili.
+
+@p Funkciju @code{head} (koja vraća prvi element prosleđene liste), ima smisla primenjivati na liste tipa @code{[Int]}, @code{[Char]}, @code{[Bool]} itd... Prema tome, umesto da se za svaki tip liste definise posebna funkcija, definisana je jedinstvena funkcija @code{head} sa polimorfnim tipom @code{[a] -> a}:
+
+@codeBlock{
 head :: [a] -> a
+head x:_ = x
+}{Poklapanjem oblika liste, mozemo rastaviti listu na glavu i rep.}
+
+@p U ovoj funkciji, vidimo da se tipska promenljiva pojavljuje unutar zagrada @code{[]}. Prema tome @code{[a]} ne predstavlja svaki tip, vec predstavlja svaki tip lista. Npr. tip @code{Int} nije oblika @code{[a], i stoga @code{head 3} nije dobro tipiziran izraz. Sa druge strane, ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
+
+@p I ostale funkcije koje smo do sada koristili za rad sa listama (poput @code{tail}, @code{init}, @code{last}, @code{null}) imaju polimorfne tipove. Samim tim te funkcije se mogu koristiti za listom bilo kog tipa.
+
+@problem{
+Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
+}{
+@p Funkcija @code{null} se moze primeniti na listu bilo kog tipa, te je njen domen @code{[a]}. Rezultat provere je logicka vrednost. Stoga je @ccode{null :: [a] -> Bool}.
 }
 
-@p Vidimo da je domen funkcije @code{head} tip lista bilo kog tipa, što se označava sa @code{[a]}. Ovde, @code{a} predstavlja @def{tipsku promenljivu}@note{Umesto slova @code{a} moglo je biti iskorišćeno i bilo koje drugo malo slovo, ali pritom se to slovo mora pojaviti i u domenu i u kodomenu. Primetimo da tipske promenljive, za razliku od konkretnih tipova, počinju malim slovima.}, odnosno proizvoljan tip. Kako funkcija @code{head} vraća prvi član liste tipa @code{[a]} tako njena povratna vrednost mora biti @code{a}.
+@p Nije nuzno da vrednost polimorfnog tipa bude funkcija.
 
 @example{
-@p Ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
+@p prazna lista @code{[]} je sama za sebe vrednost tipa @code{[a]}, i samim tim predstavlja praznu listu bilo kog tipa. Ali to ne znaci da, na primer, prazne liste u izrazima @code{[] ++ [True]} i @code{[] ++ ['a']}, predstavljaju iste vrednosti. Jedna od navedenih praznih lista je tipa @code{[Bool]} a druga @code{[Char]}. Ove dve vrednosti su neuporedive, ali im zajednicko ime@code{Kao sto dve razlicite osobe mogu da dele isto ime}.
 }
 
+@p Iz prethodnih redova vidimo da polimorfne vrednosti poprimaju razliciti tip u zavisnoti od izraza u kojima se nalaze. Upravo otuda i naziv @em{poli-morfne}. O ovome će biti jos reči u nastavku lekcije...   
+
+@p Ponekad nije dovoljno da tip poseduje samo jednu promeljivu. Ako se u tipu nalaze dve ili vise razlicitih promenljiva, tada su te promenljive nezavisne.
+
 @example{
-@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu iz @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugo uređenog para. Opšti tip uređenog para je @code{(a, b)} i ovaj tip je domen funkcije @code{fst}. Kako je domen funkcije @code{(a, b)} tada je njen kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}. Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}.
+@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugog uređenog para. Karakteristicno za uredjene parove je da kordinate mogu posedovati različite tipove. Stoga domen funkcije @code{fst} moramo zapisati kao @code{(a, b)}, a samim tim je kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}.
+
+@p Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}. U ovom tipu, tipska promenljiva @code{b} vezuje tip druge koordinate sa tipom povratne vrednosti (tj. kodomenom).
 }
 
 @problem{Kog tipa je funkcija @code{reverse} koja obrće listu?}
 {@p Funkcija @code{reverse} uzima listu bilo kog tipa i vraća listu @em{istog} tipa. Prema tome tip ove funkcije je @code{[a] -> [a]}. Tip funkcije @code{reverse} nije @code{[a] -> [b]} jer tipske promenljive @code{a} i @code{b} mogu predstavljati različite tipove.}
 
-@problem{Implementirati funkciju koja vraća prvu koordinatu uređene trojke.}
-{@codeBlock{
+@problem{Implementirati funkciju koja vraća prvu koordinatu proizvoljne uređene trojke.}
+{
+@p Proizvoljna uredjena trojka ima tip oblika @code{(A, B, C)} gde su @code{A}, @code{B}, @code{C} neki proizvoljni tipovi. Stoga polimorfni tip koji predstavja svaku uredjenu trojku je @code{(a, b, c)}. Podudaranjem oblika mozemo konstruisati narednu funkciju:
+@codeBlock{
 fst3 :: (a, b, c) -> a
 fst3 (x, _, _) = x
 }{Pošto ne koristimo vrednosti druge i treće kordinate, te vrednosti ne moramo da vezujemo novim imenom, već možemo iskoristi džoker.}
 }
 
+@p Iz prethodnih primera , vidimo da su tipovi sa slobodnim tipskim promenljivama izuzetno korisni. Mnoge funkcije iz @em{Prelude}-a koje smo vec koristili su parametarski polimorfne. Ipak, tehnika parametarskog polimorfizma i dalje ne resava konkretan problem koji smo opisali na početku lekcije. Tada smo hteli da implementiramo funkciju koja bi prihvatala razne numeričke tipove. Tu funkciju ne mozemo prosto definisati sa sledećim kodom, koliko god to bilo privlačno:
+
+@codeBlock{
+f :: a -> a
+f x = 253 * x + 17
+}
+
+@p Prethodna definicija nije dobra, iz prostog razloga zato sto tipska promenljiva @code{a} moze predstaviti svaki tip. Za tipove poput @code{Char} ili @code{Bool}, navedena definicija nema smisla jer se vrednosti tog tipa ne mogu sabirati niti mnoziti brojevima. Stoga bi bilo korisno kada bismo ograničili tipsku promenljivu @code{a} samo na one tipove koji dozvoljavaju sabiranje i mnozenje. Upravo ćemo to prikazati u nastavku.
+
 @section{@em{Ad-hoc} polimorfizam}
 
-@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija (i operatora) nad tipovima te klase. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Cesto te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
-@p Za razliku od vrednosti koje pripadaju samo jednom tipu, tipovi mogu se istovremeno nalaziti u više klasa (ili nijednoj).
+@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj).
 
 @p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.
 
