@@ -95,11 +95,11 @@ max' :: Int -> Int -> Int
 max' = \x y -> if x > y then x else y 
 }}
 
-@section{@em{Guards}}
+@section{Ograđene definicije}
 
-@p @def{Guards} je naziv za sintaksu koja omogućava testiranje više uslova. Svaki od uslova je logički izraz koji se navodi nakon vertikalne crte @code{|}, a nakon uslova potrebno je staviti i (povratnu) vrednost funkcije.
+@p Ograđena definicija@note{eng. @em{guards}} je poseban oblik definicije funkcije koja omogućava pregledno testiranje više uslova. Svaki od uslova je logički izraz koji se navodi nakon vertikalne crte @code{|}, a nakon uslova postavlja se povratna vrednost funkcije.
 
-@p @em{Guards} sintaksa može se koristiti samo pri definisanju funkcije (za razliku of @em{if then else} sintakse, @em{guards} ne predstavlja izraz). Opšti oblik guards sintakse bi bio@note{Ovakva definicija funkcije podseća na narednu matematičku sintaksu @eq{f(x)=
+@p Ograđena definicija ne predstavlja izraz@note{Za razliku od @em{let in} ili @em{if then else} sintakse.}. Opšti oblik ograđenih definicija bi bio@note{Ovakva definicija funkcije podseća na narednu matematičku sintaksu @eq{f(x)=
   \begin{cases}
   \mathrm{vrednost1}, & \mathrm{uslov1}\\
   \mathrm{vrednost1}, & \mathrm{uslov1}\\
@@ -115,11 +115,10 @@ f x1 x2 x3
   | uslovN = vrednostN
 }{U ovom zapisu, @code{f} je ime funkcije koja se definiše, a @code{x1}, @code{x2}, @code{x3} su parametri funkcije @code{f}. Uslovi, @code{uslov1} ... @code{uslovN} su izrazi koji se evaluiraju u logičku vrednost.}
 
-@p Kao i kod @em{if then else} konstrukcije, i kod @em{guards} konstrukcije sve povratne vrednosti moraju biti istog tipa.
-
+@p Kao i kod @em{if then else} konstrukcije, i kod ograđenih definicija sve povratne vrednosti moraju biti istog tipa.
 
 @example{
-@p Funkcija @code{pozitivan :: Int -> [Char]} koja vraća nisku @code{"Pozitivan"} ako je broj veći ili jednak nuli, a u suprotnom @code{"Negativan"}, može se ovako definisati
+@p Funkcija @code{pozitivan :: Int -> [Char]} koja vraća nisku @code{"Pozitivan"} ako je broj veći ili jednak nuli a u suprotnom @code{"Negativan"}, može se ovako definisati
 
 @codeBlock{
 pozitivan :: :: Int -> [Char]
@@ -130,7 +129,7 @@ pozitivan x
 
 @p Prilikom "poziva" @code{pozitivan (-4)}, prvo će se proveriti prvi navedeni slučaj, odnosno @code{x >= 0}. Kako se @code{-4 >= 0} beta redukuje u @code{False}, proveriće se naredni slučaj @code{x < 0}. Kako se @code{-4 < 0} redukuje u @code{True}, vrednost @code{pozitivan (-4)} je @code{"Negativan"}.
 
-@p Dakle, sa @em{guards} sintaksom moguće je proveriti niz uslova. Funkcija će imati vrednost koja odgovara prvom tačnom uslovu. Ako ni jedan od uslova nije tačan, tada će doći do izuzetka.
+@p Dakle, sa ograđenim definicijama moguće je proveriti niz uslova. Funkcija će imati vrednost koja odgovara prvom tačnom uslovu. Ako ni jedan od uslova nije tačan, tada će doći do izuzetka.
 
 @codeBlock{
 pozitivan' :: :: Int -> [Char]
@@ -139,7 +138,6 @@ pozitivan' x
  | x < 0 = "Negativan"
 }{U ovoj, @em{lošoj}, definiciji uslov @code{x == 0} nikad nije proveren, zbog čega će poziv @code{pozitivan' 0} dovesti do izuzetka.}
 }
-
 
 @example{
 @p Pogledajmo nešto složeniji primer. Funkcija koja vraća opis jačine zemljotresa na osnovu njegove jačine u Rihterima može biti definisana sa narednim kodom:
@@ -173,7 +171,7 @@ opisZemljotresa r
   | r >= 10 = "Epski"
 }{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden. Dodat je i uslov koji u slučaju negativnog argumenta vraća nisku @code{"Greška"}.}
 
-@p Primetimo da je i u ovom (kao i u prethodnom primeru) na poslednjem mestu postavljen slučaj koji je zadovoljen kada svi ostali slučajevi nisu@note{U suprotnom, funkcija ne bi bila totalna, i došlo bi do izuzetka za neke od argumenata}. Zbog toga, za poslednji uslov ne mora se stavljati nikakav izraz, već je dovoljno postaviti konstantu @code{True}, i tada će poslednji uslov "uhvatiti" sve što nije uhvaćeno sa prethodnim uslovima. Uobičajeno je da se na kraju @em{guards}-a postavi konstanta @code{otherwise} koja je ime za vrednost @code{True}@note{Zaista, u @em{GHCi}-u proverite da je @code{otherwise == True}.}:
+@p Primetimo da je i u ovom (kao i u prethodnom primeru) na poslednjem mestu postavljen slučaj koji je zadovoljen kada svi ostali slučajevi nisu@note{U suprotnom, funkcija ne bi bila totalna, i došlo bi do izuzetka za neke od argumenata}. Zbog toga, za poslednji uslov ne mora se stavljati nikakav izraz, već je dovoljno postaviti konstantu @code{True}, i tada će poslednji uslov "uhvatiti" sve što nije uhvaćeno sa prethodnim uslovima. Uobičajeno je da se na kraju ograđene definicije postavi konstanta @code{otherwise} koja je ime za vrednost @code{True}@note{Zaista, u @em{GHCi}-u proverite da je @code{otherwise == True}.}:
 
 @codeBlock{
 opisZemljotresa r
@@ -189,7 +187,7 @@ opisZemljotresa r
 }
 }
 
-@problem{Definisati funkciju @code{max3 :: Int -> Int -> Int -> Int} sa @em{guards} sintaksom, koja vraća najveću od tri celobrojne vrednosti.}{
+@problem{Definisati funkciju @code{max3 :: Int -> Int -> Int -> Int} sa ograđenom definicijom, koja vraća najveću od tri celobrojne vrednosti.}{
 
 @p Jedno od mogućih rešenja bi bilo:
 
@@ -368,7 +366,7 @@ saberi (x, y) = x + y
 }
 
 @example{
-@p Funkicju @code{saberi3} koja sabira koordinate uređene trojke možemo definisati na sledeći način
+@p Funkciju @code{saberi3} koja sabira koordinate uređene trojke možemo definisati na sledeći način
 
 @codeBlock{
 saberi3 :: (Double, Double, Double) -> Double

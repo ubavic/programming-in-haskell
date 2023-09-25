@@ -1,12 +1,10 @@
 @chapter{Polimorfnost}
 
-@p @em{Ova lekcija je u fazi prepravke...}
-
-@p Svaki programski jezik je osmišljen sa ciljem da olakša proces programiranja računara, koliko god ovoj iskaz delovao očigledno. Zaista, iako se svaki program može napisati u mašinskom jeziku, programeri biraju programske jezike zbog osobina tih jezika koje omogućuju efikasnije programiranje. Osobine koje olakšavaju programranja su zapravo @em{apstrakcije} kojima se nebitne pojedinosti skrivaju i samim tim obezbeđuje lakše izražavanje suštinski ideja o programu@note{Na primer, u mašinskom kodu koriste se različite instrukcije za sabiranje različitih vrsta brojeva (celobrojnih vrednosti, brojeva u pokretnom zarezu, itd...). Sa druge strane, u gotovo svakom programskom jeziku sabiranje svih tipova brojeva se izražava sa operatorom @code{+}. Na taj način, programer se može posvetiti zapisivanju matematičkih izraza, dok kompajler obezbeđuje da se ti matematički izrazi prevedu u ispravan niz instrukcija.}.
+@p Svaki programski jezik je osmišljen sa ciljem da olakša proces programiranja računara, koliko god ovoj iskaz delovao očigledno. Zaista, iako se svaki program može napisati u mašinskom jeziku, programeri biraju programske jezike zbog osobina tih jezika koje omogućuju efikasnije programiranje. Osobine koje olakšavaju programiranja su zapravo @em{apstrakcije} kojima se nebitne pojedinosti skrivaju i samim tim obezbeđuje lakše izražavanje suštinski ideja o programu@note{Na primer, u mašinskom kodu koriste se različite instrukcije za sabiranje različitih vrsta brojeva (celobrojnih vrednosti, brojeva u pokretnom zarezu, itd...). Sa druge strane, u gotovo svakom programskom jeziku sabiranje svih tipova brojeva se izražava sa operatorom @code{+}. Na taj način, programer se može posvetiti zapisivanju matematičkih izraza, dok kompajler obezbeđuje da se ti matematički izrazi prevedu u ispravan niz instrukcija.}.
 
 @p Jednoj vrsti apstrakcija posvetićemo ovu lekciju, a na samom početku ćemo pokušati da motivišemo razloge za uvođenje takvih apstrakcija.
 
-@p U prethodnim lekcijama naučili smo kako da definišemo funkcije, i upoznali smo se sa pojmom tipa funkcije. Programi koje smo pisali su bili mali i sačinjeni samo do nekoliko definicja funkcija. Ako bismo radili na velikim programima (kao što su web serveri, desktop aplikacije, itd...) uvideli bismo jedan jednostavan ali neporan problem. Naime, često bismo pisali gotovo iste funkcije koje imaju malo različite tipove.
+@p U prethodnim lekcijama naučili smo kako da definišemo funkcije, i upoznali smo se sa pojmom tipa funkcije. Programi koje smo pisali su bili mali i sačinjeni samo do nekoliko definicija funkcija. Ako bismo radili na velikim programima (kao što su web serveri, desktop aplikacije, itd...) uvideli bismo jedan jednostavan ali naporan problem. Naime, često bismo pisali gotovo iste funkcije koje imaju malo različite tipove.
 
 @example{
 @p Zamislimo da je potrebno na implementiramo funkciju koja izražava određenu numeričku zakonitost (nebitno kakvu) po formuli koja je eksperimentalno dobijena @eq{y = f(x) = 253 \cdot x + 17.}
@@ -22,7 +20,7 @@ f :: Float -> Float
 f x = 253 * x + 17
 }
 
-@p Kako ne možemo imati dve definicje istog imena (a pogotovu dve definicije istog imena sa različitim tipovima), problem nastaje ako želimo da u kodu definišemo obe. Tada, moramo odabrati novo ime za jednu od funkcija (npr. @code{f} i @code{fFloat}). Ako želimo da dodamo odgovarajuću funckciju i za @code{Double}, i za nju moramo definisati posebno ime.
+@p Kako ne možemo imati dve definicije istog imena (a pogotovu dve definicije istog imena sa različitim tipovima), problem nastaje ako želimo da u kodu definišemo obe. Tada, moramo odabrati novo ime za jednu od funkcija (npr. @code{f} i @code{fFloat}). Ako želimo da dodamo odgovarajuću funkciju i za @code{Double}, i za nju moramo definisati posebno ime.
 
 @p Opisano rešenje navedenog problema je jednostavno ali dovodi do drugih problema:
 @list{
@@ -38,14 +36,14 @@ f x = 253 * x + 17
 }
 
 @example{
-@p Numerički literal (poput npr. @code{2}) može predstvaljati vrednost tipa @code{Int}, @code{Intger}, @code{Float} ili @code{Double}.
+@p Numerički literal (poput npr. @code{2}) može predstavljati vrednost tipa @code{Int}, @code{Intger}, @code{Float} ili @code{Double}.
 }
 
-@p Polimorfnost se u Haskelu obezbeđuje na dva načina: kroz partametarki polimorfizam i kroz @em{ad-hoc} polimorfizam.
+@p Polimorfnost se u Haskelu obezbeđuje na dva načina: kroz parametarski polimorfizam i kroz @em{ad-hoc} polimorfizam.
 
 @section{Parametarski polimorfizam}
 
-@p @def{Tipska promenljiva} (ili još @def{tipski parametar}), je ime koje predstavlja proizvoljan tip (eventualno iz neke kolekcije tipova). Za razliku od tipova, tipske promenljive se se zapisuju sa početnim malim slovom, a najčešće se celo ime tipske promenljive sastoji od jednog slova. Ako tipska promenljiva predstavlja svaki mogući tip (a ne neku specifičnu kolekciju tipova), tada za tu tipsku promeljivu kažemo da je @def{slobodna}. Svaka tipska promenljiva koja se pojavljuje u tipu, i koja nije vezana za neku kolekciju tipova@note{U nastavku ćemo videti kako se tipske promenljive vezuju za određene kolekcije.}, implicitno se smatra slobodnom tipskom promenljivom.
+@p @def{Tipska promenljiva} (ili još @def{tipski parametar}), je ime koje predstavlja proizvoljan tip (eventualno iz neke kolekcije tipova). Za razliku od tipova, tipske promenljive se se zapisuju sa početnim malim slovom, a najčešće se celo ime tipske promenljive sastoji od jednog slova. Ako tipska promenljiva predstavlja svaki mogući tip (a ne neku specifičnu kolekciju tipova), tada za tu tipsku promenljivu kažemo da je @def{slobodna}. Svaka tipska promenljiva koja se pojavljuje u tipu, i koja nije vezana za neku kolekciju tipova@note{U nastavku ćemo videti kako se tipske promenljive vezuju za određene kolekcije.}, implicitno se smatra slobodnom tipskom promenljivom.
 
 @example{
 @p U tipu @code{a -> Int}, ime @code{a} predstavlja slobodnu tipsku promenljivu. Prema tome, navedeni tip može da predstavlja bilo koji tip oblika @code{A -> Int}, gde je @code{A} neki određen tip. Na primer: @code{Bool -> Int}, @code{Int -> Int}, @code{[Char] -> Int}, @code{(Bool -> Char) -> Int}, i beskonačno mnogo drugih mogućnosti...
@@ -53,7 +51,7 @@ f x = 253 * x + 17
 
 @p @def{Parametarski polimorfni tipovi} su oni tipovi koji sadrže @em{slobodne tipske promenljive}. 
 
-@p Najjednostavniji primer vrednosti koja poseduje parametarski polimorfni tip, je konstatna funkcija poput naredne:
+@p Najjednostavniji primer vrednosti koja poseduje parametarski polimorfni tip, je konstantna funkcija poput naredne:
 
 @codeBlock{
 konstantnoTačno :: a -> Bool
@@ -62,14 +60,14 @@ konstantnoTačno = \x -> True
 
 @p Navedenom definicijom, definisano je zapravo beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada mozemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
 
-@p Nesto slozeniji primer funkcije sa parametraski polimorfnim tipom je identicka funkcija, definisana u @em{Preude}-u kao @code{id}:
+@p Nesto slozeniji primer funkcije sa parametarski polimorfnim tipom je identička funkcija, definisana u @em{Preude}-u kao @code{id}:
 
 @codeBlock{
 id :: a -> a
 id = \x -> x
 }
 
-@p Tip identičke funkcije sadrzi tipsku promeljivu i u domenu i u kodomenu. Kad god se u tipu na vise mesta mesta pojavljuje ptomenljiva sa istim imenom, tada sva pojavljivanja te promenljive odeređuju isti tip. Stoga, funkcija @code{id} predstavlja funkciju tipa @code{Int -> Int} ili funkciju tipa @code{[Char] -> [Char]} i stako dalje, ali ne moze predstavljati funkciju tipa @code{Bool -> Float}. Sam tip @code{a -> a} ukazuje na to da domen i kodomen funkcije moraju biti isti tipovi, prema tome @code{id True} ili @code{id False} mogu predstavljati samo vrednosti tipa @code{Bool}.
+@p Tip identičke funkcije sadrzi tipsku promenljivu i u domenu i u kodomenu. Kad god se u tipu na vise mesta mesta pojavljuje promenljiva sa istim imenom, tada sva pojavljivanja te promenljive određuju isti tip. Stoga, funkcija @code{id} predstavlja funkciju tipa @code{Int -> Int} ili funkciju tipa @code{[Char] -> [Char]} i stako dalje, ali ne moze predstavljati funkciju tipa @code{Bool -> Float}. Sam tip @code{a -> a} ukazuje na to da domen i kodomen funkcije moraju biti isti tipovi, prema tome @code{id True} ili @code{id False} mogu predstavljati samo vrednosti tipa @code{Bool}.
 
 @p Prethodno navedene funkcije su bile trivijalne. Ipak, polimorfne funkcije su izuzetno korisne, i mi smo ih zapravo već koristili.
 
@@ -264,6 +262,65 @@ ghci> :type 2
 @p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Literal @code{2} može predstavljati vrednost tipa @code{Int}, @code{Integer}, @code{Float}, @code{Double}, i sl. Svi ovi tipovi pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}, sto se naravno označava sa @code{Num a => a}.
 
 @p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, te ne može biti tipa @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i kao @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor već klasno ograničenje.
+
+
+@todo{Kombinatori}
+
+@section{Karijevanje}
+
+@p U prethodnim lekcijama prikazana su dva načina definisanja funkcija dva argumenta. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(a, b) -> c} dok druga tehnika daje funkciju tipa @code{a -> (b -> c)}. 
+
+@p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkcije tipa @code{(a, b) -> c} u funkcije tipa @code{a -> (b -> c)}. Ovakva transformacija se naziva @def{karijevanje}@note{Eng. @em{currying}. po Haskel Kariju}. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
+
+@p Kog tipa je funkcija @code{k}? Funkcija @code{k} uzima funkciju tipa @code{(a, b) -> c} i vraća funkciju tipa @code{a -> (b -> c)}. Stoga je tip ove funkcije @code{((a, b) -> c) -> (a -> (b -> c))}. 
+
+@p Kada smo utvrdili tip, možemo da implementiramo @code{k}. Pretpostavimo da je @code{f :: (a, b) -> c} funkcija koju želimo da transformišemo. Pošto funkcija @code{k} vraća vrednost tipa @code{a -> (b -> c)}, u telu definicije moramo napisati izraz poput @code{\x y -> ...}. U telu ove lambda funkcije mora se nalaziti rezultat primene @code{f} na uređen par @code{(x, y)}. Prema tome, @code{k} možemo da definišemo sa narednim kodom
+
+@codeBlock{
+k :: ((a, b) -> c) -> (a -> (b -> c))
+k f = \x y -> f (x, y)
+}
+
+@p Na sličan način možemo da definišemo i inverznu funkciju @code{k'} koja funkcije tipa @code{a -> (b -> c)} transformiše u funkcije tipa @code{(a, b) -> c}. Jasno, tip funkcije @code{k'} je @code{(a -> (b -> c)) -> ((a, b) -> c)}. Ako je @code{g} funkcija tipa @code{a -> (b -> c)} tada je @code{k' g} funkcija koja uzima uređen par, te ćemo stoga takvu funkciju konstruisati sa lambda apstrakcijom @code{\p -> ...} gde @code{p} predstavlja neki uređen par. U telu lambda funkcije je potrebno da se nađe vrednost @code{(g x) y} gde su @code{x} i @code{y} koordinate uređenog para @code{p}. Stoga, @code{k'} možemo da definišemo sa narednim kodom
+
+@codeBlock{
+k' :: (a -> (b -> c)) -> ((a, b) -> c)
+k' g = \(x, y) -> g x y
+}
+
+@p Uverimo se da navedene funkcije zaista dobro rade. Uzmimo primer is lekcije o funkcijama:
+
+@codeBlock{
+ljubav :: (String, String) -> String
+ljubav (x, y) = x ++ " voli " ++ y ++ "!"
+}
+
+@terminal{
+ghci> ljubav' = k ljubav
+ghci> ljubav' "Ana" "Milovana"
+"Ana voli Milovana!" 
+}{Transformacija zaista funkcioniše: funkcija @code{ljubav'} ne uzima uređen par već je u pitanju funkcija višeg reda.}
+
+@p Sa druge strane, od ugrađene funkcije @code{mod} možemo dobiti našu verziju funkcije koja uzima jedan uređen par brojeva:
+
+@terminal{
+ghci> mod' = k' mod
+ghci> mod' (7, 2)
+1
+}
+
+@p Funkcije koje smo konstruisali u prethodnim redovima dostupne su pod imenima @code{curry} i @code{uncury} i poseduju sleće tipove
+
+@codeBlock{
+curry :: ((a, b) -> c) -> (a -> (b -> c))
+uncurry :: (a -> b -> c) -> ((a, b) -> c)
+}
+
+@problem{Konstruisati funkciju @code{curry3} koja uzima funkciju tipa @code{(a, b, c) -> d} i daje funkciju tipa @code{a -> (b -> (c -> d))}.}
+
+@problem{Kog tipa je izraz @code{uncurry curry}?}
+
+
 
 @todo{Parametričnost}
 

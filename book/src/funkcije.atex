@@ -250,67 +250,6 @@ zapremina :: Double -> (Double -> (Double -> Double))
 zapremina = (\a -> (\b -> (\c -> (a * b * c))))
 }}
 
-@section{Karijevanje}
-
-@p U prethodnoj sekciji prikazana su dva načina (dve tehnike) definisanja funkcija dva argumenta. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(a, b) -> c} dok druga tehnika daje funkciju tipa @code{a -> (b -> c)}. 
-
-@p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkcije tipa @code{(a, b) -> c} u funkcije tipa @code{a -> (b -> c)}! Ovakva transformacija se naziva @def{karijevanje}@note{Eng. @em{currying}. po Haskel Kariju}. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
-
-@p Kog tipa je funkcija @code{k}? Funkcija @code{k} uzima funkciju tipa @code{(a, b) -> c} i vraća funkciju tipa @code{a -> (b -> c)}. Stoga je tip ove funkcije @code{((a, b) -> c) -> (a -> (b -> c))}. 
-
-@p Kada smo utvrdili tip, možemo da implementiramo @code{k}. Pretpostavimo da je @code{f :: (a, b) -> c} funkcija koju želimo da transformišemo. Pošto funkcija @code{k} vraća vrednost tipa @code{a -> (b -> c)}, u telu definicije moramo napisati izraz poput @code{\x -> (\y -> ...)}@note{Jer je to (za sada) jedini način na koji možemo konstruisati funkcije.}. U telu ove lambda funkcije mora se nalaziti rezultat primene @code{f} na uređen par @code{(x, y)}. Prema tome, @code{k} možemo da definišemo sa narednim kodom
-
-@codeBlock{
-k :: ((a, b) -> c) -> (a -> (b -> c))
-k = (\f -> (\x -> (\y -> (f (x, y)))))
-}
-
-@p Na sličan način možemo da definišemo i inverznu funkciju @code{k'} koja funkcije tipa @code{a -> (b -> c)} transformiše u funkcije tipa @code{(a, b) -> c}. Jasno, tip funkcije @code{k'} je @code{(a -> (b -> c)) -> ((a, b) -> c)}. Ako je @code{g} funkcija tipa @code{a -> (b -> c)} tada je @code{k' g} funkcija koja uzima uređen par, te ćemo stoga takvu funkciju konstruisati sa lambda apstrakcijom @code{\p -> ...} gde @code{p} predstavlja neki uređen par. U telu lambda funkcije je potrebno da se nađe vrednost @code{(g x) y} gde su @code{x} i @code{y} koordinate uređenog para @code{p}. Stoga, @code{k'} možemo da definišemo sa narednim kodom
-
-@codeBlock{
-k' :: (a -> (b -> c)) -> ((a, b) -> c)
-k' = (\g -> (\p -> ((g (fst p)) (snd p))))
-}
-
-@p Korišćenjem @code{let in} sintakse možemo dobiti malo čitljiviju definiciju
-
-@codeBlock{
-k' :: (a -> (b -> c)) -> ((a, b) -> c)
-k' = (\g -> (\p -> (let x = fst p; y = snd p in (g x) y)))
-}
-
-@p Uverimo se da navedene funkcije zaista dobro rade. Uzmimo primer od malopre:
-
-@codeBlock{
-ljubav :: (String, String) -> String
-ljubav = (\x -> (fst x ++ " voli " ++ snd x ++ "!"))
-}
-
-@terminal{
-ghci> ljubav' = k ljubav
-ghci> ljubav' "Ana" "Milovana"
-"Ana voli Milovana!" 
-}{Transformacija zaista funkcioniše: funkcija @code{ljubav'} ne uzima uređen par već je u pitanju funkcija višeg reda.}
-
-@p Sa druge strane, od ugrađene funkcije @code{mod} možemo dobiti našu verziju funkcije koja uzima jedan uređen par brojeva:
-
-@terminal{
-ghci> mod' = k' mod
-ghci> mod' (7, 2)
-1
-}
-
-@p Funkcije koje smo konstruisali u prethodnim redovima dostupne su pod imenima @code{curry} i @code{uncury} i poseduju sleće tipove
-
-@codeBlock{
-curry :: ((a, b) -> c) -> (a -> (b -> c))
-uncurry :: (a -> b -> c) -> ((a, b) -> c)
-}
-
-@problem{Konstruisati funkciju @code{curry3} koja uzima funkciju tipa @code{(a, b, c) -> d} i daje funkciju tipa @code{a -> (b -> (c -> d))}.}
-
-@problem{Kog tipa je izraz @code{uncurry curry}?}
-
 @section{Zadaci}
 
 @problem{
