@@ -236,7 +236,7 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 
 @p Lepota rekurzivnih algoritama leži u tome što programer na jednostavan način može implementirati komplikovane funkcionalnosti. Programiranje baznog slučaja i rekurzivnog koraka su dovoljni da bi se i naizgled nemogući problemi jednostavno rešili. Primeri i zadaci koji su navedeni u ovoj lekciji bi trebalo da demonstriraju tu elegantnost.
 
-@p Ipak, elgantnost rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.
+@p Ipak, lepota rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.
 
 @example{
 @p Neka je @m{S_n = 1 + \cdots + n}, suma koju smo posmatrali na početku ove lekcije. Ako članove sume raspišemo u dva reda, pri čemu ćemo u drugom redu obrnuti poredak sabiraka, dobijamo šemu: @eq{\begin{array}{ccccc}1  &2 &\cdots &n-1 & n\\ n &n-1 &\cdots &2 & 1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva koji odgovaraju kolonama, pri čemu je zbir svakog para @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
@@ -246,9 +246,9 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 @codeBlock{
 zbir' :: Int -> Int
 zbir' n = div (n * (n+1)) 2
-}{Možemo ignoristati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
+}{Možemo ignorisati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
 
-@p Navedena alternativna definicija nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}.}, vreme za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je fukcija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u procesorskih taktova.
+@p Navedena alternativna definicija nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}.}, vreme za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je funkcija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u procesorskih taktova.
 }
 
 @example{
@@ -266,7 +266,7 @@ fib' n = round ((a^n - b^n)/t)
 }{Ugrađena funkcija @code{round} zaokružuje @code{Float} broj u @code{Int}.}
 }
 
-@p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristipiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
+@p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristupiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
 
 @section{Totalne i parcijalne funkcije}
 
@@ -283,9 +283,9 @@ zbir n
 
 @p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju, pa samim tim izraz @code{zbir x} nije definisan za svaku vrednost @code{x :: Int}.
 
-@p Funkciju koja nije definsana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Prema tome, pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
+@p Funkciju koja nije definisana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Prema tome, pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
 
-@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledni bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje ne-rekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nisu obrađene svi mogući oblici argumenta:
+@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledi bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje ne-rekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nisu obrađene svi mogući oblici argumenta:
 
 @codeBlock{
 p :: Int -> Int
@@ -297,11 +297,11 @@ Prelude> p 10
 *** Exception: <interactive>:3:1-16: Non-exhaustive patterns in function p
 }{Pokretanje @code{p x} za bilo koju vrednost @code{x} različiti od @code{0} dovodi do izuzetka.}
 
-@p @def{Izuzetak} je stanje programa koje označava da je došlo do greške@note{Izuzeci se kreiraju uz pomoć @code{error :: [Char] -> a} funkcije koja se zbog prozvoljnog domena može postaviti u bilo koji izraz. Niska koja se prosleđuje ovoj funkcije je poruka koja će biti ispisana pri izuzetku. Ako tokom izvršavanja programa dođe do evaluacije funkcije @code{error}, tada će izvršavanje programa biti prekinuto, a poruka prosleđena @code{error} funkciji ispisana u terminalu.}, i ne predstavlja validnu vrednost. 
+@p @def{Izuzetak} je stanje programa koje označava da je došlo do greške@note{Izuzeci se kreiraju uz pomoć @code{error :: [Char] -> a} funkcije koja se zbog proizvoljnog domena može postaviti u bilo koji izraz. Niska koja se prosleđuje ovoj funkcije je poruka koja će biti ispisana pri izuzetku. Ako tokom izvršavanja programa dođe do evaluacije funkcije @code{error}, tada će izvršavanje programa biti prekinuto, a poruka prosleđena @code{error} funkciji ispisana u terminalu.}, i ne predstavlja validnu vrednost. 
 
 @p Postavlja se pitanje, zašto jezik poput Haskela dozvoljava da radimo sa parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kreirati programski jezik koji ne bi sadržao parcijalne funkcije a koji bi i dalje bio dovoljno ekspresivan za izražavanje svakog algoritma.
 
-@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajave kada meki rekurzivni algoritam može ući u beskonačnu petlju, a zatim izmenom tog algoritma obezbediti da do beskonačne petlje nikad ne dođe.
+@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajeve kada meki rekurzivni algoritam može ući u beskonačnu petlju, a zatim izmenom tog algoritma obezbediti da do beskonačne petlje nikad ne dođe.
 
 @section{Zadaci}
 
@@ -319,5 +319,5 @@ Prelude> p 10
 
 @problem{Za proizvoljan prirodan broj @m{n} definišemo njegov Kolacov niz na sledeći način: @m{x_0 = n}, @m{x_{m+1} = x_m / 2} ako je @m{x_n} parno, odnosno @m{x_{m+1} = 3 x_m + 1} ako je @m{x_m} neparno. Pritom ako je @m{x_{m+1} = 1} niz se prekida. Na primer Kolacov niz za @m{n = 12} je @m{12, 6, 3, 10, 5, 16, 8, 4, 2, 1}. Pretpostavlja se da će se Kolacov niz svakog prirodnog broja eventualno prekinuti, tj. da će se pojaviti @m{1} u njemu. Naći prirodan broj manji od @m{10000} koji ima najduži Kolacov niz.}
 
-@problem{@em{Metoda polovjenja intervala} je numerička metoda određivanja korena neprekidne funkcija tipa @m{\mathbb R\to \mathbb R}. Posmatrajmo interval @m{[a, b]}. Ako za funkciju @m{f} važi da je @m{f(a) < 0} i @m{f(b) > 0} (ili da je @m{f(a) > 0} i @m{f(b) < 0}) za neke brojeve @m{a < b}, tada zbog neprekidnosti znamo da postoji @m{x}, @m{a < x < b}, takvo da je @m{f(x) = 0}. Uzmimo @m{c = (a + b) / 2}. Ako je @m{f(c) \ne 0} postupak možemo da ponovimo za jedan od intervala @m{[a , c]} ili @m{[c, b]} (naravno, ako je @m{f(c) = 0}, postupak prekidamo). Na ovaj način dobijamo niz intervala čija dužina se prepolovljava, i za koje znamo da sadrže barem jedno rešenje jednačine @m{f(x) = 0}. Stoga, u @m{n} koraka možemo odrediti koren jednačine sa greškom manjom od @m{(b-a)/2^n}. Koristeći ovaj metod, naći koren polinoma @m{p(x) = 2x^3-4x^2-6x+2} na intervalu @m{[1, 4]} sa greškom ne većom od @m{0.001}.}
+@problem{@em{Metoda polovljenja intervala} je numerička metoda određivanja korena neprekidne funkcija tipa @m{\mathbb R\to \mathbb R}. Posmatrajmo interval @m{[a, b]}. Ako za funkciju @m{f} važi da je @m{f(a) < 0} i @m{f(b) > 0} (ili da je @m{f(a) > 0} i @m{f(b) < 0}) za neke brojeve @m{a < b}, tada zbog neprekidnosti znamo da postoji @m{x}, @m{a < x < b}, takvo da je @m{f(x) = 0}. Uzmimo @m{c = (a + b) / 2}. Ako je @m{f(c) \ne 0} postupak možemo da ponovimo za jedan od intervala @m{[a , c]} ili @m{[c, b]} (naravno, ako je @m{f(c) = 0}, postupak prekidamo). Na ovaj način dobijamo niz intervala čija dužina se prepolovljava, i za koje znamo da sadrže barem jedno rešenje jednačine @m{f(x) = 0}. Stoga, u @m{n} koraka možemo odrediti koren jednačine sa greškom manjom od @m{(b-a)/2^n}. Koristeći ovaj metod, naći koren polinoma @m{p(x) = 2x^3-4x^2-6x+2} na intervalu @m{[1, 4]} sa greškom ne većom od @m{0.001}.}
 

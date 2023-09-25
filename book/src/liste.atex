@@ -199,7 +199,7 @@ Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, 
 
 
 @example{
-@p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodnsika :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodnsika} je naravno tehnika rekurzije.
+@p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodniska :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodniska} je naravno tehnika rekurzije.
 
 @p Pretpostavimo da su nam date dve neprazne niske @code{igla} i @code{seno}@note{U literaturi je uobičajno da se niske imenuju @em{igla} i @em{seno}, jer to jasno sugreše u kojoj od niska očekujemo da se nalazi druga niska.}, i da se pitamo da li se @code{igla} sadrži u nisci @code{seno}. Tada postoje dve mogućnosti:
 
@@ -210,29 +210,29 @@ Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, 
 
 @p Ako je niska @code{seno} prazna, tada se niska @code{igla} nalazi u njoj ako i samo ako je @code{igla} prazna niska. Da bi proverili da li je neka lista (specijalno niska) prazna, možemo iskoristiti ugrаđenu funkciju @code{null :: [a] -> Bool}
 
-@p Na osnovu ove analize, implementacija @code{daLiJePodnsika} je jednostavna:
+@p Na osnovu ove analize, implementacija @code{daLiJePodniska} je jednostavna:
 
 @codeBlock{
-daLiJePodnsika :: [Char] -> [Char] -> Bool
-daLiJePodnsika igla "" = null igla 
-daLiJePodnsika igla seno =
-    if daLiJePocetak igla seno
+daLiJePodniska :: [Char] -> [Char] -> Bool
+daLiJePodniska igla "" = null igla 
+daLiJePodniska igla seno =
+    if daLiJePočetak igla seno
         then True
-        else daLiJePodnsika igla (tail seno)
+        else daLiJePodniska igla (tail seno)
 }
 
-@p Ostaje nam još da implementiramo funkiju @ccode{daLiJePocetak :: [Char] -> [Char] -> Bool} koja proverava da li prva prosleđena niska predstavlja početak druge prosleđene niske. Ponovo ćemo koristiti rekurziju, ali ćemo sada vršiti rekurziju po oba argumenta. 
+@p Ostaje nam još da implementiramo funkciju @ccode{daLiJePočetak :: [Char] -> [Char] -> Bool} koja proverava da li prva prosleđena niska predstavlja početak druge prosleđene niske. Ponovo ćemo koristiti rekurziju, ali ćemo sada vršiti rekurziju po oba argumenta. 
 
-@p Ako su glave obe prosleđene niske iste, tada možemo da nastavimo da poredimo repove. U suprotonom možemo da budemo sigurni da druga niska ne počinje sa prvom niskom. Baza indukcije su slučajevi u kojima je jedna od niski prazna. Ako je prva niska prazna, onda druga niska započinje prvom niskom. Ako je druga niska prazna, a prva niska nije prazna, tada znamo da se prva niska ne sadrži u drugoj nisci
+@p Ako su glave obe prosleđene niske iste, tada možemo da nastavimo da poredimo repove. U suprotnom možemo da budemo sigurni da druga niska ne počinje sa prvom niskom. Baza indukcije su slučajevi u kojima je jedna od niski prazna. Ako je prva niska prazna, onda druga niska započinje prvom niskom. Ako je druga niska prazna, a prva niska nije prazna, tada znamo da se prva niska ne sadrži u drugoj nisci
 
 
 @codeBlock{
-daLiJePocetak :: [Char] -> [Char] -> Bool
-daLiJePocetak "" _ = True
-daLiJePocetak _ "" = False
-daLiJePocetak (x:xs) (y:ys) =
+daLiJePočetak :: [Char] -> [Char] -> Bool
+daLiJePočetak "" _ = True
+daLiJePočetak _ "" = False
+daLiJePočetak (x:xs) (y:ys) =
     if x == y
-        then daLiJePocetak xs ys
+        then daLiJePočetak xs ys
         else False
 }
 
@@ -312,7 +312,7 @@ Reimplementirati funkciju @code{map}.
 }{
 @p Iskoristićemo ponovo tehniku rekurzije. Funkcija @code{map'} treba da primeni neku funkciju @code{f} na svaki element liste @code{l}. Ako je lista @code{l} prazna, tada je i @code{map f l} prazna lista. Ovaj slučaj predstavlja bazu rekurzije.
 
-@p Ako lista nije prazna, tada ćemo na glavu liste @code{x} primeniti funkciju @code{f}, čime dobijamo prvi element tražene liste. Za dobijanje ostatka liste, rekurzvno ćemo pozvati @code{map' f} nad repom liste @code{xs}.
+@p Ako lista nije prazna, tada ćemo na glavu liste @code{x} primeniti funkciju @code{f}, čime dobijamo prvi element tražene liste. Za dobijanje ostatka liste, rekurzivno ćemo pozvati @code{map' f} nad repom liste @code{xs}.
 
 @codeBlock{
 map' :: (a -> b) -> [a] -> [b]
@@ -342,7 +342,7 @@ ghci> foldr f 0 []
 0
 }
 
-@p Ako @code{foldr} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{f} nad jedinim elementom liste i inicijanom vrednošću (tj. @code{f 1 0}):
+@p Ako @code{foldr} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{f} nad jedinim elementom liste i inicijalnom vrednošću (tj. @code{f 1 0}):
 
 @terminal{
 ghci> foldr f 0 [1]
@@ -401,10 +401,10 @@ ghci> dani2
 }
 }
 
-@p Kada nad listom parova dobijenih @code{zip} funkcijemo primenjujemo @code{map} funkciju, tada je zgodinije koristiti funkciju @ccode{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}. Funkcija @code{zipWith} kombinuje dve liste element-po-element koristeći prosleđenu funkciju.
+@p Kada na rezultat @code{zip} funkcije primenjujemo @code{map} funkciju, tada je zgodnije koristiti funkciju @ccode{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}. Funkcija @code{zipWith} kombinuje dve liste element-po-element koristeći prosleđenu funkciju.
 
 @example{
-@p (@em{Nastavak prethodnog primera}) Listu numerisanih dana možmo pretvoriti u listu niski na sledeći način
+@p (@em{Nastavak prethodnog primera}) Listu numerisanih dana možemo pretvoriti u listu niski na sledeći način
 
 @terminal{
 ghci> f (a, b) = show a ++ ". " ++ b
@@ -462,9 +462,9 @@ ghci> šifra
 šifrujKarakter k = snd (head šifrovano)
   where
     šifrovano = filter (\par -> fst par == k) šifra
-}{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parave čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{sifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{šifrujKarakter 'A' = 'D'}.}
+}{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parove čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{sifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{šifrujKarakter 'A' = 'D'}.}
 
-@p Funkcija @code{šifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{šifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalinih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head šifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{šifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
+@p Funkcija @code{šifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{šifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalnih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head šifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{šifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
 
 @codeBlock{
 šifrujKarakter :: Char -> Char
@@ -487,7 +487,7 @@ ghci> šifruj "NAPAD NA GALE VECERAS U OSAM"
 "QDSDG QD JDOH YHFHUDV X RVDP"
 }{Pošto se razmak @code{' '} ne nalazi u listi @code{šifra}, važi @code{šifrujKarakter ' ' = ' '}. Samim tim, prilikom šifrovanja razmaci se čuvaju.}
 
-@p Funkcija koja dešifruje poruku je potpuno analogna funkciji koja je šifruje, samo što je uloga koordinata obrnuta. Pretragu vršimo po drugoj koordinati, a vraćmo prvu:
+@p Funkcija koja dešifruje poruku je potpuno analogna funkciji koja je šifruje, samo što je uloga koordinata obrnuta. Pretragu vršimo po drugoj koordinati, a vraćamo prvu:
 
 @codeBlock{
 dešifrujKarakter :: Char -> Char
@@ -507,7 +507,7 @@ Implementirati Cezarovu šifru sa proizvoljnim pomerajem @m{n}.
 
 
 @problem{
-Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tajne poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljavmo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
+Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tajne poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljamo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
 }
 
 
@@ -534,7 +534,7 @@ Naći sve početke date liste. Na primer @code{poceci [1, 2, 3]} bi trebalo da n
 }
 
 @problem{
-Napisati funkciju @code{kodiraj :: String -> [(Char, Int)]} koja kodira nisku tako što je predstavlja kao listu uređenih parova karatera i prirodnih brojeva. Broj označava dužinu uzastopnog ponavljanja datog karaktera. Na primer: @code{kodiraj "aaaabb"} daje @ccode{[('a', 4), ('b', 2)]}, a @code{kodiraj "Google"} daje @ccode{[('G', 1), ('o', 2), ('g', 1), ('l', 1), ('e', 1)]}. Napisati i funkciju @code{dekodiraj :: [(Char, Int)] -> String}.
+Napisati funkciju @code{kodiraj :: String -> [(Char, Int)]} koja kodira nisku tako što je predstavlja kao listu uređenih parova karaktera i prirodnih brojeva. Broj označava dužinu uzastopnog ponavljanja datog karaktera. Na primer: @code{kodiraj "aaaabb"} daje @ccode{[('a', 4), ('b', 2)]}, a @code{kodiraj "Google"} daje @ccode{[('G', 1), ('o', 2), ('g', 1), ('l', 1), ('e', 1)]}. Napisati i funkciju @code{dekodiraj :: [(Char, Int)] -> String}.
 }
 
 @problem{
@@ -549,6 +549,6 @@ Implementirati funkciju @ccode{srednjaVrednost :: [Float] -> Float} koja računa
 }
 
 @problem{
-Data je lista prirodnih brojeva sa @m{n>0} članova. Element na poziciji @m{k \le n} predstavlja cenu neke akcije na berzi u @m{k}-tom danu. Potrebno je u jednom od ponuđenih dana kupiti akciju, a zatim u nekom od narednih dana (uključujići i dan kupovine) i prodati akciju. Naravno, cilj je ostvariti što veći profit (profit računamo kao razliku prodajne i kupovne cene).
+Data je lista prirodnih brojeva sa @m{n>0} članova. Element na poziciji @m{k \le n} predstavlja cenu neke akcije na berzi u @m{k}-tom danu. Potrebno je u jednom od ponuđenih dana kupiti akciju, a zatim u nekom od narednih dana (uključujući i dan kupovine) i prodati akciju. Naravno, cilj je ostvariti što veći profit (profit računamo kao razliku prodajne i kupovne cene).
 Napisati funkciju @code{profit :: [Int] -> Int} koja uzima cene akcija tokom vremena, i vraća najveći profit koji je moguće ostvariti trgovinom akcija. Akcija se može samo jednom kupiti i prodati, prodaja se mora odviti nakon kupovine ili istog dana. Pretpostaviti da prosleđena lista nije prazna. Na primer @code{profit [7,1,5,3,6,4] = 5} jer kupovinom drugog dana i prodajom petog dana ostvarujemo profit \(6 - 1 = 5\). Ne možemo ostvariti dobit \(7 - 1 = 5\) jer se prodaja mora ostvariti nakon kupovine.
 }

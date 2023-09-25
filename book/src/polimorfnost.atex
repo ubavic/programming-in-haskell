@@ -80,7 +80,7 @@ head :: [a] -> a
 head x:_ = x
 }{Poklapanjem oblika liste, mozemo rastaviti listu na glavu i rep.}
 
-@p U ovoj funkciji, vidimo da se tipska promenljiva pojavljuje unutar zagrada @code{[]}. Prema tome @code{[a]} ne predstavlja svaki tip, vec predstavlja svaki tip lista. Npr. tip @code{Int} nije oblika @code{[a], i stoga @code{head 3} nije dobro tipiziran izraz. Sa druge strane, ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
+@p U ovoj funkciji, vidimo da se tipska promenljiva pojavljuje unutar zagrada @code{[]}. Prema tome @code{[a]} ne predstavlja svaki tip, vec predstavlja svaki tip lista. Npr. tip @code{Int} nije oblika @code{[a]}, i stoga @code{head 3} nije dobro tipiziran izraz. Sa druge strane, ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
 
 @p I ostale funkcije koje smo do sada koristili za rad sa listama (poput @code{tail}, @code{init}, @code{last}, @code{null}) imaju polimorfne tipove. Samim tim te funkcije se mogu koristiti za listom bilo kog tipa.
 
@@ -96,12 +96,12 @@ Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
 @p prazna lista @code{[]} je sama za sebe vrednost tipa @code{[a]}, i samim tim predstavlja praznu listu bilo kog tipa. Ali to ne znaci da, na primer, prazne liste u izrazima @code{[] ++ [True]} i @code{[] ++ ['a']}, predstavljaju iste vrednosti. Jedna od navedenih praznih lista je tipa @code{[Bool]} a druga @code{[Char]}. Ove dve vrednosti su neuporedive, ali im zajednicko ime@code{Kao sto dve razlicite osobe mogu da dele isto ime}.
 }
 
-@p Iz prethodnih redova vidimo da polimorfne vrednosti poprimaju razliciti tip u zavisnoti od izraza u kojima se nalaze. Upravo otuda i naziv @em{poli-morfne}. O ovome će biti jos reči u nastavku lekcije...   
+@p Iz prethodnih redova vidimo da polimorfne vrednosti poprimaju razliciti tip u zavisnosti od izraza u kojima se nalaze. Upravo otuda i naziv @em{poli-morfne}. O ovome će biti jos reči u nastavku lekcije...   
 
-@p Ponekad nije dovoljno da tip poseduje samo jednu promeljivu. Ako se u tipu nalaze dve ili vise razlicitih promenljiva, tada su te promenljive nezavisne.
+@p Ponekad nije dovoljno da tip poseduje samo jednu promenljivu. Ako se u tipu nalaze dve ili vise razlicitih promenljiva, tada su te promenljive nezavisne.
 
 @example{
-@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugog uređenog para. Karakteristicno za uredjene parove je da kordinate mogu posedovati različite tipove. Stoga domen funkcije @code{fst} moramo zapisati kao @code{(a, b)}, a samim tim je kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}.
+@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugog uređenog para. Karakteristicno za uređene parove je da koordinate mogu posedovati različite tipove. Stoga domen funkcije @code{fst} moramo zapisati kao @code{(a, b)}, a samim tim je kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}.
 
 @p Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}. U ovom tipu, tipska promenljiva @code{b} vezuje tip druge koordinate sa tipom povratne vrednosti (tj. kodomenom).
 }
@@ -111,11 +111,11 @@ Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
 
 @problem{Implementirati funkciju koja vraća prvu koordinatu proizvoljne uređene trojke.}
 {
-@p Proizvoljna uredjena trojka ima tip oblika @code{(A, B, C)} gde su @code{A}, @code{B}, @code{C} neki proizvoljni tipovi. Stoga polimorfni tip koji predstavja svaku uredjenu trojku je @code{(a, b, c)}. Podudaranjem oblika mozemo konstruisati narednu funkciju:
+@p Proizvoljna uređena trojka ima tip oblika @code{(A, B, C)} gde su @code{A}, @code{B}, @code{C} neki proizvoljni tipovi. Stoga polimorfni tip koji predstavlja svaku uređenu trojku je @code{(a, b, c)}. Podudaranjem oblika mozemo konstruisati narednu funkciju:
 @codeBlock{
 fst3 :: (a, b, c) -> a
 fst3 (x, _, _) = x
-}{Pošto ne koristimo vrednosti druge i treće kordinate, te vrednosti ne moramo da vezujemo novim imenom, već možemo iskoristi džoker.}
+}{Pošto ne koristimo vrednosti druge i treće koordinate, te vrednosti ne moramo da vezujemo novim imenom, već možemo iskoristi džoker.}
 }
 
 @p Iz prethodnih primera , vidimo da su tipovi sa slobodnim tipskim promenljivama izuzetno korisni. Mnoge funkcije iz @em{Prelude}-a koje smo vec koristili su parametarski polimorfne. Ipak, tehnika parametarskog polimorfizma i dalje ne resava konkretan problem koji smo opisali na početku lekcije. Tada smo hteli da implementiramo funkciju koja bi prihvatala razne numeričke tipove. Tu funkciju ne mozemo prosto definisati sa sledećim kodom, koliko god to bilo privlačno:
@@ -129,7 +129,7 @@ f x = 253 * x + 17
 
 @section{@em{Ad-hoc} polimorfizam}
 
-@ Slobodne tipske promenljive mogu predstvljati bilo koji tip. Ponekad je pozeljno ograniciti tipsku promenljivu na neku specificnu kolekciju tipova. Upravo takva ogranicenja se izrazavaju kroz klase tipova.
+@ Slobodne tipske promenljive mogu predstavljati bilo koji tip. Ponekad je pozeljno ograniciti tipsku promenljivu na neku specificnu kolekciju tipova. Upravo takva ogranicenja se izrazavaju kroz klase tipova.
 
 @p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Cesto te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
@@ -147,12 +147,12 @@ ghci> show 2
 }
 
 @example{
-@p Ugradjena klasa @code{Num} predstavlja sve tipove cije vrednosti se mogu sabirati, oduzimati i mnoziti. Izmedju ostalog, tipovi @code{Int}, @code{Integer}, @code{Float} i @code{Double} pripadaju ovoj klasi.
+@p Ugrađena klasa @code{Num} predstavlja sve tipove cije vrednosti se mogu sabirati, oduzimati i mnoziti. Između ostalog, tipovi @code{Int}, @code{Integer}, @code{Float} i @code{Double} pripadaju ovoj klasi.
 }
 
-@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Cinjenicu da neki tip @code{T} prikada klasi @code{C}, oznacavamo sa @code{C T}. 
+@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Cinjenicu da neki tip @code{T} pripada klasi @code{C}, oznacavamo sa @code{C T}. 
 
-@p Koriscenjem klasa, moguce je ograniciti tipsku promenljivu na neku odredjenu klasu. @def{Tipsko ogranicenje} kojim se promenljiva @code{C} ogranicava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ogranicenja se razdvajaju od tipa sa strelicom @code{=>}. U slucaju da postoji vise ogranicenja, tada se ta ogranicenja navode u obliku uredjene @m{n}-torke.
+@p Koriscenjem klasa, moguce je ograniciti tipsku promenljivu na neku određenu klasu. @def{Tipsko ogranicenje} kojim se promenljiva @code{C} ogranicava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ogranicenja se razdvajaju od tipa sa strelicom @code{=>}. U slucaju da postoji vise ogranicenja, tada se ta ogranicenja navode u obliku uređene @m{n}-torke.
 
 @example{
 @p Tip @code{Show a => a} oznacava sve tipove koji pripadaju klasi @code{Show}.
@@ -182,7 +182,7 @@ ghci> show 2
 
 @p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}. To znači da vrednosti ovih tipova možemo da poredimo sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=} kao i da pretvaramo u niske sa funkcijom @code{show}.
 
-@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripdaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo sa operatorima @code{+}, @pre{-}, @code{*}. Tipovi @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
+@p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripadaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo sa operatorima @code{+}, @pre{-}, @code{*}. Tipovi @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
 
 @p Ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
@@ -226,7 +226,7 @@ True
 @problem{
 Da li tip @code{[(Int, Char)]} pripada klasi @code{Eq}?
 }{
-@p Da. Oba tipa @code{Int} i @code{Char} pripdaju klasi @code{Eq}. Prema tome, i tip @code{(Int, Char)} pripada klasi @code{Eq}, jer uređen par dva tipa iz klase @code{Eq} takođe prpada klasi @code{Eq}. Sada, iz toga što @code{(Int, Char)} pripada klasi @code{Eq} sledi da i tip @code{[(Int, Char)]} pripada klasi @code{Eq}.
+@p Da. Oba tipa @code{Int} i @code{Char} pripadaju klasi @code{Eq}. Prema tome, i tip @code{(Int, Char)} pripada klasi @code{Eq}, jer uređen par dva tipa iz klase @code{Eq} takođe pripada klasi @code{Eq}. Sada, iz toga što @code{(Int, Char)} pripada klasi @code{Eq} sledi da i tip @code{[(Int, Char)]} pripada klasi @code{Eq}.
 
 @p I zaista, vrednosti tipa @code{[(Int, Char)]} možemo da poredimo sa @code{==} i @code{/=}:
 @terminal{
@@ -252,7 +252,7 @@ ghci> :type (True, 'a')
 (Bool, Char) 
 }{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 0}, itd...}
 
-@p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celokunog izraza @code{[Bool]}. Da bismo razumeli proces zaključivanja tipa izraza @code{length [True, False]}, neophodno je da razumemo pojam @em{tipa funkcije} što će biti prikazano u narednoj lekciji.
+@p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celog izraza @code{[Bool]}. Da bismo razumeli proces zaključivanja tipa izraza @code{length [True, False]}, neophodno je da razumemo pojam @em{tipa funkcije} što će biti prikazano u narednoj lekciji.
 
 @p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numeričkih literala:
 

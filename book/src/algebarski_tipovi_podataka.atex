@@ -323,7 +323,7 @@ data Osoba = MkOsoba @@{
     ime :: String,
     prezime :: String,
     godinaRođenja :: Int,
-    mestoStanovaja :: String,
+    mestoStanovanja :: String,
     adresaStanovanja :: String,
 @@}
 }
@@ -337,12 +337,12 @@ osoba2 = MkOsoba @@{
     ime = "Jovana",
     prezime = "Jovanović",
     godinaRođenja = 1990,
-    mestoStanovaja = "Novi Sad",
+    mestoStanovanja = "Novi Sad",
     adresaStanovanja = "Zmaj Jovina",
 @@}
 }{Korišćenjem sintakse za zapise, programer nije u obavezi da ispoštuje redosled koordinata, ali mora navesti vrednosti za svaku koordinatu.}
 
-@p Definisanjem tipa @code{Osoba} sintaksom za zapise, zapravo je kreirano šest funkcija @code{ime :: Osoba -> String}, @code{prezime :: Osoba -> String}, @code{godinaRođenja :: Osoba -> Int}, @code{mestoStanovaja :: Osoba -> String}, @code{adresaStanovanja :: Osoba -> String}. Ove funkcije se nazivaju @def{projekcije}, i vraćaju vraćaju odgovarajuće koordinate:
+@p Definisanjem tipa @code{Osoba} sintaksom za zapise, zapravo je kreirano šest funkcija @code{ime :: Osoba -> String}, @code{prezime :: Osoba -> String}, @code{godinaRođenja :: Osoba -> Int}, @code{mestoStanovanja :: Osoba -> String}, @code{adresaStanovanja :: Osoba -> String}. Ove funkcije se nazivaju @def{projekcije}, i vraćaju vraćaju odgovarajuće koordinate:
 
 @terminal{
 ghci> :t ime
@@ -353,7 +353,7 @@ ghci> ime osoba2
 "Jovana"
 }
 
-@p Prema tome, labele zapisa se koriste poput getera u objektno orijentisanim jezicima@note{Na primer, kôd @code{ime osoba2} odgovara nečemu što bi se Javi/C++-u napisalo kao @code{osoba2.ime}.}. Što se tiče promene vrednosti koordinate (odnosno setera), to se može izvrštiti navođenjem labele sa novom vrednošću koordinate:
+@p Prema tome, labele zapisa se koriste poput getera u objektno orijentisanim jezicima@note{Na primer, kôd @code{ime osoba2} odgovara nečemu što bi se Javi/C++-u napisalo kao @code{osoba2.ime}.}. Što se tiče promene vrednosti koordinate (odnosno setera), to se može izvršiti navođenjem labele sa novom vrednošću koordinate:
 
 @terminal{
 ghci> ime osoba1
@@ -361,7 +361,7 @@ ghci> ime osoba1
 ghci> osoba3 = osoba1@@{ime = "Miloš"@@}
 ghci> ime osoba3
 "Miloš"
-}{Vrednosti kordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
+}{Vrednosti koordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
 
 @p Pri poklapanju šablona, moguće je "uhvatiti" samo labele koje su potrebne. Tako bi se funkcije od malopre mogla ovako napisati:
 
@@ -371,7 +371,7 @@ punoIme (MkOsoba @@{ime = ime, prezime = prezime@@})
     = ime ++ " " ++ prezime
 
 punaAdresa :: Osoba -> String
-punaAdresa (MkOsoba @@{mestoStanovaja = mesto, adresaStanovanja = adresa@@})
+punaAdresa (MkOsoba @@{mestoStanovanja = mesto, adresaStanovanja = adresa@@})
     = mesto ++ ", " ++ adresa
 
 punoletna :: Int -> Osoba -> MyBool
@@ -386,11 +386,11 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
 
 @problem{Kreirati algebarski tip podataka @code{Vektor} koji predstavlja vektor u trodimenzionalnom prostoru (Koristiti @code{Float} tip za koordinate). Kreirati funkcije za sabiranje vektora, množenje vektora skalarem, skalarnog množenja vektora, vektorskog množenja vektora i računanja dužine vektora.}
 
-@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše koverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednui vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algabarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljanu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
+@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše konverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednu vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algabarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadrži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljnu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
 
-@problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravugaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
+@problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravougaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
 
-@problem{Kreirati tip @code{KompleksanBroj}. Implemenitari funkcije koje sabiraju, oduzimaju, množe i dele kompleksne brojeve.}
+@problem{Kreirati tip @code{KompleksanBroj}. Implementirati funkcije koje sabiraju, oduzimaju, množe i dele kompleksne brojeve.}
 
-@problem{Kreirati tip @code{Matrica} koji predstavlja matricu dimenzija @m{3\times 3}. Kreirati funkcije koje sabiraju matrice, skalirraju matricu, i računaju determinantu matrice. Kreirati tip @code{Vektor} koji predstavlja vektor trodimenzionalno prostora. Kreirati funkciju koja množi matricu i vektor.}
+@problem{Kreirati tip @code{Matrica} koji predstavlja matricu dimenzija @m{3\times 3}. Kreirati funkcije koje sabiraju matrice, skaliraju matricu, i računaju determinantu matrice. Kreirati tip @code{Vektor} koji predstavlja vektor trodimenzionalno prostora. Kreirati funkciju koja množi matricu i vektor.}
 

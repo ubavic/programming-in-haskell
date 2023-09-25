@@ -102,7 +102,7 @@ data ListaBool = DodajBool Bool ListaBool | PraznaListaBool
 
 @codeBlock{
 data Lista a = Dodaj a (Lista a) | PraznaLista
-}{Nakon konstruktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstrakti), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homegenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstruktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
+}{Nakon konstruktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstrakti), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homogenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstruktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
 
 @p Sa apstraktnim tipom se lako mogu predstaviti liste vrednosti bilo kog tipa. Na primer, sada @code{Lista Int} predstavlja tip koji odgovara tipu @code{ListaBrojeva} od malopre, a  @code{Lista Bool} odgovara tipu @code{ListaBool} od malopre. Primetimo da sada konstruktori @code{Dodaj}, @code{PraznaLista} imaju isto ime za sve tipove, što dodatno olakšava zapis.
 
@@ -156,13 +156,13 @@ instance Show a => Show (Lista a) where
 data [] a = [] | a : ([] a) 
 }
 
-@p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sarže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infisknog konstruktora sa odgovarajućim @code{infix} dekleracijama.}, te se navodi između argumenata.
+@p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sadrže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infiksnog konstruktora sa odgovarajućim @code{infix} dekleracijama.}, te se navodi između argumenata.
 
 @p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
 
 @section{Stabla}
 
-@p Za liste se kaže da su @em{linearne} strukture podataka, jer elementi na prirodan način čine niz. Svaki element liste, osim poslednjeg, poseduje jedinsvenog sledbenika. Isto tako, svaki element, osim prvog, poseduje jedinstvenog prethodnika. Koliko god liste bile korisne, liste nisu uvek najbolji izbor za reprezentaju podataka. 
+@p Za liste se kaže da su @em{linearne} strukture podataka, jer elementi na prirodan način čine niz. Svaki element liste, osim poslednjeg, poseduje jedinstvenog sledbenika. Isto tako, svaki element, osim prvog, poseduje jedinstvenog prethodnika. Koliko god liste bile korisne, liste nisu uvek najbolji izbor za reprezentaciju podataka. 
 
 @p @def{Stablo} je rekurzivna struktura podataka sačinjena od @em{čvorova}, u kojoj svaki čvor sadrži @em{vrednost} i nekoliko manjih stabala (od kojih neka mogu biti prazna). Specijalno, @def{binarno stablo} je stablo u kom svaki čvor sadrži vrednost i dva manja stabla@note{Koja pritom mogu biti prazna}.
 

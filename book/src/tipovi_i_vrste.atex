@@ -119,7 +119,7 @@ newtype NoviTip = Konst PostojeciTip
 newtype MyBool = MkMyBool Bool
 }{Često se za ime konstruktora uzima ime tipa ispred kojeg se stavlja @em{Mk} (skraćeno od @em{Make}), jer konstruktor predstavlja jedini način da se "napravi" vrednost tipa @code{MyBool}.}
 
-@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriri da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
+@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriti da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
 
 @terminal{
 ghic> a = (MkMyBool True) || (MkMyBool False)
@@ -163,7 +163,7 @@ ghci> a
 
 @p Razlog nastanka greške je taj što program @em{GHCi} ne zna kako da ispiše vrednost tipa @code{MyBool}. Za ispisivanje svih vrednosti, @em{GHCi} koristi @code{show} funkciju koja je deklarisana u @code{Show} klasi tipova. Kako tip @code{MyBool} nije instanca ove klase, @em{GHCi} ne može da iskoristi funkciju @code{show} sa vrednostima tipa @code{MyBool}.
 
-@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno u lekciji @em{Klase tipova}. Srećom, u ovom slučaju Haskel može instaciranje automatski da uradi. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
+@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno u lekciji @em{Klase tipova}. Srećom, u ovom slučaju, instanciranje je automatsko. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
 
 @codeBlock{
 newtype MyBool = MkMyBool Bool deriving Show
@@ -189,7 +189,7 @@ newtype Eur = MkEur Double
 newtype Usd = MkUsd Double
 }
 
-@p Vrednosti oba definisana tipa sadrže suštinski iste podatke (jedan @em{double} broj). Kako su u pitanju različiti tipovi, kompajler neće dozvoliti prozvoljno mešanje ovih tipova (kao što bi bio slučaj sa tipskim sinonimima). Na taj način, na primer, možemo napisati funkciju koju je moguće isključvo primeniti na svote novca u evrima. Pokušaj primene takve funkcije na svote u dolarima dovešće do tipske greške i program neće biti iskompajliran.
+@p Vrednosti oba definisana tipa sadrže suštinski iste podatke (jedan @em{double} broj). Kako su u pitanju različiti tipovi, kompajler neće dozvoliti proizvoljno mešanje ovih tipova (kao što bi bio slučaj sa tipskim sinonimima). Na taj način, na primer, možemo napisati funkciju koju je moguće isključivo primeniti na svote novca u evrima. Pokušaj primene takve funkcije na svote u dolarima dovešće do tipske greške i program neće biti iskompajliran.
 
 @p Ograničenja poput opisanih ne deluju mnogo korisna kada se posmatraju mali programi. Ali sa programima s milionskim brojem linija ovakva ograničenja značajno "umanjuju brigu" pri menjanju koda. Na primer, promena funkcija koje koriste tip @code{Eur} neće uopšte uticati na funkcije koje koriste tip @code{Usd}.
 
@@ -203,7 +203,7 @@ newtype Usd = MkUsd Double
 @p Ponekad je slučaj da se u kodu konstruiše nekoliko sličnih tipova, koji se samo razlikuju u jednom "delu":
 
 @example{
-@p Za predstavljanje trodimenzionalnih vektora možemo konstrisati tipove:
+@p Za predstavljanje trodimenzionalnih vektora možemo konstruisati tipove:
 
 @codeBlock{
 newtype VecInt = MkVecInt (Int, Int, Int)
@@ -227,7 +227,7 @@ sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y
 @p Kao što vidimo, svaki numerički tip (@code{Int}, @code{Float}, @code{Double}) zahteva posebnu definiciju odgovarajućeg tipa vektora, što dovodi do toga da imamo mnogo međusobno sličnih definicija.
 }
 
-@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smilsu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promeljive@note{Ovaka definicija podesća na podudaranje oblika kod "običnih" funkcija.}.
+@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smislu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promeljive@note{Ovaka definicija podseća na podudaranje oblika kod "običnih" funkcija.}.
 
 @example{
 @p Za jednobraznu konstrukciju trodimenzionalnih vektora, možemo koristiti naredni apstraktni tip
@@ -245,7 +245,7 @@ sumVecInt :: Vec Int -> Vec Int -> Vec Int
 sumVecInt (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 
 sumVecFloat :: Vec Float -> Vec Float -> Vec Float
-sumVecFlaot (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecFloat (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
 
 sumVecDouble :: Vec Double -> Vec Double -> Vec Double
 sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
@@ -267,9 +267,9 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipove. U tom smilsu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
 
-@p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduse, oba abstraktna tipa imaju specificnu sintaksu, koje se razlikuje od onog sto smo gore opisali.
+@p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduše, oba apstraktna tipa imaju specificnu sintaksu, koja se razlikuje od onog što smo gore opisali.
 
-@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obelezava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Mozda ce biti jasnije ako @code{[A]} zapisemo kao @code{[] A}. Pomalo zbunjujuce, ali i konstruktor @em{vrednosti} prazne liste se takodje oznacava sa @code{[]}. Osim tog konstruktora, vrednosti liste se mogu konstruisati i sa @code{:} (koji takodje ima posebnu sintaksu koja dodatno uvodi zabunu)}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tacno @code{[]} definisan, i dodatno cemo razjasniti ovaj tip
+@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Mozda ce biti jasnije ako @code{[A]} zapisemo kao @code{[] A}. Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}. Osim tog konstruktora, vrednosti liste se mogu konstruisati i sa @code{:} (koji takođe ima posebnu sintaksu koja dodatno uvodi zabunu)}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
 
 @p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno oznacava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi nista drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jezik.
 
@@ -278,7 +278,7 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Apstraktni tipovi jesu funkcije koje tipove preslikavaju u tipove. Ali kao i sa svim preslikavanjima, potrebno je biti pažljiv pri primeni funkcija na vrednost.
 
-@p Vratimo se za tenutak korak u nazad, i posmatrajmo vrednosti. Sistem tipova nam govori nema smisla primeniti funkciju tipa @code{Int -> Int} na vrednost tipa @code{Char}. Još manje smisla ima primena vrednosti tipa @code{Bool} na vrednost tipa @code{Int}, jer prva vrednost nije čak ni funkcija.
+@p Vratimo se za trenutak korak u nazad, i posmatrajmo vrednosti. Sistem tipova nam govori nema smisla primeniti funkciju tipa @code{Int -> Int} na vrednost tipa @code{Char}. Još manje smisla ima primena vrednosti tipa @code{Bool} na vrednost tipa @code{Int}, jer prva vrednost nije čak ni funkcija.
 
 @p Iz istih razloga potrebno je klasifikovati tipove i apstraktne tipove na sličan način kao što su vrednosti klasifikovane u tipove. Drugim rečima, potrebno je uvesti pojam "tipa" za tipove@note{Klase tipova jesu kolekcije tipova, ali su nedovoljne za klasifikaciju koja nam je potrebna. Klase tipova nisu disjunktne (jedan isti tip može pripadati različitim klasama), a nama su ovde potrebne disjunktne kolekcije.}. Ovakav "tip tipa" nazivamo @def{vrsta}@note{@em{kind}}.
 
@@ -312,7 +312,7 @@ data A a b c = MkA (a, [b], Int -> c)
 
 
 @example{
-@p Nastavimo sa prethofnim primerom u interaktivnom okruzenju:
+@p Nastavimo sa prethodnim primerom u interaktivnom okruzenju:
 @terminal{
 ghci> data A a b c = MkA (a, [b], Int -> c)
 A :: * -> * -> * -> *

@@ -51,7 +51,7 @@ sati_u_danu = 24
 
 @section{Izvršavanje Haskel koda}
 
-@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operatora. Operatori i jesu funkcije koje se zapisuju u takozvanom @em{infisksnom} zapisu...}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operatora. Operatori i jesu funkcije koje se zapisuju u takozvanom @em{infiksnom} zapisu...}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -232,7 +232,7 @@ ghci> b
 
 @section{Prelom i nazubljivanje}
 
-@p Često nije zgodno pisati ceo @em{let in} ili @em{where} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostra na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo neformalna pravila koja dobro sažimaju tehnička pravila:
+@p Često nije zgodno pisati ceo @em{let in} ili @em{where} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostora na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo neformalna pravila koja dobro sažimaju tehnička pravila:
 
 @list{
 @li Nazubljivanje Haskel koda se vrši isključivo sa razmacima.
@@ -246,12 +246,12 @@ ghci> b
 @p Drugo pravilo je takođe jednostavno, i njim se zabranjuje nazubljivanje samog početka neke definicije:
 
 @codeBlock{
-dobradefinicija = 1
+dobraDefinicija = 1
 
   lošaDefinicija = 1
 }
 
-@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Phyton} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri kôda su primeri validnog preloma istog izraza:
+@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Phyton} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri koda su primeri validnog preloma istog izraza:
 
 @codeBlock{
 a = 10 * 10 + 1

@@ -17,11 +17,11 @@
 }
 
 @example{
-@p Funkcija @m{c \colon \mathbb N \to \mathbb N} definisana sa @m{c(x) = 1} svakom prirodnom broju pridružuje isti broj - broj @m{1}. Za funkciju @m{c} kažemo da je @def{konstantna funkcija} jer je njena vrednost konstantna bez obrzira na vrednost @m{x}.
+@p Funkcija @m{c \colon \mathbb N \to \mathbb N} definisana sa @m{c(x) = 1} svakom prirodnom broju pridružuje isti broj - broj @m{1}. Za funkciju @m{c} kažemo da je @def{konstantna funkcija} jer je njena vrednost konstantna bez obzira na vrednost @m{x}.
 }
 
 @example{
-@p Neka je @m{P} skup svih tačaka jedne ravni, a @m{T} skup svih duži te ravni. Definišmo funkciju @m{s} koja svakoj duži iz @m{T} pridružuje središte te duži. Domen funkcije @m{s} je @m{T}, kodomen je @m{P}, a tip je @m{T \to P}.
+@p Neka je @m{P} skup svih tačaka jedne ravni, a @m{T} skup svih duži te ravni. Definišimo funkciju @m{s} koja svakoj duži iz @m{T} pridružuje središte te duži. Domen funkcije @m{s} je @m{T}, kodomen je @m{P}, a tip je @m{T \to P}.
 }
 
 @example{
@@ -76,7 +76,7 @@ ghci> g 10
 }{Izraz @code{g 10} shvatamo kao @m{g(10)}. Nismo ranije napomenuli, ali dužina razmaka (dokle god je taj razmak u jednoj liniji), ne igra nikakvu ulogu.}
 }
 
-@p Svaki izraz oblika @code{m n}, gde su @code{m} i @code{n} neki izrazi, nazivamo @def{aplikacija}@note{eng. @em{aplication} - primena}. U Haskelu, svaka aplikacija predstavlja pokušaj primene izraza @code{m} na izraz @code{n}. Međutim, @code{m n} nema smisla ako @code{m} nije funkcija. Na primer, "primena" @code{'a' 'b'} daje grešku
+@p Svaki izraz oblika @code{m n}, gde su @code{m} i @code{n} neki izrazi, nazivamo @def{aplikacija}@note{eng. @em{application} - primena}. U Haskelu, svaka aplikacija predstavlja pokušaj primene izraza @code{m} na izraz @code{n}. Međutim, @code{m n} nema smisla ako @code{m} nije funkcija. Na primer, "primena" @code{'a' 'b'} daje grešku
 
 @terminal{
 ghci> 'a' 'b'
@@ -240,7 +240,7 @@ ghci> aritm 20 100
 
 @p Kog tipa je funkcija @code{aritm}? Za trenutak pretpostavimo da su parametri @code{x} i @code{y} tipa @code{Double}@note{Zapravo, za ovako napisano definiciju kompajler će zaključiti da su @code{x} i @code{y} tipa @code{Frac a => a}, ali to nas ne brine trenutno.}. Funkcija @code{aritm} uzima vrednost tipa @code{Double} i vraća neku funkciju, nazovimo je @code{g}. Funkcija @code{g} uzima i vraća vrednost tipa @code{Double} te je njen tip @code{Double -> Double}. Sada možemo da zaključimo da funkcija @code{aritm} poseduje tip @code{Double -> (Double -> Double)} jer uzima vrednost tipa @code{Double} i vraća vrednost tipa @code{Double -> Double}.
 
-@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametara funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b))} na vrednost tipa @code{a1} dobija se funkcija tipa @ccode{a2 -> (a3 -> (... -> (aN -> b)))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @ccode{a3 -> (... -> (aN -> b))}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
+@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b)))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametara funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b)))} na vrednost tipa @code{a1} dobija se funkcija tipa @ccode{a2 -> (a3 -> (... -> (aN -> b)))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @ccode{a3 -> (... -> (aN -> b))}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
 
 @p Funkcija koja "uzima" ili "vraća" neku drugu funkciju naziva se @def{funkcija višeg reda}. Mnogi programski jezici nemaju podršku za funkcije višeg reda, ali kao što vidimo, u Haskelu je ovaj pojam je sasvim prirodan.
 
@@ -319,7 +319,7 @@ Rešenja @m{x_1} i @m{x_2} kvadratne jednačine @m{ax^2+bx+c=0} su data sa @em{k
 
 @problem{
 Napisati funkciju @ccode{primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))} koja uzima jednu funkciju @code{f :: Int -> Bool}, jedan uređen par tipa @code{(Int, Int)}, i vraća uređen par koji se dobija primenom @code{f} na svaku koordinatu uređenog para.}{
-@p Kada se @code{primeni} primeni na neku funkciju @code{f}, potreno je da dobijemo lambda funkciju koja uzima par i vraća par dobijen primenom @code{f} na svaku od koordinata. Ova lambda funkcija se može zapisati kao @ccode{\par -> (f (fst par), f (snd par))}. Jedino što je potrebno je da uvedemo i @code{f} kao jedan parametar, tj. da napravimo apstrakciju po @code{f}. Time dobijamo:
+@p Kada se @code{primeni} primeni na neku funkciju @code{f}, potrebno je da dobijemo lambda funkciju koja uzima par i vraća par dobijen primenom @code{f} na svaku od koordinata. Ova lambda funkcija se može zapisati kao @ccode{\par -> (f (fst par), f (snd par))}. Jedino što je potrebno je da uvedemo i @code{f} kao jedan parametar, tj. da napravimo apstrakciju po @code{f}. Time dobijamo:
 
 @codeBlock{
 primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))
@@ -345,7 +345,7 @@ ghci> primeni paran (2, 7)
 @p Za naredne zadatke neophodno je podsetiti se funkcija za rad sa listama iz prethodne lekcije: @code{length}, @code{head}, @code{last}, @code{init}, @code{tail}, @code{reverse}, @code{elem}.
 
 @problem{
-Napisati funkciju @code{inicijali :: [Char] -> ([Char] -> [Char])} koja od dve niske koje predstavlaju ime i prezime pravi inicijale. Na primer @code{inicijali "Nikola" "Tesla"} daje @code{"N.T."}. Pretpostaviti da su obe niske neprazne.
+Napisati funkciju @code{inicijali :: [Char] -> ([Char] -> [Char])} koja od dve niske koje predstavljaju ime i prezime pravi inicijale. Na primer @code{inicijali "Nikola" "Tesla"} daje @code{"N.T."}. Pretpostaviti da su obe niske neprazne.
 }{
 @p Korišćenjem @code{head :: [a] -> a} funkcije, "uzećemo" prva slova imena i prezimena. Primena funkcije @code{head} na nisku nam daje vrednost tipa @code{Char}. Stoga dobijenu vrednost moramo postaviti u novu nisku, da bismo mogli koristiti operator @code{++} koji nadovezuje niske.
 
@@ -359,7 +359,7 @@ inicijali = (\x1 -> (\x2 -> (
 }
 
 @problem{Napisati funkciju @ccode{ukloni3 :: [Char] -> [Char]} koja uklanja prva tri elementa iz niske. Pretpostaviti da će funkcija uvek biti primenjena na niske dužine veće od tri.}{
-@p Funkcija @code{tail :: [a] -> [a]} nam vraća rep niske (sve osim prvog elmenta). Primenom ove funkcije tri puta na neku listu, efektivno uklanjamo prva tri elementa iz liste
+@p Funkcija @code{tail :: [a] -> [a]} nam vraća rep niske (sve osim prvog elementa). Primenom ove funkcije tri puta na neku listu, efektivno uklanjamo prva tri elementa iz liste
 @codeBlock{
 ukloni3 :: [Char] -> [Char]
 ukloni3 = (\x -> (tail (tail (tail x))))
@@ -372,12 +372,12 @@ ukloni3 = (\x -> (tail (tail (tail x))))
 }
 }
 
-@problem{Za nisku kažemo da je @em{palindrom} ako se čita isto i sa levo i sa desno, npr. @code{"anavolimilovana"} jeste palindorm. Napisati funkciju @code{palindrom :: [Char] -> Bool} koja proverava da li je niska palindorm.}{
+@problem{Za nisku kažemo da je @em{palindrom} ako se čita isto i sa levo i sa desno, npr. @code{"anavolimilovana"} jeste palindrom. Napisati funkciju @code{palindrom :: [Char] -> Bool} koja proverava da li je niska palindrom.}{
 @p Niske, odnosno vrednosti tipa @code{[Char]}, pripadaju klasi @code{Eq}. Zbog toga je moguće koristiti operator @code{==} za poređenje dve niske. Niska @code{s} je palindrom ako je jednaka nisci @code{reverse s}. Ovo zapažanje nas direktno dovodi do rešenja:
 
 @codeBlock{
 palindrom :: [Char] -> Bool
-palindorm = (\s -> (s == reverse s))
+palindrom = (\s -> (s == reverse s))
 }
 }
 
@@ -388,8 +388,8 @@ zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))
 zbir = (\u -> (\v -> (fst u + fst v, snd u + snd v)))
 }}
 
-@problem{Funkcija @ccode{max :: Ord a => a -> (a -> a)} uzima dve vrednosti i vraća veću od vrednosti. Napisati funkciju @code{max3 :: Ord a => a -> (a -> (a -> a))} koja vraća maksimum tri vrednosti. Naravno @code{Ord =>} je klasno ograničenje koja nam govori da tipska promenljiva @code{a} pripada klasi @code{Ord}, te se vrednosi ovog tipa mogu porediti sa @code{<}, @code{>}, @code{<=} i @code{>=}.}
-{@p Ako su nam date vrednosi @code{x}, @code{y} i @code{z} tada ćemo prvo naći veću od vrednosi @code{x} i @code{y} a zatim ćemo tu veću vrednost da uporedimo sa @code{z}:
+@problem{Funkcija @ccode{max :: Ord a => a -> (a -> a)} uzima dve vrednosti i vraća veću od vrednosti. Napisati funkciju @code{max3 :: Ord a => a -> (a -> (a -> a))} koja vraća maksimum tri vrednosti. Naravno @code{Ord =>} je klasno ograničenje koja nam govori da tipska promenljiva @code{a} pripada klasi @code{Ord}, te se vrednosti ovog tipa mogu porediti sa @code{<}, @code{>}, @code{<=} i @code{>=}.}
+{@p Ako su nam date vrednosti @code{x}, @code{y} i @code{z} tada ćemo prvo naći veću od vrednosti @code{x} i @code{y} a zatim ćemo tu veću vrednost da uporedimo sa @code{z}:
 @codeBlock{
 max3 :: Ord a => a -> a -> a -> a
 max3 = (\x -> (\y -> (\z -> max (max x y) z)))

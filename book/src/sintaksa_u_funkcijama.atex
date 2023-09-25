@@ -29,13 +29,13 @@ Kako je aplikacija levo asocijativna, levi par zagrada se može obrisati
 @example{
 @p Pogledajmo tipove @code{Int -> (Char -> Bool)} i @code{(Int -> Char) -> Bool}. Gledano kao na nizove simbola, razlika između ova dva tipa je samo raspored zagrada. Ali tipovi nam govore mnogo o ovim funkcijama!
 
-@p Neka je @code{f :: Int -> (Char -> Bool)}. Tada primenom @code{f} na neku vrednost @code{n :: Int} dobijamo funkciju @code{f n :: Char -> Bool}. Funkciju @code{f n} možemo zatim da primenimo vrednost @code{b :: Bool}, i dobijemo vrednost tipa @code{Char}. Dakle, @code{f} možemo da shvatimo kao binarnu funkciju koja uzima jednu @code{Int} i jednu @code{Char} vrednost. Tip ove funkije, po gorepomenutom pravilu, možemo da napišemo i kao @code{Int -> Char -> Bool}
+@p Neka je @code{f :: Int -> (Char -> Bool)}. Tada primenom @code{f} na neku vrednost @code{n :: Int} dobijamo funkciju @code{f n :: Char -> Bool}. Funkciju @code{f n} možemo zatim da primenimo vrednost @code{b :: Bool}, i dobijemo vrednost tipa @code{Char}. Dakle, @code{f} možemo da shvatimo kao binarnu funkciju koja uzima jednu @code{Int} i jednu @code{Char} vrednost. Tip ove funkcije, po gorepomenutom pravilu, možemo da napišemo i kao @code{Int -> Char -> Bool}
 
 @p Neka je @code{g :: (Int -> Char) -> Bool}. Funkciju @code{g} možemo da primenimo samo na neku drugu funkciju @code{h :: Int -> Char} i time dobijemo vrednost tipa @code{Char}. Dakle @code{g} je funkcija "jednog argumenta"@note{Svaka funkcija u Haskelu je funkcija jednog argumenta. Ali zbog karijevanja, funkcije čiji tip je oblika @code{a1 -> (a2 -> b)} možemo da nazivamo funkcijama dva argumenta, itd...}.
 }
 
 @example{
-@p U prethodnij lekciji, u zadatku 7 se tražilo da se napiše funkcija @ccode{primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))} koja uzima jednu funkciju @code{f :: Int -> Bool}, jedan uređen par tipa @code{(Int, Int)} i vraća uređen par koji se dobija primenom @code{f} na svaku koordinatu uređenog para. Rešenje do kog smo došli je 
+@p U prethodnoj lekciji, u zadatku 7 se tražilo da se napiše funkcija @ccode{primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))} koja uzima jednu funkciju @code{f :: Int -> Bool}, jedan uređen par tipa @code{(Int, Int)} i vraća uređen par koji se dobija primenom @code{f} na svaku koordinatu uređenog para. Rešenje do kog smo došli je 
 
 @codeBlock{
 primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))
@@ -56,7 +56,7 @@ primeni = \f par -> (f (fst par), f (snd par))
 @todo{dodati referencu}
 
 @problem{
-Uraditi ponovo zadatke iz prethodne lekcije korsteći što manje zagrada u kodu.
+Uraditi ponovo zadatke iz prethodne lekcije koristeći što manje zagrada u kodu.
 }
 
 @section{@em{If then else}}
@@ -171,7 +171,7 @@ opisZemljotresa r
   | r < 8.0 = "Velik"
   | r < 10.0 = "Razarajući"
   | r >= 10 = "Epski"
-}{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden. Dodaat je i uslov koji u slučaju negativnog argumenta vraća nisku @code{"Greška"}.}
+}{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden. Dodat je i uslov koji u slučaju negativnog argumenta vraća nisku @code{"Greška"}.}
 
 @p Primetimo da je i u ovom (kao i u prethodnom primeru) na poslednjem mestu postavljen slučaj koji je zadovoljen kada svi ostali slučajevi nisu@note{U suprotnom, funkcija ne bi bila totalna, i došlo bi do izuzetka za neke od argumenata}. Zbog toga, za poslednji uslov ne mora se stavljati nikakav izraz, već je dovoljno postaviti konstantu @code{True}, i tada će poslednji uslov "uhvatiti" sve što nije uhvaćeno sa prethodnim uslovima. Uobičajeno je da se na kraju @em{guards}-a postavi konstanta @code{otherwise} koja je ime za vrednost @code{True}@note{Zaista, u @em{GHCi}-u proverite da je @code{otherwise == True}.}:
 

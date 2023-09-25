@@ -168,7 +168,7 @@ class Eq a where
 newtype Racionalan = R (Int, Int)
 }
 
-@p Pokušaj korišćenja vrednosti tipa @code{Racionalan} sa operatorima klase @code{Eq} dovešće do greške, jer tip @code{Racionalan} nije intanca ove klase:
+@p Pokušaj korišćenja vrednosti tipa @code{Racionalan} sa operatorima klase @code{Eq} dovešće do greške, jer tip @code{Racionalan} nije instanca ove klase:
 
 @terminal{
 ghci> a = R (1, 2)
@@ -181,7 +181,7 @@ ghci> a == b
       In an equation for ‘it’: it = a == b
 }
 
-@p Da bismo mogli da poredimo vrednosti tipa @code{Racionalan}, instaniraćemo @code{Eq Racionalan}:
+@p Da bismo mogli da poredimo vrednosti tipa @code{Racionalan}, instanciraćemo @code{Eq Racionalan}:
 
 @codeBlock{
 instance Eq Racionalan where
@@ -216,10 +216,10 @@ class Eq a where
 
 @p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati. Kroz naredne primere upoznaćemo se detaljnije sa sintaksom pragme @em{MINIMAL}.
 
-@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{\=}, a @code{\=} kao negaciju @code{==}, tada bi svako poređenje dovoelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
+@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{\=}, a @code{\=} kao negaciju @code{==}, tada bi svako poređenje dovelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
 
 @example{
-@p @em{Nastavak prethodnog primera}. Za instacu @code{Racionalan}, dovoljno je napisati sledeće
+@p @em{Nastavak prethodnog primera}. Za instancu @code{Racionalan}, dovoljno je napisati sledeće
 
 @codeBlock{
 instance Eq Racionalan where
@@ -267,7 +267,7 @@ class (Eq a) => Ord a where
 @p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicije instance će potisnuti definicije u definiciji klase), ali za tako nečim gotovo nikad nema potrebe.
 
 @example{
-@p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implemetirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
+@p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implementirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
 
 @codeBlock{
 instance Ord Racionalan where
@@ -384,7 +384,7 @@ class Num a => Fractional a where
   @@{ -# MINIMAL fromRational, (recip | (/)) #-@@}
 }
 
-@p Funkcija @code{fromRational} transormiše vrednost tipa @code{Rational} u vrednost instance. Do sada tip @code{Rational} nismo spominjali, ali u pitanju je tip koji se koristi za prezentovanje racionalnih brojeva u proizvoljnoj tačnosti.
+@p Funkcija @code{fromRational} transformiše vrednost tipa @code{Rational} u vrednost instance. Do sada tip @code{Rational} nismo spominjali, ali u pitanju je tip koji se koristi za prezentovanje racionalnih brojeva u proizvoljnoj tačnosti.
 
 @p Funkcija @code{recip} daje recipročnu vrednost broja@note{Recipročna vrednost vrednosti @m{x} je vrednost @m{y} takva da je @m{xy=1}. U kontekstu @code{Fractional} klase, smatra se da važi @ccode{x * y = fromRational 1}, iako to nije propisano standardom.}. Dovoljno je implementirati samo jednu od funkcija @code{(/)} i  @code{recip}, jer su one u definiciji klase definisane jedna preko druge:
 
@@ -424,7 +424,7 @@ instance Fractional Racionalan where
 
 @p U narednim zadacima, funkcije @code{abs} i @code{signum} implementirati proizvoljno.
 
-@problem{Definisati tip @code{Z4} koji predstavlja skup ostataka pri deljenju sa @m{4} tj @eq{\mathbb Z_4 = \{0, 1, 2, 3\}.} Ovaj tip definisati kao @ccode{newtype Z4 = Z4 Int}. Instacirati @code{Num Z4} pri čemu voditi računa da se sve operacije vrše po modulu @m{4.} Na primer @m{3 + 2 =_4 1} i @m{2 \cdot 2 =_4 0}.
+@problem{Definisati tip @code{Z4} koji predstavlja skup ostataka pri deljenju sa @m{4} tj @eq{\mathbb Z_4 = \{0, 1, 2, 3\}.} Ovaj tip definisati kao @ccode{newtype Z4 = Z4 Int}. Instancirati @code{Num Z4} pri čemu voditi računa da se sve operacije vrše po modulu @m{4.} Na primer @m{3 + 2 =_4 1} i @m{2 \cdot 2 =_4 0}.
 }
 
 @problem{Analogno prethodnom zadatku kreirati tip @code{Z5} koji prezentuje @eq{\mathbb Z_5 = \{0, 1, 2, 3, 4\},} i instancirati @code{Num Z5}.
