@@ -127,7 +127,7 @@ f x = 253 * x + 17
 
 @section{@em{Ad-hoc} polimorfizam}
 
-@ Slobodne tipske promenljive mogu predstavljati bilo koji tip. Ponekad je pozeljno ograniciti tipsku promenljivu na neku specificnu kolekciju tipova. Upravo takva ogranicenja se izrazavaju kroz klase tipova.
+@p Slobodne tipske promenljive mogu predstavljati bilo koji tip. Ponekad je pozeljno ograniciti tipsku promenljivu na neku specificnu kolekciju tipova. Upravo takva ogranicenja se izrazavaju kroz klase tipova.
 
 @p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Cesto te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
