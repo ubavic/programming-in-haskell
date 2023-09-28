@@ -1,16 +1,16 @@
 @chapter{Funktori}
 
-@p Koncepti @em{funktora} i @em{monade} su važni za Haskel. Iako se mnogi programi (ali ne svi!) mogu zapisati bez korišćenja navedenih konecpata, korišćenje funktora i monada značajno olakšava pisanje (i čitanje) koda.
+@p Koncept @em{funktora} je važan za Haskel. Iako isprva deluje kao nepotrebno apstraktan pojam, funktori zapravo opisuju veoma prirodnu trasformaciju.
 
-@p Funktor i monada su preuzeti iz apstraktnih oblasti matematike, ali se u Haskelu ovi koncepti svode na klase tipova. Pre nego što tačno definišemo nove pojmove, pokušaćemo da damo motivaciju.
+@p Pojam funktora je preuzet iz apstraktnih oblasti matematike, ali se u Haskelu taj pojam svodi na klasu tipova. Pre nego što tačno definišemo nove pojmove, pokušaćemo da damo motivaciju.
 
 @section{Funktori}
 
 @subsection{Motivacija}
 
-@p U jednoj od prethodnih lekcija, obradili smo @code{Maybe :: * -> *} apstraktni tip. Kao što smo videli, @code{Maybe A} je tip koji osim vrednosti tipa @code{A} sadrži i vrednost @code{Nothing} koja predstavlja odsustvo vrednosti. 
+@p U jednoj od prethodnih lekcija, upoznali smo se sa apstraktnim tipom @code{Maybe :: * -> *}. Kao što smo tada videli, @code{Maybe A} je tip koji osim vrednosti tipa @code{A} sadrži i vrednost @code{Nothing} koja predstavlja odsustvo vrednosti tipa @code{A}. 
 
-@p Zamislimo da od neke funkcije dobijamo vrednost tipa @code{Maybe Float}@note{Naveli smo ranije takav primer sa temperaturnim senzorom. Međutim primer može biti bilo koji podatak koji se dobija iz spoljnog sveta: očitavanje sa senzora, korisnički unos, selekcija iz baze, @em{http} zahtev ka serveru, itd... Svaka od ovih aktivnosti nam može vratiti neku konkretnu vrednost ili vrednost @code{Nothing} koja označava da je došlo do greške. I zaista, mnoge funkcije u Haskel bibliotekama vraćaju @em{možda-vrednosti}.}. Ako želimo dalje da obrađujemo vrednost, moramo se osloboditi @code{Maybe} "omotača":
+@p Zamislimo sada da od neke funkcije dobijamo vrednost tipa @code{Maybe Float}@note{Naveli smo ranije takav primer sa temperaturnim senzorom. Međutim primer može biti bilo koji podatak koji se dobija iz spoljnog sveta: očitavanje sa senzora, korisnički unos, selekcija iz baze, @em{http} zahtev ka serveru, itd... Svaka od ovih aktivnosti nam može vratiti neku konkretnu vrednost ili vrednost @code{Nothing} koja označava da je došlo do greške. I zaista, mnoge funkcije u Haskel bibliotekama vraćaju @em{možda-vrednosti}.}. Ako želimo dalje da obrađujemo vrednost, moramo se osloboditi @code{Maybe} omotača:
 
 @codeBlock{
 dupliraj :: Maybe Float -> Float
@@ -340,5 +340,88 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 @p Da bismo definisali @code{<*>} neophodno je da obratimo pažnju na zakone aplikativnih funktora. Prvo, iz @ccode{fmap f x = pure f <*> x}, i iz @code{pure f = [f]} sledi da @code{[f] <*> [x1,...,xn]} mora biti @code{[f x1,...,f xn]}. Prema tome, @code{<*>} primenjuje funkcije iz leve liste na vrednosti iz desne liste. Postoji mnogo načina na koje se takva primena može definisati, i za sada nam nije jasno kako se više funkcija primenjuje na više vrednosti (za sada samo razumemo @code{[f] <*> xs})@note{Na primer, možda bi operator @code{(<*>)} funkcije i vrednosti uparivao član po član poput @code{zip} funkcije koja uparuje vrednosti dve liste u listu parova. Ali kako mora važiti prvi zakon @code{fmap f x = pure f <*> x} sledi da ovakva definicija nije moguća. U suprotnom bi bilo @ccode{[f x1,f x2]}@ccode{= fmap f [x1,x2]}@ccode{= pure f <*> [x1,x2]}@ccode{= [f] <*> [x1, x2] = [f x1]}, što naravno nije tačno.}. Zbog toga, @code{<*>} definišemo kao operaciju koja primenjuje svaku funkciju iz leve liste na svaku vrednost iz desne.
 
 
+@section{Strelice kao funktori}
 
+@p Jos od prvi lekcija, koristili smo konstruktor @code{->}, takozvanu strelicu, za konstrukciju tipova funkcija. Na samom pocetku to nismo znali, ali strelica je binarni tipski konstruktor, sta se lako mozemo uveriti:
+
+@terminal{
+ghci> :kind (->)
+(->) :: * -> * -> *
+}
+
+@p Kako je vrsta @code{* -> * -> *}, strelica ne moze bit funktor@note{Funktori su tipovi vrste @code{* -> *}} Ali ako fiksiramo jedan od argumenata, dobicemo tip odgovarajuce vrste. Za primer, odaberimo @code{Int} kao tip koji cemo fiksirati za domen ili kodomen, i kreirajmo dva nova tipska sinonima:
+
+@codeBlock{
+type FromInt a = Int -> a
+
+type ToInt a = a -> Int
+}
+
+@p Tipovi @code{FromInt} i @code{ToInt} su tipovi koji potencijalno mogu biti funktori:
+
+@terminal{
+ghci> :kind FromInt
+FromInt :: * -> *
+ghci> :kind ToInt
+ToInt :: * -> *
+}
+
+@p Tip @code{FromInt T} predstavlja tip svih funkcija @em{iz celih brojeva} u @code{T}, dok @code{ToInt T} predstavlja tip svih funkcija iz @code{T} @em{u tip celih brojeva}. Za pocetak, posvetimo se tipu @code{ToInt}.
+
+@p Da bi definisali instancu @code{Functor ToInt}, neophodno i dovoljno je da definisemo metodu @code{fmap :: (a -> b) -> ToInt a -> ToInt b}, tj, raspisujuci definiciju sinonima, @ccode{fmap :: (a -> b) -> (Int -> a) -> (Int -> b)}. Definisanje metode @code{fmap} se svodi na definsanje funkcije tipa @code{Int -> B} ako su nam date funkcije @code{f :: A -> B} i @code{g :: Int -> A}. Kao sto i naredna ilustracija pokazuje, nemamo mnogo izbora za definicju: jedino sto mozemo da uradimo je da napravimo kompoziciju @code{f . g :: Int -> B}:
+
+@p Definicija instance je zapravo najkraca do sada:
+
+@codeBlock{
+instance Functor ToInt where
+    fmap f g = f . g
+}
+
+@p Naravno, neophodno je i da proverimo dva zakona funktora.
+
+@p Prvo, da li je @code{fmap id} identicka funkcija. Naravno da jeste, jer je @code{id} neutralni element za kompoziciju tj. @ccode{fmap id g = id . g = g}.
+
+@p Drugo, da li je @code{fmap} distributivno u odnosu na kompoziciju? Jeste, jer je @ccode{fmap (f2. f1) g} @ccode{= (f2 . f1) g} @ccode{= f2 . (f1 . g)} @ccode{= f2 . (fmap f1 g)} @ccode{= fmap f2 (fmap f1 g)} @ccode{= (fmap f2 . fmap f1) g}. 
+
+@example{
+@p Definisimo konkretne vrednosti:
+@codeBlock{
+f :: Bool -> String
+f b = show b
+
+g :: FromInt Bool
+g n = even n
+}
+
+@p Ako ucitamo definicije funkcija (zajedno sa definicijom intance), mozemo se uveriti u novi funktor:
+
+@terminal{
+ghci> m = fmap f g
+ghci> :type m
+FromInt String
+ghci> m 2
+"True"
+ghci> m 3
+"False"
+}
+}
+
+@problem{
+Opisati operator @code{<$} u kontekstu funktora @code{FromInt}. 
+}
+
+@p Naravno, sledeci korak je da ucinimo @code{ToInt} aplikativnim funktorom. Za definisanje metode @ccode{pure :: a -> (Int -> a)} ponovo nemamo mnogo izbora. Ako nam je data jedna vrednost @code{x :: A}, mozemo samo na jedan nacin konstruisati funkciju tipa @code{A -> Int}, a ta jedinstvena funkcija je kontantna funkcija: @ccode{\_ -> x}. Definicija @code{<*>} je nesto komplikovanija, ali nas ponovo tipo vode ka resenju. U kontekstu tipa @code{FromInt}, oprator @code{<$>} poseduje tip @ccode{(Int -> (a -> b)) -> (Int -> a) -> (Int -> b)}. Ako nam je data funkcija @code{f :: Int -> (A -> B)} i funkcija @code{g :: Int -> A}, tada mozemo da konstruisemo funkciju tipa @code{Int -> B} tako sto cemo za svaku celobrojnu vrednost @code{Int}, aplicirati @code{f} i @code{g} na @code{n}, time dobiti vrednosti tipa @code{A -> B} i @code{B} od kojih na ocigledan nacin mozemo dobiti vrednost tipa @code{B}. Kod je ponovo veoma jednostavan:
+
+@codeBlock{
+instance Applicative FromInt where
+    pure x = \_ -> x
+
+    f <$> g = \n -> (f n) (g n)
+}
+
+@p Naravno, neophodno je dokazati da navedene definicije zadovoljavaju zakone aplikativnih funktora. Ovo cemo prepustiti citaocu, jer se ne razlikuje od provera koje smo do sada vrsili.
+
+@problem{
+Dokazati da gorenavedena instanca @code{Applicative FromInt} zadovoljava pet zakona aplikativnih funktora.
+}
 

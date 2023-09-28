@@ -40,7 +40,7 @@
 }
 
 @example{
-@p Funkcija @code{even}, predefinisana u @em{GHCi}-ju, svakom celom broju dodeljuje logičku vrednost u zavisnosti da li je taj broj paran. Prema tome, tip funkcije @code{even} je@note{Ovo nije u potpunosti tačno, ali ćemo detalje ostaviti za kasnije.} @code{Int -> Bool}. Isto važi i za funkciju @code{odd} koja proverava da li je broj neparan. 
+@p Funkcija @code{even}, predefinisana u @em{GHCi}-ju, svakom celom broju dodeljuje logičku vrednost u zavisnosti da li je taj broj paran. Prema tome, tip funkcije @code{even} je@note{Ovo nije u potpunosti tačno jer navedena funkcija moze da se primeni na jos neke tipove. Detalje ćemo ostaviti za kasnije. Funkcija @code{even} može da se primeni na vrednosti tipa @code{Integer}, pa prema tome domen ove funkcije nije jedinstven tip.} @code{Int -> Bool}. Isto važi i za funkciju @code{odd} koja proverava da li je broj neparan. 
 }
 
 @p Za razliku od imperativnih jezika, funkcije u Haskelu uvek moraju da poseduju kodomen. Drugim rečima, primena funkcije na vrednost mora i sama da predstavlja vrednost nekog tipa. U imperativnim jezicima neretko koristimo @code{void} funkcije koje nemaju povratnu vrednost. Takve funkcije ne postoje u Haskelu.
@@ -108,7 +108,6 @@ ghci> (\x -> (2 * x)) 10
 @p Da bi evaluirao redeks @code{(\x -> (2 * x)) 10}, @em{GHCi} u telu lambda funkcije zamenjuje @code{x} sa @code{10}, čime se dobija @code{2 * 10}. Izraz @code{2 * 10} se zatim sračunava na nivou hardvera.
 }
 
-
 @p Opisani postupak nazivamo @def{beta redukcija}. Tačnije beta redukcija je zamena redeksa @code{(\x -> a) b} sa izrazom koji se dobije kada se izrazu @code{a} sva pojavljivanja imena @code{x} zamene sa izrazom @code{b}. Pritom se početak lambda izraza, @code{\x ->}, uklanja.
 
 @example{
@@ -143,13 +142,6 @@ g = (\x -> (2 * x))
 h :: [Int] -> Int
 h = (\x -> (head x + 1))
 }{Aplikacija ima najveći prioritet te se izraz @code{head x + 1} tumači kao @code{(head x) + 1}.}
-
-@p U @em{GHCi} okruženju sa @pre{:type} naredbom možemo proveravati i tipove funkcija: 
-
-@terminal{
-ghci> :type h
-h :: [Int] -> Int
-}
 }
 
 @p Zanimljivo je primetiti šta se dešava sa tipom funkcije kada se funkcija primeni na vrednost. Pre svega, Haskel će proveriti da li se tip te vrednosti i domen funkcije podudaraju. Ako to nije slučaj, tada će doći do @def{tipske greške}.
@@ -171,16 +163,6 @@ ghci> h 2
 
 @p Ako nije došlo do tipske greške, tada primena funkcija na neku vrednost predstavlja @def{dobro tipiziran izraz}. Pritom ako je funkcija @code{f} tipa @code{a -> b}, a vrednost @code{v} tipa @code{a}, tada je @code{f v} predstavlja vrednost tipa @code{b}. Beta redukcijom moguće je odrediti tačnu vrednost izraza @code{f v}, ali i bez redukcije znamo da ta vrednost poseduje tip @code{b}.
 
-@example{
-@p Funkcija @code{h} iz prethodnog primera poseduje tip @code{[Int] -> Int}. Aplikacija @code{h [1,2,3]} poseduje tip @code{Int}:
-
-@terminal{
-ghci> :type (h [1,2,3])
-h [1,2,3] :: Int
-ghci> h [1,2,3]
-2
-}
-}
 
 @p Prosto rečeno, primenom funkcije tipa @code{A -> B} na vrednosti tipa @code{A} "brišemo" @code{A ->} iz tipa@note{Kao što u matematici @m{f} predstavlja funkciju a @m{f(10)} konkretan broj, tako i primena funkcije @code{f :: A -> B} na vrednost @code{v :: A} predstavlja rezultat tipa @code{B}.}.
 
