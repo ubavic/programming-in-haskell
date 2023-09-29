@@ -18,9 +18,9 @@
 @li @code{last :: [a] -> a} vraća poslednji element. Ako je lista prazna dolazi do izuzetka
 }
 
-@p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porditi sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
+@p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porediti sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
 
-@p Haskel prelid obezbeđuje još neke funkcije za rad sa listama karaktera:
+@p Prelid obezbeđuje neke funkcije za rad sa listama karaktera:
 
 @list{
 @li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od jedne nikse dobijaju "reči".
@@ -32,8 +32,8 @@
 @p Ovde je zgodno napomenuti kako se u Haskel kodu mogu navesti niske u više redova. Neophodno je na kraju i početku svake linije koja pripada nisci dodati znak @code{\}, osim u prvoj i poslednjoj na mestima gde je @pre{"}:
 
 @codeBlock{
-pesma :: [Char]
-pesma = "Ti, međutim, rasteš, uz zornjaču jasnu,\
+stih :: [Char]
+stih = "Ti, međutim, rasteš, uz zornjaču jasnu,\
 \sa Avalom plavom, u daljini, kao breg.\
 \Ti treperiš, i kad ovde zvezde gasnu,\
 \i topiš, ko Sunce, i led suza, i lanjski sneg." 
@@ -42,17 +42,17 @@ pesma = "Ti, međutim, rasteš, uz zornjaču jasnu,\
 @p Ipak, ovako definisana niska @em{neće} sadržati karaktere za novi red! Neophodno ih je ručno dodati na svakom mestu:
 
 @codeBlock{
-pesma :: [Char]
-pesma = "Ti, međutim, rasteš, uz zornjaču jasnu,\n\
+stih :: [Char]
+stih = "Ti, međutim, rasteš, uz zornjaču jasnu,\n\
 \sa Avalom plavom, u daljini, kao breg.\n\
 \Ti treperiš, i kad ovde zvezde gasnu,\n\
 \i topiš, ko Sunce, i led suza, i lanjski sneg.\n" 
 }
 
-@p Ako u @em{GHCi} interpreteru evaluiramo vrednost @code{pesma}, niska će se ispisati unutar dvostrukih navodnika u jednoj (ali dugačkoj) liniji terminala@note{Takođe, u zavisnosti od verzije @em{GHCi} programa, može se desiti da slova koja ne pripadaju engleskom alfabetu (@em{đ}, @em{ž}, @em{ć} i @em{č}) budu zamenjena odgovarajućim kodovima.}. Probajte i uverite se sami. Zbog toga je zgodno iskoristi metod @code{putStr} koji sadržaj ispisuje u terminal onako kao bismo i očekivali:
+@p Ako u @em{GHCi} interpreteru evaluiramo vrednost @code{stih}, niska će se ispisati unutar dvostrukih navodnika u jednoj (ali dugačkoj) liniji terminala@note{Takođe, u zavisnosti od verzije @em{GHCi} programa, može se desiti da slova koja ne pripadaju engleskom alfabetu (@em{đ}, @em{ž}, @em{ć} i @em{č}) budu zamenjena odgovarajućim kodovima.}. Probajte i uverite se sami. Zbog toga je zgodno iskoristi metod @code{putStr} koji sadržaj ispisuje u terminal onako kao bismo i očekivali:
 
 @terminal{
-ghci> putStr pesma
+ghci> putStr stih
 Ti, međutim, rasteš, uz zornjaču jasnu,
 sa Avalom plavom, u daljini, kao breg.
 Ti treperiš, i kad ovde zvezde gasnu,
@@ -61,7 +61,7 @@ i topiš, ko Sunce, i led suza, i lanjski sneg.
 
 @section{Rasponi}
 
-@p Neretko se javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @m{1} do @m{n} ili liste brojeva od @m{-n} do @m{n} itd... Iako nije teško implementirati rekurzivne funkcije koje vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{Eng. @em{ranges}} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg elementa liste, između kojih se postavljaju dve (spojene) tačke. Naredni primeri ilustruju sintaksu raspona:
+@p Neretko se javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @m{1} do @m{n} ili liste brojeva od @m{m} do @m{n} itd... Iako nije teško implementirati rekurzivne funkcije koje vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{eng. @em{ranges}} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg elementa liste, između kojih se postavljaju dve (spojene) tačke. Naredni primeri ilustruju sintaksu raspona:
 
 @terminal{
 ghci> a = [1 .. 10]
@@ -72,7 +72,6 @@ ghci> [-3 .. 3]
 ghci> [10 .. 1]
 []
 }{Ako je poslednji element manji od prvog, tada će biti konstruisana prazna lista.}
-
 
 @p Sa rasponima je moguće konstruisati i liste u kojima je korak različit od @m{1}. U tom slučaju, potrebno je navesti i drugi član liste na osnovu koga će korak biti izračunat.
 
@@ -101,7 +100,7 @@ ghci> [1.0, 1.5 .. 5.0]
 [1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0]
 }
 
-@p Ipak, treba biti pažljiv pri korišćenju raspona racionalnih brojeva, jer se računska greška@note{Kao što u decimalnom sistemu ne možemo sa konačno simbola zapisati vrednost @m{1/3}, tako u binarnom sistemu ne možemo tačno zapisati vrednost @m{1/10} koristeći konačno bitova. Racionalni brojevi koji se tačno mogu zapisati u IEEE 754 zapisu (koji je osnova za @code{Float} i @code{Double} tipove) su oblika @m{k/2^i} gde @m{i,k \in\mathbb Z}.} može brzo ukazati
+@p Ipak, treba biti pažljiv pri korišćenju raspona racionalnih brojeva, jer se računska greška može lako ukazati@note{Kao što u decimalnom sistemu ne možemo sa konačno simbola zapisati vrednost @m{1/3}, tako u binarnom sistemu ne možemo tačno zapisati vrednost @m{1/10} koristeći konačno bitova. Racionalni brojevi koji se tačno mogu zapisati u IEEE 754 zapisu (koji je osnova za @code{Float} i @code{Double} tipove) su oblika @m{k/2^i} gde @m{i,k \in\mathbb Z}.}
 
 @terminal{
 ghci> [0.1, 0.3 .. 1]
@@ -145,7 +144,6 @@ velikoSlovo :: Char -> Bool
 velikoSlovo c = elem c ['A' .. 'W'] 
 }}
 
-
 @section{Rekurzija nad listama}
 
 @p Liste imaju prirodnu rekurzivnu strukturu. Svaka lista osim prazne je nastala nadovezivanjem nekog elementa na početak neke kraće liste. Mnogi algoritmi za rad sa listama se mogu implementirati rekurzijom po dužini liste. Baza rekurzije čini slučaj prazne liste, dok rekurzivni korak predstavlja svođenje problema na isti problem za kraću listu.
@@ -164,8 +162,7 @@ zbir xs =
 @p Uslovom @code{null xs} se proverava da li je lista prazna. Ako jeste, tada vraćamo @code{0}. U suprotnom, vrednost prvog elementa dodajemo na zbir repa lsite.
 }
 
-
-@p Tehnika podudaranja oblika liste je posebno korisna za implementaciju rekurzivnih algoritama.
+@p Tehnika podudaranja oblika liste je posebno korisna za implementaciju rekurzivnih algoritama. Sa ovom tehnikom, kôd algoritma često postaje elegantniji:
 
 @example{
 @p Funkciju @code{zbir} možemo napisati i ovako:
@@ -179,6 +176,15 @@ zbir (x:xs) = x + zbir xs
 
 @problem{
 Implementirati funkciju @code{proizvod :: [Int] -> Int} koja pronalazi proizvod elemenata liste.
+}{
+@p Po ugledu na prethodne primere, lako dolazimo do rešenja
+@codeBlock{
+proizvod :: [Int] -> Int
+proizvod [] = 1
+proizvod (x:xs) = x * proizvod xs
+}
+
+@p Osim promene same operacije, promenili smo i povratnu vrednost za praznu listu. Za svaki drugi izbor vrednosti @code{proizvod []}, dobio bi se pogrešan rezultat. Štaviše, u slučaju da smo definisali @code{proizvod [] = 0}, tada bi proizvod svake liste bio @code{0}.
 }
 
 @example{
@@ -196,7 +202,6 @@ Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, 
 }
 
 @p Ponekad je potrebno implementirati funkcije koje su rekuzrivne po više argumenata.
-
 
 @example{
 @p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodniska :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodniska} je naravno tehnika rekurzije.
@@ -243,15 +248,11 @@ daLiJePočetak (x:xs) (y:ys) =
 
 @p Implementacijom mnogih rekurzivnih algoritama nad listama uvidećemo da se neki šabloni konstrukcije algoritama ponavljaju. Zbog toga su definisane funkcije višeg reda sa rad sa listama. Korišćenjem ovih funkcija možemo da izbegne eksplicitnu rekurziju u mnogim slučajevima.
 
-@subsection{Filter}
+@subsection{@em{Filter}}
 
-@p Funkcija višeg reda @code{filter} nam omogućuje da iz neke liste izdvojimo samo elemente koji zadovoljavaju neki uslov. Tip ove funkcije je
+@p Funkcija višeg reda @code{filter :: (a -> Bool) -> [a] -> [a]} iz liste izdvaja samo elemente koji zadovoljavaju neki uslov.
 
-@ccode{
-filter :: (a -> Bool) -> [a] -> [a]
-}
-
-@p Prvi argument funkcije je funkcija tipa @code{a -> Bool} koju nazivamo @def{predikat}. Predikat treba da vrati vrednost @code{True} ako element treba da ostane u listi, odnosno @code{False} ako je element potrebno ukloniti iz liste. Drugi argument funkcije je lista koju filtriramo. Rezultat je lista iz koje su uklonjeni elementi koji ne zadovoljavaju predikat.
+@p Prvi argument funkcije je funkcija tipa @code{a -> Bool} koju nazivamo @def{predikat}. Predikat treba da vrati vrednost @code{True} ako element treba da se nađe u povratnoj listi. Drugi argument funkcije je lista koju filtriramo. Rezultat je lista iz koje su uklonjeni elementi koji ne zadovoljavaju predikat, pri čemu poredak elemenata ostaje isti.
 
 @example{
 @p Ako želimo da "uzmemo" parne prirodne brojeve manje od @code{10} možemo napisati:
@@ -263,11 +264,11 @@ ghci> filter (\x -> mod x 2 == 0) [1 .. 10]
 }
 
 @problem{
-Data je lista @code{visine :: [Float]} koja predstavlja visine svih učenika jedne škole. Odrediti broj učenika viših od @m{180\mathrm{cm}}. Dati rešenja sa i bez funkcije @code{filter}.
+Data je lista @code{visine :: [Float]} koja predstavlja visine svih učenika jedne škole. Odrediti broj učenika viših od @m{180\mathrm{cm}}.
 }{
 @codeBlock{
-brojVisokihUcenika = length visokiUcenici
-    where visokiUcenici = filter (\x -> x >= 180) visine
+brojVisokihUčenika = length visokiUčenici
+    where visokiUčenici = filter (\x -> x >= 180) visine
 }
 }
 
@@ -289,18 +290,14 @@ filter' p (x:xs) = if p x then x : filter p xs else filter p xs
 }{Pošto nas u baznom slučaju ne interesuje predikat, iskoristili smo džoker @code{_}.}
 }
 
-@subsection{Map}
+@subsection{@em{Map}}
 
-@p Još jedna funkcija višeg reda koja se često koristi sa listama je @code{map}. Funkcija @code{map} primenjuje neku drugu funkciju na svaki element liste i vraća listu dobijenih vrednosti. Tip funkcije @code{map} je:
-
-@ccode{
-map :: (a -> b) -> [a] -> [b]
-}
+@p Još jedna funkcija višeg reda koja se često koristi sa listama je @ccode{map :: (a -> b) -> [a] -> [b]}. Funkcija @ccode{map} primenjuje neku drugu funkciju na svaki element liste i vraća listu dobijenih vrednosti.
 
 @p Prvi argument funkcije je funkcija tipa @code{a -> b}, a drugi argument je lista tipa @code{[a]}. Rezultat je lista tipa @code{[b]} koji je nastao od prosleđene liste primenom prosleđene funkcije na svaki element liste.
 
 @example{
-@p Ako želimo da kvadriramo svaki element liste @code{[1, 2, 3, 4]}, možemo napisati program 
+@p Ako želimo da kvadriramo svaki element liste @code{[1, 2, 3, 4]}, možemo napisati
 
 @codeBlock{
 ghci> map (\x -> x^2) [1, 2, 3, 4]
@@ -317,78 +314,71 @@ Reimplementirati funkciju @code{map}.
 @codeBlock{
 map' :: (a -> b) -> [a] -> [b]
 map' _ [] = []
-map' f (x:xs) = f x ++ map' f xs 
+map' f (x:xs) = f x : map' f xs 
 }
 }
 
-@subsection{Fold}
+@subsection{@em{Fold}}
 
-@p Funkcija @code{foldr} koristi prosleđenu binarnu funkciju da bi prosleđenu listu "presavila" (@em{fold}) u jednu vrednost. Tip funkcije @code{foldr} je
-@ccode{foldl :: (a -> b -> b) -> b -> [a] -> b}
+@p Funkcije @code{foldl} i @code{foldr} koriste prosleđenu binarnu funkciju da bi "presavile" listu u jednu vrednost. Razlika između @code{foldl} i @code{foldr} funkcije je tome što @code{foldl} poničinje od početka liste (levog kraja), dok @code{foldr} počinje od desnog kraja.
 
-@p Prvi argument funkcije @code{foldl} je binarna funkcija tipa @code{a -> b -> b}. Drugi argument je @def{početna vrednost}, a treći argument je lista koju želimo da "presavijemo". Funkcija @code{foldr} "prolazi" kroz datu listu s desna na levo (otuda @em{foldr}) pozivajući nad svakim argumentom datu binarnu funkciju. Za svaki taj poziv, rezultat poziva nad prethodnim argumentom se koristi kao drugi argument binarne funkcije. Inicijalna vrednost se koristi kao drugi argument pri prvom pozivu (a to je poziv nad poslednjim elementom u listi).
+@p Tip funkcije @code{foldr} je @ccode{foldl :: (a -> b -> b) -> b -> [a] -> b}. Prvi argument funkcije @code{foldr} je binarna funkcija tipa @code{a -> b -> b}. Drugi argument je @def{početna vrednost}, a treći argument je lista koju želimo da "presavijemo". Funkcija @code{foldr} "prolazi" kroz datu listu s desna na levo pozivajući nad svakim argumentom datu binarnu funkciju. Za svaki taj poziv, rezultat poziva nad prethodnim argumentom se koristi kao drugi argument binarne funkcije. Inicijalna vrednost se koristi kao drugi argument pri prvom pozivu (a to je poziv nad poslednjim elementom u listi). Komplikovano objašnjenje će postati jasnije kroz primere.
 
 @example{
-@p Komplikovano objašnjenje će postati jasnije kroz naredni primer. Uz pomoć @code{foldr} možemo da saberemo sve elemente jedne liste. Definišimo
+@p Uz pomoć @code{foldr} možemo sabrati sve elemente jedne liste. Binarna funkcija koju ćemo koristiti je funkcija koja sabira argumente @code{s = \a b -> a + b}.
 
-@codeBlock{
-f = \a b -> a + b
-}
-
-@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo samo početnu vrednost:
+@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo početnu vrednost:
 
 @terminal{
-ghci> foldr f 0 []
+ghci> foldr s 0 []
 0
 }
 
-@p Ako @code{foldr} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{f} nad jedinim elementom liste i inicijalnom vrednošću (tj. @code{f 1 0}):
+@p Ako @code{foldr} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{s} nad jedinim elementom liste i inicijalnom vrednošću (tj. @code{s 1 0}):
 
 @terminal{
-ghci> foldr f 0 [1]
+ghci> foldr s 0 [1]
 1
-}
-
-@p U slučaju dvočlane liste, funkcija @code{f} biče dva puta pozvana. Pri drugom pozivu biće iskorišćena povratna vrednost prvog poziva (tj. @code{f 2 (f 1 0)}):
-
-@terminal{
 ghci> foldr f 0 [2, 1]
 3
 }
 
+@p U slučaju dvočlane liste, prosleđena funkcija biće dva puta pozvana. Pri drugom pozivu biće iskorišćena povratna vrednost prvog poziva. Drugim rečima, krajnji rezultat se dobija kao @ccode{s 2 (s 1 0)}
+
 @p Za listu od više elemenata imamo:
 
 @terminal{
-ghci> foldr f 0 [5, 4, 3, 2, 1]
+ghci> foldr s 0 [5, 4, 3, 2, 1]
 15
 }
 
-@p Prethodih izraz je ekvivalentan izrazu @ccode{f 5 (f 4 (f 3 (f 2 (f 1 0))))} koji je naravno ekvivalentan izrazu @ccode{5 + (4 + (3 + (2 + (1 + 0))))}
+@p Prethodih izraz je ekvivalentan izrazu @ccode{s 5 (s 4 (s 3 (s 2 (s 1 0))))} koji je naravno ekvivalentan izrazu @ccode{5 + (4 + (3 + (2 + (1 + 0))))}
+
+@p Naravno, isti rezultat se dobija i sa @code{foldl} funkcijom. Izraz @code{foldl s 0 [5, 4, 3, 2, 1]} svodi se na izraz @ccode{(((((0 + 5) + 4) + 3) + 2) + 1)}.
 }
 
-@p Uz funkciju @code{foldr} koristi se i @code{foldl} koja "presavija" listu sa leva. Naravno, kada koristimo @em{komutativnu} operaciju, dobijamo isti rezultat sa @code{foldl} i @code{foldr} funkcijama. Za nekomutativne operacije rezultati će se uglavnom razlikovati:
+@p Nije neophodno da rezultati primene @code{foldl} i @code{foldr} funkcija budu isti:
 
 @terminal{
 ghci> g = \a b -> a / b
 ghci> foldl g 1 [1, 2, 3]
-0.16666 -- (1 / 2) / 3
+0.16666
 ghci> foldr g 1 [1, 2, 3]
-1.5 -- 1 / (2 / 3)
-}
+1.5
+}{Prvi izraz svodi se na @code{(1 / 2) / 3}, dok se drugi izraz svodi na @code{1 / (2 / 3)}.}
 
 @problem{
 Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju tipa @code{Int -> Float} koja u zavisnosti od parametra @m{n} računa sumu @eq{\sum^{n}_{i=1} \frac{1}{i}.}
 }
 
-@problem{
-Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.
-}
+
+@problem{Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.}
 
 @problem{Reimplementirati funkciju @code{filter} koristeći funkciju @code{foldl}.}
 
 @subsection{Zip}
 
-@p Za uparivanje dve liste član-po-član u listu parova koristi se funkcija @ccode{zip :: [a] -> [b] -> [(a, b)]}. Pritom dužina liste parova je jednaka dužini kraćoj od prosleđenih lista.
+@p Za uparivanje dve liste član-po-član u listu parova koristi se funkcija @ccode{zip :: [a] -> [b] -> [(a, b)]}. Pritom, dužina liste parova koja se dobija kao rezultat je jednaka dužini kraćoj od prosleđenih lista.
 
 @example{
 @p Funkcija @code{zip} se često koristi za "numerisanje" članova neke liste. Tako možemo lako numerisati listu dana u nedelji:

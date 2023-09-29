@@ -301,23 +301,23 @@ ghci> h2 3
 paran :: Int -> Bool
 paran x = mod x 2 == 0
 
-duzina :: [a] -> Int
-duzina xs = length xs 
+dužina :: [a] -> Int
+dužina xs = length xs 
 }
 
-@p Dve navedene funkcije možemo da komponujemo samo na jedan način. Pokušaj konstrukcije kompozicije @code{duzina . paran} dovešće do tipske greške.
+@p Dve navedene funkcije možemo da komponujemo samo na jedan način. Pokušaj konstrukcije kompozicije @code{dužina . paran} dovešće do tipske greške.
 
 @terminal{
-ghci> k1 = paran . duzina
-ghci> k2 = duzina . paran
+ghci> k1 = paran . dužina
+ghci> k2 = dužina . paran
 
 <interactive>:7:15: error:
     • Couldn't match type ‘Bool’ with ‘t0 a0’
         Expected: a -> t0 a0
             Actual: a -> Bool
     • In the second argument of ‘(.)’, namely ‘paran’
-      In the expression: duzina . paran
-      In an equation for ‘k2’: k2 = duzina . paran
+      In the expression: dužina . paran
+      In an equation for ‘k2’: k2 = dužina . paran
 }}
 
 

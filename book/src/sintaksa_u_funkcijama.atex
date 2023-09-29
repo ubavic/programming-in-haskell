@@ -376,6 +376,19 @@ saberi3 (x, y, z) = x + y + z
 
 @p Iz dva navedena primera, vidimo da nam funkcije poput @code{fst} ili @code{snd} nisu neophodne.
 
+@subsection{Podudaranje oblika unutar lambda izraza}
+
+@p U lambda izrazima moguće je upotrebiti podudaranje oblika za dekonstrukciju argumenta Zbog same forme lambda izraza, moguće je navesti samo jedan oblik po kom se vrši podudaranje. Taj oblik postavljamo između "lambde" i strelice.
+
+@example{
+@p Funkciju @code{head} možemo elegantno da definišemo kao @ccode{\(x:xs) -> x}. Naravno, ova funkcija neće biti totalna, jer slučaj prazne liste nije obrađen (niti može biti obrađen ako je funkcija definisana sa lambda izrazom).
+}
+
+@p Podudaranje oblika u lambda izrazima retko se koristi sa listama, baš iz razloga zato što možemo proveriti samo jedan oblik argumenta (što je retko kad dovoljno u slučaju lista). Ali, kako je oblik uređenih @m{n}-torki u potpunosti određen tipom, sa takvim tipovima se često koristi podudaranje oblika u lambda izrazima.
+
+@example{
+@p Umesto funkcija @code{fst} i @code{snd} možemo koristiti lambda funkcije @code{\(x, y) -> x} i @code{\(x, y) -> y}.
+}
 
 @todo{case}
 
@@ -383,8 +396,10 @@ saberi3 (x, y, z) = x + y + z
 
 @problem{Sa uređenom trojkom @code{(Double, Double, Double)} može se prezentovati vektor trodimenzionalne ravni. Napisati funkcije za zbir, skalarni i vektorski proizvod dva vektora, kao i funkciju koja skalira vektor za dati koeficijent i funkciju koja računa dužinu vektora.}
 
-@problem{Reimplementirati funkciju @code{daLiJeCifra} bez korišćenja bilo koje sintakse za grananje.}
-{@p Možemo iskoristiti funkciju @code{elem :: Eq a -> a -> [a] -> Bool} koja proverava da li se element nalazi u listi:
+@problem{Reimplementirati funkciju @ccode{daLiJeCifra :: Char -> Bool} bez korišćenja bilo koje sintakse za grananje.}
+{@p Možemo iskoristiti funkciju @ccode{elem :: Eq a -> a -> [a] -> Bool} koja proverava da li se element nalazi u listi:
 @codeBlock{
-daLiJeCifra = \x -> elem x "0123456789"
-}}
+daLiJeCifra :: Char -> Bool
+daLiJeCifra x = elem x "0123456789"
+}
+}

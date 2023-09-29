@@ -203,7 +203,7 @@ površina :: Int
 površina = 2*(a*b + b*c + c*a) where a = 10; b = 5; c = 3 
 }
 
-@p Za razliku @em{let in} sintakse @em{where} se ne može koristi van definicija:
+@p Za razliku @em{let in} sintakse, sintaksa @em{where} se ne može koristiti van definicija:
 
 @terminal{
 ghci> broj = a + 3 where a = 3
@@ -211,11 +211,10 @@ ghci> broj
 5
 ghci> a + 3 where a = 3
 <interactive>:1:7: error: parse error on input ‘where’
-}{Kod @code{a + 3 where a = 3} nije validan izraz, zbog čega je došlo do sintaksne greške.}
+}{Kôd @code{a + 3 where a = 3} nije validan izraz, zbog čega je došlo do sintaksne greške.}
 
 
 @p Važno je znati da je u okviru @em{let in} ili @em{where} sintakse moguće lokalno predefinisati neka već definisana imena. Zbog toga, u narednom primeru, ime @code{b} predstavlja vrednost @code{11} a ne @code{21}:
-
 
 @codeBlock{
 a :: Int

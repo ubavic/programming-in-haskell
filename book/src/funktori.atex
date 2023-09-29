@@ -25,7 +25,7 @@ dupliraj (Just a) = 2 * a
 dupliraj Nothing = 0
 }{Vrednost @code{0} je proizvoljno odabrana, ilustracije radi.}
 
-@p Funkcija @code{dupliraj} je sada totalna, ali uočavamo drugi problem: izgubili smo informaciju koju @code{Maybe} tip nosi u sebi. Sada više ne možemo razlikovati vrednost @code{0} koja je "došla" iz @code{Just 0} od one koja je "došla" od @code{Nothing}. Ponekad je dozvoljeno napraviti takav gubitak informacije, ali često postoje i situacije kada nije. Zbog toga definisaćemo funkciju @code{dupliraj'}:
+@p Funkcija @code{dupliraj} je sada totalna, ali uočavamo drugi problem: izgubili smo informaciju koju @code{Maybe} tip nosi u sebi. Sada više ne možemo razlikovati vrednost @code{0} koja je "došla" iz @code{Just 0} od one koja je "došla" od @code{Nothing}. Ponekad je dozvoljeno napraviti takav gubitak informacije, ali često postoje i situacije kada nije. Zbog toga, definisaćemo funkciju @code{dupliraj'}:
 
 @codeBlock{
 dupliraj' :: Maybe Float -> Maybe Float
@@ -103,7 +103,15 @@ instance Functor [] where
     fmap = map
 }
 
-@p Već smo videli da @code{map} zadovoljava oba zakona.
+@p Već smo videli da @code{map} zadovoljava oba zakona, ali ponovimo to još jednom. Prvo,
+@ccode{fmap id [x1 ... xn]}
+@code{= [id x1 ... id xn]}
+@code{= [x1 ... xn]}
+što znači da je @code{fmap id xs = xs} za svaku listu @code{xs}. Dakle @code{fmap id} je identička funkcija, pa je zadovoljen prvi zakon funktora. Drugo, kako je
+@ccode{(fmap g . fmap) [x1 .. xn]}
+@code{= fmap g (fmap f [x1 .. xn])}
+@code{= [g (f x1) ... g (f x)]}
+@code{= fmap (g. f) [x1 .. xn]}, sledi da je @ccode{(fmap g . fmap) xs = fmap (g. f) xs} za svaku listu @code{xs}. Prema tome zadovoljen je i drugi zakon.
 
 @p U slučaju ove instance operator @code{<$} zamenjuje sve vrednosti u listi sa jednom vrednošću:
 
@@ -133,7 +141,7 @@ Nothing
 }
 
 @example{
-@p Apstraktni tip @code{(,) :: * -> * -> *} ne može biti funktor, jer ne poseduje odgovarajuću vrstu. Ali parcijalnom aplikacijom na neki tip @code{T} dobijamo apstrakti tip @code{(,) T :: * -> *} koji može biti funktor. Upravo je na taj način definisana instanca @code{Functor ((,) a)} za svaki tip @code{a}:
+@p Apstraktni tip @code{(,) :: * -> * -> *} ne može biti funktor, jer ne poseduje odgovarajuću vrstu. Ali parcijalnom aplikacijom na neki tip @code{T} dobijamo apstraktni tip @code{(,) T :: * -> *} koji može biti funktor. Upravo je na taj način definisana instanca @code{Functor ((,) a)} za svaki tip @code{a}:
 
 @codeBlock{
 instance Functor ((,) a) where
@@ -333,9 +341,9 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 
 @subsection{Liste kao aplikativni funktori}
 
-@p Da bi @code{[] :: * -> *} postao aplikativni funktor, potrebno je samo definisati funkciju @code{pure :: a -> [a]} i jednu od funkcija @code{(<*>) :: [a -> b] -> [a] -> [b]} ili @code{liftA2 :: [a -> b -> c] -> [a] -> [b] -> c}. Posmatrajući samo tipove navedenih funkcija, možemo dati mnogo različitih definicija funkcija. Međutim, ako se osvrnemo na četiri gorenevedena zakona, uvidećemo da dolazimo do jedinstvenih definicija.
+@p Da bi @code{[] :: * -> *} postao aplikativni funktor, potrebno je samo definisati funkciju @code{pure :: a -> [a]} i jednu od funkcija @code{(<*>) :: [a -> b] -> [a] -> [b]} ili @code{liftA2 :: [a -> b -> c] -> [a] -> [b] -> c}. Posmatrajući samo tipove navedenih funkcija, možemo dati mnogo različitih definicija funkcija. Naravno neće sve definicije biti dovoljno dobre, tako da zakoni aplikativnih funkora budu zadovoljeni. Ali, u slučaju lista postoji više mogućih definicija instance @code{Applicative [a]} koje zadovoljavaju pomenute zakone. Igrom slučaja, jedna od tih definicija je odabrana i implementirana u prelidu. Tu definiciju ćemo prikazati u nastavku:
 
-@p Funkciju @code{pure} uzima vrednost nekog neodređenog tipa @code{a} i vraća vrednost tipa @code{[a]}. Kako je tip u potpunosti neodređen (nije ograničen nekom tipskom klasom), ne možemo mnogo što šta uraditi sa vrednošću. Za vrednost @code{x}, funkcija @code{pure} može vratiti @code{[]}, @code{[x]}, @code{[x, x]}, @code{[x, x, x]}, itd... Konstantna funkcija @code{\x -> []} bi bila beskorisna, dok bi funkcije poput @code{\x -> [x, x]}, @code{\x -> [x, x, x]} vraćale previše. Zbog toga, definisaćemo @code{pure} kao funkciju @code{\x -> [x]}.
+@p Funkcija @code{pure} uzima vrednost nekog neodređenog tipa @code{a} i vraća vrednost tipa @code{[a]}. Kako je tip u potpunosti neodređen (nije ograničen nekom tipskom klasom), ne možemo mnogo što šta uraditi sa vrednošću. Za vrednost @code{x}, funkcija @code{pure} može vratiti @code{[]}, @code{[x]}, @code{[x, x]}, @code{[x, x, x]}, itd... Konstantna funkcija @code{\x -> []} bi bila beskorisna, dok bi funkcije poput @code{\x -> [x, x]}, @code{\x -> [x, x, x]} vraćale previše. Zbog toga, definisaćemo @code{pure} kao funkciju @code{\x -> [x]}.
 
 @p Da bismo definisali @code{<*>} neophodno je da obratimo pažnju na zakone aplikativnih funktora. Prvo, iz @ccode{fmap f x = pure f <*> x}, i iz @code{pure f = [f]} sledi da @code{[f] <*> [x1,...,xn]} mora biti @code{[f x1,...,f xn]}. Prema tome, @code{<*>} primenjuje funkcije iz leve liste na vrednosti iz desne liste. Postoji mnogo načina na koje se takva primena može definisati, i za sada nam nije jasno kako se više funkcija primenjuje na više vrednosti (za sada samo razumemo @code{[f] <*> xs})@note{Na primer, možda bi operator @code{(<*>)} funkcije i vrednosti uparivao član po član poput @code{zip} funkcije koja uparuje vrednosti dve liste u listu parova. Ali kako mora važiti prvi zakon @code{fmap f x = pure f <*> x} sledi da ovakva definicija nije moguća. U suprotnom bi bilo @ccode{[f x1,f x2]}@ccode{= fmap f [x1,x2]}@ccode{= pure f <*> [x1,x2]}@ccode{= [f] <*> [x1, x2] = [f x1]}, što naravno nije tačno.}. Zbog toga, @code{<*>} definišemo kao operaciju koja primenjuje svaku funkciju iz leve liste na svaku vrednost iz desne.
 
@@ -381,10 +389,10 @@ instance Functor ToInt where
 
 @p Prvo, da li je @code{fmap id} identička funkcija. Naravno da jeste, jer je @code{id} neutralni element za kompoziciju tj. @ccode{fmap id g = id . g = g}.
 
-@p Drugo, da li je @code{fmap} distributivno u odnosu na kompoziciju? Jeste, jer je @ccode{fmap (f2. f1) g} @ccode{= (f2 . f1) g} @ccode{= f2 . (f1 . g)} @ccode{= f2 . (fmap f1 g)} @ccode{= fmap f2 (fmap f1 g)} @ccode{= (fmap f2 . fmap f1) g}. 
+@p Drugo, da li je @code{fmap} distributivno u odnosu na kompoziciju? Kako je @ccode{fmap (f2 . f1) g} @ccode{= (f2 . f1) . g} @ccode{= f2 . (f1 . g)} @ccode{= f2 . (fmap f1 g)} @ccode{= fmap f2 (fmap f1 g)} @ccode{= (fmap f2 . fmap f1) g} za svako @code{g}, sledi da je @code{fmap (f2 . f1) = fmap f2 . fmap f1}, pa je zadovoljen i drugi zakon funktora. 
 
 @example{
-@p Definisimo konkretne vrednosti:
+@p Definišimo konkretne vrednosti:
 @codeBlock{
 f :: Bool -> String
 f b = show b
@@ -406,22 +414,31 @@ ghci> m 3
 }
 }
 
-@problem{
-Opisati operator @code{<$} u kontekstu funktora @code{FromInt}. 
-}
+@problem{Opisati operator @code{<$} u kontekstu funktora @code{FromInt}.}
 
 @p Naravno, sledeći korak je da ucinimo @code{ToInt} aplikativnim funktorom. Za definisanje metode @ccode{pure :: a -> (Int -> a)} ponovo nemamo mnogo izbora. Ako nam je data jedna vrednost @code{x :: A}, mozemo samo na jedan način konstruisati funkciju tipa @code{A -> Int}, a ta jedinstvena funkcija je konstantna funkcija: @ccode{\_ -> x}. Definicija @code{<*>} je nešto komplikovanija, ali nas ponovo tipovi vode ka rešenju. U kontekstu tipa @code{FromInt}, operator @code{<$>} poseduje tip @ccode{(Int -> (a -> b)) -> (Int -> a) -> (Int -> b)}. Ako nam je data funkcija @code{f :: Int -> (A -> B)} i funkcija @code{g :: Int -> A}, tada možemo konstruisati funkciju tipa @code{Int -> B} tako sto ćemo za svaku celobrojnu vrednost @code{Int}, aplicirati @code{f} i @code{g} na @code{n}, time dobiti vrednosti tipa @code{A -> B} i @code{B}, od kojih na očigledan način možemo dobiti vrednost tipa @code{B}. Kôd je ponovo sasvim jednostavan:
 
 @codeBlock{
 instance Applicative FromInt where
     pure x = \_ -> x
-
     f <$> g = \n -> (f n) (g n)
 }
 
 @p Naravno, neophodno je dokazati da navedene definicije zadovoljavaju zakone aplikativnih funktora. Ovo ćemo prepustiti čitaocu, jer se ne razlikuje od provera koje smo do sada vršili.
 
-@problem{
-Dokazati da gorenavedena instanca @code{Applicative FromInt} zadovoljava pet zakona aplikativnih funktora.
-}
+@problem{Dokazati da gorenavedena instanca @code{Applicative FromInt} zadovoljava pet zakona aplikativnih funktora.}
 
+@p Kao i do sada, uvek želimo da uopštimo kôd, tako da se odnosi na što više tipova. Prehodni argumenti za tip @code{FromInt} mogu se od reči do reči ponoviti za bilo koji drugi tip. Stoga, za svaki tip @code{T}, učinićemo tip @code{(->) T} instancom klasa @code{Functor} i @code{Applicative}. Srećem, Haskel dozvoljava da ovakva opšta definicija izrazi kroz dekleraciju klase korišćenjem polimorfnog tipa @code{(->) t}. Upravo tako su i definisane instance strelice u prelidu:
+
+@codeBlock{
+instance Functor ((->) t) where
+    fmap f g = f . g
+
+instance Applicative ((->) t) where
+    pure x = \_ -> x
+    f <$> g = \n -> (f n) (g n)
+}  
+
+@p Vratimo se na tipski sinonim @code{ToInt}, koji konstruiše tip funkcija sa kodomenom @code{Int}. Da li je ovaj apstraktni tip funktor? Ako bi @code{ToInt} bio funktor, tada bismo od funkcija tipa @code{g :: A -> B} i @code{f :: A -> Int} mogli da konstruišemo funkciju tipa @code{B -> Int}. Međutim to je definitivno nemoguće, jer ako nam je data vrednost @code{B}, na tu vrednost ne možemo primeniti ni @code{f} ni @code{g}. Prema tome, @code{ToInt} ne može biti funktor, a samim tim ni aplikativni funktor. Isto važi i za svaki drugi apstraktni tip @code{FuncToT a = a -> T}.
+
+@todo{Aplikativni parseri}

@@ -102,7 +102,7 @@ data ListaBool = DodajBool Bool ListaBool | PraznaListaBool
 
 @codeBlock{
 data Lista a = Dodaj a (Lista a) | PraznaLista
-}{Nakon konstruktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstrakti), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homogenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstruktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
+}{Nakon konstruktora @code{Dodaj} moraju biti navedeni konkretni tipovi (a ne apstraktni), te je stoga drugi parametar @code{Lista a} a ne @code{Lista}. Ovim je i utvrđena homogenost liste tj. obezbeđeno je da sve vrednosti moraju biti istog tipa. Na primer, ako posmatramo tip @code{Lista Int} tada konstruktor @code{Dodaj} ima tip @code{Int -> Lista Int -> Lista Int}, tj. @code{Dodaj} može dodati samo vrednost tipa @code{Int} na listu tipa @code{Lista Int}. Induktivno sledi da vrednost @code{Lista Int} sadrži samo vrednosti tipa @code{Int}.}
 
 @p Sa apstraktnim tipom se lako mogu predstaviti liste vrednosti bilo kog tipa. Na primer, sada @code{Lista Int} predstavlja tip koji odgovara tipu @code{ListaBrojeva} od malopre, a  @code{Lista Bool} odgovara tipu @code{ListaBool} od malopre. Primetimo da sada konstruktori @code{Dodaj}, @code{PraznaLista} imaju isto ime za sve tipove, što dodatno olakšava zapis.
 
