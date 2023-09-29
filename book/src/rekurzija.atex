@@ -293,7 +293,7 @@ p 0 = 1
 }{Funkicja @code{p} je definisana samo za argument @code{0}.}
 
 @terminal{
-Prelude> p 10
+ghci> p 10
 *** Exception: <interactive>:3:1-16: Non-exhaustive patterns in function p
 }{Pokretanje @code{p x} za bilo koju vrednost @code{x} različiti od @code{0} dovodi do izuzetka.}
 

@@ -20,7 +20,7 @@
 
 @p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porditi sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
 
-@p @em{Prelude} obezbeđuje još neke funkcije za rad sa listama karaktera:
+@p Haskel prelid obezbeđuje još neke funkcije za rad sa listama karaktera:
 
 @list{
 @li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od jedne nikse dobijaju "reči".

@@ -232,10 +232,16 @@ zapremina :: Double -> (Double -> (Double -> Double))
 zapremina = (\a -> (\b -> (\c -> (a * b * c))))
 }}
 
+@section{@em{Prelude}}
+
+@p @def{Prelid}@note{eng. @em{prelude}} je kratka muzička forma improvizacijskog karaktera, koja se koristi kao uvod u veća muzička dela. U Haskelu, @em{Prelude} predstavlja kôd koji je dostupan svakom programu. Definicije iz prelida, mogu se shvatiti kao uvod u definicije koje je korisnik napisao.
+
+@p Sve predefinisane funkcije koje smo do sada predstavili, poput @code{not}, @code{mod}, @code{div}, @code{length}, @code{head}, @code{fst}, i tako dalje, zapravo su definisane u Haskel prelidu. U narednim lekcijama videćemo kako su tačno ove funkcija definisane, i upoznaćemo još mnoge druge definicije iz prelida.
+
 @section{Zadaci}
 
 @problem{
-Rešenja @m{x_1} i @m{x_2} kvadratne jednačine @m{ax^2+bx+c=0} su data sa @em{kvadratnom formulom} @eq{x_{1,2} = \frac{-b\pm\sqrt{b^2-4ac}}{2a}.} Implementirati funkciju @ccode{resenja :: Double -> (Double -> (Double -> (Double, Double)))} koja za tri prosleđena argumenta @m{a}, @m{b} i @m{c} vraća uređeni par rešenja koja su dobijena putem navedene formule. Pretpostaviti da će koeficijenti biti tako zadati da su sve računske operacije definisane.
+Rešenja @m{x_1} i @m{x_2} kvadratne jednačine @m{ax^2+bx+c=0} su data sa @em{kvadratnom formulom} @eq{x_{1,2} = \frac{-b\pm\sqrt{b^2-4ac}}{2a}.} Implementirati funkciju @ccode{resenja :: Double -> (Double -> (Double -> (Double, Double)))} koja za tri prosleđena argumenta @m{a}, @m{b} i @m{c} vraća uređeni par rešenja koja su dobijena putem navedene formule. Pretpostaviti da su koeficijenti tako zadati da su sve računske operacije definisane (u realnom domenu).
 }
 
 @problem{

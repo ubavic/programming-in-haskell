@@ -342,14 +342,14 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 
 @section{Strelice kao funktori}
 
-@p Jos od prvi lekcija, koristili smo konstruktor @code{->}, takozvanu strelicu, za konstrukciju tipova funkcija. Na samom pocetku to nismo znali, ali strelica je binarni tipski konstruktor, sta se lako mozemo uveriti:
+@p Još od prvih lekcija, koristili smo konstruktor @code{->}, takozvanu strelicu, za konstrukciju tipa funkcija. tokom prvih lekcija to nismo znali, ali strelica je binarni tipski konstruktor, u šta se lako možemo uveriti:
 
 @terminal{
 ghci> :kind (->)
 (->) :: * -> * -> *
 }
 
-@p Kako je vrsta @code{* -> * -> *}, strelica ne moze bit funktor@note{Funktori su tipovi vrste @code{* -> *}} Ali ako fiksiramo jedan od argumenata, dobicemo tip odgovarajuce vrste. Za primer, odaberimo @code{Int} kao tip koji cemo fiksirati za domen ili kodomen, i kreirajmo dva nova tipska sinonima:
+@p Kako je vrsta @code{* -> * -> *}, strelica ne može biti funktor@note{Funktori su tipovi vrste @code{* -> *}}, ali ako fiksiramo jedan od argumenata, dobićemo tip odgovarajuće vrste. Za konkretan primer tokom narednog izlaganja odabraćemo @code{Int} kao tip koji ćemo fiksirati za domen ili kodomen. Da bi olakšali zapis, kreirajmo dva nova tipska sinonima:
 
 @codeBlock{
 type FromInt a = Int -> a
@@ -366,11 +366,11 @@ ghci> :kind ToInt
 ToInt :: * -> *
 }
 
-@p Tip @code{FromInt T} predstavlja tip svih funkcija @em{iz celih brojeva} u @code{T}, dok @code{ToInt T} predstavlja tip svih funkcija iz @code{T} @em{u tip celih brojeva}. Za pocetak, posvetimo se tipu @code{ToInt}.
+@p Tip @code{FromInt T} predstavlja tip svih funkcija @em{iz celih brojeva} u @code{T}, dok @code{ToInt T} predstavlja tip svih funkcija iz @code{T} @em{u tip celih brojeva}. Za početak, posvetimo se tipu @code{ToInt}.
 
-@p Da bi definisali instancu @code{Functor ToInt}, neophodno i dovoljno je da definisemo metodu @code{fmap :: (a -> b) -> ToInt a -> ToInt b}, tj, raspisujuci definiciju sinonima, @ccode{fmap :: (a -> b) -> (Int -> a) -> (Int -> b)}. Definisanje metode @code{fmap} se svodi na definsanje funkcije tipa @code{Int -> B} ako su nam date funkcije @code{f :: A -> B} i @code{g :: Int -> A}. Kao sto i naredna ilustracija pokazuje, nemamo mnogo izbora za definicju: jedino sto mozemo da uradimo je da napravimo kompoziciju @code{f . g :: Int -> B}:
+@p Za definiciju instancu @code{Functor ToInt}, neophodno i dovoljno je definisati metodu @code{fmap :: (a -> b) -> ToInt a -> ToInt b}, tj, raspisujuci definiciju sinonima, @ccode{fmap :: (a -> b) -> (Int -> a) -> (Int -> b)}. Definisanje metode @code{fmap} se svodi na definisanje funkcije tipa @code{Int -> B} ako su nam date funkcije @code{f :: A -> B} i @code{g :: Int -> A}. Kao što i naredna ilustracija pokazuje, nemamo mnogo izbora za definiciju: jedino sto možemo da uradimo je da napravimo kompoziciju @code{f . g :: Int -> B}:
 
-@p Definicija instance je zapravo najkraca do sada:
+@p Definicija instance je zapravo najkraća do sada:
 
 @codeBlock{
 instance Functor ToInt where
@@ -379,7 +379,7 @@ instance Functor ToInt where
 
 @p Naravno, neophodno je i da proverimo dva zakona funktora.
 
-@p Prvo, da li je @code{fmap id} identicka funkcija. Naravno da jeste, jer je @code{id} neutralni element za kompoziciju tj. @ccode{fmap id g = id . g = g}.
+@p Prvo, da li je @code{fmap id} identička funkcija. Naravno da jeste, jer je @code{id} neutralni element za kompoziciju tj. @ccode{fmap id g = id . g = g}.
 
 @p Drugo, da li je @code{fmap} distributivno u odnosu na kompoziciju? Jeste, jer je @ccode{fmap (f2. f1) g} @ccode{= (f2 . f1) g} @ccode{= f2 . (f1 . g)} @ccode{= f2 . (fmap f1 g)} @ccode{= fmap f2 (fmap f1 g)} @ccode{= (fmap f2 . fmap f1) g}. 
 
@@ -393,7 +393,7 @@ g :: FromInt Bool
 g n = even n
 }
 
-@p Ako ucitamo definicije funkcija (zajedno sa definicijom intance), mozemo se uveriti u novi funktor:
+@p Ako učitamo definicije funkcija (zajedno sa definicijom instance), možemo se uveriti u novi funktor:
 
 @terminal{
 ghci> m = fmap f g
@@ -410,7 +410,7 @@ ghci> m 3
 Opisati operator @code{<$} u kontekstu funktora @code{FromInt}. 
 }
 
-@p Naravno, sledeci korak je da ucinimo @code{ToInt} aplikativnim funktorom. Za definisanje metode @ccode{pure :: a -> (Int -> a)} ponovo nemamo mnogo izbora. Ako nam je data jedna vrednost @code{x :: A}, mozemo samo na jedan nacin konstruisati funkciju tipa @code{A -> Int}, a ta jedinstvena funkcija je kontantna funkcija: @ccode{\_ -> x}. Definicija @code{<*>} je nesto komplikovanija, ali nas ponovo tipo vode ka resenju. U kontekstu tipa @code{FromInt}, oprator @code{<$>} poseduje tip @ccode{(Int -> (a -> b)) -> (Int -> a) -> (Int -> b)}. Ako nam je data funkcija @code{f :: Int -> (A -> B)} i funkcija @code{g :: Int -> A}, tada mozemo da konstruisemo funkciju tipa @code{Int -> B} tako sto cemo za svaku celobrojnu vrednost @code{Int}, aplicirati @code{f} i @code{g} na @code{n}, time dobiti vrednosti tipa @code{A -> B} i @code{B} od kojih na ocigledan nacin mozemo dobiti vrednost tipa @code{B}. Kod je ponovo veoma jednostavan:
+@p Naravno, sledeći korak je da ucinimo @code{ToInt} aplikativnim funktorom. Za definisanje metode @ccode{pure :: a -> (Int -> a)} ponovo nemamo mnogo izbora. Ako nam je data jedna vrednost @code{x :: A}, mozemo samo na jedan način konstruisati funkciju tipa @code{A -> Int}, a ta jedinstvena funkcija je konstantna funkcija: @ccode{\_ -> x}. Definicija @code{<*>} je nešto komplikovanija, ali nas ponovo tipovi vode ka rešenju. U kontekstu tipa @code{FromInt}, operator @code{<$>} poseduje tip @ccode{(Int -> (a -> b)) -> (Int -> a) -> (Int -> b)}. Ako nam je data funkcija @code{f :: Int -> (A -> B)} i funkcija @code{g :: Int -> A}, tada možemo konstruisati funkciju tipa @code{Int -> B} tako sto ćemo za svaku celobrojnu vrednost @code{Int}, aplicirati @code{f} i @code{g} na @code{n}, time dobiti vrednosti tipa @code{A -> B} i @code{B}, od kojih na očigledan način možemo dobiti vrednost tipa @code{B}. Kôd je ponovo sasvim jednostavan:
 
 @codeBlock{
 instance Applicative FromInt where
@@ -419,7 +419,7 @@ instance Applicative FromInt where
     f <$> g = \n -> (f n) (g n)
 }
 
-@p Naravno, neophodno je dokazati da navedene definicije zadovoljavaju zakone aplikativnih funktora. Ovo cemo prepustiti citaocu, jer se ne razlikuje od provera koje smo do sada vrsili.
+@p Naravno, neophodno je dokazati da navedene definicije zadovoljavaju zakone aplikativnih funktora. Ovo ćemo prepustiti čitaocu, jer se ne razlikuje od provera koje smo do sada vršili.
 
 @problem{
 Dokazati da gorenavedena instanca @code{Applicative FromInt} zadovoljava pet zakona aplikativnih funktora.
