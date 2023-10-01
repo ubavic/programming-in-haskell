@@ -441,3 +441,7 @@ Napraviti tip @code{LogickiIzraz} koji predstavlja logičke izraze sačinjenje o
 @em{Za ovaj zadatak je neophodno uraditi prethodni zadatk} Neka je data funkicja @code{f :: Int -> Bool} sa @code{f x = x \=0}. Konstruiasti funkciju @code{konvertuj :: LogickiIzraz -> Izraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izracunajAritmeticki = izracunajLogicki . konvertuj}
 }
 
+
+@todo{parsiaranje matematickih izraza}
+
+@todo{foldable klasa}

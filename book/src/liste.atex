@@ -2,6 +2,7 @@
 
 @p Liste u Haskelu su homegene strukture podataka, što znači da mogu sadržati vrednosti samo jednog tipa (npr. samo brojeve ili samo logičke vrednosti). Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[x1, x2, x3, x4, x5]}.
 
+@todo{dopisati deo o konstruktoru}
 
 @section{Funkcije za rad sa listama}
 
@@ -417,6 +418,9 @@ ghci> numerisaniDani = zipWith f [1 .. 7] dani
 @problem{Reimplementirati funkciju @code{zip} koristeći funkciju @code{zipWith}.}
 
 @problem{Reimplementirati funkciju @code{zipWith} koristeći funkcije @code{zip} i @code{map}.}
+
+
+@todo{izlistavanje}
 
 @section{Primer: Cezarova šifra}
 

@@ -298,12 +298,12 @@ False
 @p Sa operatorom @code{!!} možemo pristupiti @m{m}-tom elementu liste. Sa leve strane operatora se navodi lista, a sa desne strane vrednost tipa @code{Int}. Elementi su indeksirani od nule. Pokušaj pristupanja indeksu koji je veći od dužine liste dovodi do izuzetka.
 
 @terminal{
-ghci>[True, False, True, False, True] !! 2
+ghci> [True, False, True, False, True] !! 2
 True
 }
 
 @terminal{
-ghci>[True, False, True, False, True] !! 7
+ghci> [True, False, True, False, True] !! 7
 *** Exception: Prelude.!!: index too large
 }
 

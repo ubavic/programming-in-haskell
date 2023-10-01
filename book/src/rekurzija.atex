@@ -234,6 +234,8 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 
 @section{Složenost rekurzivnih algoritama}
 
+@todo{dopuniti opise}
+
 @p Lepota rekurzivnih algoritama leži u tome što programer na jednostavan način može implementirati komplikovane funkcionalnosti. Programiranje baznog slučaja i rekurzivnog koraka su dovoljni da bi se i naizgled nemogući problemi jednostavno rešili. Primeri i zadaci koji su navedeni u ovoj lekciji bi trebalo da demonstriraju tu elegantnost.
 
 @p Ipak, lepota rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.

@@ -79,7 +79,7 @@ class Functor f where
     fmap :: (a -> b) -> f a -> f b
     (<$) :: a -> f b -> f a
     (<$) = fmap . const
-    @@{ -# MINIMAL fmap #-@@}
+    @@{-# MINIMAL fmap #-@@}
 }
 
 @p Prvo što bi trebalo da uočimo jeste da konkretni tipovi (tipovi vrste @code{*}) ne mogu pripadati ovoj klasi, jer je @code{fmap} tipa @code{(a -> b) -> f a -> f b} iz čega sledi da @code{f} mora biti apstraktni tip vrste @code{* -> *}@note{Tip funkcije (ili bilo koje druge vrednosti) može sadržati samo konkretne tipove, pa sledi da su @code{f a} i @code{a} vrste @code{*}. Dalje sledi da je @code{f} vrste @code{* -> *}.}.
@@ -376,12 +376,12 @@ ToInt :: * -> *
 
 @p Tip @code{FromInt T} predstavlja tip svih funkcija @em{iz celih brojeva} u @code{T}, dok @code{ToInt T} predstavlja tip svih funkcija iz @code{T} @em{u tip celih brojeva}. Za početak, posvetimo se tipu @code{ToInt}.
 
-@p Za definiciju instancu @code{Functor ToInt}, neophodno i dovoljno je definisati metodu @code{fmap :: (a -> b) -> ToInt a -> ToInt b}, tj, raspisujuci definiciju sinonima, @ccode{fmap :: (a -> b) -> (Int -> a) -> (Int -> b)}. Definisanje metode @code{fmap} se svodi na definisanje funkcije tipa @code{Int -> B} ako su nam date funkcije @code{f :: A -> B} i @code{g :: Int -> A}. Kao što i naredna ilustracija pokazuje, nemamo mnogo izbora za definiciju: jedino sto možemo da uradimo je da napravimo kompoziciju @code{f . g :: Int -> B}:
+@p Za definiciju instancu @code{Functor FromInt}, neophodno i dovoljno je definisati metodu @code{fmap :: (a -> b) -> FromInt a -> FromInt b}, tj, raspisujuci definiciju sinonima, @ccode{fmap :: (a -> b) -> (Int -> a) -> (Int -> b)}. Definisanje metode @code{fmap} se svodi na definisanje funkcije tipa @code{Int -> B} ako su nam date funkcije @code{f :: A -> B} i @code{g :: Int -> A}. Kao što i naredna ilustracija pokazuje, nemamo mnogo izbora za definiciju: jedino sto možemo da uradimo je da napravimo kompoziciju @code{f . g :: Int -> B}:
 
 @p Definicija instance je zapravo najkraća do sada:
 
 @codeBlock{
-instance Functor ToInt where
+instance Functor FromInt where
     fmap f g = f . g
 }
 
@@ -389,7 +389,7 @@ instance Functor ToInt where
 
 @p Prvo, da li je @code{fmap id} identička funkcija. Naravno da jeste, jer je @code{id} neutralni element za kompoziciju tj. @ccode{fmap id g = id . g = g}.
 
-@p Drugo, da li je @code{fmap} distributivno u odnosu na kompoziciju? Kako je @ccode{fmap (f2 . f1) g} @ccode{= (f2 . f1) . g} @ccode{= f2 . (f1 . g)} @ccode{= f2 . (fmap f1 g)} @ccode{= fmap f2 (fmap f1 g)} @ccode{= (fmap f2 . fmap f1) g} za svako @code{g}, sledi da je @code{fmap (f2 . f1) = fmap f2 . fmap f1}, pa je zadovoljen i drugi zakon funktora. 
+@p Drugo, da li je @code{fmap} distributivno u odnosu na kompoziciju? Kako je @ccode{fmap (f2 . f1) g} @ccode{= (f2 . f1) . g} @ccode{= f2 . (f1 . g)} @ccode{= f2 . (fmap f1 g)} @ccode{= fmap f2 (fmap f1 g)} @ccode{= (fmap f2 . fmap f1) g} za svako @code{g}, sledi da je @ccode{fmap (f2 . f1) = fmap f2 . fmap f1}, pa je zadovoljen i drugi zakon funktora. 
 
 @example{
 @p Definišimo konkretne vrednosti:
@@ -416,11 +416,11 @@ ghci> m 3
 
 @problem{Opisati operator @code{<$} u kontekstu funktora @code{FromInt}.}
 
-@p Naravno, sledeći korak je da ucinimo @code{ToInt} aplikativnim funktorom. Za definisanje metode @ccode{pure :: a -> (Int -> a)} ponovo nemamo mnogo izbora. Ako nam je data jedna vrednost @code{x :: A}, mozemo samo na jedan način konstruisati funkciju tipa @code{A -> Int}, a ta jedinstvena funkcija je konstantna funkcija: @ccode{\_ -> x}. Definicija @code{<*>} je nešto komplikovanija, ali nas ponovo tipovi vode ka rešenju. U kontekstu tipa @code{FromInt}, operator @code{<$>} poseduje tip @ccode{(Int -> (a -> b)) -> (Int -> a) -> (Int -> b)}. Ako nam je data funkcija @code{f :: Int -> (A -> B)} i funkcija @code{g :: Int -> A}, tada možemo konstruisati funkciju tipa @code{Int -> B} tako sto ćemo za svaku celobrojnu vrednost @code{Int}, aplicirati @code{f} i @code{g} na @code{n}, time dobiti vrednosti tipa @code{A -> B} i @code{B}, od kojih na očigledan način možemo dobiti vrednost tipa @code{B}. Kôd je ponovo sasvim jednostavan:
+@p Naravno, sledeći korak je da ucinimo @code{FromInt} aplikativnim funktorom. Za definisanje metode @ccode{pure :: a -> (Int -> a)} ponovo nemamo mnogo izbora. Ako nam je data jedna vrednost @code{x :: A}, mozemo samo na jedan način konstruisati funkciju tipa @code{A -> Int}, a ta jedinstvena funkcija je konstantna funkcija: @ccode{\_ -> x}. Definicija @code{<*>} je nešto komplikovanija, ali nas ponovo tipovi vode ka rešenju. U kontekstu tipa @code{FromInt}, operator @code{<$>} poseduje tip @ccode{(Int -> (a -> b)) -> (Int -> a) -> (Int -> b)}. Ako nam je data funkcija @code{f :: Int -> (A -> B)} i funkcija @code{g :: Int -> A}, tada možemo konstruisati funkciju tipa @code{Int -> B} tako sto ćemo za svaku celobrojnu vrednost @code{Int}, aplicirati @code{f} i @code{g} na @code{n}, time dobiti vrednosti tipa @code{A -> B} i @code{B}, od kojih na očigledan način možemo dobiti vrednost tipa @code{B}. Kôd je ponovo sasvim jednostavan:
 
 @codeBlock{
 instance Applicative FromInt where
-    pure x = \_ -> x
+    pure x  = \_ -> x
     f <$> g = \n -> (f n) (g n)
 }
 
@@ -435,10 +435,183 @@ instance Functor ((->) t) where
     fmap f g = f . g
 
 instance Applicative ((->) t) where
-    pure x = \_ -> x
+    pure x  = \_ -> x
     f <$> g = \n -> (f n) (g n)
 }  
 
 @p Vratimo se na tipski sinonim @code{ToInt}, koji konstruiše tip funkcija sa kodomenom @code{Int}. Da li je ovaj apstraktni tip funktor? Ako bi @code{ToInt} bio funktor, tada bismo od funkcija tipa @code{g :: A -> B} i @code{f :: A -> Int} mogli da konstruišemo funkciju tipa @code{B -> Int}. Međutim to je definitivno nemoguće, jer ako nam je data vrednost @code{B}, na tu vrednost ne možemo primeniti ni @code{f} ni @code{g}. Prema tome, @code{ToInt} ne može biti funktor, a samim tim ni aplikativni funktor. Isto važi i za svaki drugi apstraktni tip @code{FuncToT a = a -> T}.
 
-@todo{Aplikativni parseri}
+@section{Aplikativni parseri}
+
+@p @def{Parser} je program (ili funkcija) koji od niza nekih simbola generiše vrednosti. Najčešće parseri služe da se niske (liste karaktera) transformišu u neke vrednosti poput brojeva ili struktura podataka. Za
+
+@example{
+@p Funkcija @code{read :: Read a => String -> a} koja "čita" vrednost iz niske, nije ništa drugo nego jedan parser.
+
+@terminal{
+ghci> read "39.5" :: Float
+39.5
+ghci> read "[True, False]" :: [Bool]
+[True, False]
+}
+}
+
+@p Parsiranje je generalno težak problem. Stoga ne čudi, što je tokom istorije računarstva razvijeno mnogo teorije o parserima i konkretnim tehnikama za njihovo konstruisanje. Svakako, teorija o parserima prevazilazi obime ove knjige, ali možemo ovde prikazati jednu theniku za konstrukciju parsera. U pitanju su takozvani @def{aplikativni parseri} koji su realizovani uz pomoć aplikativnih funktora@note{Aplikativni parseri definitivno jesu najpogodniji za jezike poput Haskela, ali definitivno nisu najjednostavniji.}.
+
+@p Parsiranjem bi trebalo nisku (koja je lista karaktera) pretvoriti u neku vrednost tipa @code{A}. Na primer, parser celobrojnih brojeva bi trebalo da da nisku transformiše u vrednost tipa @code{Float}, a parser logičkih lista bi trebalo da nisku pretvori u vrednost tipa @code{[Bool]}. Stoga ćemo definisati novi (apstraktni) tip, koji može predstviti parsere za vrednosti bilo kog tipa. Međutim, kroz ovaj novi tip je neophono obezbediti par stvari. 
+
+@list{
+@li Prvo, ne možemo očekivati da ćemo svaki parser konstruisati kao jedinstvenu funkciju, već kao kombinaciju manjih funkcija. Svaka od tih funkcija parsiraće jedan karakterističan deo niske (Na primer, parser @code{Float} vrednosti može biti sačinjen od tri parsera: prvog koji parsira ceo deo, drugog koji parsira tačku, i trećeg koji parsira razlomljeni deo. Slično parser logičkih nizova može biti sačinjen od parsera koji parsira levu zagradu, parsera za logički vrednost, parsera za zarez, parsera za beline, itd...). Parsere ćemo kombinovati tako što će svaki naredni parser, parsirati ono "što ostane" nakon pokretanja prethodnih parsera. Stoga jedan parser vrednosti @code{T} neće vraćati samo vrednost tipa @code{T}, već uređen par tipa @code{(String, T)}, gde prva koordinata označava ostatak niske koja se parsira.   
+@li Drugo, ne možemo očekivati da će svako parsiranje biti uspešno. Iz niske @code{"Hi!"} ne možemo parsirati broj niti logičku listu. Zbog toga, parser će vratiti možda-vrednost.
+}
+
+@p Uzimajući prethodno u obzir, stižemo do naredne definicije
+
+@codeBlock{
+newtype Parser a = P (String -> Maybe (String, a))
+}{Od sadam, parser celih brojva je tipa @code{Parser Int}, a parser logičkih lista je tipa @code{Parser [Bool]}, itd...}
+
+@p Sa navedenom definicijom tipa biće zgodna funkcija koja "pokreće" parser nad niskom:
+
+@codeBlock{
+parsiraj :: Parser a -> String -> Maybe (String, a)
+parsiraj (P p) s = p s 
+}
+
+@example{
+@p Kreirajmo parser koji parsira jedno slovo iz niske. Taj parser ima tip @code{Parser Char}. Sa konstruktorom @code{P} obuhvatićemo funkciju koja uzima jedno slovo sa početka niske. AKo je niska prazna, parser će vratiti @code{Nothing}.
+
+@codeBlock{
+slovo :: Parser Char
+slovo = P f
+    where
+        f [] = Nothing
+        f (x:xs) = Just (xs, x)
+}{Lokalno definisana funkcija @code{f} vrši glavnu ulogu. Međutim, da bi dobili vrednost tipa @code{Parse Char}, neophodno je da upakujemo ovu funkciju u konstruktor @code{P}. Naravno, postavlja se pitanje zašto je bilo neophodno da definišemo novi tip a ne tipski sinonim koji koji ne bi zahtevao konstruktor. Razlog tome je što za novi tip možemo definisati instance klasa @code{Functor} i @code{Applicative}, što nije moguće sa tipskim sinonimom koji se odnosi na tip funkcije.}
+
+@p Testiranje parsera je veoma jednostavno (i veoma čitljivo!):
+
+@terminal{
+ghci> parsiraj slovo "Hello world!"
+Just ("ello world!", 'H')
+ghci> parsiraj slovo ""
+Nothing
+}
+}
+
+@example{
+@p Nakon slova, najprirodnije je kreirati parser cifre. Parser cifre treba da nam vrati numeričku vrednost cifre, ako niska koju parsira počinje sa cifrom.
+
+@codeBlock{
+cifra :: Parser Int
+cifra = P f where
+    f []     = Nothing
+    f (x:xs) =
+        if x `elem` ['1' .. '9']
+        then Just (xs, fromEnum x - fromEnum '0')
+        else Nothing
+}{Tip karaktera pripada klasi @code{Enum}, te je moguće koristiti funkciju @code{fromEnum} koja daje @em{ASCII} vrednost karaktera. Oduzimanjem te vrednosti od  @em{ASCII}  vrednosti karaktera @code{'0'}, dobijamo numeričku vrednost koju niska predstavlja.}
+
+@terminal{
+ghci> parsiraj cifra "9abc"
+Just ("abc",9)
+ghci> parsiraj cifra "1234"
+Just ("234",1)
+ghci> parsiraj cifra "Hello!"
+Nothing
+}
+}
+
+
+@problem{Kreirati funkciju @code{maloSlovo :: Parser Char} koja parsira samo mala latinična slova (tj. karakter iz raspona ['a' .. 'w']).}
+
+@example{
+@p Često je zgodno da kreiramo funkciju koja kreira nekakav parser na osnovu prosleđenih argumenata. Parser @code{simbol :: Char -> Parser Char} je primer takve funkcije. Funkcija @code{simbol} uzima jedan karakter i vraća parser koji parsira isključivo taj karakter, a za sve ostale karaktere podbacuje.
+
+@codeBlock{
+simbol :: Char -> Parser Char
+simbol c = P $ \s -> case s of
+    x:xs -> if x == c then Just (xs, c) else Nothing
+    _   -> Nothing
+}
+
+@terminal{
+ghci> parsiraj (simbol '.') ".Hello!"
+Just ("Hello!",'.')
+ghci> parsiraj (simbol '.') "Hello!"
+Nothing
+}
+}
+
+@problem{Kreirati funkciju @code{niska :: String -> Parser String} koja na osnovu niske @code{s} kreira parser koji parsira isključivo @code{s}.}
+
+@p Sve što smo do sada videli o parserima, mogli smo da obradimo i u prethodnim lekcijama. Stoga je sada vreme da objasnimo zašto je tip @code{Parser :: * -> *} (aplikativni) funktor.
+
+@p Metod @code{fmap} u kontekstu tipa @code{Parse} poseduje tip @code{(a -> b) -> Parser a -> Parser b}. To znači da ako su nam dati funkcija @code{f :: A -> B} i parser @code{p :: Parser A}, mi bi trebalo da konstruišemo parser tipa @code{Parser B}. Nemamo mnogo izbora nego da na rezultat parsiranja sa @code{p} primenimo funkciju @code{f}.
+
+@codeBlock{
+instance Functor Parser where
+    fmap f p = P (\s -> fmap f' (parsiraj p s))
+       where f' (x, y) = (x, f y)
+}{Vrednost @code{parsiraj p s} je tipa @code{Maybe (A, String)} za neki tip @code{A}. Zbog toga @code{fmap f'} primenjena na ovu vrednost se ponaša u skaldu sa funktorom @code{Maybe}, a to je da primenjuje funkciju na vrednost ako ona postoji unutar konstruktora @code{Just}. Vrednost @code{Nothing} se ne menja.}
+
+@problem{Dokazati da navedena definicija poštuje dva zakona funktora.}
+
+@problem{Prethodnu definiciju funkcije @code{fmap} jednostavnije zapisati korišćenjem @code{fmap} metoda ostalih funktora.}{
+@p Lambdu @code{\s -> fmap f' (parsiraj p s)} možemo shvatiti kao primenu funkcije @code{fmap f'} na vrednost koja je dobijena primenom funkcije @code{parsiraj p} na vrednost @code{s}. A to upravo znači da je navedenla lambda kompozicija funkcija @code{fmap f'} i @code{parsiraj p}. Međutim ta kompozicija je upravo @code{fmap} u smislu tipa @code{(->) String}, te možemo pisati @code{fmap (fmap f') (parsiraj p)}. Time dobijamo:
+
+@codeBlock{
+instance Functor Parser where
+    fmap f p = P (fmap (fmap f') (parsiraj p))
+        where f' (x, y) = (x, f y)
+}
+
+@p Definicija pomoćne funkcije @code{f'} je ništa drugo nego @code{fmap} u smislu uređenih parova, te se možemo osloboditi definicje @code{f'}. Zagrade koje su obuhvatale izraz ispred konstruktora @code{P} možemo zameniti sa operatorom @code{$}, a umesto @code{parsiraj p} možemo parser dekonstruisati sa leve strane jednakosti. Dobijamo izuzetno elegantan kôd:
+
+@codeBlock{
+instance Functor Parser where
+    fmap f (P p) = P $ fmap (fmap (fmap f)) p
+}
+}
+
+@p Nakon što smo ustanovili da je @code{Parser} funktor, možemo tranformisati postojeće parsere.
+
+@example{
+@p Od parsera @code{cifra} iz gornjeg primera, kreirajmo parser logičkih vrednosti. Ovaj parser će odrediti da li niska započinje cifrom koja je parna.
+@terminal{
+ghci> parsiraj (fmap even cifra) "1234"
+Just ("234",False)
+ghci> parsiraj (fmap even cifra) "aaaa"
+Nothing
+}
+}
+
+@p Sledeći korak je implementirati instancu @code{Applicative Parser}. Za metodu @code{pure :: a -> Parser a}, nemamo mnogo izbora: to će biti "konstantan" parser koji ne parsira ništa. Za metodu @ccode{<*> :: Parser (a -> b) -> Parser a -> Prser b} takođe nemamo mnogo opcija. Ako nam je dat parser @code{p1 :: Parser (A -> B)} i pasrer @code{p2 :: Parser A}, sve što možemo da uradimo da bi dobili vrednost @code{B} je da "pokrenemo" parser @code{p1} i onda sa dobijenim vrednostima "pokrenemo" parser @code{p2}. Naravno, ako neki od parsera ne uspe, tada ni "kombinacija" ovih parsera ne treba da uspe.
+
+@codeBlock{
+instance Applicative Parser where
+    pure x = P $ \s -> Just (s, x)
+
+    p1 <*> p2 = P $ \s -> primeni (parsiraj p1 s) p2
+        where
+            primeni Nothing       _ = Nothing
+            primeni (Just (s',f)) p = parsiraj (fmap f p) s'
+}{Pomoćna funkcija @code{primeni}, proverava da li je parsiranje sa @code{p1} uspelo. Ako jeste uspelo, tada se rezultat @code{(s', f)} prosleđuje parseru @code{p2}, tako što se parser @code{fmap f p1} pokreće nad ostatkom @code{s'}.}
+
+@problem{Dokazati da navedena definicija poštuje zakone aplikativnih funktora.}
+
+@p Parseri koji parsiraju funkciju (tj. vrednosti tipa oblika @code{Parser (A -> B)}) su na prvi pogled veoma čudan pojam. Šta uopšte znači parsirati funkciju iz niske karaktera? Ali, setimo se koja je bila motivacija za uvođenje aplikativnih funktora: aplikacija funkcija više promenljiva na vrednosti u funktorima. Od sada koristeći @code{pure} i @code{<*>} možemo kombinovati parsere koristeći proizvoljne funkcije.
+
+@example{
+@p Kreirajmo parser koji parsira jedno slovo, zatim cifru i zatim te dve vrednosti kombinuje u uređeni par. Iz prethodnih primera i zadataka imamo parsere @code{slovo :: Pasrer Char} i @code{cifra :: Parser Int}, a želimo parser @code{slovoCifra :: Parser (Char, Int)}.
+
+@p Funkcija @ccode{f = \x y -> (x, y) :: a -> b -> (a, b)} kombinuje dve vrednosti u uređen par@note{Ovu funkciju kraće možemo zapisati kao konstruktor uređenog para @code{(,)}, ali nije to važno sad.}. Stoga, vrednost @code{pure f :: Parser (a -> b -> (a, b))} je moguće sa operatorom@note{Podsećamo da je @code{<*>} levoasocijativan operator.} @code{<*>} primeniti na dve vrednosti tipa @code{Parser A} i @code{Parser B}, da bi dobili vrednost @code{Parser (A, B)}. I zaista
+
+@terminal{
+ghci> f = \x y -> (x, y)
+ghci> slovoCifra = (pure f) <*> slovo <*> cifra
+ghci> parsiraj slovoCifra "D7"
+Just ("",('D',7))
+}{Idealno za parsiranje oznaka šahovskih polja!}
+}
+
