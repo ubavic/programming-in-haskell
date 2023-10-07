@@ -192,7 +192,7 @@ susret p m n = mod p (gcd n m) == 0
 
 @p Francuski matematičar Edvard Lukas@note{Inače, upravo je Lukas dao ime Fibonačijevom nizu kog smo obradili gore.} je krajem devetnaestog veka smislio igru koja je danas poznata kao @em{Hanojske kule}@note{Iako su od samog početka igru pratile mistične priče o poreklu u budističkim hramovima Dalekog istoka, za sada nema nikakavog dokaza o takvom poreklu.}. 
 
-@p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa, koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine koje označavamo sa @m{D_1,..., D_n}. Diskovi su probušeni u centru tako da se štap može provuću kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
+@p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine. Diskovi su probušeni u centru tako da se štap može provuću kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
 
 @figure{hanoi1}
 
@@ -238,7 +238,7 @@ Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matema
 
 @p Lepota rekurzivnih algoritama leži u tome što programer na jednostavan način može implementirati komplikovane funkcionalnosti. Programiranje baznog slučaja i rekurzivnog koraka su dovoljni da bi se i naizgled nemogući problemi jednostavno rešili. Primeri i zadaci koji su navedeni u ovoj lekciji bi trebalo da demonstriraju tu elegantnost.
 
-@p Ipak, lepota rekurzivnih funkcija dolazi po ceni da su one značajno manje efikasne od nerekurzivnih funkcija.
+@p Ipak, lepota rekurzivnih funkcija dolazi po ceni da su one često manje efikasne od odgovarajućih nerekurzivnih funkcija.
 
 @example{
 @p Neka je @m{S_n = 1 + \cdots + n}, suma koju smo posmatrali na početku ove lekcije. Ako članove sume raspišemo u dva reda, pri čemu ćemo u drugom redu obrnuti poredak sabiraka, dobijamo šemu: @eq{\begin{array}{ccccc}1  &2 &\cdots &n-1 & n\\ n &n-1 &\cdots &2 & 1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva koji odgovaraju kolonama, pri čemu je zbir svakog para @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
@@ -250,11 +250,11 @@ zbir' :: Int -> Int
 zbir' n = div (n * (n+1)) 2
 }{Možemo ignorisati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
 
-@p Navedena alternativna definicija nije mnogo kraća od rekurzivne, ali je značajno brža. Dok je vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}@note{Za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}.}, vreme za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je funkcija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u procesorskih taktova.
+@p Navedena alternativna definicija nije mnogo kraća od rekurzivne, ali je značajno brža. Vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}: za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}. Sa druge strane, vreme potrebno za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je funkcija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u nekoliko procesorskih taktova.
 }
 
 @example{
-@p Gore su navedene dve definicije funkcije koja računa parnost broja. Prva funkcija se izvršava u konstantnom vremenu, jer procesor u jednom ciklusu može da podeli dva broja sa ostatkom. Naredna, rekurzivna, definicija funkcije zahteva @code{n} rekurzivnih poziva za izračunavanje izraza @code{paran n}
+@p Gore su navedene dve definicije funkcije koja računa parnost broja. Prva funkicja, funkcija koja koristi @code{mod} funkciju, se izvršava u konstantnom vremenu, jer procesor u jednom ciklusu može da podeli dva broja sa ostatkom. Naredna, rekurzivna, definicija funkcije zahteva @code{n} rekurzivnih poziva za izračunavanje izraza @code{paran n}.
 }
 
 @example{
@@ -266,6 +266,10 @@ fib' n = round ((a^n - b^n)/t)
           a = (1 + t)/2
           b = (1 - t)/2
 }{Ugrađena funkcija @code{round} zaokružuje @code{Float} broj u @code{Int}.}
+
+@p Navedena definicija omogućanava da se @code{n}-ti član Fibonačijevog niza izračuna u konstantnom broju koraka (broj koraka ne zavisi od veličine parametra @code{n}).
+
+@p Sa druge strane, definicja koju smo dali ranije zahteva značajno više koraka pri izvršavanju. Za izračunavanje @code{fib (n -1)} potrebno je izračunati @code{fib (n-1)} i @code{fib (n-2)}. Za svaku od navedenih vrednosti potrebno je izračunati po još dve vrednosti i tako dalje. Odavde sledi da je broj koraka potreban za izračunavanje @code{fib n} proporcionalan sa @m{2^n}. Primetimo da se vrednosti računaju više puta: na primer @code{fib (n-2)} je potrebno izračunati za @code{fib n} ali i za @code{fib (n-1)}.
 }
 
 @p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristupiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
@@ -287,7 +291,7 @@ zbir n
 
 @p Funkciju koja nije definisana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Prema tome, pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
 
-@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledi bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje ne-rekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nisu obrađene svi mogući oblici argumenta:
+@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledi bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje nerekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nisu obrađeni svi mogući oblici argumenta:
 
 @codeBlock{
 p :: Int -> Int
@@ -303,7 +307,7 @@ ghci> p 10
 
 @p Postavlja se pitanje, zašto jezik poput Haskela dozvoljava da radimo sa parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kreirati programski jezik koji ne bi sadržao parcijalne funkcije a koji bi i dalje bio dovoljno ekspresivan za izražavanje svakog algoritma.
 
-@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajeve kada meki rekurzivni algoritam može ući u beskonačnu petlju, a zatim izmenom tog algoritma obezbediti da do beskonačne petlje nikad ne dođe.
+@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajeve kada rekurzivni algoritam može ući u beskonačnu petlju, a zatim izmenom tog algoritma obezbediti da do beskonačne petlje nikad ne dođe.
 
 @section{Zadaci}
 

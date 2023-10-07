@@ -427,7 +427,7 @@ instance Fractional Racionalan where
 @problem{Definisati tip @code{Z4} koji predstavlja skup ostataka pri deljenju sa @m{4} tj @eq{\mathbb Z_4 = \{0, 1, 2, 3\}.} Ovaj tip definisati kao @ccode{newtype Z4 = Z4 Int}. Instancirati @code{Num Z4} pri čemu voditi računa da se sve operacije vrše po modulu @m{4.} Na primer @m{3 + 2 =_4 1} i @m{2 \cdot 2 =_4 0}.
 }
 
-@problem{Analogno prethodnom zadatku kreirati tip @code{Z5} koji prezentuje @eq{\mathbb Z_5 = \{0, 1, 2, 3, 4\},} i instancirati @code{Num Z5}.
+@problem{Analogno prethodnom zadatku definisati tip @code{Z5} koji prezentuje @eq{\mathbb Z_5 = \{0, 1, 2, 3, 4\},} i instancirati @code{Num Z5}.
 Kreirati (sa ili bez računara) tablicu množenja za u skupu @m{\mathbb Z_5} (naravno, u odnosu na množenje modulo @m{5}). Utvrditi da je množenje u @m{\mathbb Z_5} @em{regularno} tj. da je proizvod dva nenula elementa uvek različit od nule (iz prethodnog primera vidimo da to ne važi za @m{\mathbb Z_4}).
 Koristeći ovu činjenicu, definisati recipročnu vrednost svakog elementa iz @m{\mathbb Z_5} i instancirati @code{Fractional Z5}}
 

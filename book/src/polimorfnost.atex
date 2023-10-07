@@ -58,7 +58,7 @@ konstantnoTačno :: a -> Bool
 konstantnoTačno = \x -> True
 }
 
-@p Navedenom definicijom, definisano je zapravo beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada mozemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
+@p Navedenom definicijom, definisano je zapravo beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada možemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
 
 @p Nesto složeniji primer funkcije sa polimorfnim tipom je identička funkcija, definisana u @em{Preude}-u kao @code{id}:
 
@@ -76,7 +76,7 @@ id = \x -> x
 @codeBlock{
 head :: [a] -> a
 head (x:_) = x
-}{Poklapanjem oblika liste, mozemo rastaviti listu na glavu i rep.}
+}{Poklapanjem oblika liste, možemo rastaviti listu na glavu i rep.}
 
 @p U ovoj funkciji, vidimo da se tipska promenljiva pojavljuje unutar zagrada @code{[]}. Prema tome @code{[a]} ne predstavlja svaki tip, vec predstavlja svaki tip lista. Npr. tip @code{Int} nije oblika @code{[a]}, i stoga @code{head 3} nije dobro tipiziran izraz. Sa druge strane, ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
 
@@ -109,7 +109,7 @@ Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
 
 @problem{Implementirati funkciju koja vraća prvu koordinatu proizvoljne uređene trojke.}
 {
-@p Proizvoljna uređena trojka ima tip oblika @code{(A, B, C)} gde su @code{A}, @code{B}, @code{C} neki proizvoljni tipovi. Stoga polimorfni tip koji predstavlja svaku uređenu trojku je @code{(a, b, c)}. Podudaranjem oblika mozemo konstruisati narednu funkciju:
+@p Proizvoljna uređena trojka ima tip oblika @code{(A, B, C)} gde su @code{A}, @code{B}, @code{C} neki proizvoljni tipovi. Stoga polimorfni tip koji predstavlja svaku uređenu trojku je @code{(a, b, c)}. Podudaranjem oblika možemo konstruisati narednu funkciju:
 @codeBlock{
 fst3 :: (a, b, c) -> a
 fst3 (x, _, _) = x

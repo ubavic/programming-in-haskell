@@ -231,7 +231,7 @@ ghci> b
 
 @section{Prelom i nazubljivanje}
 
-@p Često nije zgodno pisati ceo @em{let in} ili @em{where} izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostora na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo neformalna pravila koja dobro sažimaju tehnička pravila:
+@p Često nije zgodno pisati ceo izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostora na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo neformalna pravila koja dobro sažimaju ta tehnička pravila:
 
 @list{
 @li Nazubljivanje Haskel koda se vrši isključivo sa razmacima.

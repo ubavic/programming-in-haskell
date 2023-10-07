@@ -245,6 +245,16 @@ daLiJePočetak (x:xs) (y:ys) =
 @p Primetimo da se funkcija @ccode{daLiJePodlista :: Eq a => [a] -> [a] -> Bool} može implementirati na gotovo isti način.
 }
 
+@problem{Definisati funkciju @code{dupliraj :: Num a => [Int] -> [Int]} koja duplira svaki element liste brojeva. Redosled dupliranih vrednosti treba da odgovara redosledu vrednosti u originalnoj listi. Na primer @code{dupliraj [2, 3, 4]} je @code{[4, 6, 8]}, a @code{dupliraj []} je @code{[]}.}
+
+@problem{Definisati funkciju @code{dužine :: [[Char]] -> [Int]} koja listu niski preslikava u listu brojeva, pri čemu svaki broj predstavlja dužinu niske. Pritom, redosled brojeva je isti kao redosled odgovarajućih niski. Na primer, @code{dužine ["Pop","Ćira","i","pop","Spira"]} je @code{[3,4,1,3,5]}.}
+
+@problem{Definisati funkciju @code{parni :: [Int] -> [Int]} koje listu brojeva preslikava u listu brojeva koja je dobijana uklanjanjem svih brojeva koji nisu parni iz početne liste. Na primer, @code{parni [1,2,3,4]} je @code{2,4}.}
+
+@problem{Definisati funkciju @code{zbirCifara :: Int -> Int} koja određuje zbir cifara broja zapisanog u dekadnom zapisu. Koristeći ovu funkciju, naći sve prirodne brojeve @code{n} manje od @m{100}, takve da je zbir cifara broja @code{n^2} deljiv sa @code{5}.}
+
+@problem{Kreirat}
+
 @section{Funkcije višeg reda}
 
 @p Implementacijom mnogih rekurzivnih algoritama nad listama uvidećemo da se neki šabloni konstrukcije algoritama ponavljaju. Zbog toga su definisane funkcije višeg reda sa rad sa listama. Korišćenjem ovih funkcija možemo da izbegne eksplicitnu rekurziju u mnogim slučajevima.
@@ -372,10 +382,11 @@ ghci> foldr g 1 [1, 2, 3]
 Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju tipa @code{Int -> Float} koja u zavisnosti od parametra @m{n} računa sumu @eq{\sum^{n}_{i=1} \frac{1}{i}.}
 }
 
-
 @problem{Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.}
 
 @problem{Reimplementirati funkciju @code{filter} koristeći funkciju @code{foldl}.}
+
+@problem{Reimplementirati funkciju @code{id :: [a] -> [a]} koristeći funkciju @code{foldl}.}
 
 @subsection{Zip}
 
@@ -496,14 +507,17 @@ dešifruj niska = map dešifrujKarakter niska
 }
 
 @problem{
-Implementirati Cezarovu šifru sa proizvoljnim pomerajem @m{n}.
+Implementacija Cezarove šifra koju smo prezentovali gore je dobra za demonstraciju rada sa listama u Haskelu, ali nije mnogo efikasna. Umesto da za svako slovo pretražujemo listu @code{šifra}, možemo iskoristit @code{fromEnum :: Enum a => a -> Int} i @code{toEnum :: Enum a => Int -> a} funkcije da bi konvertovali slova u @em{ASCII} vrednosti i obrnuto. Koristeći navedene funkcije, kao i funkciju ostataka @code{mod}, dati alternativnu definiciju funkcije @code{šifrujKarakter}.
+}
+
+@problem{
+Koristeći prethodni zadatak, implementirati Cezarovu šifru sa proizvoljnim pomerajem @m{n}.
 }
 
 
 @problem{
 Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tajne poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljamo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
 }
-
 
 @section{Zadaci}
 
