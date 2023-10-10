@@ -673,7 +673,7 @@ ghci> parsiraj (broj <* simbol '.') "123.456"
 ("456",123)
 } 
 
-@p Na samom kraju, potrebno da dve vrednosti tipa @code{Int} ukombinujemo u jedan broj tako da druga vrednost predstavlja razvoj nakon decimalne tačke, tj. potrebno nam je preslikavanje @eq{\left(\overline{a_1\cdots a_n}, \overline{b_1\cdots b_n}\right) \mapsto \overline{a_1\cdots a_n .b_1\cdots b_n}} Prvo, obe koordinate ćemo tranformisati u @code{Double} vrednosti sa @code{fromIntegral} funkcijom. Drugu koordinatu, @m{y}, možemo rekurzivno deliti sa @m{10} dokle god je veća od @code{1}, da bismo dobili deo nakon decimalne tačke.
+@p Na samom kraju, potrebno da dve vrednosti tipa @code{Int} ukombinujemo u jedan broj tako da druga vrednost predstavlja razvoj nakon decimalne tačke, tj. potrebno nam je preslikavanje @eq{\left(\overline{a_1\cdots a_n}, \overline{b_1\cdots b_n}\right) \mapsto \overline{a_1\cdots a_n .b_1\cdots b_n}} Prvo, obe koordinate ćemo tranformisati u @code{Double} vrednosti sa @code{fromIntegral} funkcijom. Drugu koordinatu, @m{y}, možemo rekurzivno deliti sa @m{10} dokle god je veća od @m{1}, da bismo dobili deo nakon decimalne tačke.
 
 @codeBlock{
 decimalanBrojSaTačkom :: Parser Double
@@ -683,7 +683,64 @@ decimalanBrojSaTačkom = f <$> (broj <* simbol '.') <*> broj
 }
 
 @terminal{
-ghci> parsiraj decimalanBrojSaTačkom  "123.456"
+ghci> parsiraj decimalanBrojSaTačkom "123.456"
 Just ("",123.456)
 }
 }
+
+@example{
+@p Imitirajući ideju o rekurivnoj primeni parsera, možemo na jednostavan način implementirati funkciju @ccode{niska :: String -> Parser String} koju smo spomenuli u prethodnom zadatku.
+
+@p Prvo, parsiranje prazne niske iz bilo koje druge niske uvek treba da uspe. Ovo predstavlja bazni slučaj. Drugo, parsiranje neke niske @code{x:xs} iz niske @code{s} može da se izvede tako što se prvo parsira simbol @code{x}, pa ako to parsiranje uspe, rekurzivno se parsira i ostatak @code{xs}:
+
+@codeBlock{
+niska :: String -> Parser String
+niska ""     = P $ \s -> Just (s, "")
+niska (x:xs) = P $ \s -> case parsiraj (simbol x) s of
+    Just (s',_) -> parsiraj ((x:) <$> niska xs) s'
+    Nothing     -> Nothing
+}
+
+@terminal{
+ghci> parsiraj (niska "True") "Truehelloworld"
+Just ("helloworld","True")
+ghci> parsiraj (niska "False") "Falsebyeworld"
+Just ("byeworld","False")
+ghci> parsiraj (niska "hello") "bye"
+Nothing
+}
+}
+
+@p Parseri koje smo do sad konstruisali uglavnom su bili "atomični". Za kreiranje složenijih parsera, poput onih koji parsiraju čitav kôd nekog programskog jezika, potrebno je atomične parsere ukombinovati u složenije. Takvo ukombinovanje vršimo pomoću funkcija koje nazivamo @def{parser kombinatori}. Parser kombinatori uzimaju nekoliko parsera (najćešće istog tipa), i vraćaju parser.
+
+@p Najjednostavniji primer parser kombinatora je funkcija koja uzima dva parsera i kreira novi parser koji pokušava da prokrene prvi ili drugi parser. Ovakav kombinator ima sasvim jednostavnu definiciju:  
+
+@codeBlock{
+ili :: Parser a -> Parser a -> Parser a
+ili p1 p2 = P $ \s -> case parsiraj p1 s of
+    Just (s', v) -> Just (s', v)
+    Nothing -> parsiraj p2 s
+}
+
+
+@example{
+@p Koristeći kombinator @code{ili} možemo lako napraviti parser koji parsira jednu od dve logičke vrednosti:
+
+@terminal {
+ghci> logičkaVrednost = niska "True" `ili` niska "False"
+ghci> parsiraj logičkaVrednot "True"
+Just ("","True")
+ghci> parsiraj logičkaVrednot "False"
+Just ("","False")
+}{Kombinator @code{ili} je veoma zgodno postaviti u infiksni oblik kako je prikazno u prvoj liniji. Iako možda deluje neobičnao, ovakva sintasa doprinosi čitljivosti jer zapis podeća na prirodne rečenice: @em{parsirati nisku "True" ili nisku "False"}.}
+}
+
+@problem{
+Definisati parser @ccode{logičkeListe :: Parser [Bool]} koji parsira liste logičkih vrednosti @code{True} i @code{False}. Na primer, parser bi trebalo da isparavno parsira nisku @code{"[True,False]"}. Pretopstaviti da u nisci neće biti belina.
+}
+
+@problem{
+Definisati parser @ccode{preskočiBeline :: Parser ()} koji samo preskače karaktere beline @code{' '}, @code{'\n'} i @code{'\t'}.
+}
+
+@problem{Ponovo definisati parser @code{logičkeListe :: Parser [Bool]} ali tako da ispravno parsiara niske u kojima se nalaze beline između logičkih vrednosti i zareza ili zagrada. Na primer, parser bi trebalo da ispravno parsira nisku poput @ccode{"[  True,    False ]"}.}
