@@ -245,15 +245,14 @@ daLiJePočetak (x:xs) (y:ys) =
 @p Primetimo da se funkcija @ccode{daLiJePodlista :: Eq a => [a] -> [a] -> Bool} može implementirati na gotovo isti način.
 }
 
-@problem{Definisati funkciju @code{dupliraj :: Num a => [Int] -> [Int]} koja duplira svaki element liste brojeva. Redosled dupliranih vrednosti treba da odgovara redosledu vrednosti u originalnoj listi. Na primer @code{dupliraj [2, 3, 4]} je @code{[4, 6, 8]}, a @code{dupliraj []} je @code{[]}.}
+@problem{Definisati funkciju @code{dupliraj :: Num a => [Int] -> [Int]} koja duplira svaki element liste brojeva. Redosled dupliranih vrednosti treba da odgovara redosledu vrednosti u originalnoj listi. Na primer @ccode{dupliraj [2, 3, 4]} je @code{[4, 6, 8]}, a @code{dupliraj []} je @code{[]}.}
 
-@problem{Definisati funkciju @code{dužine :: [[Char]] -> [Int]} koja listu niski preslikava u listu brojeva, pri čemu svaki broj predstavlja dužinu niske. Pritom, redosled brojeva je isti kao redosled odgovarajućih niski. Na primer, @code{dužine ["Pop","Ćira","i","pop","Spira"]} je @code{[3,4,1,3,5]}.}
+@problem{Definisati funkciju @code{dužine :: [[Char]] -> [Int]} koja listu niski preslikava u listu brojeva, pri čemu svaki broj predstavlja dužinu niske. Pritom, redosled brojeva je isti kao redosled odgovarajućih niski. Na primer, @ccode{dužine ["Pop","Ćira","i","pop","Spira"]} je @code{[3,4,1,3,5]}.}
 
-@problem{Definisati funkciju @code{parni :: [Int] -> [Int]} koje listu brojeva preslikava u listu brojeva koja je dobijana uklanjanjem svih brojeva koji nisu parni iz početne liste. Na primer, @code{parni [1,2,3,4]} je @code{2,4}.}
+@problem{Definisati funkciju @code{parni :: [Int] -> [Int]} koje listu brojeva preslikava u listu brojeva koja je dobijana uklanjanjem svih neparnih brojeva iz početne liste. Na primer, @code{parni [1,2,3,4]} je @code{[2,4]}.}
 
-@problem{Definisati funkciju @code{zbirCifara :: Int -> Int} koja određuje zbir cifara broja zapisanog u dekadnom zapisu. Koristeći ovu funkciju, naći sve prirodne brojeve @code{n} manje od @m{100}, takve da je zbir cifara broja @code{n^2} deljiv sa @code{5}.}
+@problem{Definisati funkciju @code{zbirCifara :: Int -> Int} koja određuje zbir cifara broja zapisanog u dekadnom zapisu. Koristeći ovu funkciju, naći sve prirodne brojeve @m{n} manje od @m{100}, takve da je zbir cifara broja @m{n^2} deljiv sa @m{5}.}
 
-@problem{Kreirat}
 
 @section{Funkcije višeg reda}
 
@@ -303,7 +302,7 @@ filter' p (x:xs) = if p x then x : filter p xs else filter p xs
 
 @subsection{@em{Map}}
 
-@p Još jedna funkcija višeg reda koja se često koristi sa listama je @ccode{map :: (a -> b) -> [a] -> [b]}. Funkcija @ccode{map} primenjuje neku drugu funkciju na svaki element liste i vraća listu dobijenih vrednosti.
+@p Još jedna funkcija višeg reda koja se često koristi sa listama je @ccode{map :: (a -> b) -> [a] -> [b]}. Funkcija @code{map} primenjuje datu funkciju na svaki element liste i vraća listu dobijenih vrednosti tj. važi@note{Primetimo da navedena jednakost nije validan Haskel kôd, već samo zapis koji ilustruje funkciju @code{map}.} @ccode{map f [x₁, x₂, ... xₙ] = [f x₁, f x₂, ... f xₙ]}.
 
 @p Prvi argument funkcije je funkcija tipa @code{a -> b}, a drugi argument je lista tipa @code{[a]}. Rezultat je lista tipa @code{[b]} koji je nastao od prosleđene liste primenom prosleđene funkcije na svaki element liste.
 

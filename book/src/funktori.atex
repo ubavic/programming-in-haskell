@@ -104,14 +104,14 @@ instance Functor [] where
 }
 
 @p Već smo videli da @code{map} zadovoljava oba zakona, ali ponovimo to još jednom. Prvo,
-@ccode{fmap id [x1 ... xn]}
-@code{= [id x1 ... id xn]}
-@code{= [x1 ... xn]}
-što znači da je @code{fmap id xs = xs} za svaku listu @code{xs}. Dakle @code{fmap id} je identička funkcija, pa je zadovoljen prvi zakon funktora. Drugo, kako je
-@ccode{(fmap g . fmap) [x1 .. xn]}
-@code{= fmap g (fmap f [x1 .. xn])}
-@code{= [g (f x1) ... g (f x)]}
-@code{= fmap (g. f) [x1 .. xn]}, sledi da je @ccode{(fmap g . fmap) xs = fmap (g. f) xs} za svaku listu @code{xs}. Prema tome zadovoljen je i drugi zakon.
+@ccode{fmap id [x₁, x₂, ... xₙ]}
+@ccode{= [id x₁, id x₂, ... id xₙ]}
+@ccode{= [x₁, x₂, ... xₙ]}
+što znači da je @ccode{fmap id xs = xs} za svaku listu @code{xs}. Dakle @code{fmap id} je identička funkcija, pa je zadovoljen prvi zakon funktora. Drugo, kako je
+@ccode{(fmap g . fmap) [x₁, x₂, ... xₙ]}
+@ccode{= fmap g (fmap f [x₁, x₂, ... xₙ])}
+@ccode{= [g (f x₁), g (f x₂), ... g (f xₙ)]}
+@ccode{= fmap (g . f) [x₁, x₂, ... xₙ]}, sledi da je @ccode{(fmap g . fmap) xs = fmap (g. f) xs} za svaku listu @code{xs}. Prema tome zadovoljen je i drugi zakon.
 
 @p U slučaju ove instance operator @code{<$} zamenjuje sve vrednosti u listi sa jednom vrednošću:
 
@@ -654,7 +654,7 @@ instance Applicative Parser where
 
 @terminal{
 ghci> f = \x y -> (x, y)
-ghci> slovoCifra = (pure f) <*> slovo <*> cifra
+ghci> slovoCifra = f <$> slovo <*> cifra
 ghci> parsiraj slovoCifra "D7"
 Just ("",('D',7))
 }{Idealno za parsiranje oznaka šahovskih polja!}
@@ -677,7 +677,7 @@ ghci> parsiraj (broj <* simbol '.') "123.456"
 
 @codeBlock{
 decimalanBrojSaTačkom :: Parser Double
-decimalanBrojSaTačkom = pure f <*> (broj <* simbol '.') <*>  broj
+decimalanBrojSaTačkom = f <$> (broj <* simbol '.') <*> broj
     where f x y = (fromIntegral x + (g $ fromIntegral y))
           g y = if y < 1 then y else g (y / 10)
 }

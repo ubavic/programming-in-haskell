@@ -25,7 +25,7 @@
 }
 
 @example{
-@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @code{i} preslikava svaku vrednost u samu sebe. Funkciju @code{i} nazivamo @def{identička funkcija} na skupu @m{X}.
+@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @m{i} preslikava svaku vrednost u samu sebe. Funkciju @code{i} nazivamo @def{identička funkcija} na skupu @m{X}.
 }
 
 @p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja pridružuje vrednostima tipa @code{A} vrednosti tipa @code{B} označava se sa @code{A -> B}. Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{A -> B} predstavlja kolekciju svih funkcija koje tip @code{A} preslikavaju tip @code{B}.
@@ -222,7 +222,7 @@ ghci> aritm 20 100
 
 @p Kog tipa je funkcija @code{aritm}? Za trenutak pretpostavimo da su parametri @code{x} i @code{y} tipa @code{Double}@note{Zapravo, za ovako napisano definiciju kompajler će zaključiti da su @code{x} i @code{y} tipa @code{Frac a => a}, ali to nas ne brine trenutno.}. Funkcija @code{aritm} uzima vrednost tipa @code{Double} i vraća neku funkciju, nazovimo je @code{g}. Funkcija @code{g} uzima i vraća vrednost tipa @code{Double} te je njen tip @code{Double -> Double}. Sada možemo da zaključimo da funkcija @code{aritm} poseduje tip @code{Double -> (Double -> Double)} jer uzima vrednost tipa @code{Double} i vraća vrednost tipa @code{Double -> Double}.
 
-@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b)))} gde tipovi @code{a1}, ... @code{aN} predstavljaju tipove parametara funkcije od @m{N} argumenata, a @code{b} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{a1 -> (a2 -> ( ... -> (aN -> b)))} na vrednost tipa @code{a1} dobija se funkcija tipa @ccode{a2 -> (a3 -> (... -> (aN -> b)))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{a2} čime se dobija funkcija tipa @ccode{a3 -> (... -> (aN -> b))}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{b}.
+@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{T₁ -> (T₂ -> ( ... -> (Tₙ -> B)))} gde tipovi @code{T₁}, ..., @code{Tₙ} predstavljaju tipove parametara funkcije od @m{n} argumenata, a @code{B} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{T₁ -> (T₂ -> ( ... -> (Tₙ -> B)))} na vrednost tipa @code{T₁} dobija se funkcija tipa @ccode{T₂ -> (T₃ -> ... -> (Tₙ -> B))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{T₂} čime se dobija funkcija tipa @ccode{T₃ -> ... -> (Tₙ -> B)}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{B}.
 
 @p Funkcija koja "uzima" ili "vraća" neku drugu funkciju naziva se @def{funkcija višeg reda}. Mnogi programski jezici nemaju podršku za funkcije višeg reda, ali kao što vidimo, u Haskelu je ovaj pojam je sasvim prirodan.
 
@@ -291,12 +291,6 @@ inicijali = (\x1 -> (\x2 -> (
 ukloni3 :: [Char] -> [Char]
 ukloni3 = (\x -> (tail (tail (tail x))))
 }
-
-@p Primetimo da u rešenju zadatka ne postoji ništa što je specifično za niske karaktera. Prema tome možemo da implementiramo opštiju funkciju koja se može primeniti na liste bilo kog tipa. Dovoljno je samo da u dekleraciji tipa funkcije, tip @code{Char} zamenimo sa tipskom promenljivom @code{a}.
-@codeBlock{
-ukloni3 :: [a] -> [a]
-ukloni3 = (\x -> (tail (tail (tail x))))
-}
 }
 
 @problem{Za nisku kažemo da je @em{palindrom} ako se čita isto i sa levo i sa desno, npr. @code{"anavolimilovana"} jeste palindrom. Napisati funkciju @code{palindrom :: [Char] -> Bool} koja proverava da li je niska palindrom.}{
@@ -315,9 +309,3 @@ zbir :: (Double, Double) -> ((Double, Double) -> (Double, Double))
 zbir = (\u -> (\v -> (fst u + fst v, snd u + snd v)))
 }}
 
-@problem{Funkcija @ccode{max :: Ord a => a -> (a -> a)} uzima dve vrednosti i vraća veću od vrednosti. Napisati funkciju @code{max3 :: Ord a => a -> (a -> (a -> a))} koja vraća maksimum tri vrednosti. Naravno @code{Ord =>} je klasno ograničenje koja nam govori da tipska promenljiva @code{a} pripada klasi @code{Ord}, te se vrednosti ovog tipa mogu porediti sa @code{<}, @code{>}, @code{<=} i @code{>=}.}
-{@p Ako su nam date vrednosti @code{x}, @code{y} i @code{z} tada ćemo prvo naći veću od vrednosti @code{x} i @code{y} a zatim ćemo tu veću vrednost da uporedimo sa @code{z}:
-@codeBlock{
-max3 :: Ord a => a -> a -> a -> a
-max3 = (\x -> (\y -> (\z -> max (max x y) z)))
-}}

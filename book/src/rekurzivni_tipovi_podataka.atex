@@ -379,20 +379,20 @@ Klasa @code{Functor} definiše i operator @code{<$} kao @code{fmap . const}. Št
 
 @section{Aritmetički izrazi}
 
-@p Česta primena rekurzivnih tipova podataka je predstavljanje izraza (bilo matematičkih izraza, bilo izraza nekog programskog jezika). Izrazi su vrednosti koji koje mogu biti neograničeno složenosti, zbog čega su rekurzivni tipovi zaista neophodni za njihovo predstavljanje@note{Istaknimo da ovde ne govorimo o definisanju pojma funkcija uz pomoć aritmetičkih izraza u Haskelu, već o definisanju samog pojma @em{izraza} kao Haskel vrednosti.}. Na primer, ako posmatramo izraze koji su sačinjeni samo od racionalnih brojeva, sabiranja i množenja, tada lako možemo naći neograničeno mnogo izraza, pri čemu složenost svakog izraza je proizvoljno velika, npr:
+@p Česta primena rekurzivnih tipova podataka je predstavljanje izraza (bilo matematičkih izraza, bilo izraza nekog programskog jezika). Izrazi su vrednosti koji koje mogu biti neograničeno složenosti, zbog čega su rekurzivni tipovi zaista neophodni za njihovo predstavljanje@note{Istaknimo da ovde ne govorimo o definisanju pojma funkcija uz pomoć aritmetičkih izraza u Haskelu, već o definisanju samog pojma @em{izraza} kao Haskel vrednosti.}. Na primer, ako posmatramo izraze koji su sačinjeni samo od prirodnih brojeva, sabiranja i množenja, tada lako možemo naći neograničeno mnogo izraza, pri čemu složenost svakog izraza je proizvoljno velika, npr:
 @eq{1+1,}
 @eq{22 * (1 + 6),}
-@eq{((10+32.3232) * 18) * (333 + 4.04)...}
+@eq{((10+32) * 18) * (333 + 4)...}
 
 @p Da bismo našli pogodan način predstavljanja matematičkih izraza, za primer pogledajmo rekurzivnu strukturu izraza @eq{(17 + 3) * (10 * (1 + 1)).} Navedeni izraz predstavlja zbir dva manja izraza @m{17 + 3} i @m{10 * (1 + 1)}. Prvi od tih izraza je zbir dva broja, dok je drugi proizvod broja i još manjeg izraza @m{1 + 1}. Na ovom primeru vidimo da su izrazi sačinjeni od manjih izraza ili brojeva koji se kombinuju uz pomoć dve operacije.
 
-@p Navedeno razmatranje nas dovodi do rekurzivne definicije tipa @code{Izraz}. Vrednosti tipa @code{Izraz} konstruisaćemo na tri načina. Prvo, svaki broj za sebe čini izraz. Drugo, ako su data dva izraza, onda je i njihov zbir izraz. Treće, ako su data dva izraza onda je i njihov proizvod izraz:
+@p Navedeno razmatranje nas dovodi do rekurzivne definicije tipa @code{Izraz}. Vrednosti tipa @code{Izraz} konstruisaćemo na tri načina. Prvo, svaki prirodan broj za sebe čini izraz. Drugo, ako su data dva izraza, onda je i njihov zbir izraz. Treće, ako su data dva izraza onda je i njihov proizvod izraz:
 
 @codeBlock{
 data Izraz =
-    Broj Float
-    | Zbir Float Float
-    | Proizvod Float Float
+    Broj Int
+    | Zbir Izraz Izraz
+    | Proizvod Izraz Izraz
 }
 
 @example{
@@ -414,17 +414,14 @@ instance Show Izraz where
     show (Proizvod a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
 }
 
-@p Kako to obično biva, pisanje funckcije @code{read}@note{Podsećamo, @code{read} je funkcija iz klase @code{Read}} koja generiše vrednost tipa @code{Izraz} na osnovu niske je znatno složenije. Generalno, problem kreiranja sintaksnog stabla na osnovu tekstualnog podatka (tj. niske), nazivamo @def{parsiranje}. Parsiranje je značajno težak problem, i mi ćemo u nekoj od narednih lekcija videti jednu od tehnika implementacije parsera@note{Parseri su programi tj. funkcije koje vrše parsiranje.}
-
-@p Druga funkcija koju je najlogičnije implementirati  je funkcija @code{izračunaj :: Izraz -> Float}, koja izraz sračunava izraz u jedinsvenu vrednost. Funkciju implementiramo rekurzivno: sračunavanjem broja se dobija taj isti broj, dok se sračunavanjem zbira (proizvoda) dva izraza dobija zbir (proizvod) vrednosti koje su dobijene sračunavanjem odgovarajućih podizraza:
+@p Druga funkcija koju je najlogičnije implementirati  je funkcija @code{izračunaj :: Izraz -> Int}, koja izraz sračunava izraz u jedinsvenu vrednost. Funkciju implementiramo rekurzivno: sračunavanjem broja se dobija taj isti broj, dok se sračunavanjem zbira (proizvoda) dva izraza dobija zbir (proizvod) vrednosti koje su dobijene sračunavanjem odgovarajućih podizraza:
 
 @codeBlock{
-izračunaj :: Izraz -> Float
-izračunaj (Broj a) = ako
+izračunaj :: Izraz -> Int
+izračunaj (Broj a) = a
 izračunaj (Zbir a b) = izračunaj a + izračunaj b
 izračunaj (Proizvod a b) = izračunaj a * izračunaj b
 }
-
 
 
 @problem{
@@ -441,7 +438,67 @@ Napraviti tip @code{LogickiIzraz} koji predstavlja logičke izraze sačinjenje o
 @em{Za ovaj zadatak je neophodno uraditi prethodni zadatk} Neka je data funkicja @code{f :: Int -> Bool} sa @code{f x = x \=0}. Konstruiasti funkciju @code{konvertuj :: LogickiIzraz -> Izraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izracunajAritmeticki = izracunajLogicki . konvertuj}
 }
 
+@subsection{Parsiaranje matematičkih izraza}
 
-@todo{parsiaranje matematickih izraza}
+@p Gore smo definisali instancu @code{Show Izraz} na sasvim jednostavan način. Kako to obično biva, obrnuti proces je značajno koplikovaniji za implementaciju. Međutim, tehnika aplikativnih parsra koju smo predstavili u lekciji o funktorima, može nam pomoći u ovom slučaju. Sa parserom kog budemo konstruisali, moći ćemo da iz niske pročitamo vrednost @code{Izraz}.
+
+@p Pre nego što počnemo sa definisanjem parsera, moramo tačno definisati oblik niska koje ćemo parsirati. Na primer, složeni parseri izraza mogu ispravno parsirati izraze poput @code{"2 +  5"} ili @code{"2*-7+6"} jer su napravljeni tako da ignorišu beline (razmake), da vode računa o prioritetu operacija, podržavaju unarni operator negacije, itd... Da bi maksimalno skratili naredne redove, mi nećemo kreirati ovako složeni parser. Parser koji budemo konstruisali moći će da parsiara samo one izraze koji su nastali sa funkcijom @code{show :: Izraz -> String} tj, izraze sačinjene isključivo od cifara i znakova @code{+}, @code{-}, @code{(}, @code{)}, pri čemu se oko svakog podizraza nalaze zagrade (osim oko samih brojeva).
+  
+@p Kako je i sama struktura tipa @code{Izraz} rekurzivna, i parser tipa @code{Parser Izraz} biće rekurzivan. Posebno ćemo konstruisati parser @code{izrazBroj} koji parsira brojeve, parser @code{izrazZbir} koji parsira zbir dva manja izraza, i parser @code{izrazProizvod} koji parsira prizvod dva manja izraza.
+
+@p Pretpostavimo da su navedeni parseri definisani. Jedan izraz može biti broj, proizvod ili zbir manjih izraza. Zbog toga, da bi parsirali izraz, prvo ćemo pokušati da parsiramo broj. Ako to ne uspemo, onda ćemo pokušati da parsiramo zbir, a ako ni to ne uspemo pokušaćemo da parsiramo proizvod@note{Pritom, ovde uopšte nije bitno kojim redom pokušavamo pa pokrenemo parsere. U složenijim parserima, poredak je često bitan}. Sa kombinatorom @code{ili} lako dobijamo željeni parser:
+
+@codeBlock{
+izraz :: ParserIzraz
+izraz = izrazBroj `ili` izrazZbir `ili` izraz 
+}
+
+@p Ostaje još definisati @code{izrazBroj}, @code{izrazZbir} i @code{izrazProizvod}. Parser @code{izrazBroj} ćemo lako definisati pomoću parsera @code{broj :: Parser Int} kog posedujemo od ranije. Sve što je potrebno je da parsiranu vrednost (koja je tipa @code{Int}), transformišemo u vrednost tipa @code{Izraz}, što se naravno postiže podizanjem konstruktora @code{Broj :: Int -> Izraz} na nivo funktora @code{Parser}:
+
+@codeBlock{
+izrazBroj :: Parser Izraz
+izrazBroj = fmap Broj broj
+}
+
+@p Parser @code{izrazZbir} mora da funkcioniše na sledeći način: prvo je neophodno parsirati simbol za levu zagradu, zatim je potrebno parsirati levi sabirak, pa simbol plus, desni sabirak, i na kraju simbol desne zagrade. Rezultati parsiaranja simbola nisu bitni (ako su uspešni), a rezultate parsiranja levog i desnog sabirka moramo ukombinovati u vrednost oblika @code{Zbir x y :: Izraz}. Naravno, u tome će nam pomoći podizanje konstruktora @code{Zbir}. Takođe, kako su oba sabirka izrazi sami za sebe, potrebno ih je parsirati sa @code{izraz} parserom. Ovo uspostavlja rekurziju.
+
+@codeBlock{
+izrazZbir :: Parser Izraz
+izrazZbir =
+    simbol '(' *>
+    (Zbir <$> (izraz <* simbol '+') <*> izraz)
+    <* simbol ')' 
+}
+
+@p Parsiranje proizvoda je u potpunosti analogno parsiranju zbira:
+
+@codeBlock{
+izrazProizvod :: Parser Izraz
+izrazProizvod = 
+    simbol '(' *>
+    (Proizvod <$> (izraz <* simbol '*') <*> izraz)
+    <* simbol ')' 
+}
+
+@p Testiranjem se uverevamo da parser funkcioniše:
+
+@terminal{
+ghci> parsiraj izraz "(1+2)"
+Just ("",(1+2))
+ghci> parsiraj izraz "((10+2)*32)"
+Just ("",((10+2)*32))
+}{Vrednost koju vidimo u drugoj koordinati rezultat je zapravo sintaksno stablo. Međutim, zbog načina na koje smo definisali @code{show}, ovo sintaksno stablo se prikazuje na sasvim jednostavan način.}
+
+@p Samo jedan korak nas deli od implementacije primitivnog kalkulatora. Sve što je potrebno uraditi je primeniti funkciju @code{izračunaj} na rezultat parsiranja. Ali, kako je razultat parsianja tipa @code{Maybe (String, Izraz)}, neophodno je proći funkcijom @code{izračunaj} kroz @code{Maybe} i @code{(String, )}. 
+
+@codeBlock{
+parsirajIzračunaj :: String -> Maybe Int
+parsirajIzračunaj s = fmap (izračunaj . snd) (parsiraj izraz s)
+}
+
+@terminal{
+ghci> parsirajIzračunaj "(2+(4*3))"
+Just 14
+}
 
 @todo{foldable klasa}
