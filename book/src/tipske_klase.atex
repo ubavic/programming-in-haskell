@@ -1,24 +1,26 @@
 @chapter{Tipske klase}
 
-@p @def{Tipska klasa} predstavlja kolekciju tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz funkcije koje je moguće pozivati nad svim tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
+@p @def{Tipska klasa} predstavlja kolekciju tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz metode@note{@em{Metod} je samo naziv za funkciju (specijalno operator) koju klasa deklariše.} koje "rade" sa svim tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
 
-@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova nekih funkcija koje instanaca mora da implementira:
+@p U lekciji o polimorfizmu videli smo da nam tipske klase omogućuju da pišemo polimorfne funkcije koje koriste neke određene metode koje nisu dostupne svakom tipu@note{Na primer, koristeći klasu numeričkih tipova @code{Num}, moguće sa jednom definicijom implemenitrati numeričku formulu za svaki tipom koji pripda klasi @code{Num}.}. U ovoj lekciji ćemo prikazti kako i sami možemo definisati naše klase, i kroz primere predefinisanih klase videćemo razne tehnike koje je moguće koristiti pri radu sa klasama.
+
+@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova metoda koje instanaca mora da implementira:
 
 @codeBlock{
 class C a where
   f1 :: T1
   f2 :: T2 
   ....
-}{Ovde @code{a} je tipska promenljiva koja predstavlja instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku pormenljivu @code{a}.}
+}{Ovde @code{a} je tipska promenljiva koja predstavlja neku instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku pormenljivu @code{a}.}
 
-@p Da bi neki tip @code{T} pridružili klasi tipova @code{C}, koristimo narednu konstrukciju nakon koje slede definicije funkcija koje propisuje klasa:
+@p Da bi neki tip @code{T} pridružili klasi tipova @code{C}, koristimo narednu konstrukciju nakon koje slede definicije metoda koje propisuje klasa:
 
 @codeBlock{
-instance K T where
+instance C T where
   f1 = ...
   f2 = ... 
   ...
-}
+}{U okviru definicije instance ne navode se tipovi metoda.}
 
 @section{Jedan primer}
 
@@ -43,7 +45,7 @@ newtype Trougao = Trougao (Double, Double, Double, Double, Double, Double)
 
 newtype Krug = Krug (Double, Double, Double)
   deriving Show
-}{Za sada možda nije jasno šta navedene koordinate predstavljaju, ali ćemo kroz naredni kod ustanoviti na šta se koordinate odnose.}
+}{Iz navedenog koda nije jasno šta navedene koordinate predstavljaju. U slučaju pravougaonika prve dve koordinate su koordinate "levog donjeg" temena, dok druge dve koordinate predstavljaju visinu i širinu. U slučaju trougla, prve dve kooridnate predstvljaju koordinate prvog temena, druge dve drugog, i poslednje dve koordinate predstavljaju koordinate trećeg temena. U slučaju kruga, prve dve koordinate predstavljaju koordinate centra, dok treća koordinata predstavlja poluprečnik.}
 
 @p Implementacija funkcija koje računaju obim navedenih figura je takođe jednostavna:
 
@@ -62,20 +64,20 @@ obimKruga :: Krug -> Double
 obimKruga (Krug (x, y, r)) = 2 * pi * r 
 }{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
 
-@p Navedeni kod je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli primeniti jedinstvenu funkciju @code{obim} na svaku figuru@note{Baš kao što funkciju @code{show} možemo da primenimo i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a funkciju @code{fst} možemo da primenimo i na vrednost tipa @code{(Int, Char)} ali i @code{(Bool, Float)}, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
+@p Navedeni kôd je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli primeniti jedinstvenu funkciju @code{obim} na svaku figuru@note{Baš kao što funkciju @code{show} možemo primeniti i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a operator @code{+} možemo koristiti i sa @code{Int} i sa @code{Float} vrednostima, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
 
-@p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo funkciju @code{obim} u definiciji klase ćemo navesti samo jednu dekleraciju tipa. 
+@p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo metod @code{obim} u definiciji klase ćemo navesti samo jednu dekleraciju tipa. 
 
 @codeBlock{
 class Figura a where
   obim :: a -> Double
-}{Dekleracije koje klasa pruža moraju biti nazubljene za jedan nivo (barem jedan razmak), u odnosu na liniju @code{class ...}. }
+}
 
 @p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve liije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
 
 @p Tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 
-@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, potrebno je tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učininiti instancama klase @code{Figura}.
+@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, te je potrebno tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učininiti instancama klase @code{Figura}.
 
 @p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instacinaranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
 
@@ -94,11 +96,11 @@ instance Figura Krug where
   obim (Krug (x, y, r)) = 2 * pi * r
 }{Definicije funkcija su u potpunosti iste kao definicije funkcija @code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}.}
 
-@p Linijom @code{instance ... } započinje se blok definicija funkcija. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
+@p Linijom @code{instance ... } započinje se blok definicija metoda. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
-@p U bloku definicija, neophodno je definisati sve funkcije koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnje pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
+@p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnje pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
 
-@p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da @code{povrsina} može da se primenjuje na razne tipove figura
+@p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da se @code{obim} može primeniti na razne tipove figura
 
 @terminal{
 ghci> trougao = Trougao (0, 0, 1, 0, 0, 1)

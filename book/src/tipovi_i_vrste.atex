@@ -225,7 +225,7 @@ sumVecDouble :: VecDouble -> VecDouble -> VecDouble
 sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y, c+z)
 }
 
-@p Kao što vidimo, svaki numerički tip (@code{Int}, @code{Float}, @code{Double}) zahteva posebnu definiciju odgovarajućeg tipa vektora, što dovodi do toga da imamo mnogo međusobno sličnih definicija.
+@p Kao što vidimo, svaki numerički tip (@code{Int}, @code{Float}, @code{Double}, ...) zahteva posebnu definiciju odgovarajućeg tipa vektora, što dovodi do toga da imamo mnogo međusobno sličnih definicija.
 }
 
 @p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smislu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promeljive@note{Ovaka definicija podseća na podudaranje oblika kod "običnih" funkcija.}.
@@ -237,26 +237,26 @@ sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y
 newtype Vec a = MkVec (a, a, a)
 }
 
-@p Na opisani način konstruisana je jedna funkcija na nivou tipova. Ova funkcija proizvoljan tip preslikava u tip @code{(a, a, a)}. Na primer, @code{Vec Char} predstavlja tip @code{(Char, Char,Char)}.
+@p Na opisani način konstruisana je jedna funkcija na nivou tipova. Ova funkcija proizvoljan tip preslikava u tip @code{(a, a, a)}. Na primer, @code{Vec Char} predstavlja tip @code{(Char,Char,Char)}.
 
 @p Tipovi iz prethodnog primera nam nisu više neophodni, i sada možemo da koristimo @code{Vec Int}, @code{Vec Float} i @code{Vec Double}:
 
 @codeBlock{
 sumVecInt :: Vec Int -> Vec Int -> Vec Int
-sumVecInt (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecInt (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 
 sumVecFloat :: Vec Float -> Vec Float -> Vec Float
-sumVecFloat (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecFloat (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 
 sumVecDouble :: Vec Double -> Vec Double -> Vec Double
-sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 }
 
 @p I dalje se nismo umanjili broj definicija funkcija, ali možemo primetiti da je karakteristično za tipove @code{Int}, @code{Float} i @code{Double} to što se vrednosti ovih tipova mogu sabirati. Sva tri navedena tipa pripadaju @code{Num} klasi, pa možemo tri definicije zameniti sa jednom:
 
 @codeBlock{
 sumVec :: Num a => Vec a -> Vec a -> Vec a
-sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x, b+y, c+z)
+sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 }
 }
 
@@ -270,10 +270,9 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduše, oba apstraktna tipa imaju specificnu sintaksu, koja se razlikuje od onog što smo gore opisali.
 
-@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Mozda ce biti jasnije ako @code{[A]} zapisemo kao @code{[] A}. Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}. Osim tog konstruktora, vrednosti liste se mogu konstruisati i sa @code{:} (koji takođe ima posebnu sintaksu koja dodatno uvodi zabunu)}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
+@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Možda će biti jasnije ako @code{[A]} zapišemo kao @code{[] A} (što je validan zapis u kodu). Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}.}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
 
-@p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno oznacava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi nista drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jezik.
-
+@p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno označava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi ništa drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jeziku.
 
 @section{Vrste}
 
@@ -285,7 +284,7 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Ako neki tip ili apstraktni tip @code{T} poseduje vrstu @code{v}, tada to označavamo sa @code{T :: v}, baš kao i tip vrednosti.
 
-@p U Haskelu, vrsta koja obuhvata sve tipove naziva se @def{Hask} i označava se sa @code{*}. Za svaki tip (koji nije apstraktan) @code{T} kažemo da je vrste @code{*}, odnosno pišemo @code{T :: *}. Za ovakve tipove kažemo još da su @def{konkretni tipovi} (ili @em{monotipovi}), da bismo napravili distinkciju od apstraktnih tipova.
+@p U Haskelu, vrsta koja obuhvata sve tipove koji nisu apstraktni označava se sa @code{*}. Za svaki tip @code{T} koji nije apstraktan kažemo da je vrste @code{*}, i pišemo @code{T :: *}. Za ovakve tipove kažemo još da su @def{konkretni tipovi} (ili @em{monotipovi}).
 
 @p Sa druge strane, apstraktni tipovi poseduju vrstu oblika @code{P -> Q} gde su @code{P} i @code{Q} takođe neke vrste. Vrsta oblika @code{P -> Q} sugeriše da su apstraktni tipovi funkcije koje tipove preslikavaju tipove.
 
@@ -306,10 +305,10 @@ Tip @code{AbsType} uzima jedan konkretan tip i konstruiše konkretan tip, pa je 
 data A a b c = MkA (a, [b], Int -> c)
 }
 
-@p Navedeni apstraktni tip ima vrstu @code{* -> (* -> (* -> *))} koja se naravno jednostavno zapisuje kao @ccode{* -> * -> * -> *}. 
+@p Navedeni apstraktan tip ima vrstu @code{* -> (* -> (* -> *))} koja se naravno jednostavno zapisuje kao @ccode{* -> * -> * -> *}. 
 }
 
-@p I kao sto naredba @code{:type} nam moze reci tip nekog izraza u @em{GHCi}-u, tako i naredba @code{:kind} nam moze reci vrstu nekog tipa.
+@p I kao što @em{GHCi} naredba @code{:type} može odrediti tip neke vrednosti, tako i naredba @code{:kind} može odrediti vrstu nekog tipa.
 
 
 @example{
@@ -321,7 +320,7 @@ A :: * -> * -> * -> *
 }
 
 @example{
-@p Ako niste do sad verovali, @code{[]} zaista jeste apstraktni tip:
+@p Ako niste do sad verovali, @code{[]} zaista jeste apstraktan tip:
 
 @terminal{
 ghci> :kind []

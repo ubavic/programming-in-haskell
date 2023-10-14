@@ -129,7 +129,7 @@ f x = 253 * x + 17
 
 @p Slobodne tipske promenljive mogu predstavljati bilo koji tip. Ponekad je poželjno ograničiti tipsku promenljivu na neku specifičnu kolekciju tipova. Upravo takva ograničenja se izražavaju kroz klase tipova.
 
-@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Cesto te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Često te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
 @example{
 @p U Haskelu je definisana klasa @code{Show} koja poseduje metodu @code{show}. Tipovi poput @code{Int} ili @code{Bool} pripadaju ovoj klasi, i nad njima se moze pozivati funkcija @code{show} koja vrednost nekog tipa predstavlja kao nisku.
@@ -150,20 +150,20 @@ ghci> show 2
 
 @p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Cinjenicu da neki tip @code{T} pripada klasi @code{C}, oznacavamo sa @code{C T}. 
 
-@p Koriscenjem klasa, moguce je ograniciti tipsku promenljivu na neku određenu klasu. @def{Tipsko ogranicenje} kojim se promenljiva @code{C} ogranicava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ogranicenja se razdvajaju od tipa sa strelicom @code{=>}. U slucaju da postoji vise ogranicenja, tada se ta ogranicenja navode u obliku uređene @m{n}-torke.
+@p Koriscenjem klasa, moguce je ograniciti tipsku promenljivu na neku određenu klasu. @def{Klasno ograničenje} kojim se tipska promenljiva @code{a} ograničava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ograničenja se razdvajaju od samog tipa sa strelicom @code{=>}. U slučaju da postoji vise ograničenja, tada se ta ograničenja navode u obliku uređene @m{n}-torke.
 
 @example{
 @p Tip @code{Show a => a} oznacava sve tipove koji pripadaju klasi @code{Show}.
 }
 
 @example{
-@p Tip @code{Show a => a -> [Char]} je tip polimorfne funkcije ciji domen je neki tip klase @code{Show}, a kodomen tip niska.
+@p Tip @code{Show a => a -> [Char]} je tip polimorfne funkcije čiji domen je neki tip klase @code{Show}, a kodomen tip niska.
 
 @p Funkcija @code{show} koja vrednost preslikava u nisku ima upravo ovaj tip.
 }
 
 @example{
-@p Tip @code{(Num a, Show b) => a -> b} oznacava tip polimorfne funkcije ciji domen je neki tip iz klase @code{Num}, a kodomen neki tip iz klase @code{Show}.
+@p Tip @code{(Num a, Show b) => a -> b} označava tip polimorfne funkcije čiji domen je neki tip iz klase @code{Num}, a kodomen neki tip iz klase @code{Show}.
 }
 
 @p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.

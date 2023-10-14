@@ -1,6 +1,6 @@
 @chapter{Liste}
 
-@p Liste u Haskelu su homegene strukture podataka, što znači da mogu sadržati vrednosti samo jednog tipa (npr. samo brojeve ili samo logičke vrednosti). Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[x1, x2, x3, x4, x5]}.
+@p Liste u Haskelu su strukture podataka koje predstavljaju linearno uređenu kolekciju proizvoljno mnogo vrednosti istog tipa. Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[5, 8, 13, 21, 34]} predstavlja listu od pet elemenata. Međutim, zapis poput navedenog, predstavlja samo skraćeni oblik zapisa @ccode{5:(8:(13:(21:(34:[]))))}. Operacija @code{:} nadovezuje element na početak neke postojeće liste i predstavlja jedan od konstruktora vrednosti liste, odnosno funkcije kojom se konstruiše neka lista. Drugi konstruktor vrednosti liste je konstruktor prazne @code{[]}. Važno je napomenuti da su ovo jedini konstruktori vrednosti liste, i da se svaka druga funkcija koja vraća neku listu svodi na neki način na upotrebu ova dva konstruktora. Takođe, ova činjenica povlači i da je svaka lista prazna (dobijena konstruktorom prazne liste), ili poseduje prvi član (odnosno nastala je nadovezivanjem neke vrednosti na postojuću vrednost). 
 
 @todo{dopisati deo o konstruktoru}
 
@@ -19,9 +19,9 @@
 @li @code{last :: [a] -> a} vraća poslednji element. Ako je lista prazna dolazi do izuzetka
 }
 
-@p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porediti sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
+@p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa jer poseduju parametarski polimorfan tip. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porediti sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
 
-@p Prelid obezbeđuje neke funkcije za rad sa listama karaktera:
+@p Prelid obezbeđuje neke korisne funkcije za rad sa listama karaktera:
 
 @list{
 @li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od jedne nikse dobijaju "reči".
@@ -58,6 +58,15 @@ Ti, međutim, rasteš, uz zornjaču jasnu,
 sa Avalom plavom, u daljini, kao breg.
 Ti treperiš, i kad ovde zvezde gasnu,
 i topiš, ko Sunce, i led suza, i lanjski sneg.
+}
+
+@problem{
+Napisati funkciju @ccode{brojReči :: [Char] -> Int} koja broji reči u nisci.
+}{
+@codeBlock{
+brojReči :: [Char] -> Int
+brojReči x = length (words x)
+}
 }
 
 @section{Rasponi}

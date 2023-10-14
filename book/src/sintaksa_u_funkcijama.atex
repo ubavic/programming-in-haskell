@@ -244,7 +244,7 @@ daLiJeCifra '9' = True
 daLiJeCifra x = False
 }{Funkcija koja proverava da li dati karakter reprezentuje cifru.}
 
-@p U navedenom primeru, poslednja linija koda, odnosno @code{daLiJeCifra x = False} "hvata" svaki argument. Ali kao što vidimo, povratna vrednost funkcije, ne zavisi od vrednosti uhvaćenog argumenta. U ovakvim situacijama, može se koristiti znak @code{_} koji predstavlja argument koji ne želimo da vezujemo za ime. U ovom kontekstu, znak @code{_} nazivamo džoker@note{eng @em{wildcard}}.
+@p U navedenom primeru, poslednja linija koda, odnosno @code{daLiJeCifra x = False} "hvata" svaki argument. Ali kao što vidimo, povratna vrednost funkcije, ne zavisi od vrednosti uhvaćenog argumenta. U ovakvim situacijama, može se koristiti znak @code{_} koji predstavlja argument koji ne želimo da vezujemo za ime. U ovom kontekstu, znak @code{_} nazivamo @def{džoker}@note{eng @em{wildcard}}.
 
 @p Koristeći džoker, poslednju liniju prethodnog primera možemo da zamenimo sa @code{daLiJeCifra _ = False}. Ako se vratimo na pretposlednji primer (funkcija @code{f} koja slika @code{0} u @code{1} a sve ostale brojeve u @code{0}), ta funkcija može biti definisana i sa
 

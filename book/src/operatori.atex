@@ -33,9 +33,14 @@ ghci> (&&) True False
 False
 ghci> (+) 4 3
 7
+ghic> (-) 5 2
+3
 }
 
-@p Sličnim postupkom možemo videti da operatora @code{++} poseduje tip @code{[a] -> [a] -> [a]} (jer ovaj operator 'spaja' dve liste istog tipa), a operator @code{:} poseduje tip @code{a -> [a] -> a} jer ovaj operator dodaje element (levi argument) na početak liste (desni argument).
+@p Iz poslednjeg primera vidimo da je "prvi" argument operatora u prefiksnoj notaciji zapravo levi argument, a "drugi" argument pri prefiksnoj notaciji je desni argument u infiksnoj notaciji.
+
+@problem{Bez korišćenja @pre{type} naredbe, odrediti tipove operatora nadovezivanja i spajanja lista @code{:} i @code{++}.}{
+@p Operator @code{++} poseduje tip @code{[a] -> [a] -> [a]} jer ovaj operator spaja dve liste istog tipa. Operator @code{:} poseduje tip @code{a -> [a] -> a} jer ovaj operator dodaje element (levi argument) na početak liste (desni argument).}
 
 @problem{Kog je tipa operator @code{==}?}
 {@p Operator poređenja poredi dve vrednosti istog tipa i vraća logičku vrednost kao rezultat tog poređenja. Da bi se dve vrednosti nekog tipa mogle porediti, neophodno je da taj tip pripada klasi @code{Eq}. Prema tome, operator @code{==} ima tip @code{Eq a => a -> a -> Bool}.
@@ -474,7 +479,7 @@ ghci> int sin 0 pi
 
 @codeBlock{
 int :: (Double -> Double) -> Double -> Double -> Double
-int f a b = sum $ map (* d) <$> (f <$> [a, a + d .. b])
+int f a b = sum $ (* d) <$> (f <$> [a, a + d .. b])
     where d = (b - a) / 200
 }
 
