@@ -498,7 +498,7 @@ int f a b = d * (sum $ f <$> [a, a + d .. b])
 
 @p Kreiranje operatora je moćna tehnika koju malo programskih jezika poseduje. Korišćenje operatora kao svih ostalih funkcija, kao i @em{ad hoc} transformisanje operatora u prefiksne funkcije i obrnuto, su tehnike koje još manje jezika poseduje. Nesumnjivo je da navedene osobine dozvoljavaju Haskel programeru veliku ekspresivnost.
 
-@p Ipak, potrebno je biti veoma pažljiv sa kreiranjem operatora. Uvođenjem novih operatora možemo značajno otežati razumevanje koda. Čak i sami semi možemo otežati programiranje kada posle kratke pauze u radu na nekom projektu zaboravimo semantiku operatora koje smo ranije definisali. 
+@p Ipak, potrebno je biti veoma pažljiv sa kreiranjem operatora. Uvođenjem novih operatora možemo značajno otežati razumevanje koda. Čak i sami sebi možemo otežati programiranje kada posle kratke pauze u radu na nekom projektu zaboravimo semantiku operatora koje smo ranije definisali. 
 
 @p Iako nećemo u narednim lekcijama često definisati operatore, upoznaćemo sa mnogim, za nas novim, operatorima već definisanim u Haskel jeziku. Kao što ćemo videti, takvi operatori će biti korisni u rešavanju mnogih problema.
 

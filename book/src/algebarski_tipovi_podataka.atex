@@ -206,7 +206,7 @@ data Dan = Ponedeljak
 
 @section{Možda-tip}
 
-@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bili kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstruisati kao sumu tipa @code{Float} i jediničnog tipa @code{Ništa}:
+@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bilo kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstruisati kao sumu tipa @code{Float} i jediničnog tipa @code{Ništa}:
 
 @codeBlock{
 data MoždaBroj = SamoBroj Float | Ništa 

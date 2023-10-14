@@ -426,13 +426,13 @@ Kreirati tip @code{MatematičkiIzraz} čije vrednosti mogu da prezentuju matemat
 }
 
 @problem{
-@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Ako ste upoznati sa @em{LaTeX} jezikom za zapisivanje matematičke notacije, konstruišite funkciju @ccode{uLatex :: MatematičkiIzraz -> String} koja daje @em{Latex} kod za dati izraz. Koristite @em{LaTeX} naredbe poput @pre{\times}, @pre{^}, @pre{\frac}, @pre{\left(} i @pre{\right)}, i tako dalje... }
+@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Ako ste upoznati sa @em{LaTeX} jezikom za zapisivanje matematičke notacije, konstruišite funkciju @ccode{uLatex :: MatematičkiIzraz -> String} koja daje @em{LaTeX} kôd za dati izraz. Koristite @em{LaTeX} naredbe poput @pre{\times}, @pre{^}, @pre{\frac}, @pre{\left(} i @pre{\right)}, i tako dalje... }
 
 @problem{
-Napraviti tip @code{LogickiIzraz} koji predstavlja logičke izraze sačinjene od logičkih vrednosti i operacija konjunkcije i disjunkcije. Uvesti tip @code{LogickiIzraz} u @code{Show} klasu tipova. Implementirati funkciju @code{izracunajLogicki :: LogickiIzraz -> Bool} koja izračunava zadati logički izraz.}
+Definisati tip @code{LogičkiIzraz} koji predstavlja logičke izraze sačinjene od logičkih vrednosti i operacija konjunkcije i disjunkcije. Uvesti tip @code{LogickiIzraz} u @code{Show} klasu tipova. Implementirati funkciju @code{izracunajLogički :: LogičkiIzraz -> Bool} koja izračunava zadati logički izraz.}
 
 @problem{
-@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Neka je data funkcija @code{f :: Int -> Bool} sa @code{f x = x \=0}. Konstruisati funkciju @code{konvertuj :: LogickiIzraz -> Izraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izracunajAritmeticki = izracunajLogicki . konvertuj}
+@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Neka je data funkcija @code{f :: Int -> Bool} sa @code{f x = x \=0}. Konstruisati funkciju @code{konvertuj :: Izraz -> LogičkiIzraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izračunaj = izracunajLogički . konvertuj}
 }
 
 @subsection{Parsiranje matematičkih izraza}

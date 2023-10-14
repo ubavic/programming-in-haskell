@@ -1,8 +1,6 @@
 @chapter{Liste}
 
-@p Liste u Haskelu su strukture podataka koje predstavljaju linearno uređenu kolekciju proizvoljno mnogo vrednosti istog tipa. Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[5, 8, 13, 21, 34]} predstavlja listu od pet elemenata. Međutim, zapis poput navedenog, predstavlja samo skraćeni oblik zapisa @ccode{5:(8:(13:(21:(34:[]))))}. Operacija @code{:} nadovezuje element na početak neke postojeće liste i predstavlja jedan od konstruktora vrednosti liste, odnosno funkcije kojom se konstruiše neka lista. Drugi konstruktor vrednosti liste je konstruktor prazne @code{[]}. Važno je napomenuti da su ovo jedini konstruktori vrednosti liste, i da se svaka druga funkcija koja vraća neku listu svodi na neki način na upotrebu ova dva konstruktora. Takođe, ova činjenica povlači i da je svaka lista prazna (dobijena konstruktorom prazne liste), ili poseduje prvi član (odnosno nastala je nadovezivanjem neke vrednosti na postojaću vrednost). 
-
-@todo{dopisati deo o konstruktoru}
+@p Liste u Haskelu su strukture podataka koje predstavljaju linearno uređenu kolekciju proizvoljno mnogo vrednosti istog tipa. Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[5, 8, 13, 21, 34]} predstavlja listu od pet elemenata. Međutim, zapis poput navedenog, predstavlja samo skraćeni oblik zapisa @ccode{5:(8:(13:(21:(34:[]))))}. Operacija @code{:} nadovezuje element na početak neke postojeće liste i predstavlja jedan od @em{konstruktora vrednosti liste}, odnosno funkcije kojom se konstruiše neka lista. Drugi konstruktor vrednosti liste je konstruktor prazne liste koji se označava sa @code{[]}. Važno je napomenuti da su ovo jedini konstruktori vrednosti liste, i da se svaka druga funkcija koja vraća neku listu svodi na neki način na upotrebu ova dva konstruktora. Takođe, ova činjenica povlači i da je svaka lista prazna (dobijena konstruktorom prazne liste), ili poseduje prvi član (odnosno, nastala je nadovezivanjem neke vrednosti na postojaću vrednost). 
 
 @section{Funkcije za rad sa listama}
 
@@ -19,7 +17,7 @@
 @li @code{last :: [a] -> a} vraća poslednji element. Ako je lista prazna dolazi do izuzetka
 }
 
-@p Primetimo da sve navedene funkcije osim funkcije @code{elem}, mogu se koristiti sa listom proizvoljnog tipa jer poseduju parametarski polimorfan tip. Funkcija @code{elem} se može koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porediti sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
+@p Primetimo da se sve navedene funkcije, osim funkcije @code{elem}, mogu koristiti sa listom proizvoljnog tipa jer poseduju parametarski polimorfan tip. Funkcija @code{elem} može se koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porediti sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
 
 @p Prelid obezbeđuje neke korisne funkcije za rad sa listama karaktera:
 
@@ -40,7 +38,7 @@ stih = "Ti, međutim, rasteš, uz zornjaču jasnu,\
 \i topiš, ko Sunce, i led suza, i lanjski sneg." 
 }
 
-@p Ipak, ovako definisana niska @em{neće} sadržati karaktere za novi red! Neophodno ih je ručno dodati na svakom mestu:
+@p Ipak, ovako definisana niska @em{neće} sadržati karaktere za novi red! Neophodno ih je dodati na svakom mestu:
 
 @codeBlock{
 stih :: [Char]
@@ -468,21 +466,21 @@ ghci> šifra
 ('S','V'),('T','W'),('U','X'),('V','Y'),('W','Z'),('X','A'),('Y','B'),('Z','C')]
 }
 
-@p Sada listu @code{sifra} možemo da iskoristimo da šifrujemo pojedinačne karaktere. Ideja je sledeća: za dati karakter @code{k :: Char}, iz liste @code{sifra} uzećemo par čija prva koordinata je jednaka vrednosti @code{k}. Šifrovan karakter će biti druga koordinata tog para. Za pronalazak odgovarajućeg para, koristimo funkciju @code{filter}.
+@p Sada listu @code{sifra} možemo da iskoristimo da šifrujemo pojedinačne karaktere. Ideja je sledeća: za dati karakter @code{k :: Char}, iz liste @code{šifra} uzećemo par čija prva koordinata je jednaka vrednosti @code{k}. Šifrovan karakter će biti druga koordinata tog para. Za pronalazak odgovarajućeg para, koristimo funkciju @code{filter}.
 
 @codeBlock{
 šifrujKarakter :: Char -> Char
 šifrujKarakter k = snd (head šifrovano)
   where
     šifrovano = filter (\par -> fst par == k) šifra
-}{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parove čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{sifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{šifrujKarakter 'A' = 'D'}.}
+}{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parove čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{šifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{šifrujKarakter 'A' = 'D'}.}
 
-@p Funkcija @code{šifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{šifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalnih rezultata. Naime, u takvim slučajevima lista @code{sifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head šifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{šifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
+@p Funkcija @code{šifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{šifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalnih rezultata. Naime, u takvim slučajevima lista @code{šifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head šifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{šifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
 
 @codeBlock{
 šifrujKarakter :: Char -> Char
 šifrujKarakter k
-  | null sifrovano = k
+  | null šifrovano = k
   | otherwise      = snd (head šifrovano)
   where
     šifrovano = filter (\par -> fst par == k) šifra

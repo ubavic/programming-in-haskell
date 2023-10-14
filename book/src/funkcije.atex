@@ -6,7 +6,7 @@
 
 @section{Pojam funkcije i tip funkcije}
 
-@p U matematici, funkcija je pravilnost po kojem se se svi elementi nekog skupa pridružuju elementima nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @m{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridružuje vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
+@p U matematici, funkcija je pravilnost po kojoj se @em{svakom} elementu nekog skupa pridružuju elementi nekog drugog skupa. Činjenicu da neka funkcija @m{f} elementima skupa @m{A} pridružuje elemente skupa @m{B} označavamo sa @m{f\colon A \to B} i kažemo da @m{f} ima (poseduje) tip @m{A \to B}. Skup @m{A} nazivamo @def{domen} a skup @m{B} @def{kodomen} funkcije @m{f}@note{Primetimo da ako znamo domen i kodomen funkcije, tada znamo i tip te funkcije. Takođe važi obrnuto, ako znamo tip funkcije onda znamo i domen i kodomen te funkcije.}. Ako funkcija @m{f} elementu @m{x\in A} pridružuje vrednost @m{y\in B} to označavamo sa @m{f(x) = y}.
 
 @p Za funkciju tipa @m{A \to B} često kažemo da @em{preslikava} (@em{slika}, @em{transformiše}) skup @m{A} u skup @m{B}. Za izraz @m{f(x)} kažemo da predstavlja @em{primenu funkcije} @m{f} @em{na vrednost} @m{x}.
 
@@ -14,22 +14,27 @@
 
 @example{
 @p Neka je @m{\mathbb N = \{0, 1, 2, \dots\}} skup prirodnih brojeva. Funkcija @m{s\colon \mathbb N \to \mathbb N} definisana sa izrazom @m{s(x)=x + 1} svakom prirodnom broju pridružuje naredni prirodni broj tj. važi @m{s(0)=1}, @m{s(1)=2}, @m{s(2)=3} itd... Domen i kodomen ove funkcije je skup prirodnih brojeva @m{\mathbb N}.
+
+@p Funkciju @m{s} možemo da shvatimo kao transformaciju: @m{s} transformiše broj @m{0} u broj @m{1}, broj @m{1} u broj @m{2}, itd...
 }
 
 @example{
 @p Funkcija @m{c \colon \mathbb N \to \mathbb N} definisana sa @m{c(x) = 1} svakom prirodnom broju pridružuje isti broj - broj @m{1}. Za funkciju @m{c} kažemo da je @def{konstantna funkcija} jer je njena vrednost konstantna bez obzira na vrednost @m{x}.
+
+@p Zapravo, za svaki prirodan broj @m{n} može se konstruisati funkcija tipa @code{\mathbb N \to \mathbb N} koja sve prirodne brojeve preslikava u @m{n}.
 }
 
 @example{
 @p Neka je @m{P} skup svih tačaka jedne ravni, a @m{T} skup svih duži te ravni. Definišimo funkciju @m{s} koja svakoj duži iz @m{T} pridružuje središte te duži. Domen funkcije @m{s} je @m{T}, kodomen je @m{P}, a tip je @m{T \to P}.
+
+@p Primetimo da ovu funkciju nismo zadali sa formulom, već sa opisom. Ali jasno je da se radi o pravilnosti kojom se svakoj duži pridružuje tačka.
 }
 
 @example{
-@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @m{i} preslikava svaku vrednost u samu sebe. Funkciju @code{i} nazivamo @def{identička funkcija} na skupu @m{X}.
+@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @m{i} preslikava svaku vrednost u samu sebe, tj. svakom elementu @m{x} pridružuje njega samog. Funkciju @code{i} nazivamo @def{identička funkcija} na skupu @m{X}.
 }
 
-@p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojem se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja pridružuje vrednostima tipa @code{A} vrednosti tipa @code{B} označava se sa @code{A -> B}. Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{A -> B} predstavlja kolekciju svih funkcija koje tip @code{A} preslikavaju tip @code{B}.
-
+@p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojima se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja vrednostima tipa @code{A} pridružuje vrednosti tipa @code{B} označava se sa @code{A -> B}. Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{A -> B} predstavlja kolekciju svih funkcija koje tip @code{A} preslikavaju tip @code{B}.
 
 @figure{func}{Na ilustraciji vidimo dva tipa @code{C} i @code{D}, čije vrednosti su predstavljene kao tačkice. Neku funkciju @code{f} tipa @code{C -> D}, možemo zamisliti kao strelice koje vrednosti tipa @code{C} "povezuju" sa vrednostima tipa @code{D}. Na ilustraciji je radi preglednosti prikazana samo jedna takva strelica, ona koja vrednost @code{x} povezuje sa @code{f x}. Naravno, po definiciji pojma funkcije, svaka vrednost iz @code{C} mora biti povezana sa nekom vrednošću iz @code{D}.}
 
@@ -40,7 +45,7 @@
 }
 
 @example{
-@p Funkcija @code{even}, predefinisana u @em{GHCi}-ju, svakom celom broju dodeljuje logičku vrednost u zavisnosti da li je taj broj paran. Prema tome, tip funkcije @code{even} je@note{Ovo nije u potpunosti tačno jer navedena funkcija moze da se primeni na jos neke tipove. Detalje ćemo ostaviti za kasnije. Funkcija @code{even} može da se primeni na vrednosti tipa @code{Integer}, pa prema tome domen ove funkcije nije jedinstven tip.} @code{Int -> Bool}. Isto važi i za funkciju @code{odd} koja proverava da li je broj neparan. 
+@p Funkcija @code{even}, predefinisana u @em{GHCi}-ju, svakom celom broju dodeljuje logičku vrednost u zavisnosti da li je taj broj paran. Prema tome, tip funkcije @code{even} je@note{Ovo nije u potpunosti tačno jer navedena funkcija moze da se primeni na jos neke tipove. Funkcija @code{even} može da se primeni na vrednosti tipa @code{Integer}, pa prema tome domen ove funkcije nije jedinstven tip. Detalje ćemo ostaviti za kasnije.} @code{Int -> Bool}. Isto važi i za funkciju @code{odd} koja proverava da li je broj neparan. 
 }
 
 @p Za razliku od imperativnih jezika, funkcije u Haskelu uvek moraju da poseduju kodomen. Drugim rečima, primena funkcije na vrednost mora i sama da predstavlja vrednost nekog tipa. U imperativnim jezicima neretko koristimo @code{void} funkcije koje nemaju povratnu vrednost. Takve funkcije ne postoje u Haskelu.
