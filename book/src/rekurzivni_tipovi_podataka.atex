@@ -2,11 +2,11 @@
 
 @p Rekurzivni tipovi podataka su tipovi čije vrednosti mogu "sadržati u sebi" vrednosti istog tipa. Ovakva apstraktna karakterizacija ne znači trenutno mnogo. Zbog toga ćemo u nastavku upoznati se sa dva najznačajnija rekurzivna tipa, a to su @em{liste} i @em{stabla}. Kroz primere, uvidećemo da su rekurzivni tipovi podataka pogodni za predstavljanje vrednosti neograničene složenosti.
 
-@p Vаžno je napomenuti da su rekurzivni tipovi specijalni slučaj algebarskih tipova podataka (koje smo već upoznali). Ono što izdvaja rekurzivne tipove podataka je to što se u definiciji tipa nalazi tip koji se definiše@note{Baš kao što se u definiciji rekurzivne funkcije pojavljuje sama funkcija koja se definiše. Otuda i ime @em{rekurzivni tipovi podataka}.}
+@p Važno je napomenuti da su rekurzivni tipovi specijalni slučaj algebarskih tipova podataka (koje smo već upoznali). Ono što izdvaja rekurzivne tipove podataka je to što se u definiciji tipa nalazi tip koji se definiše@note{Baš kao što se u definiciji rekurzivne funkcije pojavljuje sama funkcija koja se definiše. Otuda i ime @em{rekurzivni tipovi podataka}.}
 
 @section{Liste}
 
-@p Konstruisaćemo tip @code{ListaBrojeva} čije vrednosti su liste s celobrojnim vrednostima@note{Već znamo da je to @code{[Int]}, ali ignorišimo to za trenutak.}. Tip @code{ListaBrojeva} mora sadržati vrednost prazne liste, liste sa jednim elementom, liste sa dva elementa, liste sa tri elementa itd... Prazna lista se može predstaviti sa nularnim konstruktorom. Lista sa jednim elementom se može predstaviti sa unarnim konstruktorom, lista sa dva elmenta sa binarnim konstruktorom, i tako dalje... Uzimajući ova razmatranja u obzir, dolazimo do naivne ideje o konstrukciju tipa @code{ListaBrojeva} kao sume konstruktora različite arnosti:
+@p Konstruisaćemo tip @code{ListaBrojeva} čije vrednosti su liste s celobrojnim vrednostima@note{Već znamo da je to @code{[Int]}, ali ignorišimo to za trenutak.}. Tip @code{ListaBrojeva} mora sadržati vrednost prazne liste, liste sa jednim elementom, liste sa dva elementa, liste sa tri elementa itd... Prazna lista se može predstaviti sa nularnim konstruktorom. Lista sa jednim elementom se može predstaviti sa unarnim konstruktorom, lista sa dva elementa sa binarnim konstruktorom, i tako dalje... Uzimajući ova razmatranja u obzir, dolazimo do naivne ideje o konstrukciju tipa @code{ListaBrojeva} kao sume konstruktora različite arnosti:
 
 @codeBlock{
 data ListaBrojeva =
@@ -24,7 +24,7 @@ data ListaBrojeva = DodajBroj Int ListaBrojeva | PraznaListaBrojeva
 }
 
 @example{
-@p Listu od tri elementa @code{1}, @code{2}, @code{3} možemo konstruisti kao @ccode{DodajBroj 1 (DodajBroj 2 (DodajBroj 3 PraznaListaBrojeva))}.
+@p Listu od tri elementa @code{1}, @code{2}, @code{3} možemo konstruisati kao @ccode{DodajBroj 1 (DodajBroj 2 (DodajBroj 3 PraznaListaBrojeva))}.
 }
 
 @p Da bi smo prikazivali vrednosti tipa @code{ListaBrojeva} u konzoli, pridružićemo tip @code{ListaBrojeva} klasi @code{Show}:
@@ -85,7 +85,7 @@ Implementirati funkciju @ccode{parni :: ListaBrojeva -> ListaBrojeva} koja uklan
 }
 
 @problem{
-Implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaBrojeva} koja primenjuje prosleđenu funkciju na svaki elment liste.
+Implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaBrojeva} koja primenjuje prosleđenu funkciju na svaki element liste.
 }
 
 @subsection{Apstraktni tip lista}
@@ -98,7 +98,7 @@ data ListaChar = DodajChar Char ListaChar | PraznaListaChar
 data ListaBool = DodajBool Bool ListaBool | PraznaListaBool
 }
 
-@p Ovakvim pristupom za svaki tip mormo definisati odgovarajući tip lista, što nije praktično. Zbog toga, definisaćemo jedan apstraktan tip podataka @code{Lista :: * -> *} čiji parametar označava tip vrednosti sadržanih u listi. Definicija liste ostaje gotovo ista, ali se umesto konkretnog tipa pojavljuje tipski parametar @code{a}:
+@p Ovakvim pristupom za svaki tip moramo definisati odgovarajući tip lista, što nije praktično. Zbog toga, definisaćemo jedan apstraktan tip podataka @code{Lista :: * -> *} čiji parametar označava tip vrednosti sadržanih u listi. Definicija liste ostaje gotovo ista, ali se umesto konkretnog tipa pojavljuje tipski parametar @code{a}:
 
 @codeBlock{
 data Lista a = Dodaj a (Lista a) | PraznaLista
@@ -135,7 +135,7 @@ obrni (Dodaj x xs) = spoji (obrni xs) x
 Za tip @code{Lista a} implementirati funkcije koje odgovaraju funkcijama @code{filter}, @code{map}, @code{zip} i @code{fold}.
 }
 
-@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implemenatcija te funkcije za tip @code{ListaBrojeva}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri dekleraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
+@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implementacija te funkcije za tip @code{ListaBrojeva}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri dekleraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
 
 @codeBlock{
 instance Show a => Show (Lista a) where
@@ -186,13 +186,13 @@ stablo1 = Čvor 1
 
 @figure{tree1}
 
-@p Ovo stablo je sačinjeno od čvora koji sadrži vrednost @m{1} kao i dva manja stabla. Ta dva manja stabla su sačinjena od po jednog čvora koji sadrži vrednost @m{2}, odnosno @m{3}. Ovi čvorovi u sebi sadrže prazna stabla (koje ne predstavlajmo na slikama).
+@p Ovo stablo je sačinjeno od čvora koji sadrži vrednost @m{1} kao i dva manja stabla. Ta dva manja stabla su sačinjena od po jednog čvora koji sadrži vrednost @m{2}, odnosno @m{3}. Ovi čvorovi u sebi sadrže prazna stabla (koje ne predstavljamo na slikama).
 
 @p Za čvor @m{1} kažemo da je @em{roditelj} čvorova @m{2} i  @m{3}, dok za čvorove @m{2} i @m{3} često kažemo i da su @em{deca} čvora @m{1}. Za jedinstveni čvor koji se nalazi na samom vrhu stabla, ovde je to @m{1}, kažemo da je @em{koren} stabla. Za čvorove koji nemaju decu kažemo da su @em{listovi} stabla: u ovom stablu to su @m{2} i @m{3}.
 }
 
 @example{
-@p Vrednost 
+@p Naredna vrednost predstavlja stablo sa šest čvorova:
 @codeBlock{
 stablo2 = Čvor 5
     (Čvor 3
@@ -203,14 +203,12 @@ stablo2 = Čvor 5
         (Čvor 8 PraznoStablo PraznoStablo))
 }
 
-@p predstalja stablo sa šest čvorova:
-
 @figure{tree2}
 
 @p U ovom stablu, @m{5} je koren, a čvorovi @m{2}, @m{4} i @m{8} su listovi. Primetimo da u stablu čvor @m{6} ima samo jedno dete.
 }
 
-@p Stabla su pogodne strukture podataka za modelovanje mnogih odnosа koje srećemo u svakodnevnici@note{Na primer, pokušajte da sa stablom predstavite porodično stablo: sve vaše direktne pretke (roditelje, roditelje roditelja, itd...). Uvidećete da je porodično stablo zaista jedno binarno stablo. Isprava zbunjujuće, ali u takvom predstavljanju @em{deca} čvorova će zapravo biti @em{roditelji} osobe...}.
+@p Stabla su pogodne strukture podataka za modelovanje mnogih odnosa koje srećemo u svakodnevnici@note{Na primer, pokušajte da sa stablom predstavite porodično stablo: sve vaše direktne pretke (roditelje, roditelje roditelja, itd...). Uvidećete da je porodično stablo zaista jedno binarno stablo. Isprava zbunjujuće, ali u takvom predstavljanju @em{deca} čvorova će zapravo biti @em{roditelji} osobe...}.
 
 @p Prvo bi bilo zgodno napisati funkciju @code{brojČvorova} koja određuje broj čvorova u stablu@note{Kao što funkcija @code{length} određuje broj elemenata u listi.}. Naravno, funkciju ćemo implementirati rekurzivno, podudaranjem vrednosti po konstruktorima. Broj čvorova u praznom stablu je @m{0}. Broj čvorova u stablu @code{Čvor a l r} je za jedan veći od zbira broja čvorova u podstablima @code{l} i @code{r}:
 
@@ -227,7 +225,7 @@ ghci> brojČvorova stablo2
 6
 }{Vrednosti @code{stablo1} i @code{stablo2} su definisana u prethodnim primerima.}
 
-@p Još jedna numerička karkteristika je @em{visina} stabla koja predstavlja najveći broj koraka od korena stabla do nekog lista. Drugim rečima, visina stabla predstavlja broj "generacija" prisutnih u stablu. Visinu stabla ćemo takođe izračunati rekurzivno: visina praznog stabla je @m{0}, a visina stabla @code{Čvor a l r} je maksimum visina stabala @code{l} i @code{r} uvećan za jedan:
+@p Još jedna numerička karakteristika je @em{visina} stabla koja predstavlja najveći broj koraka od korena stabla do nekog lista. Drugim rečima, visina stabla predstavlja broj "generacija" prisutnih u stablu. Visinu stabla ćemo takođe izračunati rekurzivno: visina praznog stabla je @m{0}, a visina stabla @code{Čvor a l r} je maksimum visina stabala @code{l} i @code{r} uvećan za jedan:
 
 @codeBlock{
 visinaStabla :: StabloBrojeva -> Int
@@ -242,7 +240,7 @@ ghci> visinaStabla stablo2
 3
 }
 
-@p Korisna je i funkcija koja proverava da li se neka vrednost nalazi u stablu@note{Kao što funkcija @code{elem} proverava da li se vrednost nalazi u listi.}. Strategija za pretragu je sledeća: ako čvor sadrži vrednost koju tražimo, tada se pretraga završava. U suprotnom, pretragu nastavljamo rekurzivno, pretraživajući oba stabla:
+@p Korisna je i funkcija koja proverava da li se neka vrednost nalazi u stablu@note{Kao što funkcija @code{elem} proverava da li se vrednost nalazi u listi.}. Strategija za pretragu je sledeća: ako čvor sadrži vrednost koju tražimo, tada se pretraga završava. U suprotnom, pretragu nastavljamo rekurzivno, pretražujući oba stabla:
 
 @codeBlock{
 elementStabla :: Int -> StabloBrojeva -> Bool
@@ -258,7 +256,6 @@ False
 ghci> elementStabla 6 stablo2
 True
 }
-
 
 @problem{
 Implementirati funkciju @ccode{zbir :: StabloBrojeva -> Int} koja sabira vrednosti svih čvorova u stablu.
@@ -298,9 +295,9 @@ elementUređenogStabla v (Čvor a l r)
 }
 
 @example{
-@p Funkcija @code{elementStabla} primenjena na vrednosti @code{8} i @code{stablo2} će imati sledeći tok: pošto je vrednost korenskog čvora (@code{5}) različita od @code{6}, funkcija će rekurzivno proveriti da li se vrednost @code{6} nalazi u levom podstablu. Pri toj pretrazi, funkcija ponovo rekurzivno proverava vrednosti čvorova @m{3}, @m{2} i @m{5}. Pošto levo podstablo ne sadrži traženu vrednost, prelazi se na desno podstablo. Prvo se proverava vrednost korena tog postabla (čvor @m{6}), a zatim se prelazi na desno dete, gde se pronalazi tražena vrednost. Primetimo da je algoritam obišao celokupno stablo pri pretrazi.
+@p Funkcija @code{elementStabla} primenjena na vrednosti @code{8} i @code{stablo2} će imati sledeći tok: pošto je vrednost korenskog čvora (@code{5}) različita od @code{6}, funkcija će rekurzivno proveriti da li se vrednost @code{6} nalazi u levom podstablu. Pri toj pretrazi, funkcija ponovo rekurzivno proverava vrednosti čvorova @m{3}, @m{2} i @m{5}. Pošto levo podstablo ne sadrži traženu vrednost, prelazi se na desno podstablo. Prvo se proverava vrednost korena tog podstabla (čvor @m{6}), a zatim se prelazi na desno dete, gde se pronalazi tražena vrednost. Primetimo da je algoritam obišao celokupno stablo pri pretrazi.
 
-@p Pogledajmo sada izvršavanje funkcije @code{elementUređenogStabla} primenjene na iste vrednosti @code{8} i @code{stablo2} (ovo stablo je uređeno, te ima smisla korisiti ovu funkciju). Pošto је tražena vrednost veća od vrednosti korenskog čvora @m{5}, algoritam rekurzivno nastavlja pretragu na desnom podstablu. Vrednost @code{8} je takođe veća od vrednosti (sada korenskog) čvora @m{6}, te se ponovo prelazi na desno podstablo. Međutim korenski čvor sada poseduje traženu vrednost, i pretraga se uspešno prekida. Primetimo da smo obišli samo dva čvora pre nego što smo prekinuli pretragu.
+@p Pogledajmo sada izvršavanje funkcije @code{elementUređenogStabla} primenjene na iste vrednosti @code{8} i @code{stablo2} (ovo stablo je uređeno, te ima smisla koristiti ovu funkciju). Pošto је tražena vrednost veća od vrednosti korenskog čvora @m{5}, algoritam rekurzivno nastavlja pretragu na desnom podstablu. Vrednost @code{8} je takođe veća od vrednosti (sada korenskog) čvora @m{6}, te se ponovo prelazi na desno podstablo. Međutim korenski čvor sada poseduje traženu vrednost, i pretraga se uspešno prekida. Primetimo da smo obišli samo dva čvora pre nego što smo prekinuli pretragu.
 }
 
 @p Kao što vidimo iz prethodnog primera, pretraga uređenog stablo može biti značajno efikasnija nego pretraga neuređenog stabla. Zaista, ako je dato stablo koje poseduje @m{n} generacija, tada to stablo može posedovati @eq{2^0 +2^1 + 2^2 + \cdots + 2^n = 2^{n+1} - 1} čvorova. Pretraga ovakvog stabla bi u najgorem slučaju zahtevala @m{2^{n+1} - 1} rekurzivnih poziva funkcije (računajući i prvi poziv), jer je neophodno da algoritam obiđe sve čvorove da bi dao definitivan odgovor. Sa druge strane, ako je to stablo uređeno, tada je u najgorem slučaju dovoljno izvršiti samo @m{n} rekurzivnih poziva.
@@ -311,7 +308,7 @@ Implementirati funkciju @ccode{najvećiUređeno :: StabloBrojeva -> Int} koja pr
 
 @subsection{Apstraktni tip stabla}
 
-@p Naravno, u čvorovima stabla korisno je postavljati i vrednosi drugih tipova osim @code{Int}. Stoga je zgodno napraviti apstraktni tip  @code{Stablo :: * -> *} koji će omogućiti uopštenu konstrukciju binarnog stabla. Jedini parametar ovog apstraktong tipa, biće tip koji označava tip vrednosti sadržane u čvoru. Gore navedenu rekurzivnu definiciju je potrebno neznatno izmeniti:
+@p Naravno, u čvorovima stabla korisno je postavljati i vrednosti drugih tipova osim @code{Int}. Stoga je zgodno napraviti apstraktni tip  @code{Stablo :: * -> *} koji će omogućiti uopštenu konstrukciju binarnog stabla. Jedini parametar ovog apstraktnog tipa, biće tip koji označava tip vrednosti sadržane u čvoru. Gore navedenu rekurzivnu definiciju je potrebno neznatno izmeniti:
 
 @codeBlock{
 data Stablo a = PraznoStablo | Čvor a (Stablo a) (Stablo a)
@@ -328,9 +325,9 @@ brojČvorova (Čvor _ l r) = 1 + brojČvorova l + brojČvorova r
 visinaStabla :: Stablo a -> Int
 visinaStabla PraznoStablo = 0
 visinaStabla (Čvor _ l r) = 1 + max (visinaStabla l) (visinaStabla r)
-}{Imajte na umu da ove dve definicije ne mogu biti u istoj datoteci kao pretodne definicije, jer se tipovi razlikuju.}
+}{Imajte na umu da ove dve definicije ne mogu biti u istoj datoteci kao prethodne definicije, jer se tipovi razlikuju.}
 
-@p Funkcija @code{elementStabla} mora koristiti operator @code{(==) :: Eq a => a -> a -> a}. Stoga je potrebno da i tip funkcije @code{elmentStabla} bude ograničen @code{Eq} klasom. Osim toga, definicija funkcije je potpuno ista:
+@p Funkcija @code{elementStabla} mora koristiti operator @code{(==) :: Eq a => a -> a -> a}. Stoga je potrebno da i tip funkcije @code{elementStabla} bude ograničen @code{Eq} klasom. Osim toga, definicija funkcije je potpuno ista:
 
 @codeBlock{
 elementStabla :: Eq a => a -> Stablo a -> Bool
@@ -340,7 +337,7 @@ elementStabla v (Čvor a l r)
     | v /= a = elementStabla v l || elementStabla v r
 }
 
-@p Ako želimo da govorimo i o uređenim stablima, tada se moramo ograničiti na kalsu @code{Ord}.
+@p Ako želimo da govorimo i o uređenim stablima, tada se moramo ograničiti na klasu @code{Ord}.
 
 @problem{
 Implementirati funkciju @ccode{uređeno :: Ord a => Stablo a -> Bool} koje proverava da li je stablo uređeno.
@@ -352,7 +349,7 @@ Implementirati funkciju @ccode{elementUređenogStabla :: Ord a => a => Stablo a 
 
 @subsection{Stabla kao funktori}
 
-@p U jednoj od prethodnih lekcija obradili smo funktore. Funktor je apstraktni tip @code{T :: * -> *} koji dozvoljava implementaciju funkcije mapiranja @ccode{fmap :: (a -> b) -> T a -> T b}, koja zadovoljava određene osobine. Na primeru lista i možda-tipova, uvideli smo da o @code{fmap} možemo misliti kao o funkciji koja primenjuje prosleđenu funkciju na svaku vrednost tipa @code{a} sadržnoj u vrednosti tipa @code{T a}, pri čemu se sama struktura vrednosti tipa @code{T a} čuva.
+@p U jednoj od prethodnih lekcija obradili smo funktore. Funktor je apstraktni tip @code{T :: * -> *} koji dozvoljava implementaciju funkcije mapiranja @ccode{fmap :: (a -> b) -> T a -> T b}, koja zadovoljava određene osobine. Na primeru lista i možda-tipova, uvideli smo da o @code{fmap} možemo misliti kao o funkciji koja primenjuje prosleđenu funkciju na svaku vrednost tipa @code{a} sadržanoj u vrednosti tipa @code{T a}, pri čemu se sama struktura vrednosti tipa @code{T a} čuva.
 
 @p I goredefinisani tip @code{Stablo :: * -> *} može biti instanca klase @code{Functor}. Primetimo prvo da @code{Stablo} je odgovarajuće vrste @code{* -> *}. Zatim, ako razmislimo o tome šta @code{fmap} radi na primeru drugih funktora, lako se dolazi do ideje da @code{fmap} primenjuje datu funkciju na vrednost u svakom čvoru stabla@note{Ovo je samo heuristički argument, do kog smo došli iskustvom. U nastavku ćemo dokazati da ovako definisana @code{fmap} funkcija zaista zadovoljava odgovarajuće osobine.}.
 
@@ -403,7 +400,7 @@ Ova vrednost se može predstaviti i kao naredno stablo:
 @figure{tree3}
 }
 
-@p Kao što vidimo vrednosti tipa @code{Izraz} se mogu shvatiti kao stabla, čiji listovi su brojevi, dok ostali čvorovi predstvaljaju operacije sabiranja ili množenja. Stabla poput ovih nazivamo @def{sintaksna stabla}. Sa sintaksnim stablima se mogu prezentovati matematički izrazi ali izrazi nekog programskog jezika@note{Ili opštije, bilo kog formalnog jezika}, i predstavljaju ključni koncept programe poput kompajlera i interpretera.
+@p Kao što vidimo vrednosti tipa @code{Izraz} se mogu shvatiti kao stabla, čiji listovi su brojevi, dok ostali čvorovi predstavljaju operacije sabiranja ili množenja. Stabla poput ovih nazivamo @def{sintaksna stabla}. Sa sintaksnim stablima se mogu prezentovati matematički izrazi ali izrazi nekog programskog jezika@note{Ili opštije, bilo kog formalnog jezika}, i predstavljaju ključni koncept programe poput kompajlera i interpretera.
 
 @p Naravno, novodefinisani tip želimo da uvedemo u neke klase. Najkorisnije je implementirati funkciju @code{show}, koja je će izraz predstaviti u obliku na koji smo do sada navikli.
 
@@ -414,7 +411,7 @@ instance Show Izraz where
     show (Proizvod a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
 }
 
-@p Druga funkcija koju je najlogičnije implementirati  je funkcija @code{izračunaj :: Izraz -> Int}, koja izraz sračunava izraz u jedinsvenu vrednost. Funkciju implementiramo rekurzivno: sračunavanjem broja se dobija taj isti broj, dok se sračunavanjem zbira (proizvoda) dva izraza dobija zbir (proizvod) vrednosti koje su dobijene sračunavanjem odgovarajućih podizraza:
+@p Druga funkcija koju je najlogičnije implementirati  je funkcija @code{izračunaj :: Izraz -> Int}, koja izraz sračunava izraz u jedinstvenu vrednost. Funkciju implementiramo rekurzivno: sračunavanjem broja se dobija taj isti broj, dok se sračunavanjem zbira (proizvoda) dva izraza dobija zbir (proizvod) vrednosti koje su dobijene sračunavanjem odgovarajućih podizraza:
 
 @codeBlock{
 izračunaj :: Izraz -> Int
@@ -425,26 +422,26 @@ izračunaj (Proizvod a b) = izračunaj a * izračunaj b
 
 
 @problem{
-Kreirati tip @code{MatematičkiIzraz} čije vrednosti mogu da prezentuju matematičke izraze sačinjenje od nepoznate @m{x}, realnih brojeva, operacija sabiranja, oduzimanja, množenja, deljenja i stepenovanja kao i funkcija poput sinusa i kosinusa. Napisati funkciju koja izračunava ove izraze u zavisnosti od vrednosti nepoznate. Implementirati funkciju koja računa izvod matematičkog izraza.
+Kreirati tip @code{MatematičkiIzraz} čije vrednosti mogu da prezentuju matematičke izraze sačinjene od nepoznate @m{x}, realnih brojeva, operacija sabiranja, oduzimanja, množenja, deljenja i stepenovanja kao i funkcija poput sinusa i kosinusa. Napisati funkciju koja izračunava ove izraze u zavisnosti od vrednosti nepoznate. Implementirati funkciju koja računa izvod matematičkog izraza.
 }
 
 @problem{
-@em{Za ovaj zadatak je neophodno uraditi prethodni zadatk} Ako ste upoznati sa @em{LaTeX} jezikom za zapisivanje matematičke notacije, konstruišite funkciju @ccode{uLatex :: MatematičkiIzraz -> String} koja daje @em{Latex} kod za dati izraz. Koristite @em{LaTeX} naredbe poput @pre{\times}, @pre{^}, @pre{\frac}, @pre{\left(} i @pre{\right)}, i tako dalje... }
+@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Ako ste upoznati sa @em{LaTeX} jezikom za zapisivanje matematičke notacije, konstruišite funkciju @ccode{uLatex :: MatematičkiIzraz -> String} koja daje @em{Latex} kod za dati izraz. Koristite @em{LaTeX} naredbe poput @pre{\times}, @pre{^}, @pre{\frac}, @pre{\left(} i @pre{\right)}, i tako dalje... }
 
 @problem{
-Napraviti tip @code{LogickiIzraz} koji predstavlja logičke izraze sačinjenje od logičkih vrednosti i operacija konjunkcije i disjunkcije. Uvesti tip @code{LogickiIzraz} u @code{Show} klasu tipova. Implementirati funkciju @code{izracunajLogicki :: LogickiIzraz -> Bool} koja izračunava zadati logički izraz.}
+Napraviti tip @code{LogickiIzraz} koji predstavlja logičke izraze sačinjene od logičkih vrednosti i operacija konjunkcije i disjunkcije. Uvesti tip @code{LogickiIzraz} u @code{Show} klasu tipova. Implementirati funkciju @code{izracunajLogicki :: LogickiIzraz -> Bool} koja izračunava zadati logički izraz.}
 
 @problem{
-@em{Za ovaj zadatak je neophodno uraditi prethodni zadatk} Neka je data funkicja @code{f :: Int -> Bool} sa @code{f x = x \=0}. Konstruiasti funkciju @code{konvertuj :: LogickiIzraz -> Izraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izracunajAritmeticki = izracunajLogicki . konvertuj}
+@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Neka je data funkcija @code{f :: Int -> Bool} sa @code{f x = x \=0}. Konstruisati funkciju @code{konvertuj :: LogickiIzraz -> Izraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izracunajAritmeticki = izracunajLogicki . konvertuj}
 }
 
-@subsection{Parsiaranje matematičkih izraza}
+@subsection{Parsiranje matematičkih izraza}
 
-@p Gore smo definisali instancu @code{Show Izraz} na sasvim jednostavan način. Kako to obično biva, obrnuti proces je značajno koplikovaniji za implementaciju. Međutim, tehnika aplikativnih parsra koju smo predstavili u lekciji o funktorima, može nam pomoći u ovom slučaju. Sa parserom kog budemo konstruisali, moći ćemo da iz niske pročitamo vrednost @code{Izraz}.
+@p Gore smo definisali instancu @code{Show Izraz} na sasvim jednostavan način. Kako to obično biva, obrnuti proces je značajno komplikovaniji za implementaciju. Međutim, tehnika aplikativnih parsera koju smo predstavili u lekciji o funktorima, može nam pomoći u ovom slučaju. Sa parserom kog budemo konstruisali, moći ćemo da iz niske pročitamo vrednost @code{Izraz}.
 
-@p Pre nego što počnemo sa definisanjem parsera, moramo tačno definisati oblik niska koje ćemo parsirati. Na primer, složeni parseri izraza mogu ispravno parsirati izraze poput @code{"2 +  5"} ili @code{"2*-7+6"} jer su napravljeni tako da ignorišu beline (razmake), da vode računa o prioritetu operacija, podržavaju unarni operator negacije, itd... Da bi maksimalno skratili naredne redove, mi nećemo kreirati ovako složeni parser. Parser koji budemo konstruisali moći će da parsiara samo one izraze koji su nastali sa funkcijom @code{show :: Izraz -> String} tj, izraze sačinjene isključivo od cifara i znakova @code{+}, @code{-}, @code{(}, @code{)}, pri čemu se oko svakog podizraza nalaze zagrade (osim oko samih brojeva).
+@p Pre nego što počnemo sa definisanjem parsera, moramo tačno definisati oblik niska koje ćemo parsirati. Na primer, složeni parseri izraza mogu ispravno parsirati izraze poput @code{"2 +  5"} ili @code{"2*-7+6"} jer su napravljeni tako da ignorišu beline (razmake), da vode računa o prioritetu operacija, podržavaju unarni operator negacije, itd... Da bi maksimalno skratili naredne redove, mi nećemo kreirati ovako složeni parser. Parser koji budemo konstruisali moći će da parsira samo one izraze koji su nastali sa funkcijom @code{show :: Izraz -> String} tj, izraze sačinjene isključivo od cifara i znakova @code{+}, @code{-}, @code{(}, @code{)}, pri čemu se oko svakog podizraza nalaze zagrade (osim oko samih brojeva).
   
-@p Kako je i sama struktura tipa @code{Izraz} rekurzivna, i parser tipa @code{Parser Izraz} biće rekurzivan. Posebno ćemo konstruisati parser @code{izrazBroj} koji parsira brojeve, parser @code{izrazZbir} koji parsira zbir dva manja izraza, i parser @code{izrazProizvod} koji parsira prizvod dva manja izraza.
+@p Kako je i sama struktura tipa @code{Izraz} rekurzivna, i parser tipa @code{Parser Izraz} biće rekurzivan. Posebno ćemo konstruisati parser @code{izrazBroj} koji parsira brojeve, parser @code{izrazZbir} koji parsira zbir dva manja izraza, i parser @code{izrazProizvod} koji parsira proizvod dva manja izraza.
 
 @p Pretpostavimo da su navedeni parseri definisani. Jedan izraz može biti broj, proizvod ili zbir manjih izraza. Zbog toga, da bi parsirali izraz, prvo ćemo pokušati da parsiramo broj. Ako to ne uspemo, onda ćemo pokušati da parsiramo zbir, a ako ni to ne uspemo pokušaćemo da parsiramo proizvod@note{Pritom, ovde uopšte nije bitno kojim redom pokušavamo pa pokrenemo parsere. U složenijim parserima, poredak je često bitan}. Sa kombinatorom @code{ili} lako dobijamo željeni parser:
 
@@ -460,7 +457,7 @@ izrazBroj :: Parser Izraz
 izrazBroj = fmap Broj broj
 }
 
-@p Parser @code{izrazZbir} mora da funkcioniše na sledeći način: prvo je neophodno parsirati simbol za levu zagradu, zatim je potrebno parsirati levi sabirak, pa simbol plus, desni sabirak, i na kraju simbol desne zagrade. Rezultati parsiaranja simbola nisu bitni (ako su uspešni), a rezultate parsiranja levog i desnog sabirka moramo ukombinovati u vrednost oblika @code{Zbir x y :: Izraz}. Naravno, u tome će nam pomoći podizanje konstruktora @code{Zbir}. Takođe, kako su oba sabirka izrazi sami za sebe, potrebno ih je parsirati sa @code{izraz} parserom. Ovo uspostavlja rekurziju.
+@p Parser @code{izrazZbir} mora da funkcioniše na sledeći način: prvo je neophodno parsirati simbol za levu zagradu, zatim je potrebno parsirati levi sabirak, pa simbol plus, desni sabirak, i na kraju simbol desne zagrade. Rezultati parsiranja simbola nisu bitni (ako su uspešni), a rezultate parsiranja levog i desnog sabirka moramo ukombinovati u vrednost oblika @code{Zbir x y :: Izraz}. Naravno, u tome će nam pomoći podizanje konstruktora @code{Zbir}. Takođe, kako su oba sabirka izrazi sami za sebe, potrebno ih je parsirati sa @code{izraz} parserom. Ovo uspostavlja rekurziju.
 
 @codeBlock{
 izrazZbir :: Parser Izraz
@@ -480,7 +477,7 @@ izrazProizvod =
     <* simbol ')' 
 }
 
-@p Testiranjem se uverevamo da parser funkcioniše:
+@p Testiranjem se uveravamo da parser funkcioniše:
 
 @terminal{
 ghci> parsiraj izraz "(1+2)"
@@ -489,7 +486,7 @@ ghci> parsiraj izraz "((10+2)*32)"
 Just ("",((10+2)*32))
 }{Vrednost koju vidimo u drugoj koordinati rezultat je zapravo sintaksno stablo. Međutim, zbog načina na koje smo definisali @code{show}, ovo sintaksno stablo se prikazuje na sasvim jednostavan način.}
 
-@p Samo jedan korak nas deli od implementacije primitivnog kalkulatora. Sve što je potrebno uraditi je primeniti funkciju @code{izračunaj} na rezultat parsiranja. Ali, kako je razultat parsianja tipa @code{Maybe (String, Izraz)}, neophodno je proći funkcijom @code{izračunaj} kroz @code{Maybe} i @code{(String, )}. 
+@p Samo jedan korak nas deli od implementacije primitivnog kalkulatora. Sve što je potrebno uraditi je primeniti funkciju @code{izračunaj} na rezultat parsiranja. Ali, kako je rezultat parsiranja tipa @code{Maybe (String, Izraz)}, neophodno je proći funkcijom @code{izračunaj} kroz @code{Maybe} i @code{(String, )}. 
 
 @codeBlock{
 parsirajIzračunaj :: String -> Maybe Int

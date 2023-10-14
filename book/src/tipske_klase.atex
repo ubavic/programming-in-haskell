@@ -2,16 +2,16 @@
 
 @p @def{Tipska klasa} predstavlja kolekciju tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz metode@note{@em{Metod} je samo naziv za funkciju (specijalno operator) koju klasa deklariše.} koje "rade" sa svim tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
 
-@p U lekciji o polimorfizmu videli smo da nam tipske klase omogućuju da pišemo polimorfne funkcije koje koriste neke određene metode koje nisu dostupne svakom tipu@note{Na primer, koristeći klasu numeričkih tipova @code{Num}, moguće sa jednom definicijom implemenitrati numeričku formulu za svaki tipom koji pripda klasi @code{Num}.}. U ovoj lekciji ćemo prikazti kako i sami možemo definisati naše klase, i kroz primere predefinisanih klase videćemo razne tehnike koje je moguće koristiti pri radu sa klasama.
+@p U lekciji o polimorfizmu videli smo da nam tipske klase omogućuju da pišemo polimorfne funkcije koje koriste neke određene metode koje nisu dostupne svakom tipu@note{Na primer, koristeći klasu numeričkih tipova @code{Num}, moguće sa jednom definicijom implementirati numeričku formulu za svaki tipom koji pripada klasi @code{Num}.}. U ovoj lekciji ćemo prikazati kako i sami možemo definisati naše klase, i kroz primere predefinisanih klase videćemo razne tehnike koje je moguće koristiti pri radu sa klasama.
 
-@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova metoda koje instanaca mora da implementira:
+@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova metoda koje instanca mora da implementira:
 
 @codeBlock{
 class C a where
   f1 :: T1
   f2 :: T2 
   ....
-}{Ovde @code{a} je tipska promenljiva koja predstavlja neku instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku pormenljivu @code{a}.}
+}{Ovde @code{a} je tipska promenljiva koja predstavlja neku instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku promenljivu @code{a}.}
 
 @p Da bi neki tip @code{T} pridružili klasi tipova @code{C}, koristimo narednu konstrukciju nakon koje slede definicije metoda koje propisuje klasa:
 
@@ -24,7 +24,7 @@ instance C T where
 
 @section{Jedan primer}
 
-@p Gotovo da nema uvodne knjige o programiranju u nekom jeziku koja ne sadrži primer sa geometrisjkim figurama poput pravougaonika, trougla i kruga. Implementirati strukture koje predstavljaju figure i funkcije koje računaju obim i površinu figura je jednostavno u svakom popularnom jeziku, ali može da pozluži za odličnu ilustraciju mnogobrojnih pojedinosti nekog programskog jezika. Nama će poslužiti da ilustrujemo zašto su klase tipova korisne.  
+@p Gotovo da nema uvodne knjige o programiranju u nekom jeziku koja ne sadrži primer sa geometrijskim figurama poput pravougaonika, trougla i kruga. Implementirati strukture koje predstavljaju figure i funkcije koje računaju obim i površinu figura je jednostavno u svakom popularnom jeziku, ali može da posluži za odličnu ilustraciju mnogobrojnih pojedinosti nekog programskog jezika. Nama će poslužiti da ilustrujemo zašto su klase tipova korisne.  
 
 @p Prvo ćemo definisati tri tipa podatka koji predstavljaju figure u Dekartovoj ravni:
 
@@ -45,7 +45,7 @@ newtype Trougao = Trougao (Double, Double, Double, Double, Double, Double)
 
 newtype Krug = Krug (Double, Double, Double)
   deriving Show
-}{Iz navedenog koda nije jasno šta navedene koordinate predstavljaju. U slučaju pravougaonika prve dve koordinate su koordinate "levog donjeg" temena, dok druge dve koordinate predstavljaju visinu i širinu. U slučaju trougla, prve dve kooridnate predstvljaju koordinate prvog temena, druge dve drugog, i poslednje dve koordinate predstavljaju koordinate trećeg temena. U slučaju kruga, prve dve koordinate predstavljaju koordinate centra, dok treća koordinata predstavlja poluprečnik.}
+}{Iz navedenog koda nije jasno šta navedene koordinate predstavljaju. U slučaju pravougaonika prve dve koordinate su koordinate "levog donjeg" temena, dok druge dve koordinate predstavljaju visinu i širinu. U slučaju trougla, prve dve koordinate predstavljaju koordinate prvog temena, druge dve drugog, i poslednje dve koordinate predstavljaju koordinate trećeg temena. U slučaju kruga, prve dve koordinate predstavljaju koordinate centra, dok treća koordinata predstavlja poluprečnik.}
 
 @p Implementacija funkcija koje računaju obim navedenih figura je takođe jednostavna:
 
@@ -73,13 +73,13 @@ class Figura a where
   obim :: a -> Double
 }
 
-@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve liije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
+@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
 
 @p Tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 
-@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, te je potrebno tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učininiti instancama klase @code{Figura}.
+@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, te je potrebno tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učiniti instancama klase @code{Figura}.
 
-@p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instacinaranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
+@p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instanciranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
 
 @codeBlock{
 instance Figura Pravougaonik where
@@ -98,7 +98,7 @@ instance Figura Krug where
 
 @p Linijom @code{instance ... } započinje se blok definicija metoda. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
-@p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnje pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
+@p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnije pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
 
 @p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da se @code{obim} može primeniti na razne tipove figura
 
@@ -114,7 +114,7 @@ ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu Pravougaonika i kruga ćemo lako izračinati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu Pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where
@@ -260,7 +260,7 @@ class (Eq a) => Ord a where
 
 @p U slučaju klase @code{Ord}, ima smisla zahtevati da tip već pripada klasi @code{Eq} jer pojam jednakosti vrednosti neophodan za razlikovanje funkcija @code{>} i @code{>=}@note{Drugim rečima, ako možemo da poredimo vrednosti sa @code{>} i @code{>=}, tada @code{a == b} možemo definisati kao @ccode{(a >= b) && not (a > b)}. Sa druge strane ako možemo da poredimo vrednosti sa @code{==} i @code{\=}, to nam ništa ne govori o poređenju vrednosti u smislu operatora @code{<}, @code{<=}, @code{>}, @code{>=}. Dakle, funkcije koje definiše klasa @code{Eq} su elementarnije od onih funkcija klase @code{Ord}. Stoga ima smisla zahtevati da @code{Ord} bude podklasa klase @code{Eq}.}. Prema tome, klasa @code{Ord} je podklasa klase @code{Eq}.
 
-@p Klasa @code{Ord} propisuje funkciju @code{compare :: a -> a -> Ordering} koja upoređuje dve vrednosti, uobičajne relacije (operatore koje vraćaju logičke vrednosti) za poređenje elementa kao i dve binarne funkcije @code{min} i @code{max} koje respektivno vraćaju manji odnosno veći od argumenata.
+@p Klasa @code{Ord} propisuje funkciju @code{compare :: a -> a -> Ordering} koja upoređuje dve vrednosti, uobičajene relacije (operatore koje vraćaju logičke vrednosti) za poređenje elementa kao i dve binarne funkcije @code{min} i @code{max} koje respektivno vraćaju manji odnosno veći od argumenata.
 
 @p Tip @code{Ordering} je tip koji sadržati tri vrednosti @code{LT}, @code{EQ}, @code{GT} koje označavaju rezultat poređenja dve vrednosti. Vrednost @code{compare a b} je @code{LT}, @code{EQ}, @code{GT} ako je vrednost @code{a} strogo manja, jednaka, strogo veća od vrednosti @code{b}.
 
@@ -306,7 +306,7 @@ ghci> a
 R (2,3)
 }{Kada u @em{GHCi} unesemo neki izraz, taj izraz će se evaluirati, i dobijena vrednost će se prikazati kao niska dobijena primenom @code{show} funkcije.}
 
-@p Za tip @code{Racionalan} je bolje implementirati posedbnu @code{show} funkciju, i ne koristiti izvođenje. U tom slučaju treba ukloniti @code{deriving (Show)}, a dodati instancu @code{Show Racionalan}:
+@p Za tip @code{Racionalan} je bolje implementirati posebnu @code{show} funkciju, i ne koristiti izvođenje. U tom slučaju treba ukloniti @code{deriving (Show)}, a dodati instancu @code{Show Racionalan}:
 
 @codeBlock{
 instance Show Racionalan where

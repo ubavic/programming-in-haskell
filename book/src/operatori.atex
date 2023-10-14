@@ -341,7 +341,7 @@ Neka je @code{f :: (A -> B) -> C} i @code{g :: C -> D}. Da li je @code{g . f} do
 @problem{
 Neka su @code{p} i @code{q} dve funkcije tipa @code{a -> Bool}. Zašto su @ccode{filter p . filter q} i @ccode{filter (\x -> p x && q x)} iste funkcije?
 }{
-@p Kako je @ccode{(filter p . filter q) xs = filter p (filter q xs)} to se primenom funkcije @code{filter p . filter q} na listu @code{xs} odstranjuju svi elementi koji ne zadovoljavaju predikat @code{q}, a zatim se odstranjuju sve elementi koji ne zadovoljavuju predikat @code{p}. Prema tome, u listi @ccode{(filter p . filter q) xs} se nalaze svi elementi koji zadovoljavaju predikate @code{p} i @code{q}. A upravo se takva lista dobija i kao @ccode{filter (\x -> p x && q x) xs}.
+@p Kako je @ccode{(filter p . filter q) xs = filter p (filter q xs)} to se primenom funkcije @code{filter p . filter q} na listu @code{xs} odstranjuju svi elementi koji ne zadovoljavaju predikat @code{q}, a zatim se odstranjuju sve elementi koji ne zadovoljavaju predikat @code{p}. Prema tome, u listi @ccode{(filter p . filter q) xs} se nalaze svi elementi koji zadovoljavaju predikate @code{p} i @code{q}. A upravo se takva lista dobija i kao @ccode{filter (\x -> p x && q x) xs}.
 }
 
 @problem{
@@ -451,7 +451,7 @@ ghci> (*2) <$> [1 .. 10]
 @eq{I = \sum\limits_{i=0}^{n} f\left(x_i\right) \left(x_{i+1} - x_i\right),}
 gde je @eq{a = x_0 < x_1 < \cdots < x_{n} < x_{n+1} = b} niz tačaka koje dele interval @m{[a,b]}. Navedene podeone tačke se mogu uzeti proizvoljno, ali što ih više ima to će kvadratići biti uži, a samim tim će aproksimacija površine biti tačnija.
 
-@p Lako možemo implementirati funkciju @ccode{int :: (Double -> Double) -> Double -> Double -> Double} koja računa određen integral neke fukcije @code{f :: Float -> Float}. Prvi parametar funkcije @code{int} je funkcija @code{f}, drugi početak intervala a treći kraj intervala. Povratna vrednost je aproksimacija određenog integrala Rimanovom sumom.
+@p Lako možemo implementirati funkciju @ccode{int :: (Double -> Double) -> Double -> Double -> Double} koja računa određen integral neke funkcije @code{f :: Float -> Float}. Prvi parametar funkcije @code{int} je funkcija @code{f}, drugi početak intervala a treći kraj intervala. Povratna vrednost je aproksimacija određenog integrala Rimanovom sumom.
 
 @p Listu podeonih tačaka možemo formirati korišćenjem izlistavanja. Ako su @code{a} i @code{b} krajevi intervala, a @code{d} neki dovoljno mali broj, tada lista @code{[a, a + d .. b]} predstavlja podelu intervala @m{[a,b]}. Primenom funkcije @code{f} na svaki element date liste, dobijamo listu visina pravougaonika: @ccode{map f [a, a + d .. b]}. Množenjem svake od ovih visina sa širinom intervala, odnosno sa @code{d}, dobijamo listu površina pravougaonika: @ccode{map (\h -> h * d) (map f [a, a + d .. b])}. Na kraju, dovoljno je da površine saberemo:
 @ccode{sum (map (\h -> h * d) (map f [a, a + d .. b]))}.
@@ -464,7 +464,7 @@ int f a b = sum povrsine
     where
         povrsine = map (\h -> h * d) (map f [a, a + d .. b])
         d = (b - a) / 200
-}{U ovoj implementaciji uzeto je da je @code{d} jednak @m{200}-tom delu intrvala @m{[a, b]}. Prime tome, lista podenih tačaka će sadržati @m{200} elemenata. Za veću preciznost, dovoljno je uvećati konstantu @code{200}.}
+}{U ovoj implementaciji uzeto je da je @code{d} jednak @m{200}-tom delu intervala @m{[a, b]}. Prime tome, lista podeonih tačaka će sadržati @m{200} elemenata. Za veću preciznost, dovoljno je uvećati konstantu @code{200}.}
 
 @example{
 @p U @em{GHCi} okruženju je dostupna funkcija @code{sin} kao i konstanta @code{pi}. Ako učitamo implementaciju funkcije @code{int} možemo da izračunamo integral sinusa na intervalu @m{[0,\pi]}:

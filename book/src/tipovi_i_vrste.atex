@@ -219,7 +219,7 @@ sumVecInt :: VecInt -> VecInt -> VecInt
 sumVecInt (MkVecInt (a,b,c)) (MkVecInt (x,y,z)) = MkVecInt (a+x, b+y, c+z)
 
 sumVecFloat :: VecFloat -> VecFloat -> VecFloat
-sumVecFlaot (MkVecFloat (a,b,c)) (MkVecFloat (x,y,z)) = MkVecFloat (a+x, b+y, c+z)
+sumVecFloat (MkVecFloat (a,b,c)) (MkVecFloat (x,y,z)) = MkVecFloat (a+x, b+y, c+z)
 
 sumVecDouble :: VecDouble -> VecDouble -> VecDouble
 sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y, c+z)
@@ -228,7 +228,7 @@ sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y
 @p Kao što vidimo, svaki numerički tip (@code{Int}, @code{Float}, @code{Double}, ...) zahteva posebnu definiciju odgovarajućeg tipa vektora, što dovodi do toga da imamo mnogo međusobno sličnih definicija.
 }
 
-@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smislu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promeljive@note{Ovaka definicija podseća na podudaranje oblika kod "običnih" funkcija.}.
+@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smislu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promenljive@note{Ovakva definicija podseća na podudaranje oblika kod "običnih" funkcija.}.
 
 @example{
 @p Za jednobraznu konstrukciju trodimenzionalnih vektora, možemo koristiti naredni apstraktni tip
@@ -266,7 +266,7 @@ sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 data A a b c = MkA (a, [b], Int -> c)
 }{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{A Char Bool Float} predstavlja tip @code{(Char, [Bool], Int -> Float)}.}
 
-@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipove. U tom smilsu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
+@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipove. U tom smislu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
 
 @p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduše, oba apstraktna tipa imaju specificnu sintaksu, koja se razlikuje od onog što smo gore opisali.
 

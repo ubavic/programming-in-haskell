@@ -82,7 +82,7 @@ neparan 0 = False
 neparan n = not (paran (n - 2))
 }
 
-@p Demonstirajmo izvršavanje koda na jednom primeru:
+@p Demonstrirajmo izvršavanje koda na jednom primeru:
 
 @eq{
 \begin{aligned}
@@ -103,9 +103,9 @@ neparan n = not (paran (n - 2))
 
 @section{Fibonačijev niz}
 
-@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio kljigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do raultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Zapravo, na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
+@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio knjigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do rezultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Zapravo, na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
 
-@p Danas definicija @em{Fibonačijevog niza} nema mnogo veze za zečevima, a niz se konstruiše po sledećem prinicpu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
+@p Danas definicija @em{Fibonačijevog niza} nema mnogo veze za zečevima, a niz se konstruiše po sledećem principu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
 
 @p Po navedenom principu, treći član Fibonačijevog niza je @m{2} (jer je @m{2 = 1 + 1}), četvrti član je @m{3} (jer je @m{3 = 1 + 2}), peti član je @m{5} (jer je @m{5 = 2 + 3}), šesti član je @m{8} (jer je @m{8 = 3 + 5}), i tako dalje...
 
@@ -121,7 +121,7 @@ fib n
 }
 
 @problem{
-Takozani @em{Tribonačijev niz} se konstriše na sledeći način: prva tri člana Tribonačijevog niza su @m{1}. Svaki naredni član Tribonačijevog niza je zbir prethodna tri člana. Implementirati funkciju koja računa @m{n}-ti element Tribonačijev broj.
+Takozvani @em{Tribonačijev niz} se konstruiše na sledeći način: prva tri člana Tribonačijevog niza su @m{1}. Svaki naredni član Tribonačijevog niza je zbir prethodna tri člana. Implementirati funkciju koja računa @m{n}-ti element Tribonačijev broj.
 }
 
 @section{Euklidov algoritam}
@@ -160,7 +160,7 @@ nzd a b
 Primetimo da smo više puta za redom oduzimali isti broj (@m{8}) od @m{32}.
 }
 
-@p Navedeni primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo nefeikasno rekurzivno pozivali funkciju, možemo da podelimo argumene po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
+@p Navedeni primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo neefikasno rekurzivno pozivali funkciju, možemo da podelimo argumente po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
 
 @p Neka je @m{r} ostatak deljenja @m{a} sa @m{b}. Ako je @m{r} nula, to znači da je @m{a} deljivo sa @m{b}, pa  sledi da je @em{NZD} ova dva broja bаš @m{b}. U suprotnom, dovoljno je potražiti @em{NZD} brojeva @m{b} i @m{r}. Ovo nas dovodi do narednog koda:
 
@@ -175,7 +175,7 @@ nzd' a b = if r == 0 then b else nzd' b r
 }
 
 @problem{Skakavac @em{A} se nalazi u koordinatnom početku brojevne prave, a skakavac @em{B} se nalazi u tački @m{p}, gde je @m{p} prirodan broj. Kretanje oba skakavca je ograničeno samo brojevnu pravu, i pritom @em{A} uvek skače @m{m} jedinica (levo ili desno), a @em{B} uvek skače @m{n} jedinica (takođe, levo ili desno). Brojevi @m{m} i @m{n} su takođe prirodni. Napisati funkciju @ccode{susret :: Int -> Int -> Int -> Bool} koja na osnovu tri prirodna broja @m{p}, @m{m} i @m{n} određuje da li je moguće da se skakavci ikad susretnu u jednoj tački.}{
-@p Oba skakavca se mogu nalaziti samo u celobrojnim tačkama. Pretpostavimo da su se nakon @m{\mu} skokova skakavaca @em{A} i @m{\nu} skokova skakavaca @em{B}, dva skakavca susrela u celom broju @m{z}. Tada važi @m{z = \mu m = p + \nu n,} odnosno @eq{p = \mu m - \nu n.} Neka je @m{d} @em{NZD} brojeva @m{m} i @m{n}. Ako važi navednena jednakost, tada @m{d} mora deliti broj @m{p}. Obratno, ako @m{d} deli @m{p} tada Bezuovom stavu garantuje gornju jednakost za neke @m{\mu} i @m{\nu}. Dakle, skakavci se mogu susresti, ako i samo ako @m{d} deli @m{p}.
+@p Oba skakavca se mogu nalaziti samo u celobrojnim tačkama. Pretpostavimo da su se nakon @m{\mu} skokova skakavaca @em{A} i @m{\nu} skokova skakavaca @em{B}, dva skakavca susrela u celom broju @m{z}. Tada važi @m{z = \mu m = p + \nu n,} odnosno @eq{p = \mu m - \nu n.} Neka je @m{d} @em{NZD} brojeva @m{m} i @m{n}. Ako važi navedena jednakost, tada @m{d} mora deliti broj @m{p}. Obratno, ako @m{d} deli @m{p} tada Bezuovom stavu garantuje gornju jednakost za neke @m{\mu} i @m{\nu}. Dakle, skakavci se mogu susresti, ako i samo ako @m{d} deli @m{p}.
 
 @p Neophodno je razmotriti još specijalne slučajeve. Ako su i @m{m} i @m{n} jednaki nuli, tada se skakavci mogu susresti samo ako su već u istoj tački. Ako je samo @m{m} jednak nuli, tada se skakavci mogu susresti samo ako @m{n} deli početnu razdaljinu @m{p}. I slično važi ako je samo @m{n} jednak nuli.
 
@@ -190,21 +190,21 @@ susret p m n = mod p (gcd n m) == 0
 
 @section{Hanojske kule}
 
-@p Francuski matematičar Edvard Lukas@note{Inače, upravo je Lukas dao ime Fibonačijevom nizu kog smo obradili gore.} je krajem devetnaestog veka smislio igru koja je danas poznata kao @em{Hanojske kule}@note{Iako su od samog početka igru pratile mistične priče o poreklu u budističkim hramovima Dalekog istoka, za sada nema nikakavog dokaza o takvom poreklu.}. 
+@p Francuski matematičar Edvard Lukas@note{Inače, upravo je Lukas dao ime Fibonačijevom nizu kog smo obradili gore.} je krajem devetnaestog veka smislio igru koja je danas poznata kao @em{Hanojske kule}@note{Iako su od samog početka igru pratile mistične priče o poreklu u budističkim hramovima Dalekog istoka, za sada nema nikakvog dokaza o takvom poreklu.}. 
 
-@p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine. Diskovi su probušeni u centru tako da se štap može provuću kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
+@p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine. Diskovi su probušeni u centru tako da se štap može provući kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
 
 @figure{hanoi1}
 
 @p Za osobu nije teško da sama dođe do rešenja nakon malo početnog igranja. Ali je na prvi pogled veoma teško napisati program koji formira rešenje za proizvoljan broj diskova.
 
-@p Prvo ćemo utvrditi kako želimo da prezentujemo rešenje, i koji ulazni parameti su potrebni. Rešenje možemo predstaviti kao listu poteza, od kojih je svaki potez uređen par karaktera koji označavaju štap sa kog i štap na koji prebacujemo disk. Na primer, uređen par @code{('A', 'B')} predstavlja potez u kom se sa prvi disk sa štapa @m{A} prebacuje na štap @m{B}. Sa druge strane, rešenje zadatka zavisi samo od broja diskova @m{n}. Stoga, naš zadatak je da napišemo funkciju @ccode{kule :: Int -> (Char, Char)} koja pronalazi jedno rešenje@note{Primetimo da rešenje nije jedinstveno. Igru možemo odigrati na mnogo načina.}.
+@p Prvo ćemo utvrditi kako želimo da prezentujemo rešenje, i koji ulazni parametri su potrebni. Rešenje možemo predstaviti kao listu poteza, od kojih je svaki potez uređen par karaktera koji označavaju štap sa kog i štap na koji prebacujemo disk. Na primer, uređen par @code{('A', 'B')} predstavlja potez u kom se sa prvi disk sa štapa @m{A} prebacuje na štap @m{B}. Sa druge strane, rešenje zadatka zavisi samo od broja diskova @m{n}. Stoga, naš zadatak je da napišemo funkciju @ccode{kule :: Int -> (Char, Char)} koja pronalazi jedno rešenje@note{Primetimo da rešenje nije jedinstveno. Igru možemo odigrati na mnogo načina.}.
 
 @example{
 @p Lista @ccode{[('A', 'B'), ('A', 'C'), ('B', 'C')]} predstavlja rešenje slučaja kada za @m{n = 2}. 
 }
 
-@p Naravno, problem ćemo rešiti rekurzivno. Kako problem suštinski zavisi samo od broja diskova, rekurziju ćemo vršiti po @m{n}. U najednostavnijem slučaju, kad je @m{n=1}, jasno je da je rešenje jednočlana lista @code{[('A', 'C')]}, tj. par koji se sastoji od početnog i krajnjeg diska. Pretpostavimo zato da je @m{n>1} i da znamo da rešimo slučajeve za manje diskova. Tada možemo postupiti na sledeći način: prvih @m{n-1} diskova ćemo prebaciti sa početnog na pomoćni (@m{B}) štap, zatim ćemo prebaciti najveći disk sa početnog na krajnji, i na kraju ćemo pomeriti @m{n-1} diskova sa pomoćnog na krajni štap. Ova strategija je prikazana na narednoj ilustraciji.
+@p Naravno, problem ćemo rešiti rekurzivno. Kako problem suštinski zavisi samo od broja diskova, rekurziju ćemo vršiti po @m{n}. U najjednostavnijem slučaju, kad je @m{n=1}, jasno je da je rešenje jednočlana lista @code{[('A', 'C')]}, tj. par koji se sastoji od početnog i krajnjeg diska. Pretpostavimo zato da je @m{n>1} i da znamo da rešimo slučajeve za manje diskova. Tada možemo postupiti na sledeći način: prvih @m{n-1} diskova ćemo prebaciti sa početnog na pomoćni (@m{B}) štap, zatim ćemo prebaciti najveći disk sa početnog na krajnji, i na kraju ćemo pomeriti @m{n-1} diskova sa pomoćnog na krajni štap. Ova strategija je prikazana na narednoj ilustraciji.
 
 @figure{hanoi2}
 
@@ -267,9 +267,9 @@ fib' n = round ((a^n - b^n)/t)
           b = (1 - t)/2
 }{Ugrađena funkcija @code{round} zaokružuje @code{Float} broj u @code{Int}.}
 
-@p Navedena definicija omogućanava da se @code{n}-ti član Fibonačijevog niza izračuna u konstantnom broju koraka (broj koraka ne zavisi od veličine parametra @code{n}).
+@p Navedena definicija omogućava da se @code{n}-ti član Fibonačijevog niza izračuna u konstantnom broju koraka (broj koraka ne zavisi od veličine parametra @code{n}).
 
-@p Sa druge strane, definicja koju smo dali ranije zahteva značajno više koraka pri izvršavanju. Za izračunavanje @code{fib (n -1)} potrebno je izračunati @code{fib (n-1)} i @code{fib (n-2)}. Za svaku od navedenih vrednosti potrebno je izračunati po još dve vrednosti i tako dalje. Odavde sledi da je broj koraka potreban za izračunavanje @code{fib n} proporcionalan sa @m{2^n}. Primetimo da se vrednosti računaju više puta: na primer @code{fib (n-2)} je potrebno izračunati za @code{fib n} ali i za @code{fib (n-1)}.
+@p Sa druge strane, definicija koju smo dali ranije zahteva značajno više koraka pri izvršavanju. Za izračunavanje @code{fib (n -1)} potrebno je izračunati @code{fib (n-1)} i @code{fib (n-2)}. Za svaku od navedenih vrednosti potrebno je izračunati po još dve vrednosti i tako dalje. Odavde sledi da je broj koraka potreban za izračunavanje @code{fib n} proporcionalan sa @m{2^n}. Primetimo da se vrednosti računaju više puta: na primer @code{fib (n-2)} je potrebno izračunati za @code{fib n} ali i za @code{fib (n-1)}.
 }
 
 @p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristupiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
@@ -296,7 +296,7 @@ zbir n
 @codeBlock{
 p :: Int -> Int
 p 0 = 1
-}{Funkicja @code{p} je definisana samo za argument @code{0}.}
+}{Funkcija @code{p} je definisana samo za argument @code{0}.}
 
 @terminal{
 ghci> p 10

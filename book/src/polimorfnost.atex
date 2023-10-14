@@ -60,7 +60,7 @@ konstantnoTačno = \x -> True
 
 @p Navedenom definicijom, definisano je zapravo beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada možemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
 
-@p Nesto složeniji primer funkcije sa polimorfnim tipom je identička funkcija, definisana u @em{Preude}-u kao @code{id}:
+@p Nesto složeniji primer funkcije sa polimorfnim tipom je identička funkcija, definisana u prelidu kao @code{id}:
 
 @codeBlock{
 id :: a -> a

@@ -1,6 +1,6 @@
 @chapter{Liste}
 
-@p Liste u Haskelu su strukture podataka koje predstavljaju linearno uređenu kolekciju proizvoljno mnogo vrednosti istog tipa. Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[5, 8, 13, 21, 34]} predstavlja listu od pet elemenata. Međutim, zapis poput navedenog, predstavlja samo skraćeni oblik zapisa @ccode{5:(8:(13:(21:(34:[]))))}. Operacija @code{:} nadovezuje element na početak neke postojeće liste i predstavlja jedan od konstruktora vrednosti liste, odnosno funkcije kojom se konstruiše neka lista. Drugi konstruktor vrednosti liste je konstruktor prazne @code{[]}. Važno je napomenuti da su ovo jedini konstruktori vrednosti liste, i da se svaka druga funkcija koja vraća neku listu svodi na neki način na upotrebu ova dva konstruktora. Takođe, ova činjenica povlači i da je svaka lista prazna (dobijena konstruktorom prazne liste), ili poseduje prvi član (odnosno nastala je nadovezivanjem neke vrednosti na postojuću vrednost). 
+@p Liste u Haskelu su strukture podataka koje predstavljaju linearno uređenu kolekciju proizvoljno mnogo vrednosti istog tipa. Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada, npr. @ccode{[5, 8, 13, 21, 34]} predstavlja listu od pet elemenata. Međutim, zapis poput navedenog, predstavlja samo skraćeni oblik zapisa @ccode{5:(8:(13:(21:(34:[]))))}. Operacija @code{:} nadovezuje element na početak neke postojeće liste i predstavlja jedan od konstruktora vrednosti liste, odnosno funkcije kojom se konstruiše neka lista. Drugi konstruktor vrednosti liste je konstruktor prazne @code{[]}. Važno je napomenuti da su ovo jedini konstruktori vrednosti liste, i da se svaka druga funkcija koja vraća neku listu svodi na neki način na upotrebu ova dva konstruktora. Takođe, ova činjenica povlači i da je svaka lista prazna (dobijena konstruktorom prazne liste), ili poseduje prvi član (odnosno nastala je nadovezivanjem neke vrednosti na postojaću vrednost). 
 
 @todo{dopisati deo o konstruktoru}
 
@@ -131,7 +131,7 @@ ghci> ['a', 'c' .. 'w']
 }{Lista karaktera je naravno niska te se @code{['a', 'b', 'c', 'd']} prikazuje kao @code{"abcd"} u terminalu.}
 
 
-@p Da bi neki tip mogao da se koristi sa rasponima, mora pripadati tipskoj klasi @code{Enum}. Ova klasa sadrži sve tipove čije vrednosti se mogu enumersati. Svaki tip @code{a} iz @code{Enum} klase mora da implementira funkcije @code{fromEnum :: a -> Int} i @code{toEnum :: Int -> a} koje redom kodiraju i dekodiraju vrednosti tog tipa kroz cele brojeve. Vrednosti dobijene ovim kodiranjem korsite se za konstrukciju opsega.
+@p Da bi neki tip mogao da se koristi sa rasponima, mora pripadati tipskoj klasi @code{Enum}. Ova klasa sadrži sve tipove čije vrednosti se mogu enumerisati. Svaki tip @code{a} iz @code{Enum} klase mora da implementira funkcije @code{fromEnum :: a -> Int} i @code{toEnum :: Int -> a} koje redom kodiraju i dekodiraju vrednosti tog tipa kroz cele brojeve. Vrednosti dobijene ovim kodiranjem koriste se za konstrukciju opsega.
 
 @example{
 @p Tip @code{Char} pripada klasi @code{Enum}. Funkcija @code{fromEnum} primenjena na karakter vraća poziciju tog karaktera u @em{Unicode} tabeli.
@@ -141,7 +141,7 @@ ghci> fromEnum 'a'
 97
 ghci> toEnum 100 :: Char
 'd'
-}{Kako je @code{toEnum} tipa @code{Int -> a} kompajler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklaristai tip izraza. Više o ovome kasnije...}
+}{Kako je @code{toEnum} tipa @code{Int -> a} kompajler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklarisati tip izraza. Više o ovome kasnije...}
 }
 
 @p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @ccode{[fromEnum 'a', fromEnum 'c' .. fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
@@ -159,7 +159,7 @@ velikoSlovo c = elem c ['A' .. 'W']
 @p Liste imaju prirodnu rekurzivnu strukturu. Svaka lista osim prazne je nastala nadovezivanjem nekog elementa na početak neke kraće liste. Mnogi algoritmi za rad sa listama se mogu implementirati rekurzijom po dužini liste. Baza rekurzije čini slučaj prazne liste, dok rekurzivni korak predstavlja svođenje problema na isti problem za kraću listu.
 
 @example{
-@p Funkciju @code{zbir :: [Int] -> Int} koja sabira sve elemete liste možemo napisati ovako:
+@p Funkciju @code{zbir :: [Int] -> Int} koja sabira sve elemente liste možemo napisati ovako:
 
 @codeBlock{
 zbir :: [Int] -> Int
@@ -169,7 +169,7 @@ zbir xs =
     else head xs + zbir (tail xs)
 }
 
-@p Uslovom @code{null xs} se proverava da li je lista prazna. Ako jeste, tada vraćamo @code{0}. U suprotnom, vrednost prvog elementa dodajemo na zbir repa lsite.
+@p Uslovom @code{null xs} se proverava da li je lista prazna. Ako jeste, tada vraćamo @code{0}. U suprotnom, vrednost prvog elementa dodajemo na zbir repa liste.
 }
 
 @p Tehnika podudaranja oblika liste je posebno korisna za implementaciju rekurzivnih algoritama. Sa ovom tehnikom, kôd algoritma često postaje elegantniji:
@@ -198,7 +198,7 @@ proizvod (x:xs) = x * proizvod xs
 }
 
 @example{
-@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekuzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkcije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
+@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekurzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkcije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
 
 @codeBlock{
 last' :: [a] -> a
@@ -211,19 +211,19 @@ last' (_:xs) = last xs
 Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, @code{elem}, @code{unique}.
 }
 
-@p Ponekad je potrebno implementirati funkcije koje su rekuzrivne po više argumenata.
+@p Ponekad je potrebno implementirati funkcije koje su rekurzivne po više argumenata.
 
 @example{
 @p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodniska :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodniska} je naravno tehnika rekurzije.
 
-@p Pretpostavimo da su nam date dve neprazne niske @code{igla} i @code{seno}@note{U literaturi je uobičajno da se niske imenuju @em{igla} i @em{seno}, jer to jasno sugreše u kojoj od niska očekujemo da se nalazi druga niska.}, i da se pitamo da li se @code{igla} sadrži u nisci @code{seno}. Tada postoje dve mogućnosti:
+@p Pretpostavimo da su nam date dve neprazne niske @code{igla} i @code{seno}@note{U literaturi je uobičajno da se niske imenuju @em{igla} i @em{seno}, jer to jasno sugeriše u kojoj od niska očekujemo da se nalazi druga niska.}, i da se pitamo da li se @code{igla} sadrži u nisci @code{seno}. Tada postoje dve mogućnosti:
 
 @list{
     @li Niska @code{igla} predstavlja početak niske @code{seno}. U ovom slučaju, odgovor je na pitanje da li se igla nalazi u senu je potvrdan.
-    @li Niska @code{igla} nije početak niske @code{seno}. U ovom slučaju, ako se niska @code{igla} nalazi u nisci @code{seno}, tada se mora nalaziti u repu te niske. Stoga pretragu možemo da okraničimo na rep niske @code{seno}.
+    @li Niska @code{igla} nije početak niske @code{seno}. U ovom slučaju, ako se niska @code{igla} nalazi u nisci @code{seno}, tada se mora nalaziti u repu te niske. Stoga pretragu možemo da ograničimo na rep niske @code{seno}.
 }
 
-@p Ako je niska @code{seno} prazna, tada se niska @code{igla} nalazi u njoj ako i samo ako je @code{igla} prazna niska. Da bi proverili da li je neka lista (specijalno niska) prazna, možemo iskoristiti ugrаđenu funkciju @code{null :: [a] -> Bool}
+@p Ako je niska @code{seno} prazna, tada se niska @code{igla} nalazi u njoj ako i samo ako je @code{igla} prazna niska. Da bi proverili da li je neka lista (specijalno niska) prazna, možemo iskoristiti funkciju @code{null :: [a] -> Bool} iz prelida.
 
 @p Na osnovu ove analize, implementacija @code{daLiJePodniska} je jednostavna:
 
@@ -515,7 +515,7 @@ dešifruj niska = map dešifrujKarakter niska
 }
 
 @problem{
-Implementacija Cezarove šifra koju smo prezentovali gore je dobra za demonstraciju rada sa listama u Haskelu, ali nije mnogo efikasna. Umesto da za svako slovo pretražujemo listu @code{šifra}, možemo iskoristit @code{fromEnum :: Enum a => a -> Int} i @code{toEnum :: Enum a => Int -> a} funkcije da bi konvertovali slova u @em{ASCII} vrednosti i obrnuto. Koristeći navedene funkcije, kao i funkciju ostataka @code{mod}, dati alternativnu definiciju funkcije @code{šifrujKarakter}.
+Implementacija Cezarove šifra koju smo prezentovali gore je dobra za demonstraciju rada sa listama u Haskelu, ali nije mnogo efikasna. Umesto da za svako slovo pretražujemo listu @code{šifra}, možemo iskoristiti @code{fromEnum :: Enum a => a -> Int} i @code{toEnum :: Enum a => Int -> a} funkcije da bi konvertovali slova u @em{ASCII} vrednosti i obrnuto. Koristeći navedene funkcije, kao i funkciju ostataka @code{mod}, dati alternativnu definiciju funkcije @code{šifrujKarakter}.
 }
 
 @problem{
@@ -542,7 +542,7 @@ Palindromski broj je prirodan broj koji se čita isto i sa leva i sa desna. Najv
 }
 
 @problem{
-Implementirati funkciju @code{dekartovProzivod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProzivod [1, 2, 3] ['a', 'b']} daje @ccode{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.
+Implementirati funkciju @code{dekartovProizvod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProizvod [1, 2, 3] ['a', 'b']} daje @ccode{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.
 }
 
 @problem{

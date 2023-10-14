@@ -15,13 +15,13 @@ data P = MkP A B
 @p Svaka vrednost gore definisanog tipa @code{P}, je oblika @code{MkP a b} gde su @code{a :: A} i @code{b :: B} neke vrednosti. Podudaranje oblika dozvoljava da vrednosti tipa @code{P} "dekonstruišemo" na ovaj način.
 
 @example{
-@p Vektor dvodimenzionalne ravni možemo definsati kao proizvod tipova @code{Float} i @code{Float} na sledeći način:
+@p Vektor dvodimenzionalne ravni možemo definisati kao proizvod tipova @code{Float} i @code{Float} na sledeći način:
 
 @codeBlock{
 data Vektor = Vektor Float Float deriving (Show)
 }
 
-@p Vrednosti se konstrišu sa konstruktorom:
+@p Vrednosti se konstruišu sa konstruktorom:
 
 @terminal{
 ghci> v = Vektor 2 1
@@ -68,7 +68,7 @@ promeniIme novoIme (Osoba _ godine drzavljanin) = Osoba novoIme godine drzavljan
 Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba}.
 }
 
-@p Proizvod tipova može da sadrži i samo jedan tip. U tom slučaju porozvod je ekvivalentan @code{newtype} konstrukciji koju smo ranije upoznali.
+@p Proizvod tipova može da sadrži i samo jedan tip. U tom slučaju proizvod je ekvivalentan @code{newtype} konstrukciji koju smo ranije upoznali.
 
 @subsection{Uređene @m{n}-torke kao proizvodi tipova}
 
@@ -95,13 +95,13 @@ ghci> :k (,)
 data T = K
 }
 
-@p Konstruktor @code{K} je funkcija arnosti 0, odnsno konstanta tipa @code{T}. Drugim rečima, tip @code{T} sadrži samo jednu vrednost a to je @code{K}. Zbog toga za @code{T} takođe kažemo da je @def{jedinični tip} baš kao za @code{()}. Zapravo, tip @code{()} je takođe definisan kao prazan proizvod:
+@p Konstruktor @code{K} je funkcija arnosti 0, odnosno konstanta tipa @code{T}. Drugim rečima, tip @code{T} sadrži samo jednu vrednost a to je @code{K}. Zbog toga za @code{T} takođe kažemo da je @def{jedinični tip} baš kao za @code{()}. Zapravo, tip @code{()} je takođe definisan kao prazan proizvod:
 
 @codeBlock{data () = ()}{Ovo je još jedan primer gde konstruktor i tip imaju isto ime.}
 
 @section{Suma}
 
-@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednostima tipova @code{A} i @code{B}. Suma tipova može se shavati kao unija dva tipa. Suma tipova se vrši navođenjem više konstruktora razdvojenih vertikalnom crtom. Svaki od konstruktora predstavlja konstruktor proizvoda, i može imati proizvoljno mnogo argumenata.
+@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednostima tipova @code{A} i @code{B}. Suma tipova može se shvati kao unija dva tipa. Suma tipova se vrši navođenjem više konstruktora razdvojenih vertikalnom crtom. Svaki od konstruktora predstavlja konstruktor proizvoda, i može imati proizvoljno mnogo argumenata.
 
 @example{
 @p Tip @code{SlovoIliBroj} koji sadrži i slova i brojeve može se konstruisati kao
@@ -119,7 +119,7 @@ ghci> :t a1
 a1 :: SlovoIliBroj
 ghci> :t a2
 a2 :: SlovoIliBroj
-}{Vrednosti @code{a1} i @code{a2} imaju isti tip, iako predstavljaju razlčite oblike podataka.}
+}{Vrednosti @code{a1} i @code{a2} imaju isti tip, iako predstavljaju različite oblike podataka.}
 
 @p Konstruktore koristimo sa podudaranjem oblika. Svaka vrednost tipa @code{SlovoIliBroj} može biti ili oblika @code{Slovo x} ili oblika @code{Broj x}, te podudaramo takve oblike:
 
@@ -133,7 +133,7 @@ daLiJeSlovo (Broj x) = False
 @p Moguće je "sabrati" više tipova istovremeno, odnosno navesti više od dva konstruktora.
 
 @example{
-@p Sledeći tip označava dužinu u različitim mernim jednicama
+@p Sledeći tip označava dužinu u različitim mernim jedinicama
 
 @codeBlock{
 data Dužina = Metar Float | Milja Float | SvetlosnaSekunda Float
@@ -149,7 +149,7 @@ uMetre (SvetlosnaSekunda x) = Metar (299792458 * x)
 uMetre x = x
 }
 
-@p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno razlčite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Int}
+@p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno različite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Int}
 }
 
 @p Napomenimo da poredak konstruktora u sumi nije od značaja. Tako na primer, definicija @ccode{data SlovoIliBroj = Slovo Char | Broj Int} definiše isti@note{Tačnije, svaka od ove dve definicije se može zameniti sa onom drugom u kodu, i ostatak koda neće morati da se promeni.} tip kao i definicija @code{data SlovoIliBroj = Broj Int | Slovo Char}. Za razliku od toga, u proizvodima poredak tipova je bitan. Tako na primer, definicija @ccode{data SlovoIBroj = SIB Int Char} je sasvim različita od definicije@note{Ove dve definicije su naravno ekvivalentne u smislu da mogu predstaviti vrednosti koje su u jednoznačnoj korenspodenciji. Međutim, ako se jedna od ove dve definicije zameni sa drugom, ta zamena će zahtevati i promenu ostatka koda (na svim mestima u kodu gde su iskorišćeni konstruktori).} @ccode{data SlovoIBroj = SIB Char Int}
@@ -170,14 +170,14 @@ data ZnakKarte = Herc | Karo | Tref | Pik
 data Boje = Crna | Bela | Crvena | Plava | Zelena | Žuta
 }
 
-@p Do sada smo se sureli sa više tipova koji su suma jediničnih tipova (a da to nismo ni znali):
+@p Do sada smo se susreli sa više tipova koji su suma jediničnih tipova (a da to nismo ni znali):
 
 @list{
     @li Logički tip @code{Bool} je definisan kao suma jediničnih tipova @code{True} i @code{False}.
     @li Tip @code{Ordering} je definisan kao suma jediničnih tipova @code{LT}, @code{EQ} i @code{GT}. Podsećamo da se vrednosti ovog tipa koriste kao rezultati poređenja.
 }
 
-@problem{Kreirati alegbarski tip @code{Ruka}, koji može predstavljati @em{papir}, @em{kamen} ili @em{makaze}. Kreirati funkciju @code{uporedi :: Ruka -> Ruka -> Ordering} koja određuje poredak među različitim rukama.}{
+@problem{Kreirati algebarski tip @code{Ruka}, koji može predstavljati @em{papir}, @em{kamen} ili @em{makaze}. Kreirati funkciju @code{uporedi :: Ruka -> Ruka -> Ordering} koja određuje poredak među različitim rukama.}{
 @codeBlock{
 data Ruka = Papir | Kamen | Makaze
 
@@ -201,12 +201,12 @@ data Dan = Ponedeljak
     | Petak
     | Subota
     | Nedelja 
-}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neohodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicija nije podeljena na više delova sa praznim linijama.}
+}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neophodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicija nije podeljena na više delova sa praznim linijama.}
 }
 
 @section{Možda-tip}
 
-@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bili kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstrusati kao sumu tipa @code{Float} i jediničnog tipa @code{Ništa}:
+@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bili kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstruisati kao sumu tipa @code{Float} i jediničnog tipa @code{Ništa}:
 
 @codeBlock{
 data MoždaBroj = SamoBroj Float | Ništa 
@@ -215,9 +215,9 @@ data MoždaBroj = SamoBroj Float | Ništa
 @p Tip @code{MoždaBroj} je koristan kad god hoćemo da radimo u programu sa nekim vrednostima koje možda nisu ni zadate.
 
 @example{
-@p Ako očitvamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti @code{Float} vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu tempraturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temperature 0°C od neispravnih.
+@p Ako očitavamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti @code{Float} vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu temperaturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temperature 0°C od neispravnih.
 
-@p Stoga je u ovom slučaju zgodno koristiti @code{MoždaBroj} tip za prezentovnje očitavanja senzora. Vrednost poput @code{SamoBroj 2} označava da je temperatura zaista 2°C, dok vrednost @code{Ništa} označava da do očitavanja nije došlo.
+@p Stoga je u ovom slučaju zgodno koristiti @code{MoždaBroj} tip za prezentovanje rezultata očitavanja senzora. Vrednost poput @code{SamoBroj 2} označava da je temperatura zaista 2°C, dok vrednost @code{Ništa} označava da do očitavanja nije došlo.
 }
 
 @p Sa @code{MoždaBroj} vrednostima nije lako raditi kao sa @code{Float} vrednostima, ali nije ni preteško napisati funkcije koje su nam potrebne:
@@ -226,7 +226,7 @@ data MoždaBroj = SamoBroj Float | Ništa
 apsolutnaRazlika :: MoždaBroj -> MoždaBroj -> MoždaBroj
 apsolutnaRazlika (SamoBroj x) (SamoBroj y) = SamoBroj $ abs $ x - y
 apsolutnaRazlika _ _ = Ništa
-}{Fuknkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga smisla vratiti samo vrednost @code{Nista}}
+}{Funkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga smisla vratiti samo vrednost @code{Nista}}
 
 @codeBlock{
 podeli :: MoždaBroj -> MoždaBroj -> MoždaBroj
@@ -235,7 +235,7 @@ podeli (SamoBroj x) (SamoBroj y) =
         then Ništa
         else SamoBroj $ x / y
 podeli _ _ = Ništa
-}{Neke funkije sy takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethonoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
+}{Neke funkcije sy takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethodnoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
 
 @p Slično tipu @code{MoždaBroj} možemo konstruisati@note{Obratite pažnju da u istom modulu nije moguće definisati tip @code{MoždaBroj} i @code{MoždaNiska} jer imaju istoimeni konstruktor @code{Ništa}. Naravno, rešenje je da promenim ime konstruktora u npr @code{NištaNiska} ili @code{BezNiske}. U nastavku ćemo radi jednostavnosti zadržati naziv @code{Ništa}.} tip @code{MoždaNiska}:
 
@@ -386,7 +386,7 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
 
 @problem{Kreirati algebarski tip podataka @code{Vektor} koji predstavlja vektor u trodimenzionalnom prostoru (Koristiti @code{Float} tip za koordinate). Kreirati funkcije za sabiranje vektora, množenje vektora skalarem, skalarnog množenja vektora, vektorskog množenja vektora i računanja dužine vektora.}
 
-@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše konverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednu vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algabarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadrži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljnu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
+@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše konverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednu vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algebarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadrži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljnu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
 
 @problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravougaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
 
