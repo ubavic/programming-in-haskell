@@ -1,0 +1,120 @@
+@chapter{Haskel programi}
+
+@p U dosadašnjim lekcijama prikazali smo iskljičivo rad u interaktivnom okruženju @em{GHCi}. Sada ćemo se upoznati sa Haskel kompajlerom i naučićemo kako da kompajliramo Haskel kod u izvšne datoteke. Takođe ćemo se upoznati sa metodama koje nam omogućavaju ulaz i izlaz iz programa (bilo kroz terminal, bilo kroz datoteke), kao i nekim osnovama organizacije Haskell koda.
+
+@section{@em{Hello World!}}
+
+@p Većina knjiga o programskim jezicima započinje sa @em{Hello World!} programom: jednostavnim programom čija je jedina svrha da ispiše pozdrav u terminal. Sa mnogim Haskel knjigama, pa tako i ovom koju čitate, to nije slučaj. Umesto toga, na početku se prikazuje rad kroz interaktvno okruženje da bi osnovne osobine jezika dobro upoznale. Tek onda se demonstrira pisanje programa koji se samostalno izvšavaju i koji mogu prilikom izvršavanja da interaguju sa korisnikom, fajl sistemom, drugim programima, mrežom, itd... Razlog ovakvog pristupa je jednostavan: pisanje samostalnih Haskel programa iziskuje razumevanje naprednijih koncepata Haskel jezika. Ali čitaoca ne treba da brine ova konstatacija jer, iako do kraja ove lekcije neće imati potpuno razumevanje, te koncepte ćemo postupno uvoditi. Znanje iz prethodnih lekcija značajno će olakšati čitanje ove glave. Ali o tom potom. Pogledajmo prvo @em{Hello world}.
+
+@p Definišimo jednu datoteku, na primer @code{hello.hs}, i u nju smestimo naredni kôd (koji ćemo u nastavku pojasniti):
+
+@codeBlock{
+main :: IO ()
+main = putStrLn "Hello World!"
+}
+
+@p I kao što je u većini drugih programskih jezika uvek pootrebno definisati @em{main} funkciju koja predstavlja početnu tačku izvršavanja programa, tako i svaki Haskel program koji se kompajlira mora imati definisanu vrednost @code{main} tipa @code{IO ()}. 
+
+@p Kôd možemo iskompajlirati u izvršni program pomoću @em{GHC} kompjalera. U sistemskom promptu@note{Dakle, ovde ne govorimo o pokretanju @em{GHCi} programa. Komande koje navodimo se sve pokreću u sistemskom promptu kog u nastavku označavamo sa @code{$}.} potrebno je pokrenuti kompajler @pre{ghc} i kao jedini argument proslediti mu ime datoteke koju je potrebno iskompajlirati: 
+
+@terminal{
+$ ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+}
+
+@p Ako je kompilacija prošla uspešno, u direktorijumu u kom je @code{hello.hs} naći će se izvršna datoteka @pre{hello} (ili @pre{hello.exe} ako govorimo o @em{Windows} sistemima). Pokretanjem datoteke dobijamo dugo očekivani pozdrav:
+
+@terminal{
+$ ./hello
+Hello World!
+}{Na @em{Windows} sistemima, umesto komande @code{./hello}, potrebno je uneti @code{.\hello.exe}. U nastavku lekcije ćemo ignorisati ovu razliku.}
+
+@p Gorenavedeni kôd nije dugačak, ali jeste drugačiji od kôda kojeg smo do sada pisali. Funkcija @code{putStrLn} primenjena na nisku @code{"Hello World!"} ne izgleda neobično, ali tip @code{IO ()} svakako izgleda.
+
+@p Tip @code{()} nam je poznat iz prethodne lekcije. U pitanju je tip koji sadrži samo jednu vrednost, vrednost koja se označava sa @code{()}. Tip @code{IO} je zapravo apstraktni tip vrste @code{* -> *}. Eksplicitnu definiciju definiciju tipa @code{IO} ne možemo navesti, ali možemo objasniti šta ovaj tip predstavlja.
+
+@p Za neki tip @code{T}, tip @code{IO T} predstavlja proceduru (u najširem smislu te reči), koja se može izvršiti tokom izvršavanja programa, i čiji rezultat je vrednost tipa @code{T}. Vrednosti koje poseduju tip oblika @code{IO T} nazivamo @def{akcije}. Prema tome, @code{main} je jedna@note{Zapravo, @code{main} i jedina akcija u našem programu.} akcija koja će se izvršiti tokom izvršavanja programa i čiji rezultat je vrednost tipa @code{()}, odnosno baš @code{()}. 
+
+@p Zapravo @code{main} je akcija koja ima poseban status: to je akcija koja se uvek prva izvršava pri radu programa, i poziva ostale akcije. U navedenom programu, akcija @code{main} je pozvala akciju @code{putStrLn "Hello World!"}. Funkcija @code{putStrLn} poseduje@note{U šta se možete uveriti pomoću @code{:type} naredbe u @em{GHCi} programu.} tip @code{String -> IO ()}, pa vrednost primene @code{putStrLn} na neku nisku je akcija tipa @code{IO ()} koja se može dodeliti imenu @code{main}.
+
+@p Za sada nismo objasnili zašto tako naizgled jednostavna funkcija poput @code{main} ima tako neobičan tip, niti smo objasnili kako se funkcija poput @code{putStrLn} može iskoristiti unutar funkcija koje smo do sada pisali. Tip @code{IO} je za sada otvora više pitanja nego što daje odgovora, ali ćemo pokušati da kroz ovu lekciju odgovorimo na neka od tih pitanja. 
+
+@section{Interakcija sa konzolom}
+
+@p Programi koji ispisuju jednu nisku nisu mnogo korisni, te ćemo prvo pokazati kako se akcije mogu nadovezivati. U tu svrhu koristi se @em{do} notacija koja dozvoljava da se akcije navedu u posebnim redovima jednok bloka. Navedene akcije biće izršeno skevencijalno, redom kojim su navedene.
+
+@codeBlock{
+main :: IO ()
+main = do
+	putStrLn "Hello World!"
+	putStrLn "Don't worry,"
+	putStrLn "Be happy."
+	putStrLn "Bye!"
+}{Obratite pažnju na ključnu reč @code{do}. Ova reč otvara blok linija, a svaka akcija mora se navesti u posebnoj liniji.}
+
+@p Kompilacijom i izvršavanjem programa dobijamo očekivani rezultat
+
+@terminal{
+$ ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+$ ./hello
+Hello World!
+Don't worry,
+Be happy.
+Bye!
+}
+
+@p Na linijma unutar @em{do} bloka moraju se navesti @code{IO} akcije, ali mi te akcije možemo i definisati i van odogvarajućeg bloka. Na primer, možemo kreirati funkciju @code{pozdrav} koja uzima ime (nisku) i vraća akciju koja ispisuje pozdrav sa prosleđenim imenom.
+
+@codeBlock{
+pozdrav :: String -> IO ()
+pozdrav x = do
+	putStrLn $ "Zdravo " ++ x ++ "!"
+
+main :: IO ()
+main = do
+	pozdrav "Nikola"
+	pozdrav "Marina"
+}
+
+@terminal{
+$ ./hello
+Zdravo Nikola!
+Zdravo Marina!
+}
+
+@p Osim @code{putStrLn} funkcije, u prelidu su dostupne i funkcije @code{putChar :: Char -> IO} i @code{putStr :: String -> IO ()}. Funkcija @code{putStrLn} se razlikuje od @code{puStr} samo po tome što uz prosleđenu nisku ispisuje i karakter za novi red. 
+
+@p Uz ispisivanje sadržaja u terminal, neophodno je i pihvatati korisnički unos. Za prihvatanje linije koristi se akcija @code{getLine :: IO String} dostupna u prelidu. Tip ove akcije oznčava da se radi o akciji čiji rezultat je niska - niska koji je korisnik uneo. Da bi se toj vrednosti pristupilo, potrebno ju je dodaeliti novom imenu uz pomoć strelice @code{<-}:
+
+@codeBlock{
+pozdrav :: String -> IO ()
+pozdrav x = do
+	putStrLn $ "Zdravo " ++ x ++ "!"
+
+main :: IO ()
+main = do
+	putStr "Vaše ime je: "
+	ime <- getLine
+	pozdrav ime
+}{Strelicom @code{<-} se vrednost tipa @code{T} "otpakuje" iz vrednosti tipa @code{IO T}.}
+
+
+@terminal{
+$ ./hello
+Vaše ime je: Marija
+Zdravo Marija!
+}
+
+@section{Rad sa datotekama}
+
+@section{Nasumične vrednosti}
+
+@section{Vreme i datum}
+
+@section{Referencijalna transparentnost}
+
+
+@section{@em{Hello Web!}}
