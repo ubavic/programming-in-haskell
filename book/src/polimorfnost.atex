@@ -145,15 +145,15 @@ ghci> show 2
 }
 
 @example{
-@p Ugrađena klasa @code{Num} predstavlja sve tipove cije vrednosti se mogu sabirati, oduzimati i mnoziti. Između ostalog, tipovi @code{Int}, @code{Integer}, @code{Float} i @code{Double} pripadaju ovoj klasi.
+@p Ugrađena klasa @code{Num} predstavlja sve tipove cije vrednosti se mogu sabirati, oduzimati i množiti. Između ostalog, tipovi @code{Int}, @code{Integer}, @code{Float} i @code{Double} pripadaju ovoj klasi.
 }
 
-@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Cinjenicu da neki tip @code{T} pripada klasi @code{C}, oznacavamo sa @code{C T}. 
+@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Činjenicu da neki tip @code{T} pripada klasi @code{C}, označavamo sa @code{C T}. 
 
-@p Koriscenjem klasa, moguce je ograniciti tipsku promenljivu na neku određenu klasu. @def{Klasno ograničenje} kojim se tipska promenljiva @code{a} ograničava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ograničenja se razdvajaju od samog tipa sa strelicom @code{=>}. U slučaju da postoji vise ograničenja, tada se ta ograničenja navode u obliku uređene @m{n}-torke.
+@p Korišćenjem klasa, moguće je ograničiti tipsku promenljivu na neku određenu klasu. @def{Klasno ograničenje} kojim se tipska promenljiva @code{a} ograničava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ograničenja se razdvajaju od samog tipa sa strelicom @code{=>}. U slučaju da postoji vise ograničenja, tada se ta ograničenja navode u obliku uređene @m{n}-torke.
 
 @example{
-@p Tip @code{Show a => a} oznacava sve tipove koji pripadaju klasi @code{Show}.
+@p Tip @code{Show a => a} označava sve tipove koji pripadaju klasi @code{Show}.
 }
 
 @example{
@@ -174,7 +174,7 @@ ghci> show 2
 @li Klasa @code{Show} je klasa svih tipova čije vrednosti mogu da se reprezentuju kao niska. Nad vrednostima instance klase @code{Show} dozvoljeno je pozivati funkciju @code{show} koja vrednost pretvara u nisku.
 @li Klasa @code{Eq} je klasa svih tipova čije vrednosti se mogu porediti sa operatorima @code{==} i @code{/=}.
 @li Klasa @code{Ord} je klasa svih tipova čije vrednosti se mogu porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}.
-@li Klasa @code{Num} je klasa svih tipova čije vrednosti se mogu kombinovati sa operatorima @code{+}, @pre{-}, @code{*}.
+@li Klasa @code{Num} je klasa svih tipova čije vrednosti se mogu sračunavati sa operatorima @code{+}, @pre{-}, @code{*}.
 @li Klasa @code{Fractional} je @em{podklasa} klase @code{Num} koja sadrži tipove nad kojima se može pozivati operacija @code{/}.
 }
 

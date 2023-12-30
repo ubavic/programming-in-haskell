@@ -345,7 +345,7 @@ map' f (x:xs) = f x : map' f xs
 @example{
 @p Uz pomoć @code{foldr} možemo sabrati sve elemente jedne liste. Binarna funkcija koju ćemo koristiti je funkcija koja sabira argumente @code{saberi = \a b -> a + b}.
 
-@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo početnu vrednost@note{Ovo je uvek tačno za @em{fold} funkcije, pozivanjem nad prznom listom dobijamo početnu vrednost, jer u listi nije bilo elementa na koje je prosleđena binarna funkcija mogla biti primenjena.}:
+@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo početnu vrednost@note{Ovo je uvek tačno za obe @em{fold} funkcije, pozivanjem nad prznom listom dobijamo početnu vrednost, jer u listi nije bilo elementa na koje je prosleđena binarna funkcija mogla biti primenjena.}:
 
 @terminal{
 ghci> foldr saberi 0 []
@@ -364,7 +364,7 @@ ghci> foldr saberi 0 [1]
 @terminal{
 ghci> foldr saberi 0 [2, 1]
 3
-}{Navedeni izraz se svodi na @ccode{saberi 2 (saberi 1 0)}}
+}{Navedeni izraz se svodi na @code{saberi 2 (saberi 1 0)}}
 
 @p Za listu od više elemenata imamo:
 
@@ -388,11 +388,10 @@ ghci> foldr g 1 [2, 3]
 1.5
 }{Prvi izraz se svodi na @code{(1 / 2) / 3}, dok se drugi izraz svodi na @code{1 / (2 / 3)}.}
 
-
 @p Često je zgodno da umesto posebne inicjalne vrednosti, iskorisimo prvi (ili poslednji) element liste. Tada nam mogu pomoći funkcije @ccode{foldl1 :: (a -> a -> a) -> [a] -> a} i @ccode{foldr1 :: (a -> a -> a) -> t a -> a} koje se razlikuju od @code{foldl} i @code{foldr} funkcija po tome što nemaju i inicijalnu vrednost kao jedan od parametara.
 
 @example{
-@p Binarna funkcija @code{min :: Ord a => a -> a -> a} vraća manju od dve vrednosti@note{Setimo se, klasa @code{Ord} sadrži sve one tipove čiji se vrednosti mogu porediti sa @code{<}, @code{==}, @code{>}, itd... Prema tome za dve vrednosti nekog tipa iz @code{Ord}, uvek možemo odrediti koja je manja}. Ako želimo da odredimo najmanju vrednost u tročlanoj listi, dovoljno je da prvo odredimo najmanju vrednost od prva dva elementa, a zatim tu vrednost uporedimo sa trećim elemntom. Slično važi i za liste veće dužine. Prema tome, funkcija @code{min} nam je dovoljna za implementaciju funkcije @code{najmanji :: Ord a => [a] -> a}:
+@p Binarna funkcija @code{min :: Ord a => a -> a -> a} vraća manju od dve vrednosti@note{Setimo se, klasa @code{Ord} sadrži sve one tipove čiji se vrednosti mogu porediti sa @code{<}, @code{==}, @code{>}, itd... Prema tome za dve vrednosti nekog tipa iz @code{Ord}, uvek možemo odrediti koja je manja.}. Ako želimo da odredimo najmanju vrednost u tročlanoj listi, dovoljno je da prvo odredimo najmanju vrednost od prva dva elementa, a zatim tu vrednost uporedimo sa trećim elemntom. Slično važi i za liste veće dužine. Prema tome, funkcija @code{min} nam je dovoljna za implementaciju funkcije @code{najmanji :: Ord a => [a] -> a}:
 
 @codeBlock{
 najmanji :: Ord a => [a] -> a
@@ -402,7 +401,7 @@ najamnji xs = foldl1 min xs
 @terminal{
 ghci> najmanji [3, 4, 1, 2]
 1
-}{Poziv @code{najamnji [3, 4, 1, 2]}, svodi se na izraz @ccode{min (min (min 3 4) 1) 2}, koji se naravno redukuje u @code{1}}
+}{Poziv @code{najamnji [3, 4, 1, 2]}, svodi se na izraz @code{min (min (min 3 4) 1) 2}, koji se naravno redukuje u @code{1}}
 
 @p Treba napomenuti da funkcije @code{foldl1} i @code{foldr1} očekuju neprazan niz. Ako se ovim funkcijama prosledi prazan niz, doći će do izuzetka (jer ove funkcije jednostano "nemaju" vrednost da vrate). Sa druge strane, kao što smo napomenuli, funkcije @code{foldl} i @code{foldr} mogu se primeniti i na prazan niz.
 }
@@ -425,17 +424,18 @@ Implementirati funkciju @code{baremJedan :: [Bool] -> Bool} koja vraća @code{Tr
 Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju tipa @code{Int -> Float} koja u zavisnosti od parametra @m{n} računa sumu @eq{\sum^{n}_{i=1} \frac{1}{i}.}
 }
 
-@problem{U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u ceobrojnu vrednost. Na primer @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće bit prazna i sadržaće samo cifre).}{
-@p Koristeći funkcije @code{map} i @code{uCifru} nisku možemo prevesti u listu cifara tj. vrednost tipa @code{[Int]}. Na primer @code{map uCifru "123"} nam daje @code{[1,2,3]}. Sada je potrebno rekurzivno proći kroz ovakav niz cifara i formirati broj. Za to ćemo napisati pomoćnu funkciju @code{cifreUbroj :: [Int] -> Int}
+@problem{
+U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u ceobrojnu vrednost. Na primer, @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće bit prazna i sadržaće samo cifre).}
+{@p Koristeći funkcije @code{map} i @code{uCifru} nisku možemo prevesti u listu cifara tj. vrednost tipa @code{[Int]}. Na primer @code{map uCifru "123"} nam daje @code{[1,2,3]}. Sada je potrebno rekurzivno proći kroz ovakav niz cifara i formirati broj. Za to ćemo napisati pomoćnu funkciju @code{cifreUbroj :: [Int] -> Int}
 
 @p Algoritam je najlakše sprovesti rekurzijom po poslednjem elementu liste (pokušajte i da implementirate algoritam rastavljajući listu na glavu i rep). Bazu rekurzije čini slučaj jednočlanog niza. U tom slučaju kao povratnu vrednost vraćamo jedini element te liste (jer je vrednost jednocifrenog broja jednaka vrednosti jedine cifre tog broja). U suprotnom, rastavljamo listu na početak i na poslednji element, i računamo vrednost koju predstavlja početak. Tu vrednost početka pomeramo za jedno decimalno mesto (množeći sa @code{10}) i na to dodajemo vrednost poslednjeg elementa. Konkretno, ako nam je data lista @code{[1, 2, 3]}, rekurzivno nalazimo vrednost @code{cifreUBroj [1, 2]} što bi trebalo da nam da @code{12}. Množenjem sa @code{10} dobijamo vrednost @code{120}, koja kad je saberemo sa poslednjim elementom liste daje traženu vrednost funkcije. Kada razumemo postpak, kod nije teško napisati:
 
-@code{
+@codeBlock{
 cifreUbroj :: [Int] -> Int
 cifreUbroj [] = 0
 cifreUbroj [x] = x
 cifreUBroj xs = (cifreUBroj (init x)) * 10 + (last x)
-}{Slučaj prazne liste je dodat radi sigurnosti}
+}{Slučaj prazne liste je dodat radi totalnosti}
 
 @p Koristeći navedenu pomoćnu funkciju, zadatak je lako rešiti
 
