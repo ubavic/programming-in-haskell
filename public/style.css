@@ -407,6 +407,10 @@ aside {
         color: var(--color-gray-4);
     }
 
+    code {
+        background-color: #1A1A1A;
+    }
+
     pre {
         background-color: #1A1A1A;
         border: none;
@@ -414,24 +418,24 @@ aside {
 
     .example,
     .problem {
-        background: #151515;
-        border: none;
+        background: transparent;
+        border-color: #1a191c;
     }
 
     .sh-constructor {
-        color: hsl(225, 100%, 70%);
+        color: hsl(225, 70%, 80%);
     }
 
     .sh-number {
-        color: hsl(0, 100%, 70%);
+        color: hsl(0, 70%, 80%);
     }
 
     .sh-comment {
-        color: hsl(0, 0%, 70%);
+        color: hsl(0, 0%, 80%);
     }
 
     .sh-string {
-        color: hsl(33, 100%, 70%);
+        color: hsl(33, 80%, 80%);
     }
 
     .terminal {
@@ -441,7 +445,7 @@ aside {
     }
 
     aside {
-        color: var(--color-gray-3);
+        color: var(--color-gray-4);
     }
 
     figure img {
