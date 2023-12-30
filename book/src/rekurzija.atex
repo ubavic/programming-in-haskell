@@ -121,12 +121,12 @@ fib n
 }
 
 @problem{
-Takozvani @em{Tribonačijev niz} se konstruiše na sledeći način: prva tri člana Tribonačijevog niza su @m{1}. Svaki naredni član Tribonačijevog niza je zbir prethodna tri člana. Implementirati funkciju koja računa @m{n}-ti element Tribonačijev broj.
+Takozvani @em{Tribonačijev niz} se konstruiše na sledeći način: prva tri člana Tribonačijevog niza su @m{1}. Svaki naredni član Tribonačijevog niza je zbir prethodna tri člana. Implementirati funkciju koja računa @m{n}-ti element Tribonačijevog niza.
 }
 
 @section{Euklidov algoritam}
 
-@p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka (algoritama). Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
+@p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka. Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
 
 @p Kao što samo ime kaže, @em{najveći zajednički delilac} (@em{NZD}) prirodnih brojeva @m{a} i @m{b} je prirodni broj @m{d} takav da deli @m{a} i @m{b}, i pritom je @m{d} najveći broj sa takvom osobinom. 
 
