@@ -42,7 +42,7 @@ Hello World!
 
 @section{Interakcija sa konzolom}
 
-@p Programi koji ispisuju jednu nisku nisu mnogo korisni, te ćemo prvo pokazati kako se akcije mogu nadovezivati. U tu svrhu koristi se @em{do} notacija koja dozvoljava da se akcije navedu u posebnim redovima jednok bloka. Navedene akcije biće izršeno skevencijalno, redom kojim su navedene.
+@p Programi koji ispisuju jednu nisku nisu mnogo korisni, te ćemo prvo pokazati kako se akcije mogu nadovezivati. U tu svrhu koristi se @em{do} notacija koja dozvoljava da se akcije navedu u zasebnim redovima jednog bloka. Navedene akcije biće izršeno skevencijalno, redom kojim su navedene.
 
 @codeBlock{
 main :: IO ()
@@ -85,7 +85,7 @@ Zdravo Nikola!
 Zdravo Marina!
 }
 
-@p Osim @code{putStrLn} funkcije, u prelidu su dostupne i funkcije @code{putChar :: Char -> IO ()} i @code{putStr :: String -> IO ()}. Funkcija @code{putStrLn} se razlikuje od @code{puStr} samo po tome što dobijana akcija uz prosleđenu nisku ispisuje i karakter za novi red. Funkcija @code{putChr} daje akciju koja će ispisati jedan karakter.
+@p Osim @code{putStrLn} funkcije, u prelidu su dostupne i funkcije @code{putChar :: Char -> IO ()} i @code{putStr :: String -> IO ()}. Funkcija @code{putStrLn} se razlikuje od @code{putStr} samo po tome što dobijana akcija uz prosleđenu nisku ispisuje i karakter za novi red. Funkcija @code{putChr} daje akciju koja će ispisati jedan karakter.
 
 @p Uz ispisivanje sadržaja u terminal, neophodno je i prihvatati korisnički unos. Za prihvatanje linije koristi se akcija @code{getLine :: IO String} dostupna u prelidu. Tip @code{IO String} oznčava da se radi o akciji čiji rezultat je niska - to će biti niska koju je korisnik uneo. Da bi se toj vrednosti pristupilo, potrebno ju je dodeliti novom imenu uz pomoć strelice @code{<-} unutar @code{do} bloka:
 
@@ -107,7 +107,6 @@ Vaše ime je: Marija
 Zdravo Marija!
 }
 
-
 @p Vrednost koju "otpakujemo" sa @code{<-} predstvalja vrednosti sa kojima smo do sada radili. Te vrednosti možemo dalje prosleđivati funkcijama koje smo i do sada pisali, bez potrebe za korišćenjem akcija. Akcije koristimo samo kada iz programa želimo da ispišemo podatke ili da ih učitamo u program.
 
 @codeBlock{
@@ -123,7 +122,7 @@ main = do
 	putStrLn (inicijali ime prezime)
 }
 
-@p Unutar @code{do} bloka je dozvoljeno definisati vrednosti, slično definicijama u @code{where} blokovima. Ali za razliku od @code{where} blokova u kojima poredak definicja nije bitan, u @code{do} blokovima definicje moraju imati smisleni redosled: definicije koje sadrže neke prethodno definisane ili "otpakovane" vrednosti moraju se nalaziti nakon tih tefinicija. Prethodni primer smo mogli i da napišemo ovako:
+@p Unutar @code{do} bloka je dozvoljeno definisati vrednosti, slično definicijama u @code{where} blokovima. Ali za razliku od @code{where} blokova u kojima poredak definicja nije bitan, u @code{do} blokovima definicije moraju imati smisleni redosled: definicije koje sadrže definisane (ili "otpakovane") vrednosti moraju se nalaziti nakon tih tefinicija. Prethodni primer smo mogli i da napišemo ovako:
 
 @codeBlock{
 inicijali :: String -> String -> String
@@ -153,10 +152,42 @@ main = do
 
 @section{Akcije i funkcije}
 
-@section{Rad sa datotekama}
+@p Haskel početnici često poistovećuju @em{akcije} (poput @code{putStrLn "Hello World" :: IO ()} i @code{getLine :: IO Stringq}) sa @em{funkcijama} jer pojam funkcije u drugim programskim jezicima obuhvata oba pojma u Haskelu. Na primer, u C jeziku postoji funkcija (funkcija u smislu C jezika) @pre{getline} koja je u potpunosti analogna Haskel akciji @code{getLine} (čak imaju i skoro identično ime). Ali kao što ćemo uskoro videti, Haskel akcije ne mogu biti Haskel funkcije! Prema tome, pojam @em{funkcije} u drugim jezicima je širi pojam od pojma funkcije u Haskelu.
 
-@section{Nasumične vrednosti}
+@p U Haskelu funkcije predstavljaju @em{pravilnosti} po kojima se vrednostima nekog tipa pridružuju vrednosti drugog tipa. Ključna reč u navedenoj definiciji je "pravilnosti", jer ona označava osobinu funkcija da imaju istu povratnu vrednost kada se primene na iste argumente. Tačnije, ako je @m{x=y}, tada je i @m{f(x)=f(y)}. U tom smislu, vrednost @code{getLine} ne može biti funkcija: njena vrednost prilikom svakog "pozivanja" može biti drugačija (zavisi od toga šta je korisnik konzole uneo). Sličan argument važi za sve ostale procedure čija povratna vrednost zavisi od vrednosti koje se "nalaze" van samog programa. Na primer, to mogu biti procedure koje vraćaju sadržaj neke datoteke, korisnički unos, vreme, sadržaj nekog resursa na internetu, podatke iz baze, i tako dalje. Gledano iz ugla Haskel programa, sve ovakve prcedure vraćaju vrednosti iz @em{spoljnog sveta}. Pod terminom @def{spoljni svet} smatraju se sve vrednosti koje nisu definisane unutar (Haskel) programa.
 
-@section{Vreme i datum}
+@p Osim što su akcije neophodne za "preuzimanje" informacija iz spoljnog sveta, akcije moramo koristiti i kada "šaljemo" informacije u spoljni svet. Na primer, ako štampamo tekst u terminal, čuvamo podatke na disk, šaljemo zahteve veb serverima i tako dalje. Navedene procedure poseduju @def{propratne efekte}@note{@em{side effects}} što znači da menjaju stanje spoljnog sveta. Haskel funkcije nemaju propratne efekte, dok Haskel akcije mogu imati propratne efekte.
 
-@section{Referencijalna transparentnost}
+@p Takođe, primetimo još jednu razliku između funkcija i akcija. Funkcije uvek moramo primeniti na vrednost (što takođe nazivamo i @em{pozivanje sa vrednošću}), tj. moramo napisati kod poput @code{f x}. Sa druge strane, akcije ne primenjujemo na vrednosti@note{Na prvi pogled deluje da se primer poput @code{putStrLn :: Sting -> IO ()} kosi sa ovom izjavom. Ali, obratimo pažnju da @code{putStrLn} nije akcija već funkcija! Rezultat primene ove funkcije na neku nisku je akcija.}. Zbog toga za akcije kažemo da se @em{pokreću} unutar @code{do} bloka.
+
+@p Apstraktni tip @code{IO} predstavlja "most" koji spaja spoljni svet sa programom. Sva komunikacija programa sa spoljnim svetom mora se odviti @em{pokretanjem} akcija sa @code{IO} tipom, a svaku @code{IO} akciju je moguće pokrenuti samo iz neke druge @code{IO} akcije. Zaista, nemoguće je pokrenuti@note{Pokušajte, ali nećete uspeti. Akcije možete pokrenuti unutar @code{do} bloka, a @code{do} blok sam za sebe predstavlja jednu @code{IO} akciju...} akcije unutar funkcija koje nemaju @code{IO} tip. Dakle, akcije su uvek pokrenute od starne drugih akcija, i tako dalje, sve do @code{main} akcije.
+
+@example{
+@p Naravno, definisanjem akcije ne znači da će ta akcija biti i pokrenuta. Pokretanjem narednog programa videćemo samo dva pozdrava u konzoli. Obratite pažnju da će akcija @code{a3} biti pokrenuta iz @code{a1} akcije a ne iz @code{main} akcije.
+
+@codeBlock{
+main :: IO ()
+main = do
+	a1
+
+a1 :: IO ()
+a1 = do
+	putStrLn "Hello"
+	a3
+
+a2 :: IO ()
+a2 = do
+	putStrLn "Ciao"
+
+a3 :: IO ()
+a3 = do
+	putStrLn "Zdravo"
+}
+}
+
+@p Za korisnike drugih programskih jezika, ovakvo razdvajanje pojma akcija od pojma funkcija deluje kao nepotrebno komplikovanje. Ali zapravo se ovde radi o prednosti Haskel jezika u odnosu na druge jezike. Dok u mnogim drugim jezicima (C/C++, Python, Java, Javaskript, Go, itd..) ne postoji nikakva kontrola interakcije programa sa spoljnim svetom@note{Na primer, ako radite na projektu koji sadrži hiljade procedura koje pozivaju jedna drugu, tada ne možete lako znati da li će neka funkcija koju pozovete imati neki efekat koji ne želite. Šta ako funkcija koju pozivate, dalje poziva neke funkcije koje štampaju šifre u konzolu ili brišu tabele iz baze? Čak i ako analizirate sav kôd koji pozivate, ne možete biti sigurni da vaš kolega kasnije neće slučajno izmeniti kôd na neželjen način.}, u Haskelu je kroz sistem tipova (tj. @code{IO} tip) obezbeđeno jasno razdvajanje dela koda koji intereaguje sa spoljnim svetom od dela koda koji to ne čini. Na taj način postignuto je se mnoge potencijalne greške (bagovi), uoče i isprave tokom kompilacije programa.
+
+@p U navedenim programskim jezicima postoji slična podela koda. Programeri često govore o @def{čistom}@note{@em{pure}} i @def{nečistom}@note{@em{impure}} kodu. Čiste funkcije su one funkcije koje zadovoljavaju dva pravila: za iste parametre vraćaju iste povratne vrednosti i nemaju propratne efekte. To su upravo one dve osobine koje smo naveli za Haskel funkcije. Prema tome možemo reći da su Haskel funkcije uvek čiste dok su akcije nečiste. Primetimo da u navedenim programskim jezicima razlika između čistog i nečistog kod nije uspostavljena kroz kompajler (kao što je to slučaj sa Haskelom), već programer mora sam da zaključi o kakvom kodu se radi. 
+
+
+
