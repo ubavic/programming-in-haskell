@@ -451,9 +451,13 @@ ghci> read "[True, False]" :: [Bool]
 }
 }
 
+@example{
+@p I sami smo konstruisali jedan parser u lekciji o listama. U pitanju je funkcija @code{uBroj :: [Char] -> Int} koja iz niske parsira brojeve.
+}
+
 @p Parsiranje je generalno težak problem. Stoga ne čudi što je tokom istorije računarstva razvijeno mnogo teorije o parserima i konkretnim tehnikama za njihovo konstruisanje. Svakako, teorija o parserima prevazilazi obime ove knjige, ali možemo ovde prikazati jednu tehniku za konstrukciju parsera. U pitanju su takozvani @def{aplikativni parseri} koji su realizovani uz pomoć aplikativnih funktora@note{Aplikativni parseri su pogodni za implementaciju u jezicima poput Haskela, ali definitivno nisu najjednostavniji način za konstrukciju parsera.}.
 
-@p Parsiranjem bi trebalo nisku (koja je lista karaktera) pretvoriti u neku vrednost tipa @code{A}. Na primer, parser celobrojnih brojeva bi trebalo da da nisku transformiše u vrednost tipa @code{Float}, a parser logičkih lista bi trebalo da nisku pretvori u vrednost tipa @code{[Bool]}. Stoga ćemo definisati novi (apstraktni) tip, koji može predstaviti parsere za vrednosti bilo kog tipa. Međutim, kroz ovaj novi tip je neophodno obezbediti par stvari. 
+@p Parsiranjem bi trebalo nisku (koja je lista karaktera) pretvoriti u neku vrednost tipa @code{T}. Na primer, parser celobrojnih brojeva bi trebalo da nisku transformiše u vrednost tipa @code{Int}, pa bi tip ovakvog parsera bio @code{String -> Int}. Parser logičkih lista bi trebalo da nisku pretvori u vrednost tipa @code{[Bool]}, pa bi tip ovakvog parsera bio @code{String -> [Bool]}. Stoga ćemo definisati novi (apstraktni) tip @ccode{Parser a = String -> a}, koji može predstaviti parsere za vrednosti bilo kog tipa. Međutim, kroz ovaj novi tip je neophodno obezbediti još par stvari. 
 
 @list{
 @li Prvo, ne možemo očekivati da ćemo svaki parser konstruisati kao jedinstvenu funkciju, već kao kombinaciju manjih funkcija. Svaka od tih funkcija parsiraće jedan karakterističan deo niske (Na primer, parser @code{Float} vrednosti može biti sačinjen od tri parsera: prvog koji parsira ceo deo, drugog koji parsira tačku, i trećeg koji parsira razlomljeni deo. Slično, parser logičkih nizova može biti sačinjen od parsera koji parsira zagrade, parsera za literale logičke vrednosti, parsera za zarez, parsera za beline, itd...). Parsere ćemo kombinovati tako što će svaki naredni parser, parsirati ono "što ostane" nakon pokretanja prethodnih parsera. Stoga jedan parser vrednosti @code{T} neće vraćati samo vrednost tipa @code{T}, već uređen par tipa @code{(String, T)}, gde prva koordinata označava ostatak niske koja se parsira.
@@ -728,9 +732,9 @@ ili p1 p2 = P $ \s -> case parsiraj p1 s of
 
 @terminal {
 ghci> logičkaVrednost = niska "True" `ili` niska "False"
-ghci> parsiraj logičkaVrednot "True"
+ghci> parsiraj logičkaVrednost "True"
 Just ("","True")
-ghci> parsiraj logičkaVrednot "False"
+ghci> parsiraj logičkaVrednost "False"
 Just ("","False")
 }{Kombinator @code{ili} je veoma zgodno postaviti u infiksni oblik kako je prikazno u prvoj liniji. Iako možda deluje neobičnao, ovakva sintasa doprinosi čitljivosti jer zapis podeća na prirodne rečenice: @em{parsirati nisku "True" ili nisku "False"}.}
 }

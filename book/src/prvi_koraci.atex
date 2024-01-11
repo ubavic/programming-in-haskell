@@ -2,7 +2,7 @@
 
 @p Naredna lekcija sadrži informacije neophodne za razumevanje svih ostalih lekcija. Ako neku lekciju ne bi trebalo da preskočite, to je definitivno ova. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
 
-@p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda.
+@p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda. Ove sekcije se mogu površno preći prilikom prvog čitanja.
 
 @section{Haskel kompajler}
 

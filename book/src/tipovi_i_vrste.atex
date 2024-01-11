@@ -8,15 +8,15 @@
 
 @p Tip koji sadrži jednu vrednost označavamo sa @code{()} i nazivamo @def{jedinični tip}@note{@em{unit type}}. Jedinu vrednost ovog tipa označavamo takođe sa @code{()}. Dakle @code{() :: ()}.
 
-@p Svaka funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
+@p Svaka totalna@note{U nastavku isključivo govorimo o totalnim funkcijama, odnosno o funkcijama koje su definisane za sveku vrednost domena.} funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data totalna funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
 
-@p Sa druge strane, ako je data funkcija @code{g :: A -> ()}, tada za svaku vrednost @code{x :: A} mora važiti @code{g x = ()} (jer je @code{()} jedina vrednost kodomena). Stoga, za svaki tip @code{A} važi da postoji @em{samo jedna} funkcija tipa @code{A -> ()}, i ta funkcija je definisana sa @ccode{\_ -> ()}.
+@p Sa druge strane, ako je data totalna funkcija @code{g :: A -> ()}, tada za svaku vrednost @code{x :: A} mora važiti @code{g x = ()} (jer je @code{()} jedina vrednost kodomena). Stoga, za svaki tip @code{A} važi da postoji @em{samo jedna} totalna funkcija tipa @code{A -> ()}, i ta funkcija je definisana sa @ccode{\_ -> ()}.
 
 @p Tip koji ne sadrži nijednu vrednost označava se sa @code{Void} i nazivamo ga @def{prazan tip}@note{@em{void type}}.
 
-@p Posmatrajmo sada funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} mora biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
+@p Posmatrajmo sada totalnu funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} mora biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina totalna funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
 
-@p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena funkcija@note{Takva funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
+@p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena totalna funkcija@note{Takva polimorfna funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
 
 @p Primetiomo da tip @code{Void} ne odgovara pojmu @pre{void} koji se može naći u drugim programskim jezicima popout C-a, C++-a, Jave. U takvim programskim jezicima, @pre{void} se koristi za funkcije čija povratna vrednost nas ne interesuje. Prema tome, takav pojam odgovara jediničnom tipu u Haskelu@note{Videćemo kasnije da se tip @code{()} u Haskelu koristi kad nas ne interesuje povratna vrednost funkcije. Obično su takve funkcije on koje imaju propratne efekte...}.
 
@@ -35,10 +35,14 @@ f2 () = False
 @p Iako tipovi @code{()} i @code{Void} na prvi pogled deluju beskorisno, ti tipovi imaju i teorijsku i praktičnu važnost. Takođe, ova dva tipa će nam poslužiti kao dodatni primeri pri ilustraciju naprednih koncepata.
 
 @problem{Koliko vrednosti sadrži tip @code{[Void]}?}
+{@p Tip @code{[Void]} sadrži samo jednu vrednost: @code{[]}.}
 
 @problem{Koliko vrednosti sadrži tip @code{((), ())}?}
+{@p Tip @code{((), ())} sadrži samo jednu vrednost: @code{((), ())}.}
 
 @problem{Koliko vrednosti sadrži tip @code{(Bool, Void)}?}
+
+@problem{Posmatrajmo i parcijalne funkcije (funkcije koje nisu totalne). Koliko postoji funcija (parcijalnih i totalnih) tipa @code{() -> Bool}?}
 
 @section{Tipski sinonimi}
 

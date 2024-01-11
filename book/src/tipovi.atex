@@ -1,6 +1,6 @@
 @chapter{Tipovi}
 
-@p @def{Tip} predstavlja kolekciju @em{vrednosti}. Svaka vrednost u Haskel jeziku, pripada jednom i samo jednom, tipu. Činjenicu da neka vrednost @code{v} pripada tipu @code{T} označavamo sa @code{v :: T}. Izraz @code{v :: T} često čitamo kao "@code{v} poseduje tip @code{T}". 
+@p @def{Tip} predstavlja kolekciju @em{vrednosti}. Svaka vrednost u Haskel jeziku, pripada jednom i samo jednom, tipu. Činjenicu da neka vrednost @code{v} pripada tipu @code{T} označavamo sa @ccode{v :: T}. Izraz @code{v :: T} često čitamo kao "@code{v} poseduje tip @code{T}". 
 
 @p Haskel poseduje @def{statički sistem tipova} što znači da su tipovi svih izraza poznati prilikom kompilacije (ili interpretacije). Time se otklanjaju mnoge greške koje bi mogle srušiti ceo program prilikom izvršavanja@note{Na primer, @em{GHC} neće iskompajlirati kôd u kom se broj oduzima od niske, jer takva operacija nema smisla.}. Jezici poput @em{Python}-a ili @em{JavaScript}-a nemaju statički sistem tipova, već @em{dinamički} sistem tipova. U takvim jezicima, tipovi izraza se određuju prilikom izvršavanja programa što ostavlja veliku mogućnost za pojavljivanje @em{bagova}.
 

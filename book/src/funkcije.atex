@@ -21,7 +21,7 @@
 @example{
 @p Funkcija @m{c \colon \mathbb N \to \mathbb N} definisana sa @m{c(x) = 1} svakom prirodnom broju pridružuje isti broj - broj @m{1}. Za funkciju @m{c} kažemo da je @def{konstantna funkcija} jer je njena vrednost konstantna bez obzira na vrednost @m{x}.
 
-@p Zapravo, za svaki prirodan broj @m{n} može se konstruisati funkcija tipa @code{\mathbb N \to \mathbb N} koja sve prirodne brojeve preslikava u @m{n}.
+@p Zapravo, za svaki prirodan broj @m{n} može se konstruisati funkcija tipa @m{\mathbb N \to \mathbb N} koja sve prirodne brojeve preslikava u @m{n}.
 }
 
 @example{
@@ -73,7 +73,7 @@ Matematičkom notacijom zapisano, navedeni izraz predstavlja funkciju @m{g(x) = 
 g = (\x -> (2 * x))
 }{Primer validne definicije funkcije u @code{.hs} datoteci.}
 
-@p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima zgodnije je reći @em{primena funkcije na vrednost}.} je na neke vrednosti. Da bi funkciju primenili na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
+@p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima pravilnije je reći @em{primena funkcije na vrednost}, ali ćemo mi koristiti oba izraza.} je na neke vrednosti. Da bi funkciju primenili na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
 
 @terminal{
 ghci> g 10
@@ -194,8 +194,8 @@ ljubav = (\x -> (fst x ++ " voli " ++ snd x ++ "!"))
 @terminal{
 ghci> ljubav ("Ana", "Milovana")
 "Ana voli Milovana!"
-ghci> ljubav ("Marija", "Marijana")
-"Marija voli Marijana!"
+ghci> ljubav ("Marijana", "Marijana")
+"Marijana voli Marijana!"
 }
 
 @p Pozivanje ovako definisane funkcije podseća na pozivanje funkcija u imperativnim jezicima. Ali primetimo da smo mi u prethodnoj lekciji funkcije poput @code{mod} pozivali sa @code{mod 7 3} a ne sa @code{mod (7, 3)}. Takođe možemo da primetimo da iako funkciji prosleđujemo dva podatka, funkcija @code{ljubav} suštinski uzima samo jednu vrednost tipa @code{(String, String)}.

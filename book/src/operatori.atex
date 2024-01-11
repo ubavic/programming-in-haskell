@@ -347,7 +347,7 @@ Neka su @code{p} i @code{q} dve funkcije tipa @code{a -> Bool}. Zašto su @ccode
 @problem{
 Implementirati funkciju @code{ks :: [a -> a] -> a -> a} koja uzima listu funkcija i vraća njihovu kompoziciju. Tačnije, za funkciju @code{ks} mora važiti @eq{\mathrm{ks}\;[f_1, f_2, \dots, f_n] = f_1 \circ f_2 \circ \cdots \circ f_n}
 }{
-@p Zadatak možemo da rešimo rekurzivno. Funkcija @code{ks} primenjena na praznu listu treba da nam da identičku funkciju @code{\x -> x} koja je već definisan u Haskelu pod imenom @code{id}. Ako lista funkcija nije prazna, tada je možemo rastaviti na glavu i na rep, rekurzivno naći kompoziciju repa, a zatim komponovati glavu sa tom kompozicijom:
+@p Zadatak možemo da rešimo rekurzivno. Funkcija @code{ks} primenjena na praznu listu treba da nam da identičku funkciju @code{\x -> x} koja je već definisana u Haskelu pod imenom @code{id}. Ako lista funkcija nije prazna, tada je možemo rastaviti na glavu i na rep, rekurzivno naći kompoziciju repa, a zatim komponovati glavu sa tom kompozicijom:
 
 @codeBlock{
 ks :: [a -> a] -> a -> a
@@ -355,7 +355,7 @@ ks [] = id
 ks (f:fs) = f . ks fs
 }
 
-@p Navedeni rekurzivni šablon obrade liste se može zameniti sa jednom @code{foldl} funkcijom:
+@p Navedeni rekurzivni šablon može se zameniti sa @code{foldl} funkcijom:
 
 @codeBlock{
 ks :: [a -> a] -> a -> a

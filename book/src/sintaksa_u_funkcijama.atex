@@ -95,6 +95,8 @@ max' :: Int -> Int -> Int
 max' = \x y -> if x > y then x else y 
 }}
 
+@problem{Implementirati funkciju @code{prestupna :: Int -> Bool} koja na osnovu pravila Gregorijanskog kalendara određuje da li je data godina prestupna. Godina se smatra prestupnom ako je deljiva sa @m{4}, osim u slučaju kada je deljiva i sa @m{100}. Međutim, ako je deljiva i sa @m{400} tada se ipak smatra prestupnom. Na primer, godina @m{2000}. je bila prestupna jer je deljiva sa @m{400}. Takve su bile i @m{2004}, @m{2008} i @m{2012} jer su sve deljive sa @code{4}. Ali @code{2100}. godina neće biti prestupna jer je deljiva sa @m{100} ali ne i sa @m{400}.}
+
 @section{Ograđene definicije}
 
 @p Ograđena definicija@note{eng. @em{guards}} je poseban oblik definicije funkcije koja omogućava pregledno testiranje više uslova. Svaki od uslova je logički izraz koji se navodi nakon vertikalne crte @code{|}, a nakon uslova postavlja se povratna vrednost funkcije.
