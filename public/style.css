@@ -117,6 +117,7 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 nav {
@@ -284,6 +285,10 @@ aside {
     position: absolute;
     padding: 0;
     transition: background-color 0.2s ease-in-out, top 0.5s ease-in-out;
+}
+
+.version{
+    color: var(--color-gray-2);
 }
 
 @media screen and (max-width: 1550px) {

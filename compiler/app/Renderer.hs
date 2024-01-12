@@ -116,7 +116,7 @@ renderIndexPage chapters date = pageHTML body "Programiranje u Haskelu" date
         body = do
             hgroup ! A.id "titleHeading" $ do
                 h1 $ string "Programiranje u Haskelu"
-                p $ string "Zbirka lekcija o funkcionalnom programiranju"
+                p $ string "Knjiga o funkcionalnom programiranju"
             main $ do
                 ol ! A.id "index" $ mapM_ f chapters
         f (path, name, sections) = do
@@ -133,8 +133,8 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
         meta ! A.name "author" ! A.content "Nikola Ubavić"
         meta ! A.name "description" ! A.content "Knjiga o programskom jeziku Haskel"
         meta ! A.name "viewport" ! A.content "width=device-width, user-scalable=yes"
-        meta ! A.name "theme-color-colorhor" ! A.content "Knjiga o programskom jeziku Haskel"
         meta ! A.name "theme-color" ! A.content "#ffffff"
+        meta ! customAttribute "property" "og:image" ! A.content "https://haskel.ubavic.rs/img/og.png"
         link ! A.rel "stylesheet" ! A.href "style.css"
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "192x192" ! A.href "/img/favicon-192x192.png"
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "32x32" ! A.href "/img/favicon-32x32.png"
@@ -151,16 +151,17 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
                 " • "
                 a ! A.href "https://github.com/ubavic/programming-in-haskell" $ "GitHub"
             div $ do
-                "Sadržaj je objavljen pod licencom "
+                "Knjiga je objavljena pod licencom "
                 a ! A.href "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" $ "CC BY-NC-SA 4.0"
             div $ do
                 "Autor "
-                a ! A.href "https://ubavic.rs" $ "Nikola Ubavić"
-            div ! A.class_ "version" $ string $ "Verzija " <> date
+                a ! A.class_ "version" ! A.href "https://ubavic.rs" $ "Nikola Ubavić"
+            div $ string $ "Sadržaj knjige se redovno unapređuje i dopunjuje. Poslednja izmena " <> date <> " godine."
 
 
 katexImports :: String
 katexImports = "\
 \<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css' integrity='sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/' crossorigin='anonymous'>\
 \<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js' integrity='sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O' crossorigin='anonymous'></script>\
-\<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js' integrity='sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05' crossorigin='anonymous' onload='renderMathInElement(document.body);'></script>"
+\<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js' integrity='sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05' crossorigin='anonymous' onload='renderMathInElement(document.body);'></script>\
+\<script src='https://beamanalytics.b-cdn.net/beam.min.js' data-token='c408e92a-b8b2-4f8c-b0ac-a62f282ee954' async></script>"
