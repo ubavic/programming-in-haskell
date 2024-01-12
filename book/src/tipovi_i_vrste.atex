@@ -10,7 +10,11 @@
 
 @p Svaka totalna@note{U nastavku isključivo govorimo o totalnim funkcijama, odnosno o funkcijama koje su definisane za sveku vrednost domena.} funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data totalna funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
 
+@figure{unit_function2}
+
 @p Sa druge strane, ako je data totalna funkcija @code{g :: A -> ()}, tada za svaku vrednost @code{x :: A} mora važiti @code{g x = ()} (jer je @code{()} jedina vrednost kodomena). Stoga, za svaki tip @code{A} važi da postoji @em{samo jedna} totalna funkcija tipa @code{A -> ()}, i ta funkcija je definisana sa @ccode{\_ -> ()}.
+
+@figure{unit_function1}
 
 @p Tip koji ne sadrži nijednu vrednost označava se sa @code{Void} i nazivamo ga @def{prazan tip}@note{@em{void type}}.
 

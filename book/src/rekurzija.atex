@@ -270,6 +270,8 @@ fib' n = round ((a^n - b^n)/t)
 @p Navedena definicija omogućava da se @code{n}-ti član Fibonačijevog niza izračuna u konstantnom broju koraka (broj koraka ne zavisi od veličine parametra @code{n}).
 
 @p Sa druge strane, definicija koju smo dali ranije zahteva značajno više koraka pri izvršavanju. Za izračunavanje @code{fib (n -1)} potrebno je izračunati @code{fib (n-1)} i @code{fib (n-2)}. Za svaku od navedenih vrednosti potrebno je izračunati po još dve vrednosti i tako dalje. Odavde sledi da je broj koraka potreban za izračunavanje @code{fib n} proporcionalan sa @m{2^n}. Primetimo da se vrednosti računaju više puta: na primer @code{fib (n-2)} je potrebno izračunati za @code{fib n} ali i za @code{fib (n-1)}.
+
+@figure{fibonacci}{Šematski prikaz rekurzivnog računanja vrednosti @m{F_5}.}
 }
 
 @p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristupiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
@@ -302,8 +304,6 @@ p 0 = 1
 ghci> p 10
 *** Exception: <interactive>:3:1-16: Non-exhaustive patterns in function p
 }{Pokretanje @code{p x} za bilo koju vrednost @code{x} različiti od @code{0} dovodi do izuzetka.}
-
-@p @def{Izuzetak} je stanje programa koje označava da je došlo do greške@note{Izuzeci se kreiraju uz pomoć @code{error :: [Char] -> a} funkcije koja se zbog proizvoljnog domena može postaviti u bilo koji izraz. Niska koja se prosleđuje ovoj funkcije je poruka koja će biti ispisana pri izuzetku. Ako tokom izvršavanja programa dođe do evaluacije funkcije @code{error}, tada će izvršavanje programa biti prekinuto, a poruka prosleđena @code{error} funkciji ispisana u terminalu.}, i ne predstavlja validnu vrednost. 
 
 @p Postavlja se pitanje, zašto jezik poput Haskela dozvoljava da radimo sa parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kreirati programski jezik koji ne bi sadržao parcijalne funkcije a koji bi i dalje bio dovoljno ekspresivan za izražavanje svakog algoritma.
 
