@@ -51,7 +51,7 @@ sati_u_danu = 24
 
 @section{Izvršavanje Haskel koda}
 
-@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije@note{Kasnije ćemo se upoznati detaljnije sa pojmom funkcija i operatora. Operatori i jesu funkcije koje se zapisuju u takozvanom @em{infiksnom} zapisu...}. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -64,8 +64,8 @@ dana_u_godini :: Int
 dana_u_godini = 28 + 4 * 30 + 7 * 31
 
 sati_u_nedelji :: Int
-sati_u_nedelji = dana_nedelji * sati_u_nedelji
-}{Definicija labele @code{sati_u_nedelji} koristi definicije @code{dana_u_nedelji} i @code{sati_u_danu}. definisana imena uvek predstavljaju vrednosti koje su im dodeljene prilikom definicije, i mogu se koristiti umesto tih konkretnih vrednosti. Opet, poredak definicija nije bitan pa je ime @code{sati_u_nedelji} moglo biti definisano prvo.}
+sati_u_nedelji = dana_nedelji * sati_u_danu
+}{Definicija labele @code{sati_u_nedelji} koristi definicije @code{dana_u_nedelji} i @code{sati_u_danu}. Imena uvek predstavljaju vrednosti koje su im dodeljene prilikom definicije, i mogu se koristiti umesto tih konkretnih vrednosti.}
 
 @p Lista definicija nije sama po sebi mnogo korisna ako ne možemo utvrditi vrednosti izraza. Tako je u prethodnom primeru zgodno saznati koliko to sati ima u nedelji, a da bi smo saznali tu vrednost potrebno je da izvršimo Haskel kôd. Postoje dva načina na koje je moguće izvršiti Haskel kôd:
 
