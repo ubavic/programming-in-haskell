@@ -150,6 +150,70 @@ main = do
 }
 }
 
+@problem{Napisati @em{quine}, to jest program koji ispusuje sopstveni kôd.}
+{@p Napisati @em{quine} u bilo kom jeziku nije lak zadatak. Dobra početna tačka je program koji ispusuje neku nisku. Odabraćemo nisku koja je početak koda samog programa:
+
+@codeBlock{
+main = putStrLn "main = putStrLn"
+}{Iskoristićemo to što u Haskelu ne moramo da navodimo dekleracije tipovaq da bismo pojednostavili rešenje.}
+
+@p Kompilacijom i pokretanjem programa dobijamo početak kôda.
+
+@terminal{
+$ ghc quine.hs
+[1 of 1] Compiling Main             ( quine.hs, quine.o )
+Linking quine ...
+$ ./quine
+main = putStrLn
+}
+
+@p Deluje da je dovoljno da ostatak koda smestimo u nisku:
+
+@codeBlock{
+main = putStrLn "main = putStrLn \"main = putStrLn\""
+}{Par navodnika označava početak i kraj niske. Međutim problem se javlja ako želimo da napišemo nisku koja sadrži navodnik u sebi. Zbog toga koristimo kosu crtu koja označava da naredni karakter ima specijalno značenje. Konkretno, da bi naveli dupli navodnik unutar niske koristimo @pre{\"}. Ovim smo definisali nisku @em{main = putStrLn "main = putStrLn"}.}
+
+@terminal{
+$ ./quine
+main = putStrLn "main = putStrLn"
+}{Pokretanjem rešenja uviđamo da je strategija bila naivna. Novim programom jesmo ispisali kôd prethodnog programa, ali nismo uspeli da konstruišemo @em{quine} - program koji ispisuje sopstveni kôd.}
+
+@p Kako mi dodajemo tekst u nisku to program postaje duži te moramo da dodajemo još više teksta, i tako dalje... Takav proces se nikad neće zauzativiti. Zbog toga moramo konstruisati nisku koju ćemo ispisati. Vratimo se na prvi pokušaj rešenja, tj. program @ccode{main = putStrLn "main = putStrLn"} i dodajmo funkciju @code{(\s -> s ++ s)} koja "duplira" niksu. Kôd te funkcije ćemo takođe dodati u nisku:
+
+@codeBlock{
+main = putStrLn ((\s->s++s) "main = putStrLn (\\s->s++s)")
+}{Da bi naveli kosu crtu unutar niske koristimo @pre{\\}}
+
+@terminal{
+$ ./quine
+main = putStrLn (\s->s++s)main = putStrLn (\s->s++s)
+}
+
+@p Poredeći kôd i ispis programa vidimo da nedostaje par zagrada, par navodnika, razmak, i kosa crta u lambda funkciji. Zagrade i razmak možemo da pokušamo da dodamo u nisku i telo lambda funkcije:
+
+@codeBlock{
+main = putStrLn ((\s->s++" "++s++")") "main = putStrLn ((\\s->s++\" \"++s++\")\")")
+}
+
+@terminal{
+$ ./quine
+main = putStrLn ((\s->s++" "++s++")") main = putStrLn ((\s->s++" "++s++")"))
+}
+
+@p Rešenje sad deluje dosta blizu. Neophodno je sad postaviti drugi deo ispsa u navodnike i dodati kose crte. Tj. potrebno je nisku ispisati u obliku u kom bi bila zapisana kao Haskel literal. Upravo to radi @code{show} funkcija. Sada je dovoljno umesto @code{\s->s++" "++s++")"} napisati @code{\s->s++" "++show s++")"}.
+
+@codeBlock{
+main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
+}
+
+@terminal{
+$ ./quine
+main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
+}
+}
+
+
+
 @section{Akcije i funkcije}
 
 @p Haskel početnici često poistovećuju @em{akcije} (poput @code{putStrLn "Hello World" :: IO ()} i @code{getLine :: IO Stringq}) sa @em{funkcijama} jer pojam funkcije u drugim programskim jezicima obuhvata oba pojma u Haskelu. Na primer, u C jeziku postoji funkcija (funkcija u smislu C jezika) @pre{getline} koja je u potpunosti analogna Haskel akciji @code{getLine} (čak imaju i skoro identično ime). Ali kao što ćemo uskoro videti, Haskel akcije ne mogu biti Haskel funkcije! Prema tome, pojam @em{funkcije} u drugim jezicima je širi pojam od pojma funkcije u Haskelu.
@@ -160,7 +224,7 @@ main = do
 
 @p Takođe, primetimo još jednu razliku između funkcija i akcija. Funkcije uvek moramo primeniti na vrednost (što takođe nazivamo i @em{pozivanje sa vrednošću}), tj. moramo napisati kod poput @code{f x}. Sa druge strane, akcije ne primenjujemo na vrednosti@note{Na prvi pogled deluje da se primer poput @code{putStrLn :: Sting -> IO ()} kosi sa ovom izjavom. Ali, obratimo pažnju da @code{putStrLn} nije akcija već funkcija! Rezultat primene ove funkcije na neku nisku je akcija.}. Zbog toga za akcije kažemo da se @em{pokreću} unutar @code{do} bloka.
 
-@p Apstraktni tip @code{IO} predstavlja "most" koji spaja spoljni svet sa programom. Sva komunikacija programa sa spoljnim svetom mora se odviti @em{pokretanjem} akcija sa @code{IO} tipom, a svaku @code{IO} akciju je moguće pokrenuti samo iz neke druge @code{IO} akcije. Zaista, nemoguće je pokrenuti@note{Pokušajte, ali nećete uspeti. Akcije možete pokrenuti unutar @code{do} bloka, a @code{do} blok sam za sebe predstavlja jednu @code{IO} akciju...} akcije unutar funkcija koje nemaju @code{IO} tip. Dakle, akcije su uvek pokrenute od starne drugih akcija, i tako dalje, sve do @code{main} akcije.
+@p Apstraktni tip @code{IO} predstavlja "most" koji spaja spoljni svet sa programom. Sva komunikacija programa sa spoljnim svetom mora se odviti @em{pokretanjem} akcija sa @code{IO} tipom, a svaku @code{IO} akciju je moguće pokrenuti samo iz neke druge @code{IO} akcije. Zaista, nemoguće je pokrenuti@note{Pokušajte, ali nećete uspeti. Akcije možete pokrenuti unutar @code{do} bloka, a @code{do} blok sam za sebe predstavlja jednu @code{IO} akciju...} akcije unutar funkcija. Dakle, akcije su uvek pokrenute od starne drugih akcija, i tako dalje, sve do @code{main} akcije.
 
 @example{
 @p Naravno, definisanjem akcije ne znači da će ta akcija biti i pokrenuta. Pokretanjem narednog programa videćemo samo dva pozdrava u konzoli. Obratite pažnju da će akcija @code{a3} biti pokrenuta iz @code{a1} akcije a ne iz @code{main} akcije.
@@ -188,6 +252,7 @@ a3 = do
 @p Za korisnike drugih programskih jezika, ovakvo razdvajanje pojma akcija od pojma funkcija deluje kao nepotrebno komplikovanje. Ali zapravo se ovde radi o prednosti Haskel jezika u odnosu na druge jezike. Dok u mnogim drugim jezicima (C/C++, Python, Java, Javaskript, Go, itd..) ne postoji nikakva kontrola interakcije programa sa spoljnim svetom@note{Na primer, ako radite na projektu koji sadrži hiljade procedura koje pozivaju jedna drugu, tada ne možete lako znati da li će neka funkcija koju pozovete imati neki efekat koji ne želite. Šta ako funkcija koju pozivate, dalje poziva neke funkcije koje štampaju šifre u konzolu ili brišu tabele iz baze? Čak i ako analizirate sav kôd koji pozivate, ne možete biti sigurni da vaš kolega kasnije neće slučajno izmeniti kôd na neželjen način.}, u Haskelu je kroz sistem tipova (tj. @code{IO} tip) obezbeđeno jasno razdvajanje dela koda koji intereaguje sa spoljnim svetom od dela koda koji to ne čini. Na taj način postignuto je se mnoge potencijalne greške (bagovi), uoče i isprave tokom kompilacije programa.
 
 @p U navedenim programskim jezicima postoji slična podela koda. Programeri često govore o @def{čistom}@note{@em{pure}} i @def{nečistom}@note{@em{impure}} kodu. Čiste funkcije su one funkcije koje zadovoljavaju dva pravila: za iste parametre vraćaju iste povratne vrednosti i nemaju propratne efekte. To su upravo one dve osobine koje smo naveli za Haskel funkcije. Prema tome možemo reći da su Haskel funkcije uvek čiste dok su akcije nečiste. Primetimo da u navedenim programskim jezicima razlika između čistog i nečistog kod nije uspostavljena kroz kompajler (kao što je to slučaj sa Haskelom), već programer mora sam da zaključi o kakvom kodu se radi. 
+
 
 
 

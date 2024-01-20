@@ -31,7 +31,7 @@
 }
 
 @example{
-@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @m{i} preslikava svaku vrednost u samu sebe, tj. svakom elementu @m{x} pridružuje njega samog. Funkciju @code{i} nazivamo @def{identička funkcija} na skupu @m{X}.
+@p Neka je @m{X} proizvoljan skup. Tada možemo definisati funkciju @m{i \colon X\to X} sa @m{i(x) = x}. Funkcija @m{i} preslikava svaku vrednost u samu sebe, tj. svakom elementu @m{x} pridružuje njega samog. Funkciju @m{i} nazivamo @def{identička funkcija} na skupu @m{X}.
 }
 
 @p U Haskelu, analogno matematici, funkcije predstavljaju pravilnosti po kojima se vrednostima nekog tipa (domena) pridružuju vrednosti drugog tipa (kodomena). Tip funkcije koja vrednostima tipa @code{A} pridružuje vrednosti tipa @code{B} označava se sa @code{A -> B}. Tip funkcije, kao i svaki drugi tip, predstavlja kolekciju nekih vrednosti. Tip @code{A -> B} predstavlja kolekciju svih funkcija koje tip @code{A} preslikavaju tip @code{B}.

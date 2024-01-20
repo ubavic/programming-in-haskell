@@ -155,15 +155,14 @@ opisZemljotresa r
   | (r >= 7.0) && (r < 8.0) = "Velik"
   | (r >= 8.0) && (r < 10.0) = "Razarajući"
   | r >= 10 = "Epski"
-}{Ako pozovemo @code{opisZemljotresa 5.6}, tada će uslov @code{(r >= 5.0) && (r < 6.0)} biti zadovoljen zbog čega će se @code{opisZemljotresa 5.6} evaluirati @code{"Srednji"}. Ova funkcija nije totalna, jer nijedan slučaj ne odgovara negativnoj vrednosti @code{r}.}
+}{Ako pozovemo @code{opisZemljotresa 5.6}, tada će uslov @code{(r >= 5.0) && (r < 6.0)} biti zadovoljen zbog čega će se @code{opisZemljotresa 5.6} evaluirati @code{"Srednji"}. Primetimo da funkcija nije definisana za negativne argumente.}
 
 @p U prethodnom primeru možemo primetiti da uslove možemo pojednostaviti. Naime kako su uslovi poređani redom po jačini zemljotresa, možemo se osloboditi dela uslova kojim se proverava da je jačina zemljotresa jača od nekog intenziteta@note{Jer  je povratna vrednost funkcije definisane sa @em{guards} sintaksom ona koja odgovara prvom zadovoljenom uslovu.}. Stoga funkciju @code{opisZemljotresa} možemo i ovako definisati
 
 @codeBlock{
 opisZemljotresa :: Double -> [Char]
 opisZemljotresa r
-  | r < 0.0 = "Greška"
-  | r < 4.0 = "Mikro"
+  | r < 2.0 = "Mikro"
   | r < 4.0 = "Manji"
   | r < 5.0 = "Lakši"
   | r < 6.0 = "Srednji"
@@ -171,14 +170,13 @@ opisZemljotresa r
   | r < 8.0 = "Velik"
   | r < 10.0 = "Razarajući"
   | r >= 10 = "Epski"
-}{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden. Dodat je i uslov koji u slučaju negativnog argumenta vraća nisku @code{"Greška"}.}
+}{Pozivanjem @code{opisZemljotresa 5.6} ponovo dobijamo @code{"Srednji"}. Iako su i uslovi @code{r < 7.0}, @code{r < 8.0}, @code{r < 10.0} tačni, uslov @code{r < 6.0} je prvi naveden.}
 
-@p Primetimo da je i u ovom (kao i u prethodnom primeru) na poslednjem mestu postavljen slučaj koji je zadovoljen kada svi ostali slučajevi nisu@note{U suprotnom, funkcija ne bi bila totalna, i došlo bi do izuzetka za neke od argumenata}. Zbog toga, za poslednji uslov ne mora se stavljati nikakav izraz, već je dovoljno postaviti konstantu @code{True}, i tada će poslednji uslov "uhvatiti" sve što nije uhvaćeno sa prethodnim uslovima. Uobičajeno je da se na kraju ograđene definicije postavi konstanta @code{otherwise} koja je ime za vrednost @code{True}@note{Zaista, u @em{GHCi}-u proverite da je @code{otherwise == True}.}:
+@p Primetimo da je i u ovom (kao i u prethodnom primeru) na poslednjem mestu postavljen slučaj koji je zadovoljen kada svi ostali slučajevi nisu. Zbog toga, za poslednji uslov ne mora se stavljati nikakav izraz, već je dovoljno postaviti konstantu @code{True}, i tada će poslednji uslov "uhvatiti" sve što nije uhvaćeno sa prethodnim uslovima. Uobičajeno je da se na kraju ograđene definicije postavi konstanta @code{otherwise} koja je ime za vrednost @code{True}@note{Zaista, u @em{GHCi}-u proverite da je @code{otherwise == True}.}:
 
 @codeBlock{
 opisZemljotresa r
-  | r < 0.0 = "Greška"
-  | r < 4.0 = "Mikro"
+  | r < 2.0 = "Mikro"
   | r < 4.0 = "Manji"
   | r < 5.0 = "Lakši"
   | r < 6.0 = "Srednji"
