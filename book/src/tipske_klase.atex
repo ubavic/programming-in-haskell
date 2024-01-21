@@ -73,9 +73,9 @@ class Figura a where
   obim :: a -> Double
 }
 
-@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do linije koja nije nazubljena.
+@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do neprazne linije koja nije nazubljena.
 
-@p Tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
+@p Slobodna tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja proizvoljnu instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 
 @p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, te je potrebno tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učiniti instancama klase @code{Figura}.
 
@@ -114,18 +114,18 @@ ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{povrsina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{povrsina}. Površinu Pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{površina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{površina}. Površinu Pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where
   obim :: a -> Double
-  povrsina :: a -> Double
+  površina :: a -> Double
 
 
 instance Figura Pravougaonik where
   obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
 
-  povrsina (Pravougaonik (x, y, a, b)) = a * b
+  površina (Pravougaonik (x, y, a, b)) = a * b
 
 
 instance Figura Trougao where
@@ -135,7 +135,7 @@ instance Figura Trougao where
       b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
       c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2
   
-  povrsina (Trougao (x1, y1, x2, y2, x3, y3)) = sqrt . prod $ [s, s-a, s-b, s-c]
+  površina (Trougao (x1, y1, x2, y2, x3, y3)) = sqrt . prod $ [s, s-a, s-b, s-c]
       where
         a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
         b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2
@@ -146,7 +146,7 @@ instance Figura Trougao where
 instance Figura Krug where
   obim (Krug (x, y, r)) = 2 * pi * r
   
-  povrsina (Krug (x, y, r)) = pi * r^2
+  površina (Krug (x, y, r)) = pi * r^2
 }
 
 @p Više o klasama tipova naučićemo na primerima poznatih klasa koje su već definisane u Haskelu.

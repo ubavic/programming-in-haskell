@@ -95,7 +95,7 @@ max' :: Int -> Int -> Int
 max' = \x y -> if x > y then x else y 
 }}
 
-@problem{Implementirati funkciju @code{prestupna :: Int -> Bool} koja na osnovu pravila Gregorijanskog kalendara određuje da li je data godina prestupna. Godina se smatra prestupnom ako je deljiva sa @m{4}, osim u slučaju kada je deljiva i sa @m{100}. Međutim, ako je deljiva i sa @m{400} tada se ipak smatra prestupnom. Na primer, godina @m{2000}. je bila prestupna jer je deljiva sa @m{400}. Takve su bile i @m{2004}, @m{2008} i @m{2012} jer su sve deljive sa @code{4}. Ali @code{2100}. godina neće biti prestupna jer je deljiva sa @m{100} ali ne i sa @m{400}.}
+@problem{Implementirati funkciju @code{prestupna :: Int -> Bool} koja na osnovu pravila Gregorijanskog kalendara određuje da li je data godina prestupna. Godina se smatra prestupnom ako je deljiva sa @m{4}, osim u slučaju kada je deljiva i sa @m{100}. Međutim, ako je deljiva i sa @m{400} tada se ipak smatra prestupnom. Na primer, godina 2000. je bila prestupna jer je deljiva sa @m{400}. Takve su bile i 2004, 2008 i 2012. jer su sve deljive sa @m{4}. Ali 2100. godina neće biti prestupna jer je deljiva sa @m{100} ali ne i sa @m{400}.}
 
 @section{Ograđene definicije}
 
@@ -335,17 +335,17 @@ s _ = 1
 
 
 @example{
-@p Funkcija koja vraća rep liste (sve element osim prvog), može se definisati na sledeći način:
+@p Funkcija koja vraća rep liste brojeva (sve element osim prvog), može se definisati na sledeći način:
 
 @codeBlock{
-rep :: [a] -> a
+rep :: [Int] -> Int
 rep (x:xs) = xs
-}{Operator @code{:} nadovezuje element na početak @em{liste}. Prema tome @code{x} je prvi element, a @code{xs} predstavlja ostatak liste. Primetimo da ova funkcija nije totalna jer nije definisana za slučaj prazne liste.}
+}{Operator @code{:} nadovezuje element na početak @em{liste}. Prema tome @code{x} je prvi element, a @code{xs} predstavlja ostatak liste. Primetimo da ova funkcija definisana za slučaj prazne liste.}
 
 @p Zapravo, pošto nas u navedenom kodu vrednost @code{x} ne interesuje, funkciju možemo definisati i sa džokerom:
 
 @codeBlock{
-rep :: [a] -> a
+rep :: [Int] -> Int
 rep (_:xs) = xs
 }{Džokere bi trebalo koristiti kad god je to moguće, jer poboljšavaju čitljivost koda tako što umanjuju broj vezanih imena.}
 }
@@ -378,10 +378,10 @@ saberi3 (x, y, z) = x + y + z
 
 @subsection{Podudaranje oblika unutar lambda izraza}
 
-@p U lambda izrazima moguće je upotrebiti podudaranje oblika za dekonstrukciju argumenta Zbog same forme lambda izraza, moguće je navesti samo jedan oblik po kom se vrši podudaranje. Taj oblik postavljamo između "lambde" i strelice.
+@p U lambda izrazima moguće je upotrebiti podudaranje oblika za dekonstrukciju argumenta. Zbog same forme lambda izraza, moguće je navesti samo jedan oblik po kom se vrši podudaranje. Taj oblik postavljamo između "lambde" i strelice.
 
 @example{
-@p Funkciju @code{head} možemo elegantno da definišemo kao @ccode{\(x:xs) -> x}. Naravno, ova funkcija neće biti totalna, jer slučaj prazne liste nije obrađen (niti može biti obrađen ako je funkcija definisana sa lambda izrazom).
+@p Funkciju @code{head} možemo elegantno da definišemo kao @ccode{\(x:xs) -> x}. Naravno, ova funkcija neće biti definsana za sve vrednosti, jer slučaj prazne liste nije obrađen (niti može biti obrađen ako je funkcija definisana sa lambda izrazom).
 }
 
 @p Podudaranje oblika u lambda izrazima retko se koristi sa listama, baš iz razloga zato što možemo proveriti samo jedan oblik argumenta (što je retko kad dovoljno u slučaju lista). Ali, kako je oblik uređenih @m{n}-torki u potpunosti određen tipom, sa takvim tipovima se često koristi podudaranje oblika u lambda izrazima.
