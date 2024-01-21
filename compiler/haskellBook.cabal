@@ -11,7 +11,7 @@ extra-source-files: README.md
 
 executable haskellBook
     main-is:          Main.hs
-    build-depends:    base >=4.13.0.0 && <=4.15.0.0,
+    build-depends:    base >=4.13.0.0,
                       megaparsec >=9.0,
                       text,
                       time,
