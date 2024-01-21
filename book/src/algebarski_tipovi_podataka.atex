@@ -249,7 +249,7 @@ data MoždaNiska = SamoNiska String | Ništa
 data Možda t = Samo t | Ništa
 }
 
-@p Upravo ovako je definisan apstraktni tip @code{Maybe} koji je dostupan u prelidu:
+@p Upravo ovako je definisan apstraktni tip @code{Maybe} koji je dostupan u Prelidu:
 
 
 @codeBlock{
