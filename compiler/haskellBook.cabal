@@ -7,7 +7,6 @@ bug-reports:        https://github.com/ubavic/programming-in-haskell
 license:            MIT
 author:             Nikola Ubavić
 maintainer:         haskellBook@ubavic.rs
-extra-source-files: README.md
 
 executable haskellBook
     main-is:          Main.hs
