@@ -38,7 +38,7 @@ const setNotePositions = () => {
 addNoteEventListeners();
 setNotePositions();
 
-setTimeout(setNotePositions, 2000);
+setTimeout(setNotePositions, 100);
 
 window.onresize = setNotePositions;
 

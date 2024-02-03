@@ -106,6 +106,30 @@ ghci> (\x -> (2 * x)) 10
 
 @p Primer redeksa je upravo @code{(\x -> (2 * x)) 10} ali i @code{g 10} jer je @code{g} po definiciji @code{(\x -> (2 * x))}. Za razliku od izraza @code{'a' 'b'}, svaki redeks predstavlja smislenu aplikaciju funkcije na vrednost.
 
+
+@problem{
+Napisati lambda izraz koji za dati broj @m{r} daje površinu kruga čiji je poluprečnik @code{r}. Dodeliti ovaj izraz imenu @code{površinaKruga}. Izračunati površinu krugova čiji su poluprečnici @m{2} i @m{5}. Konstanta @code{\pi} je dostupna pod imenom @code{pi}.
+}{
+@p Površina kruga sa poluprečnikom @m{r} je @m{\pi r^2}, te stoga možemo definisati traženi lambda izraz sa @code{\r -> (pi * r^2)}. Ovaj izraz možemo imenovati, odnosno dodeliti nekom imenu, i sačuvati u @code{.hs} datoteci:
+
+@codeBlock{
+površinaKruga = (\r -> (2 * r^2))
+}
+
+@p Nakon učitavanja datoteke u @em{ghci}, možemo naći površine različitih krugova:
+
+@terminal{
+ghci> površinaKruga 2
+12.566370614359172
+ghci> površinaKruga 5
+78.53981633974483
+}
+}
+
+@problem{
+Temperatura od @m{x} stepeni Farenhajta je jednaka temperaturi od @m{\frac{5}{9}(x - 32)} stepeni Celzijusa. Napisati funkciju @code{uCelzijuse} koja stepene Farenhajta pretvara u stepne Celzijusa. Izraziti i stepene Farenhajta preko stepena Celzijusa, i napisati funkciju @code{uFarenhajte} koja vrši konverziju. Potvrditi sa obe funkcije da je @m{30^\circ \mathrm C} jednako @m{86^\circ \mathrm F}
+}
+
 @section{Beta redukcija}
 
 @p Ako je data matematička funkcija @m{f(x)=2*x}, tada se postupak nalaženja vrednosti @m{f(10)} sastoji u tome da se svako pojavljivanje promenljive @m{x} u izrazu @m{2*x} zameni sa argumentom @m{10}. Time se dobija izraz @m{2*10} koji može direktno da se izračuna. Analognim postupkom redeksi se mogu svesti na neku vrednost koja u sebi ne sadrži redeks.
@@ -169,12 +193,7 @@ ghci> h 2
 
 @p Ako nije došlo do tipske greške, tada primena funkcija na neku vrednost predstavlja @def{dobro tipiziran izraz}. Pritom, ako je funkcija @code{f} tipa @code{A -> B}, a vrednost @code{v} tipa @code{A}, tada je @code{f v} predstavlja vrednost tipa @code{B}. Beta redukcijom moguće je odrediti tačnu vrednost izraza @code{f v}, ali i bez redukcije znamo da ta vrednost poseduje tip @code{B}. Prosto rečeno, primenom funkcije tipa @code{A -> B} na vrednosti tipa @code{A} "brišemo" @code{A ->} iz tipa@note{Kao što u matematici @m{f} predstavlja funkciju a @m{f(10)} konkretan broj, tako i primena funkcije @code{f :: A -> B} na vrednost @code{v :: A} predstavlja rezultat tipa @code{B}.}.
 
-@problem{Napisati funkciju @ccode{površinaKruga :: Double -> Double} koja za zadati poluprečnik kruga vraća njegovu površinu. Konstanta @m{\pi} je dostupna u Haskelu kao @code{pi}.}
-{
-@codeBlock{
-površinaKruga :: Double -> Double
-površinaKruga = (\r -> (pi * r ** 2))
-}}
+@problem{Deklarisati tipove funkcija iz prethodnih zadataka ove lekcije.}
 
 @section{Funkcije više promenljiva}
 
@@ -241,7 +260,7 @@ zapremina = (\a -> (\b -> (\c -> (a * b * c))))
 
 @p @def{Prelid}@note{eng. @em{prelude}} je kratka muzička forma improvizacijskog karaktera, koja se koristi kao uvod u veća muzička dela. U Haskelu, @em{Prelude} predstavlja kôd koji je dostupan svakom programu. Definicije iz Prelida, mogu se shvatiti kao uvod u definicije koje je korisnik napisao.
 
-@p Sve predefinisane funkcije koje smo do sada predstavili, poput @code{not}, @code{mod}, @code{div}, @code{length}, @code{head}, @code{fst}, i tako dalje, zapravo su definisane u Haskel Prelidu. U narednim lekcijama videćemo kako su tačno ove funkcija definisane, i upoznaćemo još mnoge druge definicije iz Prelida.
+@p Sve predefinisane funkcije koje smo do sada predstavili, poput @code{not}, @code{mod}, @code{div}, @code{length}, @code{head}, @code{fst}, i tako dalje, zapravo su definisane u Haskel Prelidu. Takođe, konstante poput @code{pi} su definisane u Prelidu. U narednim lekcijama videćemo kako su tačno navedene funkcija definisane, i upoznaćemo još mnoge druge definicije iz Prelida.
 
 @section{Zadaci}
 
@@ -279,19 +298,19 @@ ghci> primeni paran (2, 7)
 @problem{
 Napisati funkciju @ccode{inicijali :: [Char] -> ([Char] -> [Char])} koja od dve niske koje predstavljaju ime i prezime pravi inicijale. Na primer @code{inicijali "Nikola" "Tesla"} daje @code{"N.T."}. Pretpostaviti da su obe niske neprazne.
 }{
-@p Korišćenjem @code{head :: [a] -> a} funkcije, "uzećemo" prva slova imena i prezimena. Primena funkcije @code{head} na nisku nam daje vrednost tipa @code{Char}. Stoga dobijenu vrednost moramo postaviti u novu nisku, da bismo mogli koristiti operator @code{++} koji nadovezuje niske.
+@p Korišćenjem @code{head} funkcije, "uzećemo" prva slova imena i prezimena. Primena funkcije @code{head} na nisku nam daje vrednost tipa @code{Char}. Stoga dobijenu vrednost moramo postaviti u novu nisku, da bismo mogli koristiti operator @code{++} koji nadovezuje niske.
 
 @codeBlock{
 inicijali :: [Char] -> ([Char] -> [Char])
 inicijali = (\x1 -> (\x2 -> (
     let y1 = head x1; y2 = head x2
-    in [x1] ++ "." [x2] ++ "."
+    in [x1] ++ "." ++ [x2] ++ "."
   )))
 }
 }
 
 @problem{Napisati funkciju @ccode{ukloni3 :: [Char] -> [Char]} koja uklanja prva tri elementa iz niske. Pretpostaviti da će funkcija uvek biti primenjena na niske dužine veće od tri.}{
-@p Funkcija @code{tail :: [a] -> [a]} nam vraća rep niske (sve osim prvog elementa). Primenom ove funkcije tri puta na neku listu, efektivno uklanjamo prva tri elementa iz liste
+@p Funkcija @code{tail} nam vraća rep niske (sve osim prvog elementa). Primenom ove funkcije tri puta na neku listu, efektivno uklanjamo prva tri elementa iz liste
 @codeBlock{
 ukloni3 :: [Char] -> [Char]
 ukloni3 = (\x -> (tail (tail (tail x))))

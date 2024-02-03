@@ -4,20 +4,20 @@
 
 @p Jednoj vrsti apstrakcija posvetićemo ovu lekciju, a na samom početku ćemo pokušati da motivišemo razloge za uvođenje takvih apstrakcija.
 
-@p U prethodnim lekcijama naučili smo kako da definišemo funkcije, i upoznali smo se sa pojmom tipa funkcije. Programi koje smo pisali su bili mali i sačinjeni samo do nekoliko definicija funkcija. Ako bismo radili na velikim programima (kao što su web serveri, desktop aplikacije, itd...) uvideli bismo jedan jednostavan ali naporan problem. Naime, često bismo pisali gotovo iste funkcije koje imaju malo različite tipove.
+@p U prethodnim lekcijama naučili smo kako da definišemo funkcije, i upoznali smo se sa pojmom tipa funkcije. Programi koje smo pisali su bili mali i sačinjeni samo do nekoliko definicija funkcija. Ako bismo radili na velikim programima (kao što su @em{web} serveri, desktop aplikacije, itd...) uvideli bismo jedan jednostavan ali naporan problem. Naime, često bismo pisali gotovo iste funkcije koje imaju malo različite tipove.
 
 @example{
-@p Zamislimo da je potrebno na implementiramo funkciju koja izražava određenu numeričku zakonitost (nebitno kakvu) po formuli koja je eksperimentalno dobijena @eq{y = f(x) = 253 \cdot x + 17.}
+@p Zamislimo da je potrebno na implementiramo funkciju koja izražava određenu numeričku zakonitost (nebitno kakvu) po formuli koja je eksperimentalno dobijena @eq{y = f(x) = x\cdot x + x.}
 @p Ako očekujemo da će vrednosti @m{x} i @m{y} biti tipa @code{Int}, tada možemo napisati sledeću definiciju
 @codeBlock{
 f :: Int -> Int
-f x = 253 * x + 17
+f x = x*x + x
 }
 
 @p Sa druge strane, ako očekujemo da će @m{x} i @m{y} biti tipa @code{Float}, tada možemo napisati sledeću definiciju
 @codeBlock{
 f :: Float -> Float
-f x = 253 * x + 17
+f x = x*x + x
 }
 
 @p Kako ne možemo imati dve definicije istog imena (a pogotovu dve definicije istog imena sa različitim tipovima), problem nastaje ako želimo da u kodu definišemo obe. Tada, moramo odabrati novo ime za jednu od funkcija (npr. @code{f} i @code{fFloat}). Ako želimo da dodamo odgovarajuću funkciju i za @code{Double}, i za nju moramo definisati posebno ime.
@@ -91,7 +91,7 @@ Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
 @p Nije nuzno da vrednost polimorfnog tipa bude funkcija.
 
 @example{
-@p prazna lista @code{[]} je sama za sebe vrednost tipa @code{[a]}, i samim tim predstavlja praznu listu bilo kog tipa. Ali to ne znaci da, na primer, prazne liste u izrazima @code{[] ++ [True]} i @code{[] ++ ['a']}, predstavljaju iste vrednosti. Jedna od navedenih praznih lista je tipa @code{[Bool]} a druga @code{[Char]}. Ove dve vrednosti nisu iste, ali poseduju isto ime@note{Kao sto dve različite osobe mogu da dele isto ime}.
+@p prazna lista @code{[]} je sama za sebe vrednost tipa @code{[a]}, i samim tim predstavlja praznu listu bilo kog tipa. Ali to ne znači da, na primer, prazne liste u izrazima @code{[] ++ [True]} i @code{[] ++ ['a']}, predstavljaju iste vrednosti. Jedna od navedenih praznih lista je tipa @code{[Bool]} a druga @code{[Char]}. Ove dve vrednosti nisu iste, ali poseduju isto ime@note{Kao sto dve različite osobe mogu da dele isto ime}.
 }
 
 @p Iz prethodnih redova vidimo da polimorfne vrednosti poprimaju razliciti tip u zavisnosti od izraza u kojima se nalaze. Upravo otuda i naziv @em{poli-morfne}. O ovome će biti jos reči u nastavku lekcije...   
@@ -99,7 +99,7 @@ Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
 @p Ponekad nije dovoljno da tip poseduje samo jednu promenljivu. Ako se u tipu nalaze dve ili vise razlicitih promenljiva, tada su te promenljive nezavisne.
 
 @example{
-@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugog uređenog para. Karakteristicno za uređene parove je da koordinate mogu posedovati različite tipove. Stoga domen funkcije @code{fst} moramo zapisati kao @code{(a, b)}, a samim tim je kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}.
+@p Funkcija @code{fst} uzima proizvoljan uređen par i vraća prvu koordinatu. Funkcija @code{fst} mora da nam vrati prvu koordinatu para @code{(True, 2) :: (Bool, Int)} ili @code{("Pi", 3.141) :: ([Char], Float)} ili bilo kog drugog uređenog para. Stoga domen funkcije @code{fst} moramo zapisati kao @code{(a, b)}, a samim tim je kodomen @code{a}, odnosno važi @code{fst :: (a, b) -> a}@note{Imena tipskih promenljiva su proizvoljna, te smo mogli i da napišemo @code{fst :: (p, q) -> p}.}. Ilustrovano na konkretnom slučaju, ako @code{fst} primenimo na @code{(2, 'a') :: (Int, Char)} tada se @code{fst} ponaša kao funkcija tipa @code{(Int, Char) -> Int}.
 
 @p Naravno, tip funkcije @code{snd} je @code{(a, b) -> b}. U ovom tipu, tipska promenljiva @code{b} vezuje tip druge koordinate sa tipom povratne vrednosti (tj. kodomenom).
 }
@@ -129,7 +129,7 @@ f x = 253 * x + 17
 
 @p Slobodne tipske promenljive mogu predstavljati bilo koji tip. Ponekad je poželjno ograničiti tipsku promenljivu na neku specifičnu kolekciju tipova. Upravo takva ograničenja se izražavaju kroz klase tipova.
 
-@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Često te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija (i operacija) nad tipovima te klase. Često te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
 @example{
 @p U Haskelu je definisana klasa @code{Show} koja poseduje metodu @code{show}. Tipovi poput @code{Int} ili @code{Bool} pripadaju ovoj klasi, i nad njima se moze pozivati funkcija @code{show} koja vrednost nekog tipa predstavlja kao nisku.
@@ -148,7 +148,7 @@ ghci> show 2
 @p Ugrađena klasa @code{Num} predstavlja sve tipove cije vrednosti se mogu sabirati, oduzimati i množiti. Između ostalog, tipovi @code{Int}, @code{Integer}, @code{Float} i @code{Double} pripadaju ovoj klasi.
 }
 
-@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više klasa (ili nijednoj)@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.}. Činjenicu da neki tip @code{T} pripada klasi @code{C}, označavamo sa @code{C T}. 
+@p Za razliku od vrednosti koja pripada samo jednom tipu, tipovi se mogu istovremeno nalaziti u više@note{Upravo smo u prethodnim primerima videli da @code{Int} pripada i klasi @code{Show} i klasi @code{Num}.} klasa (ili nijednoj). Činjenicu da neki tip @code{T} pripada klasi @code{C}, označavamo sa @code{C T}. 
 
 @p Korišćenjem klasa, moguće je ograničiti tipsku promenljivu na neku određenu klasu. @def{Klasno ograničenje} kojim se tipska promenljiva @code{a} ograničava na tipove klase @code{C} se zapisuje kao @code{C a}. Ovakva ograničenja se razdvajaju od samog tipa sa strelicom @code{=>}. U slučaju da postoji vise ograničenja, tada se ta ograničenja navode u obliku uređene @m{n}-torke.
 
@@ -166,7 +166,7 @@ ghci> show 2
 @p Tip @code{(Num a, Show b) => a -> b} označava tip polimorfne funkcije čiji domen je neki tip iz klase @code{Num}, a kodomen neki tip iz klase @code{Show}.
 }
 
-@p Klase su korisne jer omogućavaju korišćenje istih@note{Tačnije, sa istim imenom.} funkcija nad različitim tipovima što značajno pojednostavljuje programiranje.
+@p Klase su korisne jer omogućavaju korišćenje funkcija sa istim imenom nad različitim tipovima što značajno pojednostavljuje programiranje.
 
 @p U Haskel programima često se koriste naredne klase:
 
@@ -181,6 +181,85 @@ ghci> show 2
 @p Tipovi poput @code{Bool}, @code{Int}, @code{Integer}, @code{Float}, @code{Double}, @code{Char} pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}. To znači da vrednosti ovih tipova možemo da poredimo sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=} kao i da pretvaramo u niske sa funkcijom @code{show}.
 
 @p Tipovi @code{Int}, @code{Integer}, @code{Float}, @code{Double} svi pripadaju klasi @code{Num}. Vrednosti ovog tipa možemo da sabiramo, oduzimamo, i množimo sa operatorima @code{+}, @pre{-}, @code{*}. Tipovi @code{Float} i @code{Double} pripadaju klasi @code{Fractional}@note{Klasa @code{Fractional} predstavlja kolekciju onih tipova koji mogu da predstave racionalne brojeve. Zato @code{Int} i @code{Integer} ne pripadaju ovoj klasi.}.
+
+@p Sa tipskim klasama moguće je rešiti probleme o kojima smo govorili na početku ove lekcije. Funckiju iz prvog primera, @m{y = f(x) = x \cdot x + x} možemo implementirati tako da sa @em{jednom} definicijom obuhvatimo sve numeričke tipove:
+
+@codeBlock{
+f :: Num a => a -> a
+f x = x*x + x
+}
+
+@p Gornji kod je dobro tipiziran iz narednog razloga: za svaki vrednost @code{x :: N} gde je @code{N} neki tip iz klase @code{Num}, važi da je @code{x * x} dobro tipizaran izraz tipa @code{N}. Kako su izrazi @code{x*x} i @code{x} takođe tipa @code{N}, sledi da je @code{x*x + x :: N}. Prema tome, primenom funkcije @code{f} na neku vrednost @code{x :: N} dobijamo takođe vrednost @code{N}.
+
+@example{
+@p Ako definišemo naredne numeričke konstante različitih tipova, uverićemo se da je @code{f} moguće primeniti na svaku od njih:
+
+@codeBlock{
+x1 :: Int
+x1 = 5
+
+x2 :: Integer
+x4 = 5
+
+x3 :: Float
+x3 = 5
+
+x4 :: Double
+x4 = 5
+}
+
+@terminal{
+ghci> f x1
+30
+ghci> f x2
+30
+ghci> f x3
+30
+ghci> f x4
+30
+}
+}
+
+@p Iz primera vidimo da klase zaista omogućavaju polimorfizam: vrednost @code{f} kao da istovremeno poseduje različite tipove @code{Int -> Int}, @code{Integer -> Integer}, @code{Float -> Float} i @code{Double -> Double}. 
+
+@p Važno je imati na umu da metode neke određene klase su različite funkcije (što možda nije očigledno u prethodnom primeru). Na primer, operacija @code{+} u smislu tipa @code{Int} nije isto što i operacija @code{+} u smislu tipa @code{Integer} iako na prvi pogled ne deluje tako.
+
+@example{
+@p Definišimo:
+
+@codeBlock{
+y1 :: Int
+y1 = 12345678987654321
+
+y2 :: Integer
+y4 = 12345678987654321
+
+y3 :: Float
+y3 = 12345678987654321
+
+y4 :: Double
+y4 = 12345678987654321
+}
+
+@terminal{
+ghci> f y1
+-1878358338631772398
+ghci> f y2
+152415789666209432556012777625362
+ghci> f y3
+1.5241581e32
+ghci> f y4
+1.5241578966620942e32
+}{Prilikom računanja @code{f y1} došlo je do prekoračenja zbog čega je krajnji rezultat besmislen. Tip @code{Integer} omogućeje predstavljanje proizvoljne velikih celih brojeva, te @code{f y2} daje tačan rezultat. Tipovi @code{Float} i @code{Double} mogu predstaviti mnogo veće brojeve nego @code{Int} ali po cenu tačnosti: vidimo da poslednja dva rezultata imaju samo @m{8} odnosno @m{18} tačnih cifara.}
+}
+
+@p Ako smo u pretposlednjem primeru demonstrirali kako klase omogućuju polimorfizam, u poslednjem primeru smo uvideli zašto se taj polimorfizam naziva @em{ad hoc}: konkretna implementacija metoda razlikuje se od klase do klase!
+
+@p Naravno, i dalje nismo razjasnili mnoge stvari oko klasa, kao na primer kako se klase definišu ili kako se tipovi uvode u klase. Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno u lekciji @em{Tipske klase}. Za sada je bitno samo da razumemo tipske potpise koji sadrže klasna ograničenja.
+
+@subsection{Klase i složeni tipovi}
+
+@p Videli smo u lekciji o tipovima, da je od postojećih tipova moguće dobiti nove tipove lista i proizvode (npr. od @code{Int} dobijamo @code{[Int]}). Deluje prirodno da se neke osbine tipova prenose pri ovom procesu. Tačnije, ako tip @code{T} pripada nekoj klasi @code{C}, tada je nekad smisleno da i @code{T} pripada istoj to klasi. Srećom, ovakava "nasleđivanja" su moguća i prisutna u Haskelu.
 
 @p Ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
@@ -219,7 +298,6 @@ True
 @p Dva uređena para će biti jednaka samo ako su im jednake prve koordinate i jednake druge koordinate.
 }
 
-@p Više o tipskim klasama, njihovom definisanju i instanciranju, biće rečeno u lekciji @em{Tipske klase}.
 
 @problem{
 Da li tip @code{[(Int, Char)]} pripada klasi @code{Eq}?
@@ -237,7 +315,7 @@ False
 {@p Ako su nam date vrednosti @code{x}, @code{y} i @code{z} tada ćemo prvo naći veću od vrednosti @code{x} i @code{y} a zatim ćemo tu veću vrednost da uporedimo sa @code{z}:
 @codeBlock{
 max3 :: Ord a => a -> a -> a -> a
-max3 = (\x -> (\y -> (\z -> max (max x y) z)))
+max3 x y z = max (max x y) z
 }}
 
 @section{Zaključivanje tipova}
@@ -257,7 +335,13 @@ ghci> :type (True, 'a')
 (Bool, Char) 
 }{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 0}, itd...}
 
-@p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celog izraza @code{[Bool]}. Da bismo razumeli proces zaključivanja tipa izraza @code{length [True, False]}, neophodno je da razumemo pojam @em{tipa funkcije} što će biti prikazano u narednoj lekciji.
+@p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. 
+
+@list{
+	@li Pri zaključivanju tipa izraza @code{[True, False]}, kompajler prvo uviđa da se radi o listi. Prema tome, prvo se zaključuje da je tip ovog izraza @code{[a]} za neki neodređeni tip @code{a}. Zatim, kompajler uvidom u prvi element ove liste zaključuje da je tip @code{a} baš @code{Bool}, pa je samim tim tip celog izraza @code{[Bool]}. Naravno pri ovom procesu se proverava da svi ostali elementi liste imaju isti tip.
+	@li Operacijom @code{!!} se pristupa @m{n}-tom elementu liste. Kako lista u izrazu @code{[True, False] !! 1} ima tip @code{[Bool]} sledi da izraz @code{[True, False] !! 1} ima tip @code{Bool}.
+	@li Izraz @code{length [True, False]} je nešto složeniji. Funkcija @code{length} poseduje polimorfan tip @code{[a] -> Int}. U ovom slučaju jasno je da će povratna vrednost funkcije imati tip @code{Int}. Ali svakako, pri proveri dobre tipiziranosti celog izraza kompajler prvo mora da utvrdi da argument poseduje tip koji se može poklopiti sa @code{[a]}.
+}
 
 @p Rezultat @code{:type} naredbe će nas iznenaditi u slučaju numeričkih literala:
 
@@ -266,29 +350,34 @@ ghci> :type 2
 2 :: Num a => a
 }
 
-@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Literal @code{2} može predstavljati vrednost tipa @code{Int}, @code{Integer}, @code{Float}, @code{Double}, i sl. Svi ovi tipovi pripadaju tipskoj klasi @code{Num}. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}, sto se naravno označava sa @code{Num a => a}.
+@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Literal @code{2} može predstavljati vrednost tipa različitih numeričkih tipova. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}, sto se naravno označava sa @code{Num a => a}.
 
 @p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Frac a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, te ne može biti tipa @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i kao @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor već klasno ograničenje.
 
 
-@todo{Kombinatori}
-
 @section{Karijevanje}
 
-@p U prethodnim lekcijama prikazana su dva načina definisanja funkcija dva argumenta. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(a, b) -> c} dok druga tehnika daje funkciju tipa @code{a -> (b -> c)}. 
+@p U lekciji o funkcijama prikazana su dva načina definisanja funkcije sa više parametara. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(A, B) -> C} dok druga tehnika daje funkciju tipa @code{A -> (B -> C)}. 
 
-@p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkcije tipa @code{(a, b) -> c} u funkcije tipa @code{a -> (b -> c)}. Ovakva transformacija se naziva @def{karijevanje}@note{Eng. @em{currying}. po Haskel Kariju}. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
+@p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkciju tipa @code{(A, B) -> C} u funkciju tipa @code{A -> (B -> C)} (gde su @code{A}, @code{B} i @code{C} neki tipovi). Ovakva transformacija se naziva @def{karijevanje}@note{Eng. @em{currying}. po Haskel Kariju}. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
 
-@p Kog tipa je funkcija @code{k}? Funkcija @code{k} uzima funkciju tipa @code{(a, b) -> c} i vraća funkciju tipa @code{a -> (b -> c)}. Stoga je tip ove funkcije @code{((a, b) -> c) -> (a -> (b -> c))}. 
+@p Kog tipa je funkcija @code{k}? Funkcija @code{k} uzima funkciju tipa @code{(A, B) -> C} i vraća funkciju tipa @code{A -> (B -> C)}. Stoga je tip ove funkcije @code{((A, B) -> C) -> (A -> (B -> C))}. 
 
-@p Kada smo utvrdili tip, možemo da implementiramo @code{k}. Pretpostavimo da je @code{f :: (a, b) -> c} funkcija koju želimo da transformišemo. Pošto funkcija @code{k} vraća vrednost tipa @code{a -> (b -> c)}, u telu definicije moramo napisati izraz poput @code{\x y -> ...}. U telu ove lambda funkcije mora se nalaziti rezultat primene @code{f} na uređen par @code{(x, y)}. Prema tome, @code{k} možemo da definišemo sa narednim kodom
+@p Kada smo utvrdili tip, možemo da implementiramo @code{k}. Pretpostavimo da je @code{f :: (A, B) -> C} funkcija koju želimo da transformišemo. Pošto primena @code{k f} predstavlja vrednost tipa @code{A -> (B -> C)}, podudaranjem oblika možemo definisati da @code{k f} predstavlja neki lambda izraz @code{\x y -> ...}. U telu ovog lambda izraza mora se nalaziti rezultat primene @code{f} na uređen par @code{(x, y)}. Prema tome, @code{k} možemo da definišemo sa narednim kodom
+
+@codeBlock{
+k :: ((A, B) -> C) -> (A -> (B -> C))
+k f = \x y -> f (x, y)
+}
+
+@p U definiciji funkcije @code{k} nigde nismo koristili činjenicu da radimo sa vrednostima tipova @code{A}, @code{B} ili @code{C}, tj nismo iskoristili osobine ovih tipova. Prema tome, funkciju @code{k} možemo učiniti u potpunosti parametarski polimorfnom:
 
 @codeBlock{
 k :: ((a, b) -> c) -> (a -> (b -> c))
 k f = \x y -> f (x, y)
-}
+}{Umesto na funkcije nekog konkretnog tipa, sada se @code{k} može primeniti na sve funkcije čiji je domen uređen par.}
 
-@p Na sličan način možemo da definišemo i inverznu funkciju @code{k'} koja funkcije tipa @code{a -> (b -> c)} transformiše u funkcije tipa @code{(a, b) -> c}. Jasno, tip funkcije @code{k'} je @code{(a -> (b -> c)) -> ((a, b) -> c)}. Ako je @code{g} funkcija tipa @code{a -> (b -> c)} tada je @code{k' g} funkcija koja uzima uređen par, te ćemo stoga takvu funkciju konstruisati sa lambda apstrakcijom @code{\p -> ...} gde @code{p} predstavlja neki uređen par. U telu lambda funkcije je potrebno da se nađe vrednost @code{(g x) y} gde su @code{x} i @code{y} koordinate uređenog para @code{p}. Stoga, @code{k'} možemo da definišemo sa narednim kodom
+@p Na sličan način možemo da definišemo i inverznu funkciju @code{k'} koja funkcije tipa @code{a -> (b -> c)} transformiše u funkcije tipa @code{(a, b) -> c}. Jasno, tip funkcije @code{k'} je @code{(a -> (b -> c)) -> ((a, b) -> c)}. Ako je @code{g} funkcija tipa @code{a -> (b -> c)} tada je @code{k' g} funkcija koja uzima uređen par, te ćemo stoga takvu funkciju konstruisati sa lambda apstrakcijom @code{\(x, y) -> ...}. U telu lambda funkcije je potrebno da se nađe vrednost @code{(g x) y}. Stoga, @code{k'} možemo da definišemo sa narednim kodom
 
 @codeBlock{
 k' :: (a -> (b -> c)) -> ((a, b) -> c)
@@ -328,8 +417,3 @@ uncurry :: (a -> b -> c) -> ((a, b) -> c)
 @problem{Konstruisati funkciju @code{curry2x2} koja uzima funkciju tipa @code{(a, b) -> (c, d) -> e} i daje funkciju tipa @code{a -> (b -> (c -> (d -> e)))}.}
 
 @problem{Kog tipa je izraz @code{uncurry curry}?}
-
-
-
-@todo{Parametričnost}
-
