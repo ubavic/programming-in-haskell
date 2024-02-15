@@ -262,7 +262,7 @@ data Maybe t = Just t | Nothing
 {@p @code{Just True}, @code{Just False} i @code{Nothing}.}
 
 @problem{Koje vrednosti sadrži tip @code{Maybe (Maybe Bool)}?}
-{@p @code{Just (Just True)}, @code{Just (Just False)}, @code{Just (Just Nothing)} i  @code{Nothing}}
+{@p @code{Just (Just True)}, @code{Just (Just False)}, @code{Just Nothing} i  @code{Nothing}}
 
 @subsection{Totalne funkcije sa možda tipovima}
 

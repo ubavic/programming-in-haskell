@@ -8,7 +8,7 @@
 
 @p Tip koji sadrži jednu vrednost označavamo sa @code{()} i nazivamo @def{jedinični tip}@note{@em{unit type}}. Jedinu vrednost ovog tipa označavamo takođe sa @code{()}. Dakle @code{() :: ()}.
 
-@p Svaka totalna@note{U nastavku isključivo govorimo o totalnim funkcijama, odnosno o funkcijama koje su definisane za sveku vrednost domena.} funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data totalna funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
+@p Svaka totalna@note{U nastavku isključivo govorimo o totalnim funkcijama, odnosno o funkcijama koje su definisane za svaku vrednost domena.} funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data totalna funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
 
 @figure{unit_function2}
 
@@ -46,7 +46,7 @@ f2 () = False
 
 @problem{Koliko vrednosti sadrži tip @code{(Bool, Void)}?}
 
-@problem{Posmatrajmo i parcijalne funkcije (funkcije koje nisu totalne). Koliko postoji funcija (parcijalnih i totalnih) tipa @code{() -> Bool}?}
+@problem{Posmatrajmo i parcijalne funkcije (funkcije koje nisu totalne). Koliko postoji funkcija (parcijalnih i totalnih) tipa @code{() -> Bool}?}
 
 @section{Tipski sinonimi}
 

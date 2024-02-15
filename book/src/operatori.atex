@@ -52,7 +52,7 @@ ghic> (-) 5 2
 
 @p Zagrade su neophodne da bi se tačno preneo smisao izraza. Ako bismo iz prethodnog primera obrisali zagrade, dobili bismo izraz @m{1 + 2 \cdot 5}. U zavisnosti od toga kojim redom vršimo računske operacije, od ovog izraza možemo da dobijemo vrednost @m{11} ili @m{15}. Naravno ovde grešku nećemo napraviti jer znamo za konvenciju o prioritetu računskih operacija koja govori da je množenje potrebno izvršiti pre sabiranja kada zagradama drugačije nije naznačeno. Pomenutom konvencijom je ustanovljen @def{prioritet} operatora. Za operator @m{\cdot} kažemo da ima @def{veći} (ili @def{viši}) prioritet od operatora @m{+}, odnosno za @m{+} kažemo da ima @def{manji} (ili @def{niži}) prioritet od operatora @m{\cdot}.
 
-@p Dakle, uspostavljenjem prioriteta operatora, možemo se osloboditi nekih parova zagrada bez brige da ćemo izgubiti namereno značenje izraza. Na primer, iz izraza @m{1 + (2 \cdot 5)} možemo obrisati zagrade, ali ne i izraza @m{(1 + 2) \cdot 5} jer bismo time dobili drugačiju vrednost.
+@p Dakle, uspostavljenjem prioriteta operatora, možemo se osloboditi nekih parova zagrada bez brige da ćemo izgubiti namereno značenje izraza. Na primer, iz izraza @m{1 + (2 \cdot 5)} možemo obrisati zagrade, ali ne i iz izraza @m{(1 + 2) \cdot 5} jer bismo time dobili sasvim drugi izraz.
 
 @p Šta se dešava kada koristimo operatore istog prioriteta? Štaviše, šta se dešava kada koristimo samo jedan operator? Da li možemo iz izraza @m{(2 + 4) + 6} obrisati zagrade? U navedenom primeru možemo, jer izrazi @m{(2 + 4) + 6} i @m{2 + (4 + 6)} daju potpuno isti rezultat.
 
@@ -64,9 +64,9 @@ ghic> (-) 5 2
 @p Nije svaki operator asocijativan. Operator deljenja @m{/} nije, jer izraz @m{1 / (2 / 3)} ima drugačiju vrednost od izraza @m{(1 / 2) / 3}. Prema tome, izraz @m{1 / 2 / 3} je potrebno pažljivo interpretirati@note{U matematici, konvencija je da se izračunavanje izraza vrši s leva na desno, ako je izraz sačinjen od operatora istog prioriteta. U matematici izraz @m{1/2/3} označava @m{(1/2)/3}}.
 }
 
-@p Korišćenjem osobine asocijativnosti i konvencije o prioritetu možemo se osloboditi mnogih zagrada u izrazima. Zbog toga i u Haskelu je moguce izraziti ova dva pojma.
+@p Korišćenjem osobine asocijativnosti i konvencije o prioritetu možemo se osloboditi zagrada u izrazima. Zbog toga su autori Haskel jezika omogućili izražavanje ove dve osobine u jeziku.
 
-@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @code{0}, a oni sa najvišim imaju prioritet @code{9}. Prioritet @code{10} je rezervisan za aplikaciju funkcija na vrednost.
+@p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @m{0}, a oni sa najvišim imaju prioritet @m{9}. Prioritet @m{10} je rezervisan za aplikaciju funkcija na vrednost.
 
 @example{
 @p Operator @code{++} koji nadovezuje liste je asocijativan operator jer očigledno važi @ccode{xs ++ (ys ++ zs) = xs ++ (ys ++ zs)} za sve liste @code{xs}, @code{ys}, @code{zs}. Prema tome, uvek kada nadovezujemo više lista, možemo pisati izraz poput @ccode{xs ++ ys ++ zs} jer je sve jedno kako se taj izraz interpretira.

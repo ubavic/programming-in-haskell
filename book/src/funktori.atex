@@ -350,7 +350,7 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 
 @section{Strelice kao funktori}
 
-@p Još od prvih lekcija, koristili smo konstruktor @code{->}, takozvanu strelicu, za konstrukciju tipa funkcija. Tokom prvih lekcija to nismo znali, ali strelica je binarni tipski konstruktor, u šta se smo se uverili u lekciji o vrstama.
+@p Još od prvih lekcija, koristili smo konstruktor @code{->}, takozvanu strelicu, za konstrukciju tipa funkcija. U lekciji o vrstama, uverili smo se da je strelica binarni tipski konstruktor.
 
 @p Kako je strelica vrste @code{* -> * -> *}, strelica ne može biti funktor@note{Funktori su tipovi vrste @code{* -> *}}, ali ako fiksiramo jedan od argumenata, dobićemo tip odgovarajuće vrste. Za konkretan primer tokom narednog izlaganja odabraćemo @code{Int} kao tip koji ćemo fiksirati za domen ili kodomen. Da bi olakšali zapis, kreirajmo dva nova tipa:
 
