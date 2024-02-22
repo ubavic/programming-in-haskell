@@ -103,7 +103,7 @@ Vaše ime je: Marija
 Zdravo Marija!
 }
 
-@p Vrednost koju "otpakujemo" sa @code{<-} predstvlja vrednosti sa kojima smo do sada radili. Akcije koristimo samo kada želimo da ispišemo ili učitamo podatke.
+@p Vrednost koju "otpakujemo" sa @code{<-} je "obična" vrednost poput onih sa kojima smo do sada "radili". Otpakovanu vrednost možemo dalje prosleđivati funkcijama. Akcije koristimo samo kada želimo da ispišemo ili učitamo podatke.
 
 @codeBlock{
 inicijali :: String -> String -> String
@@ -303,7 +303,7 @@ main :: IO ()
 main = do
     pesma <- readFile "pesma.txt"
     writeFile "novaPesma.txt" pesma
-}{Pokretanjem navedenog programa, sadržaj datotke @pre{pesma.txt} će biti prekopiran u datoteku @pre{novaPesma.txt}, a u terminalu neće biti prikzana bilo kakva poruka.}
+}{Pokretanjem navedenog programa, sadržaj datotke @pre{pesma.txt} će biti prekopiran u datoteku @pre{novaPesma.txt}, a u terminalu neće biti prikzana bilo kakva poruka. Kao što vidimo, jedina svrha ovog programa je da kopira tekstualnu datoteku sa određenim imenom.}
 
 @p Pri radu sa funkcijama @code{readFile} i @code{writeFile} trebalo bi imati na umu da ove funkcije mogu dovesti do izuzetka koji prekida rad programa. Na primer, ako pokušamo čitanje datoteke koja ne postoji, ili upisavanje u datotkeu za koju nemamo odgovarajuće dozvole. Videćemo kasnije kako se izuzeci mogu kontrolisati.
 

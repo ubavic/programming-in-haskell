@@ -373,6 +373,8 @@ ToInt :: * -> *
 
 @p Za definiciju instancu @code{Functor FromInt}, neophodno i dovoljno je definisati metodu @code{fmap :: (a -> b) -> FromInt a -> FromInt b}, tj, raspisujuci definiciju sinonima, @ccode{fmap :: (a -> b) -> (Int -> a) -> (Int -> b)}. Definisanje metode @code{fmap} se svodi na definisanje funkcije tipa @code{Int -> B} ako su nam date funkcije @code{f :: A -> B} i @code{g :: Int -> A}. Kao što i naredna ilustracija pokazuje, nemamo mnogo izbora za definiciju: jedino sto možemo da uradimo je da napravimo kompoziciju @code{f . g :: Int -> B}:
 
+@figure{arrow_functor}
+
 @p Definicija instance je zapravo najkraća do sada:
 
 @codeBlock{

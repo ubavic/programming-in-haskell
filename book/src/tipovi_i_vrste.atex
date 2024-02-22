@@ -112,12 +112,12 @@ type String = [Char]
 @p Slično definisanju tipskog sinonima, možemo definisati i potpuno novi tip od postojećeg tipa. Definicija novog tipa ima naredni oblik
 
 @codeBlock{
-newtype NoviTip = Konst PostojeciTip
+newtype NoviTip = Konstruktor PostojeciTip
 }
 
 @p Gornjim kodom definisan je tip @code{NoviTip}, koji se može shvatiti kao kopija tipa @code{PostojeciTip}. Svaka vrednost u tipu @code{NoviTip} odgovara nekoj vrednosti u tipu @code{PostojeciTip}, ali ova dva tipa nemaju zajedničke vrednosti!
 
-@p U gore navedenoj definiciji, reč @code{Konst} predstavlja ime @em{konstruktora}. @def{Konstruktor} je @em{funkcija} kojim se konstruišu vrednosti tipa @code{NoviTip}. Svaka vrednost tipa @code{NoviTip} je oblika @code{Konst x} za neko @code{x :: PostojeciTip}. Ime konstruktora i ime novog tipa, ne smeju biti već zauzeti i moraju počinjati velikim slovom. Međutim, dozvoljeno je da tip i konstruktor imaju isto ime.
+@p U gore navedenoj definiciji, reč @code{Konstruktor} predstavlja ime @em{konstruktora}. @def{Konstruktor} je @em{funkcija} kojim se konstruišu vrednosti tipa @code{NoviTip}. Svaka vrednost tipa @code{NoviTip} je oblika @code{Konstruktor x} za neko @code{x :: PostojeciTip}. Ime konstruktora i ime novog tipa, ne smeju biti već zauzeti i moraju počinjati velikim slovom@note{S obzirom da su konstuktori funkcije, u ovom slučaju nije ispoštovano pravilo da su imena sa velikim početnim slovom rezervisna za tipove, a imena sa malim početnim slovom za vrednosti. Ali kako su konstruktori uvek "vezani" za tipove, ovakvo odstupanje ima smisla.}. Međutim, dozvoljeno je da tip i konstruktor imaju isto ime.
 
 @p Veoma bitna razlika između tipova definisanih sa @code{newtype} i tipskih sinonima je ta što sa @code{newtype} dobijamo u potpunosti novi tip. Stoga nije moguće novi tip koristiti sa funkcijama koje su namenjene za postojeći tip (kao što je to bio slučaj sa tipskim sinonimima).
 
@@ -151,7 +151,7 @@ ghic> a = (MkMyBool True) || (MkMyBool False)
 @codeBlock{
 ili :: MyBool -> MyBool -> MyBool
 ili (MkMyBool False) (MkMyBool False) = MkMyBool False
-ili _ _ = (MkMyBool False)
+ili _ _ = MkMyBool True
 }{Svaka vrednost tipa @code{MyBool} je oblika @code{MkMyBool x}. Haskel dozvoljava da upotrebimo tehniku podudaranja oblika u ovom slučaju. Prva linija definicije odnosi se samo na slučaj kada su obe prosleđene vrednosti baš @code{MkMyBool False}. Svi ostali slučajevi su obuhvaćeni drugom linijom, u kojoj se koriste džokeri.}
 
 @p Nakon učitavanja navedenog koda, možemo naći disjunkciju novih logičkih vrednosti
@@ -160,7 +160,7 @@ ili _ _ = (MkMyBool False)
 ghci> a = ili (MkMyBool True) (MkMyBool False)
 }
 
-@p Za sada sve deluje dobro. Kreirali smo novi tip, i napisali smo jednu funkciju čiji je domen i kodomen novi tip. Ali ako interaktivnom okruženju pokušamo da ispišemo vrednost @code{a}, dobićemo grešku:
+@p Za sada sve deluje dobro. Kreirali smo novi tip, i napisali smo jednu funkciju čiji je domen i kodomen novi tip. Ali ako u interaktivnom okruženju pokušamo da ispišemo vrednost @code{a}, dobićemo grešku:
 
 @codeBlock{
 ghci> a
@@ -172,13 +172,13 @@ ghci> a
 
 @p Razlog nastanka greške je taj što program @em{GHCi} ne zna kako da ispiše vrednost tipa @code{MyBool}. Za ispisivanje svih vrednosti, @em{GHCi} koristi @code{show} funkciju koja je deklarisana u @code{Show} klasi tipova. Kako tip @code{MyBool} nije instanca ove klase, @em{GHCi} ne može da iskoristi funkciju @code{show} sa vrednostima tipa @code{MyBool}.
 
-@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno u lekciji @em{Klase tipova}. Srećom, u ovom slučaju, instanciranje je automatsko. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
+@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno u lekciji @em{Klase tipova}. Srećom, u ovom slučaju instanciranje može biti automatsko. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
 
 @codeBlock{
 newtype MyBool = MkMyBool Bool deriving Show
 }{Za sada nećemo detaljnije objašnjavati @code{deriving Show}.}
 
-@p Ponovnim učitavanjem koda, možemo bez problema da ispisujemo vrednosti novog tipa
+@p Ponovnim učitavanjem koda, možemo bez problema ispisivati vrednosti novog tipa
 
 @terminal{
 ghci> a = ili (MkMyBool True) (MkMyBool False)
