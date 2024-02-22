@@ -64,7 +64,7 @@ saveChapter :: Filename -> Date -> (Filename, Chapter, Maybe (Filename, String),
 saveChapter path date (filename, chapter, prev, next) =
         writeFile (path ++ "/" ++ filename) (buildChapterHTML prev next date chapter) >>
         putStr (warningS . T.unpack . T.unlines . filterTodos $ chapter) >>
-        (putStrLn . okS . concat) ["Saved document ", filename, ".html"]
+        (putStrLn . okS . concat) ["Saved document ", filename]
 
 buildIndexPage :: [(Filename, String, [Html])] -> Date -> String
 buildIndexPage chapters date = renderHtml $ renderIndexPage chapters date
