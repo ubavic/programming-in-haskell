@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="600"
+   height="150"
+   viewBox="0 0 600 150"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="2_1.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.5061374"
+     inkscape:cx="225.41104"
+     inkscape:cy="101.58436"
+     inkscape:window-width="1920"
+     inkscape:window-height="1050"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5" />
+  <defs
+     id="defs2" />
+  <rect
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     id="rect286"
+     width="499"
+     height="99"
+     x="50.5"
+     y="14.126318"
+     rx="3"
+     ry="3" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     x="475.34076"
+     y="137.87396"
+     id="text1004"
+     transform="scale(0.9983293,1.0016735)"><tspan
+       sodipodi:role="line"
+       id="tspan358"
+       x="475.34076"
+       y="137.87396"><tspan
+         id="tspan1002"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Semi-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
+         x="475.34076"
+         y="137.87396">Bool</tspan></tspan><tspan
+       sodipodi:role="line"
+       id="tspan360"
+       x="475.34076"
+       y="162.87396" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     x="363.28"
+     y="70.720329"
+     id="text416"
+     transform="scale(0.9983293,1.0016735)"><tspan
+       sodipodi:role="line"
+       id="tspan374"
+       x="363.28"
+       y="70.720329"><tspan
+         id="tspan414"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
+         x="363.28"
+         y="70.720329">False</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     x="178.12407"
+     y="70.160332"
+     id="text444"
+     transform="scale(0.9983293,1.0016735)"><tspan
+       sodipodi:role="line"
+       id="tspan365"
+       x="178.12407"
+       y="70.160332"><tspan
+         id="tspan442"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
+         x="178.12407"
+         y="70.160332">True</tspan></tspan></text>
+</svg>

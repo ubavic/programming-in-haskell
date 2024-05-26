@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# Append ".html" extension if the file exists
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
+RewriteRule !\.\w{2,4}$ %{REQUEST_URI}.html [L]

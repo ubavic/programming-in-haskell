@@ -1,0 +1,396 @@
+@chapter{Algebarski tipovi podataka}
+
+@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicij tipa @code{T} sada će počinjati sa @code{data T =}, a umesto jednog konstruktora od sada ćemo potencijalno imati više konstruktora.
+
+@p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaju @def{algebarski tipovi podataka}.
+
+@section{Proizvod}
+
+@p Proizvod dva tipa @code{A} i @code{B} je tip čije vrednosti odgovaraju kombinacijama vrednosti tipova @code{A} i @code{B}. Proizvod tipova u Haskelu se jednostavno konstruiše na sledeći način:
+
+@codeBlock{
+data P = MkP A B
+}{Ovde, @code{P} je naziv novog tipa, a @code{MkP} je konstruktor.}
+
+@p Svaka vrednost gore definisanog tipa @code{P}, je oblika @code{MkP a b} gde su @code{a :: A} i @code{b :: B} neke vrednosti. Podudaranje oblika dozvoljava da vrednosti tipa @code{P} "dekonstruišemo" na ovaj način.
+
+@example{
+@p Vektor dvodimenzionalne ravni možemo definisati kao proizvod tipova @code{Float} i @code{Float} na sledeći način:
+
+@codeBlock{
+data Vektor = Vektor Float Float deriving (Show)
+}
+
+@p Vrednosti se konstruišu sa konstruktorom:
+
+@terminal{
+ghci> v = Vektor 2 1
+}
+
+@p Konstruktor se koristi i za dekonstrukciju vrednosti sa tehnikom podudaranja oblika:
+
+@codeBlock{
+dužinaVektora :: Vektor -> Float
+dužinaVektora (Vektor x y) = sqrt (x**2 + y**2)
+}
+
+@terminal{
+ghci> dužinaVektora v
+2.23606797749979
+}
+}
+
+@p Nije nužno postaviti iste tipove u proizvod, niti ih mora biti dva.
+
+@example {
+@p Naredni tip prestavlja jednu osobu (njeno ime, godine, i to da li je državljanin Srbije):
+
+@codeBlock{
+data Osoba = Osoba String Int Bool deriving (Show)
+}{Ovde, kao i u nekim prethodnim primerima sa @code{newtype} konstrukcijom, tip i konstruktor imaju isto ime}
+
+@p Pri radu sa tipom @code{Osoba} takođe koristimo podudaranje oblika. Ako želimo da "izvučemo" ime iz osobe, možemo napisati narednu funkciju:
+
+@codeBlock{
+imeOsobe :: Osoba -> String
+imeOsobe (Osoba ime _ _) = ime
+}
+
+@p Prethodna funkcija odgovara onome što u objektno orijentisanim jezicima nazivamo @em{getter} (metoda kojom se pristupa nekom atributu objekta). Lako je implementirati i @em{setter}, tj. funkciju koja menja jednu vrednost u proizvodu:
+
+@codeBlock{
+promeniIme :: String -> Osoba -> Osoba
+promeniIme novoIme (Osoba _ godine drzavljanin) = Osoba novoIme godine drzavljanin
+}
+}
+
+@problem{
+Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba}.
+}
+
+@p Proizvod tipova može da sadrži i samo jedan tip. U tom slučaju proizvod je ekvivalentan @code{newtype} konstrukciji koju smo ranije upoznali.
+
+@subsection{Uređene @m{n}-torke kao proizvodi tipova}
+
+@p Pažljiv čitalac će uvideti da smo koncept proizvoda tipova već imali kod uređenih @m{n}-torki. I zaista tip @code{Osoba} iz prethodnog primera je u nekom smislu ekvivalentan tipu @code{([Char], Int, Bool)}@note{Preciznije, između navedenih tipova postoji bijekcija: uzajamno jednoznačna korenspondencija.}. Svaku vrednost tipa @code{Osoba} možemo konvertovati u vrednost tipa @code{([Char], Int, Bool)} i obrnuto@note{Napišite funkcije koje uspostavljaju bijekciju.}.
+
+@p Sličnost nije slučajna, uređene @m{n}-torke jesu proizvodi tipova. Na primer, uređen par je @em{apstraktni} tip definisan sa @ccode{data (,) a b = (,) a b}. Slično su definisane i druge uređene @m{n}-torke @ccode{data (,,) a b c = (,,) a b c}, @ccode{data (,,,) a b c d = (,,,) a b c d} i tako dalje. Primetimo da tipovi i konstruktori imaju isto ime!
+
+@p Haskel kompajler dozvoljava da se ovaj konstruktor upotrebljava na malo drugačiji način, pa se može pisati @code{(1, 'a')} umesto @code{(,) 1 'a'}.
+
+@p Koliko god ovo delovalo čudno, možemo se zaista uveriti da @code{(,)} jeste jedno ime koje dele konstruktor tipa i konstruktor vrednosti:
+
+@terminal{
+ghci> :t (,)
+(,) :: a -> b -> (a, b)
+ghci> :k (,)
+(,) :: * -> * -> *
+}
+
+@subsection{Jedinični tip}
+
+@p Konstrukcija proizvoda tipova ima oblik @code{K T1 T2 T3 ... Tn}, gde su @code{T1}, ... @code{Tn} neki tipovi, a @code{K} konstruktor. U specijalnom slučaju možemo napraviti proizvod čiji konstruktor ne uzima ni jedan dodatni tip:
+
+@codeBlock{
+data T = K
+}
+
+@p Konstruktor @code{K} je funkcija arnosti 0, odnosno konstanta tipa @code{T}. Drugim rečima, tip @code{T} sadrži samo jednu vrednost a to je @code{K}. Zbog toga za @code{T} takođe kažemo da je @def{jedinični tip} baš kao za @code{()}. Zapravo, tip @code{()} je takođe definisan kao prazan proizvod:
+
+@codeBlock{data () = ()}{Ovo je još jedan primer gde konstruktor i tip imaju isto ime.}
+
+@section{Suma}
+
+@p Suma dva tipa @code{A} i @code{B} je tip koji sadrži vrednosti koje odgovaraju svim vrednostima tipova @code{A} i @code{B}. Suma tipova može se shvati kao unija dva tipa. Suma tipova se vrši navođenjem više konstruktora razdvojenih vertikalnom crtom. Svaki od konstruktora predstavlja konstruktor proizvoda, i može imati proizvoljno mnogo argumenata.
+
+@example{
+@p Tip @code{SlovoIliBroj} koji sadrži i slova i brojeve može se konstruisati kao
+
+@codeBlock{
+data SlovoIliBroj = Slovo Char | Broj Int deriving (Show)
+}
+
+@p Sada postoje dva konstruktora vrednosti:
+
+@terminal{
+ghci> a1 = Slovo 'a'
+ghci> a2 = Broj 2
+ghci> :t a1
+a1 :: SlovoIliBroj
+ghci> :t a2
+a2 :: SlovoIliBroj
+}{Vrednosti @code{a1} i @code{a2} imaju isti tip, iako predstavljaju različite oblike podataka.}
+
+@p Konstruktore koristimo sa podudaranjem oblika. Svaka vrednost tipa @code{SlovoIliBroj} može biti ili oblika @code{Slovo x} ili oblika @code{Broj x}, te podudaramo takve oblike:
+
+@codeBlock{
+daLiJeSlovo :: SlovoIliBroj -> Bool
+daLiJeSlovo (Slovo x) = True
+daLiJeSlovo (Broj x) = False
+}
+}
+
+@p Moguće je "sabrati" više tipova istovremeno, odnosno navesti više od dva konstruktora.
+
+@example{
+@p Sledeći tip označava dužinu u različitim mernim jedinicama
+
+@codeBlock{
+data Dužina = Metar Float | Milja Float | SvetlosnaSekunda Float
+                deriving (Show)
+}
+
+@p Za tip @code{Dužina} možemo da definišemo ovakvu funkciju konverzije:
+
+@codeBlock{
+uMetre :: Dužina -> Dužina
+uMetre (Milja x) = Metar (1609.344 * x)
+uMetre (SvetlosnaSekunda x) = Metar (299792458 * x)
+uMetre x = x
+}
+
+@p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno različite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Int}
+}
+
+@p Napomenimo da poredak konstruktora u sumi nije od značaja. Tako na primer, definicija @ccode{data SlovoIliBroj = Slovo Char | Broj Int} definiše isti@note{Tačnije, svaka od ove dve definicije se može zameniti sa onom drugom u kodu, i ostatak koda neće morati da se promeni.} tip kao i definicija @code{data SlovoIliBroj = Broj Int | Slovo Char}. Za razliku od toga, u proizvodima poredak tipova je bitan. Tako na primer, definicija @ccode{data SlovoIBroj = SIB Int Char} je sasvim različita od definicije@note{Ove dve definicije su naravno ekvivalentne u smislu da mogu predstaviti vrednosti koje su u jednoznačnoj korenspodenciji. Međutim, ako se jedna od ove dve definicije zameni sa drugom, ta zamena će zahtevati i promenu ostatka koda (na svim mestima u kodu gde su iskorišćeni konstruktori).} @ccode{data SlovoIBroj = SIB Char Int}
+
+@subsection{Suma jediničnih tipova}
+
+@p Jedinični tipovi nisu mnogo korisni sami po sebi, ali su veoma korisni kada se koriste unutar sume. Na primer, sada lako (i logično) možemo da predstavimo tipove sa konačno mnogo članova (takozvane @em{enumeracije}):
+
+@codeBlock{
+data Pol = Muško | Žensko
+}
+
+@codeBlock{
+data ZnakKarte = Herc | Karo | Tref | Pik
+}
+
+@codeBlock{
+data Boje = Crna | Bela | Crvena | Plava | Zelena | Žuta
+}
+
+@p Do sada smo se susreli sa više tipova koji su suma jediničnih tipova (a da to nismo ni znali):
+
+@list{
+    @li Logički tip @code{Bool} je definisan kao suma jediničnih tipova @code{True} i @code{False}.
+    @li Tip @code{Ordering} je definisan kao suma jediničnih tipova @code{LT}, @code{EQ} i @code{GT}. Podsećamo da se vrednosti ovog tipa koriste kao rezultati poređenja.
+}
+
+@problem{Kreirati algebarski tip @code{Ruka}, koji može predstavljati @em{papir}, @em{kamen} ili @em{makaze}. Kreirati funkciju @code{uporedi :: Ruka -> Ruka -> Ordering} koja određuje poredak među različitim rukama.}{
+@codeBlock{
+data Ruka = Papir | Kamen | Makaze
+
+uporedi :: Ruka -> Ruka -> Ordering
+uporedi Kamen  Kamen  = EQ
+uporedi Papir  Papir  = EQ
+uporedi Makaze Makaze = EQ
+uporedi Makaze Papir  = GT
+uporedi Kamen  Makaze = GT
+uporedi Papir  Kamen  = GT
+uporedi _      _      = LT
+}
+}
+
+@problem{Kreirati algebarski tip @code{Dan} čije vrednosti prezentuju dane u nedelji.}{
+@codeBlock{
+data Dan = Ponedeljak
+    | Utorak
+    | Sreda
+    | Četvrtak
+    | Petak
+    | Subota
+    | Nedelja 
+}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neophodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicija nije podeljena na više delova sa praznim linijama.}
+}
+
+@section{Možda-tip}
+
+@p Sada ćemo kreirati tip @code{MoždaBroj} kojim možemo da predstavimo ili jedan @code{Float} broj ili izostanak bilo kakve smislene vrednosti@note{Nešto poput vrednosti @code{null} ili @code{undefined} u nekim jezicima}. Ovaj tip ćemo konstruisati kao sumu tipa @code{Float} i jediničnog tipa @code{Ništa}:
+
+@codeBlock{
+data MoždaBroj = SamoBroj Float | Ništa 
+}
+
+@p Tip @code{MoždaBroj} je koristan kad god hoćemo da radimo u programu sa nekim vrednostima koje možda nisu ni zadate.
+
+@example{
+@p Ako očitavamo temperaturu s nekog senzora, onda je dobro to očitavanje predstaviti @code{Float} vrednošću. U nekim situacijama naš senzor ne mora vraćati očitanu temperaturu (usled nekih hardverskih problema, itd...), i tada treba koristiti specijalnu vrednost koja označava da do očitavanja temperature nije ni došlo. Nezgodno bi bilo koristiti vrednost 0 (ili neku drugu vrednost) jer se tada ne mogu razlikovati ispravna očitavanja temperature 0°C od neispravnih.
+
+@p Stoga je u ovom slučaju zgodno koristiti @code{MoždaBroj} tip za prezentovanje rezultata očitavanja senzora. Vrednost poput @code{SamoBroj 2} označava da je temperatura zaista 2°C, dok vrednost @code{Ništa} označava da do očitavanja nije došlo.
+}
+
+@p Sa @code{MoždaBroj} vrednostima nije lako raditi kao sa @code{Float} vrednostima, ali nije ni preteško napisati funkcije koje su nam potrebne:
+
+@codeBlock{
+apsolutnaRazlika :: MoždaBroj -> MoždaBroj -> MoždaBroj
+apsolutnaRazlika (SamoBroj x) (SamoBroj y) = SamoBroj $ abs $ x - y
+apsolutnaRazlika _ _ = Ništa
+}{Funkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga smisla vratiti samo vrednost @code{Nista}}
+
+@codeBlock{
+podeli :: MoždaBroj -> MoždaBroj -> MoždaBroj
+podeli (SamoBroj x) (SamoBroj y) = 
+    if y == 0
+        then Ništa
+        else SamoBroj $ x / y
+podeli _ _ = Ništa
+}{Neke funkcije sy takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethodnoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
+
+@p Slično tipu @code{MoždaBroj} možemo konstruisati@note{Obratite pažnju da u istom modulu nije moguće definisati tip @code{MoždaBroj} i @code{MoždaNiska} jer imaju istoimeni konstruktor @code{Ništa}. Naravno, rešenje je da promenim ime konstruktora u npr @code{NištaNiska} ili @code{BezNiske}. U nastavku ćemo radi jednostavnosti zadržati naziv @code{Ništa}.} tip @code{MoždaNiska}:
+
+@codeBlock{
+data MoždaNiska = SamoNiska String | Ništa
+}
+
+@p Konstrukcija tipa je @code{MozdaNiska} je u potpunosti analogna konstrukciji tipa @code{MoždaBroj}. Jasno je da je ovakva konstrukcija korisna za bilo koji tip, stoga možemo definisati naredni apstraktni tip
+
+@codeBlock{
+data Možda t = Samo t | Ništa
+}
+
+@p Upravo ovako je definisan apstraktni tip @code{Maybe} koji je dostupan u Prelidu:
+
+
+@codeBlock{
+data Maybe t = Just t | Nothing
+}
+
+@p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
+
+@problem{Koje vrednosti sadrži tip @code{Maybe Bool}?}
+{@p @code{Just True}, @code{Just False} i @code{Nothing}.}
+
+@problem{Koje vrednosti sadrži tip @code{Maybe (Maybe Bool)}?}
+{@p @code{Just (Just True)}, @code{Just (Just False)}, @code{Just Nothing} i  @code{Nothing}}
+
+@subsection{Totalne funkcije sa možda tipovima}
+
+@p Možda-tipovi se često koriste da bi se parcijalnim funkcijama pridružile odgovarajuće totalne funkcije. Ideja je da se za one vrednosti domena za koje je funkcija nedefinisana, prosto vrati @code{Nothing} vrednost.
+
+@example{
+@p Funkcija @code{head :: [a] -> a} koja vraća glavu niza nije totalna: pozivanje @code{head []} dovodi do izuzetka, jer prazan niz nema glavu. Zbog toga, u jednom od standardnih modula, definisana je funkcija @code{maybeHead}:
+
+@codeBlock{
+maybeHead :: [a] -> Maybe a
+maybeHead []  = Nothing
+maybeHead x:_ = Just x
+}
+
+@p Dakle, ako niz nije prazan @code{maybeHead} će vratiti glavu niza upakovanu u @code{Just}. Ako je niz prazan, @code{maybeHead} će vratiti @code{Nothing}.
+}
+
+@problem{
+Definisati totalne varijante funkcija @code{tail}, @code{init}, @code{last} koristeći možda tipove.
+}
+
+@section{Zapisi}
+
+@p Koliko god proizvod tipova delovao korisno, u nekim situacijama pristupanje elementima proizvoda može dovesti do glomaznog i nečitljivog koda.
+
+@example{
+@p Na svakoj elektronskoj ličnoj karti su sačuvane i sledeće niske: ime, prezime, mesto stanovanja, adresa stanovanja, kao i broj koji predstavlja godinu rođenja. Ako formiramo novi tip koji će u sebi sadržati navedene informacije, dolazimo do glomazne definicije:
+
+@codeBlock{
+data Osoba = MkOsoba String String String String Int
+}{Primetimo da iz ove definicije ne znamo koja koordinata predstavlja koju informaciju. Jednino znamo da koordinata tipa @code{Int} predstavlja godinu rođenja. Ovu dvosmislenost možemo rešiti pisanjem komentara pored definicije}
+
+@p Možemo se odlučiti da prva niska predstavlja ime, druga prezime, treća mesto a četvrta adresu. Tada funkcije za rad sa tipom @code{Osoba} deluju poput sledećih:
+
+@codeBlock{
+punoIme :: Osoba -> String
+punoIme (MkOsoba ime prezime _ _ _)
+    = ime ++ " " ++ prezime
+
+punaAdresa :: Osoba -> String
+punaAdresa (MkOsoba _ _ mesto adresa _)
+    = adresa ++ ", " ++ ime
+
+punoletna :: Int -> Osoba -> MyBool
+punoletna trenutnaGodina (MkOsoba _ _ _ _ godinaRođenja)
+    = trenutnaGodina - godinaRođenja >= 18
+}
+
+@p Osim što dekonstrukcije podatka daju dugačak kod, programer je u obavezi da pamti šta svaka od koordinata u proizvodu predstavlja. Takođe, veliki problem se javlja kada se definicija tipa promeni nakon što su funkcije napisane. Tada je potrebno izmeniti svako podudaranje oblika u kodu, što može biti zahtevan posao.
+}
+
+@p Da bi se sprečili problemi opisani u primeru, i olakšao programerima posao, Haskel dozvoljava nešto drugačiju definiciju proizvoda koju nazivamo @def{zapis}@note{eng. @em{record}}. U definiciji zapisa svakoj od koordinata se dodeljuje ime - @def{labela}, koje se može kasnije iskoristiti za pristupanje toj koordinati. Niz imena koordinata se navodi u vitičastim zagradama.
+
+@p Nastavljajući priču iz prošlog primera, možemo definisati tip @code{Osoba} kao zapis:
+
+@codeBlock{
+data Osoba = MkOsoba @@{
+    ime :: String,
+    prezime :: String,
+    godinaRođenja :: Int,
+    mestoStanovanja :: String,
+    adresaStanovanja :: String,
+@@}
+}
+
+@p Vrednosti tipa @code{Osoba} je i dalje moguće konstruisati navođenjem vrednosti nakon konstruktora, ali je moguće i iskorititi sintaksu za zapise:
+
+@codeBlock{
+osoba1 = MkOsoba "Petar" "Petrović" 2000 "Beograd" "Njegoševa"
+
+osoba2 = MkOsoba @@{
+    ime = "Jovana",
+    prezime = "Jovanović",
+    godinaRođenja = 1990,
+    mestoStanovanja = "Novi Sad",
+    adresaStanovanja = "Zmaj Jovina",
+@@}
+}{Korišćenjem sintakse za zapise, programer nije u obavezi da ispoštuje redosled koordinata, ali mora navesti vrednosti za svaku koordinatu.}
+
+@p Definisanjem tipa @code{Osoba} sintaksom za zapise, zapravo je kreirano šest funkcija @code{ime :: Osoba -> String}, @code{prezime :: Osoba -> String}, @code{godinaRođenja :: Osoba -> Int}, @code{mestoStanovanja :: Osoba -> String}, @code{adresaStanovanja :: Osoba -> String}. Ove funkcije se nazivaju @def{projekcije}, i vraćaju vraćaju odgovarajuće koordinate:
+
+@terminal{
+ghci> :t ime
+ime :: Osoba -> String
+ghci> ime osoba1
+"Petar"
+ghci> ime osoba2
+"Jovana"
+}
+
+@p Prema tome, labele zapisa se koriste poput getera u objektno orijentisanim jezicima@note{Na primer, kôd @code{ime osoba2} odgovara nečemu što bi se Javi/C++-u napisalo kao @code{osoba2.ime}.}. Što se tiče promene vrednosti koordinate (odnosno setera), to se može izvršiti navođenjem labele sa novom vrednošću koordinate:
+
+@terminal{
+ghci> ime osoba1
+"Petar"
+ghci> osoba3 = osoba1@@{ime = "Miloš"@@}
+ghci> ime osoba3
+"Miloš"
+}{Vrednosti koordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
+
+@p Pri poklapanju šablona, moguće je "uhvatiti" samo labele koje su potrebne. Tako bi se funkcije od malopre mogla ovako napisati:
+
+@codeBlock{
+punoIme :: Osoba -> String
+punoIme (MkOsoba @@{ime = ime, prezime = prezime@@})
+    = ime ++ " " ++ prezime
+
+punaAdresa :: Osoba -> String
+punaAdresa (MkOsoba @@{mestoStanovanja = mesto, adresaStanovanja = adresa@@})
+    = mesto ++ ", " ++ adresa
+
+punoletna :: Int -> Osoba -> MyBool
+punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
+    = trenutnaGodina - godinaRođenja >= 18
+}
+
+@todo{Algebra tipova}
+
+
+@section{Zadaci}
+
+@problem{Kreirati algebarski tip podataka @code{Vektor} koji predstavlja vektor u trodimenzionalnom prostoru (Koristiti @code{Float} tip za koordinate). Kreirati funkcije za sabiranje vektora, množenje vektora skalarem, skalarnog množenja vektora, vektorskog množenja vektora i računanja dužine vektora.}
+
+@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše konverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednu vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algebarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadrži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljnu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
+
+@problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravougaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
+
+@problem{Kreirati tip @code{KompleksanBroj}. Implementirati funkcije koje sabiraju, oduzimaju, množe i dele kompleksne brojeve.}
+
+@problem{Kreirati tip @code{Matrica} koji predstavlja matricu dimenzija @m{3\times 3}. Kreirati funkcije koje sabiraju matrice, skaliraju matricu, i računaju determinantu matrice. Kreirati tip @code{Vektor} koji predstavlja vektor trodimenzionalno prostora. Kreirati funkciju koja množi matricu i vektor.}
+

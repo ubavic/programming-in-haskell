@@ -1,0 +1,313 @@
+@chapter{Haskel programi}
+
+@p U dosadašnjim lekcijama prikazali smo iskljičivo rad u interaktivnom okruženju @em{GHCi}. Sada ćemo se upoznati sa Haskel kompajlerom i naučićemo kako da kompajliramo Haskel kod u izvršne datoteke. Takođe ćemo se upoznati sa metodama koje nam omogućavaju ulaz i izlaz iz programa (bilo kroz terminal, bilo kroz datoteke), kao i nekim osnovama organizacije Haskell koda.
+
+@section{@em{Hello World!}}
+
+@p Većina knjiga o programskim jezicima započinje sa @em{Hello World!} programom: jednostavnim programom čija je jedina svrha da ispiše pozdrav u terminal. Sa mnogim Haskel knjigama, pa tako i ovom koju čitate, to nije slučaj. Umesto toga, na početku se prikazuje rad kroz interaktvno okruženje @em{ghci} da bi se osnovne osobine jezika dobro upoznale. Tek onda se demonstrira pisanje programa koji se samostalno izvšavaju i koji mogu prilikom izvršavanja da intereaguju sa korisnikom, datotekama, itd... Razlog ovakvog pristupa je jednostavan: pisanje samostalnih Haskel programa zahteva razumevanje nešto naprednijih koncepata Haskel jezika. Ali čitaoca ne treba da brine ova konstatacija jer ćemo mi te koncepte ovde postupno uvoditi. Znanje iz prethodnih lekcija značajno će olakšati čitanje ove lekcije. Ali o tom potom. Pogledajmo prvo @em{Hello world}.
+
+@p Definišimo jednu datoteku, na primer @code{hello.hs}, i u nju smestimo naredni kôd (koji ćemo u nastavku pojasniti):
+
+@codeBlock{
+main :: IO ()
+main = putStrLn "Hello World!"
+}
+
+@p I kao što je u većini drugih programskih jezika uvek potrebno definisati @em{main} funkciju koja predstavlja početnu tačku izvršavanja programa, tako i svaki Haskel program koji se kompajlira mora imati definisanu vrednost @code{main} tipa @code{IO ()}. 
+
+@p Kôd možemo iskompajlirati u izvršni program pomoću @em{GHC} kompjalera. U sistemskom promptu@note{Dakle, ovde ne govorimo o pokretanju @em{GHCi} programa. Komande koje navodimo se sve pokreću u sistemskom promptu kog u nastavku označavamo sa @code{$}.} potrebno je pokrenuti kompajler @pre{ghc} i kao jedini argument proslediti mu ime datoteke koju je potrebno iskompajlirati: 
+
+@terminal{
+$ ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+}
+
+@p Ako je kompilacija prošla uspešno, u direktorijumu u kom je @code{hello.hs} naći će se izvršna datoteka @pre{hello} (ili @pre{hello.exe} ako govorimo o @em{Windows} sistemima). Pokretanjem datoteke dobijamo dugo očekivani pozdrav:
+
+@terminal{
+$ ./hello
+Hello World!
+}{Na @em{Windows} sistemima, umesto komande @code{./hello}, potrebno je uneti @code{.\hello.exe}. U nastavku lekcije ćemo ignorisati ovu razliku.}
+
+@p Gorenavedeni kôd nije dugačak, ali jeste drugačiji od kôda kojeg smo do sada pisali. Funkcija @code{putStrLn} primenjena na nisku @code{"Hello World!"} ne izgleda neobično, ali tip @code{IO ()} svakako izgleda.
+
+@p Tip @code{()} nam je poznat iz prethodne lekcije. U pitanju je tip koji sadrži samo jednu vrednost, vrednost koja se označava sa @code{()}. Tip @code{IO} je zapravo apstraktni tip vrste @code{* -> *}. Eksplicitnu definiciju definiciju tipa @code{IO} ne možemo navesti, ali možemo objasniti šta ovaj tip predstavlja.
+
+@p Za neki tip @code{T}, tip @code{IO T} predstavlja proceduru (u najširem smislu te reči), koja se može izvršiti tokom izvršavanja programa, i čiji rezultat je vrednost tipa @code{T}. Vrednosti koje poseduju tip oblika @code{IO T} nazivamo @def{akcije}. Prema tome, @code{main} je jedna akcija koja će se izvršiti tokom izvršavanja programa i čiji rezultat je vrednost tipa @code{()}, odnosno baš @code{()}. 
+
+@p Zapravo @code{main} je akcija koja ima poseban status: to je akcija koja se uvek prva izvršava pri radu programa, i poziva ostale akcije. U navedenom programu, akcija @code{main} je pozvala akciju @code{putStrLn "Hello World!"}. Funkcija @code{putStrLn} poseduje@note{U šta se možete uveriti pomoću @code{:type} naredbe u @em{GHCi} programu.} tip @code{String -> IO ()}, pa vrednost primene @code{putStrLn} na neku nisku je akcija tipa @code{IO ()} koja se može dodeliti imenu @code{main}. Dakle, @code{putStrLn} je funkcija koja nisku preslikava u akciju koja će ispisatu tu nisku, ali vrednost @code{putStrLn} nije akcija!
+
+@p Za sada nismo objasnili zašto tako naizgled jednostavna funkcija poput @code{main} ima tako neobičan tip, niti smo objasnili kako se funkcija poput @code{putStrLn} može iskoristiti unutar funkcija koje smo do sada pisali. Tip @code{IO} je za sada otvara više pitanja nego što daje odgovora, ali ćemo pokušati da kroz ovu lekciju odgovorimo na neka od tih pitanja. 
+
+@section{Interakcija sa konzolom}
+
+@p Programi koji ispisuju jednu nisku nisu mnogo korisni, te ćemo prvo pokazati kako se akcije mogu nadovezivati. U tu svrhu koristi se @em{do} notacija koja dozvoljava da se akcije navedu u zasebnim redovima jednog bloka. Navedene akcije biće izršeno skevencijalno, redom kojim su navedene.
+
+@codeBlock{
+main :: IO ()
+main = do
+	putStrLn "Hello World!"
+	putStrLn "Don't worry,"
+	putStrLn "Be happy."
+	putStrLn "Bye!"
+}{Obratite pažnju na ključnu reč @code{do}. Ova reč otvara blok linija, a svaka akcija mora se navesti u posebnoj liniji.}
+
+@p Kompilacijom i izvršavanjem programa dobijamo očekivani rezultat
+
+@terminal{
+$ ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+$ ./hello
+Hello World!
+Don't worry,
+Be happy.
+Bye!
+}
+
+@p Na linijma unutar @em{do} bloka moraju se navesti @code{IO} akcije, ali mi te akcije možemo i definisati i van odgovarajućeg bloka. Na primer, možemo kreirati funkciju @code{pozdrav} koja uzima ime (nisku) i vraća akciju koja ispisuje pozdrav sa prosleđenim imenom.
+
+@codeBlock{
+pozdrav :: String -> IO ()
+pozdrav x = do
+	putStrLn ("Zdravo " ++ x ++ "!")
+
+main :: IO ()
+main = do
+	pozdrav "Nikola"
+	pozdrav "Marina"
+}{Kada se u @code{do} bloku nalazi samo jedna akcija (kao u slučaju @code{pozdrav} funkcije), tada nije potrebno otvarati @code{do} blok. Pogledati kako je u gore definisana @code{main} akcija sa jednom akcijom.}
+
+@terminal{
+$ ./hello
+Zdravo Nikola!
+Zdravo Marina!
+}
+
+@p Osim @code{putStrLn} funkcije, u Prelidu su dostupne i funkcije @code{putChar :: Char -> IO ()} i @code{putStr :: String -> IO ()}. Funkcija @code{putStrLn} se razlikuje od @code{putStr} samo po tome što dobijana akcija uz prosleđenu nisku ispisuje i karakter za novi red. Funkcija @code{putChr} daje akciju koja će ispisati jedan karakter.
+
+@p Uz ispisivanje sadržaja u terminal, neophodno je i prihvatati korisnički unos. Za "prihvatanje" linije koristi se akcija @code{getLine :: IO String} dostupna u Prelidu. Tip @code{IO String} označava da se radi o akciji čiji rezultat je niska - to će biti niska koju je korisnik uneo. Da bi se toj vrednosti pristupilo, potrebno ju je dodeliti novom imenu uz pomoć strelice @code{<-} unutar @code{do} bloka:
+
+@codeBlock{
+main :: IO ()
+main = do
+	putStr "Vaše ime je: "
+	ime <- getLine
+	putStrLn ("Zdravo " ++ ime ++ "!")
+}{Strelicom @code{<-} se vrednost tipa @code{T} "otpakuje" iz vrednosti tipa @code{IO T}.}
+
+@terminal{
+$ ./hello
+Vaše ime je: Marija
+Zdravo Marija!
+}
+
+@p Vrednost koju "otpakujemo" sa @code{<-} je "obična" vrednost poput onih sa kojima smo do sada "radili". Otpakovanu vrednost možemo dalje prosleđivati funkcijama. Akcije koristimo samo kada želimo da ispišemo ili učitamo podatke.
+
+@codeBlock{
+inicijali :: String -> String -> String
+inicijali ime prezime = (head ime) ++ "." ++ (head prezime) ++ "."
+
+main :: IO ()
+main = do
+	putStr "Vaše ime: "
+	ime <- getLine
+	putStr "Vaše prezime: "
+	prezime <- getLine
+	putStrLn (inicijali ime prezime)
+}
+
+@p Unutar @code{do} bloka je dozvoljeno definisati vrednosti koristeći @code{let} ključnu reč. U @code{do} blokovima definicije moraju imati smisleni redosled: definicije koje sadrže definisane (ili "otpakovane") vrednosti moraju se nalaziti nakon tih definicija. Prethodni primer smo mogli i da napišemo ovako:
+
+@codeBlock{
+inicijali :: String -> String -> String
+inicijali ime prezime = (head ime) ++ "." ++ (head prezime) ++ "."
+
+main :: IO ()
+main = do
+	putStr "Vaše ime: "
+	ime <- getLine
+	putStr "Vaše prezime: "
+	prezime <- getLine
+	let inic = inicijali ime prezime
+	putStrLn inic
+}
+
+@problem{
+U jednoj od prošlih lekcija smo konstruisali funkciju @code{uBroj :: String -> Int} koja prevodi nisku u broj. Koristeći ovu funkciju definisati @code{main} akciju koja uzima dva broja, a zatim ispsuje njihov zbir. Pretpostaviti da će obe unete niske predstavljati validan zapis broja.
+}{
+@codeBlock{
+main :: IO ()
+main = do
+	a <- getLine
+	b <- getLine
+	let zbir = (uBroj a) + (uBroj b)
+	putStrLn (show zbir)
+}
+}
+
+@problem{Napisati @em{quine}, to jest program koji ispusuje sopstveni kôd.}
+{@p Napisati @em{quine} u bilo kom jeziku nije lak zadatak. Dobra početna tačka je program koji ispusuje neku nisku. Odabraćemo nisku koja je početak koda samog programa:
+
+@codeBlock{
+main = putStrLn "main = putStrLn"
+}{Iskoristićemo to što u Haskelu ne moramo da navodimo dekleracije tipovaq da bismo pojednostavili rešenje.}
+
+@p Kompilacijom i pokretanjem programa dobijamo početak kôda.
+
+@terminal{
+$ ghc quine.hs
+[1 of 1] Compiling Main             ( quine.hs, quine.o )
+Linking quine ...
+$ ./quine
+main = putStrLn
+}
+
+@p Deluje da je dovoljno da ostatak koda smestimo u nisku:
+
+@codeBlock{
+main = putStrLn "main = putStrLn \"main = putStrLn\""
+}{Par navodnika označava početak i kraj niske. Međutim problem se javlja ako želimo da napišemo nisku koja sadrži navodnik u sebi. Zbog toga koristimo kosu crtu koja označava da naredni karakter ima specijalno značenje. Konkretno, da bi naveli dupli navodnik unutar niske koristimo @pre{\"}. Ovim smo definisali nisku @em{main = putStrLn "main = putStrLn"}.}
+
+@terminal{
+$ ./quine
+main = putStrLn "main = putStrLn"
+}{Pokretanjem rešenja uviđamo da je strategija bila naivna. Novim programom jesmo ispisali kôd prethodnog programa, ali nismo uspeli da konstruišemo @em{quine} - program koji ispisuje sopstveni kôd.}
+
+@p Kako mi dodajemo tekst u nisku to program postaje duži te moramo da dodajemo još više teksta, i tako dalje... Takav proces se nikad neće zauzativiti. Zbog toga moramo konstruisati nisku koju ćemo ispisati. Vratimo se na prvi pokušaj rešenja, tj. program @ccode{main = putStrLn "main = putStrLn"} i dodajmo funkciju @code{(\s -> s ++ s)} koja "duplira" niksu. Kôd te funkcije ćemo takođe dodati u nisku:
+
+@codeBlock{
+main = putStrLn ((\s->s++s) "main = putStrLn (\\s->s++s)")
+}{Da bi naveli kosu crtu unutar niske koristimo @pre{\\}}
+
+@terminal{
+$ ./quine
+main = putStrLn (\s->s++s)main = putStrLn (\s->s++s)
+}
+
+@p Poredeći kôd i ispis programa vidimo da nedostaje par zagrada, par navodnika, razmak, i kosa crta u lambda funkciji. Zagrade i razmak možemo da pokušamo da dodamo u nisku i telo lambda funkcije:
+
+@codeBlock{
+main = putStrLn ((\s->s++" "++s++")") "main = putStrLn ((\\s->s++\" \"++s++\")\")")
+}
+
+@terminal{
+$ ./quine
+main = putStrLn ((\s->s++" "++s++")") main = putStrLn ((\s->s++" "++s++")"))
+}
+
+@p Rešenje sad deluje dosta blizu. Neophodno je sad postaviti drugi deo ispsa u navodnike i dodati kose crte. Tj. potrebno je nisku ispisati u obliku u kom bi bila zapisana kao Haskel literal. Upravo to radi @code{show} funkcija. Sada je dovoljno umesto @code{\s->s++" "++s++")"} napisati @code{\s->s++" "++show s++")"}.
+
+@codeBlock{
+main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
+}
+
+@terminal{
+$ ./quine
+main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
+}
+}
+
+@section{Akcije i funkcije}
+
+@p Haskel početnici često poistovećuju @em{akcije} (poput @code{putStrLn "Hello World" :: IO ()} i @code{getLine :: IO Stringq}) sa @em{funkcijama} jer pojam funkcije u drugim programskim jezicima obuhvata oba pojma u Haskelu. Na primer, u C jeziku postoji funkcija (funkcija u smislu C jezika) @pre{getline} koja je u potpunosti analogna Haskel akciji @code{getLine} (čak imaju i skoro identično ime). Ali kao što ćemo uskoro videti, Haskel akcije ne mogu biti Haskel funkcije! Prema tome, pojam @em{funkcije} u drugim jezicima je širi pojam od pojma funkcije u Haskelu.
+
+@p U Haskelu funkcije predstavljaju @em{pravilnosti} po kojima se vrednostima nekog tipa pridružuju vrednosti drugog tipa. Ključna reč u navedenoj definiciji je "pravilnosti", jer ona označava osobinu funkcija da imaju istu povratnu vrednost kada se primene na iste argumente. Tačnije, ako je @m{x=y}, tada je i @m{f(x)=f(y)}. U tom smislu, vrednost @code{getLine} ne može biti funkcija: njena vrednost prilikom svakog "pozivanja" može biti drugačija (zavisi od toga šta je korisnik konzole uneo). Sličan argument važi za sve ostale procedure čija povratna vrednost zavisi od vrednosti koje se "nalaze" van samog programa. Na primer, to mogu biti procedure koje vraćaju sadržaj neke datoteke, korisnički unos, vreme, sadržaj nekog resursa na internetu, podatke iz baze, i tako dalje. Gledano iz ugla Haskel programa, sve ovakve prcedure vraćaju vrednosti iz @em{spoljnog sveta}. Pod terminom @def{spoljni svet} smatraju se sve vrednosti koje nisu definisane unutar (Haskel) programa.
+
+@p Osim što su akcije neophodne za "preuzimanje" informacija iz spoljnog sveta, akcije moramo koristiti i kada "šaljemo" informacije u spoljni svet. Na primer, ako štampamo tekst u terminal, čuvamo podatke na disk, šaljemo zahteve veb serverima i tako dalje. Navedene procedure poseduju @def{propratne efekte}@note{@em{side effects}} što znači da menjaju stanje spoljnog sveta. Haskel funkcije nemaju propratne efekte, dok Haskel akcije mogu imati propratne efekte.
+
+@p Takođe, primetimo još jednu razliku između funkcija i akcija. Funkcije uvek moramo primeniti na vrednost (što takođe nazivamo i @em{pozivanje sa vrednošću}), tj. moramo napisati kod poput @code{f x}. Sa druge strane, akcije ne primenjujemo na vrednosti@note{Na prvi pogled deluje da se primer poput @code{putStrLn :: Sting -> IO ()} kosi sa ovom izjavom. Ali, obratimo pažnju da @code{putStrLn} nije akcija već funkcija! Rezultat primene ove funkcije na neku nisku je akcija.}. Zbog toga za akcije kažemo da se @em{pokreću} unutar @code{do} bloka.
+
+@p Apstraktni tip @code{IO} predstavlja "most" koji spaja spoljni svet sa programom. Sva komunikacija programa sa spoljnim svetom mora se odviti @em{pokretanjem} akcija sa @code{IO} tipom, a svaku @code{IO} akciju je moguće pokrenuti samo iz neke druge @code{IO} akcije. Zaista, nemoguće je pokrenuti@note{Pokušajte, ali nećete uspeti. Akcije možete pokrenuti unutar @code{do} bloka, a @code{do} blok sam za sebe predstavlja jednu @code{IO} akciju...} akcije unutar funkcija. Dakle, akcije su uvek pokrenute od starne drugih akcija, i tako dalje, sve do @code{main} akcije.
+
+@example{
+@p Naravno, definisanjem akcije ne znači da će ta akcija biti i pokrenuta. Pokretanjem narednog programa videćemo samo dva pozdrava u konzoli. Obratite pažnju da će akcija @code{a3} biti pokrenuta iz @code{a1} akcije a ne iz @code{main} akcije.
+
+@codeBlock{
+main :: IO ()
+main = do
+	a1
+
+a1 :: IO ()
+a1 = do
+	putStrLn "Hello"
+	a3
+
+a2 :: IO ()
+a2 = do
+	putStrLn "Ciao"
+
+a3 :: IO ()
+a3 = do
+	putStrLn "Zdravo"
+}
+
+@p Razliku između definisanja i pokretanja akcije je moguće uvideti i u narednom kodu. Znak jednakosti u prvoj liniji @code{do} bloka određuje definiciju akcije @code{a} koja nije pokrenuta! Sa druge strane, strelica @code{<-} u narednoj liniji pokreće akciju sa desne strane, i rezultat pokretanja te akcije dodeljuje imenu @code{r}. Kako je @code{putStr :: String -> IO ()}, to će vrednost @code{r} imati tip (a i vrednost) @code{()}. 
+
+@codeBlock{
+main :: IO ()
+main = do
+	let a = putStr "Hello"
+	r <- putStr "Zdravo"
+	putStrLn "!"
+}{Kako je prva akcija samo definisana, a druga pokrenuta, ispis u konzoli će biti @em{Zdravo!}}
+}
+
+@p Za korisnike drugih programskih jezika, ovakvo razdvajanje pojma akcija od pojma funkcija deluje kao nepotrebno komplikovanje. Ali zapravo se ovde radi o prednosti Haskel jezika u odnosu na druge jezike. Dok u mnogim drugim jezicima (C/C++, Python, Java, Javaskript, Go, itd..) ne postoji nikakva kontrola interakcije programa sa spoljnim svetom@note{Na primer, ako radite na projektu koji sadrži hiljade procedura koje pozivaju jedna drugu, tada ne možete lako znati da li će neka funkcija koju pozovete imati neki efekat koji ne želite. Šta ako funkcija koju pozivate, dalje poziva neke funkcije koje štampaju šifre u konzolu ili brišu tabele iz baze? Čak i ako analizirate sav kôd koji pozivate, ne možete biti sigurni da vaš kolega kasnije neće slučajno izmeniti kôd na neželjen način.}, u Haskelu je kroz sistem tipova (tj. @code{IO} tip) obezbeđeno jasno razdvajanje dela koda koji intereaguje sa spoljnim svetom od dela koda koji to ne čini. Na taj način postignuto je se mnoge potencijalne greške (bagovi), uoče i isprave tokom kompilacije programa.
+
+@p U navedenim programskim jezicima postoji slična podela koda. Programeri često govore o @def{čistom}@note{@em{pure}} i @def{nečistom}@note{@em{impure}} kodu. Čiste funkcije su one funkcije koje zadovoljavaju dva pravila: za iste parametre vraćaju iste povratne vrednosti i nemaju propratne efekte. To su upravo one dve osobine koje smo naveli za Haskel funkcije. Prema tome možemo reći da su Haskel funkcije uvek čiste dok su akcije nečiste. Primetimo da u navedenim programskim jezicima razlika između čistog i nečistog kod nije uspostavljena kroz kompajler (kao što je to slučaj sa Haskelom), već programer mora sam da zaključi o kakvom kodu se radi. 
+
+
+@section{Rad sa datotekama}
+
+@p Osim interakcije sa korisnikom kroz konzolu, programi moraju učitavati i zapisivati datoteke. Iako postoji mnogo funkcija dostupnih Haskel programerima za interkaciju sa datotekam, ovde ćemo spomenuti samo dve funkcije koje se koriste za čitanje i pisanje iz tekstualnih datoteka. To su funkcije @ccode{readFile :: FilePath -> IO String} i  @ccode{writeFile :: FilePath -> String -> IO ()} obe dostupne u Prelidu.
+
+@p Tip @code{FilePath} koji se pojavljuje u tipu obe navedene funkcije je tipski sinonim za @code{[Char]} odnosno @code{String}. Definisanjem ovog tipa, kroz same tipove smo dokumentovali čemu služe parametri funkcije. Sada je u poptpunosti jasno šta predstavljaju parametri funkcije @code{writeFile}: prvi je putanja do datotke u koju treba zapisati nisku koja je prosleđena kao drugi argument. Sa druge strane, da nismo konstruisali novi tipski sinonim, iz tipa @code{String -> String -> IO ()} ne bi bilo jasno koji parametar se odnosi na putanju a koji na sadržaj.
+
+@p Dakle, funkcija @ccode{writeFile :: FilePath -> String -> IO ()} uzima putunju do datoteke, nisku, i daje akciju koja kada se pokrene upisuje dati sadržaj u datoteku na navedenoj lokaciji. Funkcija @ccode{readFile :: FilePath -> IO String} je nešto jednostavnija. Ta funkcija uzima putanju do datoteke a vraća akciju koja kada se pokrene učitava sadržaj datoteke u nisku.
+
+@p Da bi demonstirali primenu navedenih funkcija, kreirajmo datoteku @pre{pesma.txt} i sačuvajmo je u istom direktorijumu u kom se nalazi i kôd programa.
+
+@codeBlock{
+Ono sve što znaš o meni
+To je stvarno tako malo
+U dvje riječi sve bi stalo
+Kada pričala bi ti
+}{Sadržaj datoteke @pre{pesma.txt}}
+
+@p Program koji učitava sadržaj pesme i ispisuje u terminal je sledeći
+
+@codeBlock{
+main :: IO ()
+main = do
+    pesma <- readFile "pesma.txt"
+    putStrLn pesma
+}{Kao što pokretanje akcije @code{getLine} daje korisnički unos, tako i pokretanje akcije @code{readFile "pesma.txt"} daje sadržaj datoteke. U oba slučaja moramo iskoristiti strelicu @code{<-} da bi pokrenuli akciju i rezultat smestili u novo ime.}
+
+@terminal{
+$ ghc main.hs
+[1 of 1] Compiling Main             ( main.hs, main.o )
+Linking main ...
+$ ./main
+Ono sve što znaš o meni
+To je stvarno tako malo
+U dvje riječi sve bi stalo
+Kada pričala bi ti
+}
+
+@p Da bi zapisali nisku u datoteku iskoristićemo funkciju @code{writeFile}. Na primer, pesmu koju smo učitali sa prethodnim programom, možemo zapisati u novu datoteku na sledeći način:
+
+@codeBlock{
+main :: IO ()
+main = do
+    pesma <- readFile "pesma.txt"
+    writeFile "novaPesma.txt" pesma
+}{Pokretanjem navedenog programa, sadržaj datotke @pre{pesma.txt} će biti prekopiran u datoteku @pre{novaPesma.txt}, a u terminalu neće biti prikzana bilo kakva poruka. Kao što vidimo, jedina svrha ovog programa je da kopira tekstualnu datoteku sa određenim imenom.}
+
+@p Pri radu sa funkcijama @code{readFile} i @code{writeFile} trebalo bi imati na umu da ove funkcije mogu dovesti do izuzetka koji prekida rad programa. Na primer, ako pokušamo čitanje datoteke koja ne postoji, ili upisavanje u datotkeu za koju nemamo odgovarajuće dozvole. Videćemo kasnije kako se izuzeci mogu kontrolisati.
+
+
+
+
+

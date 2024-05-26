@@ -1,0 +1,329 @@
+@chapter{Rekurzija}
+
+@p Rekurzija je način rešavanja nekog problema korišćenjem rešenja istog problema manje složenosti (dimenzije, veličine). To u praksi znači da rekurzivna implementacija algoritma podrazumeva (direktno ili indirektno) samopozivanje funkcije sa promenjenim argumentima. Moć rekurzije leži u tome što se rešenja teških problema mogu iskazati kroz jednostavne veze. 
+
+@p U nastavku ćemo kroz neke klasične primere videti kako možemo implementirati rekurziju u Haskelu. Primer su poređani od jednostavnijih ka složenijim, i demonstriraju različite oblike rekurzije. Neke druge rekurzivne tehnike ćemo upoznati kasnije kroz Haskel.
+
+@section{Aritmetička suma}
+
+@problem{Napisati funkciju @code{zbir :: Int -> Int} koja vraća zbir prvih @code{n} prirodnih brojeva.}
+
+@p Funkciju @code{zbir} je lako implementirati u nekom imperativnom jeziku pomoću jedne petlje. Međutim, u Haskelu ne postoji pojam petlje, te moramo iskoristiti tehniku rekurzije. To podrazumeva da pri nalaženju rešenja koristimo rešenje istog problema manje složenosti. Konkretno u ovom slučaju prilikom nalaženja zbira brojeva koristimo zbir manje brojeva. Ako napišemo izraz za zbir, rešenje će nam se samo ukazati:
+@ccode{zbir n = 1 + 2 + ... + (n - 1) + n}
+Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir prvih @code{n - 1} brojeva. Stoga se rešenje u kodu samo nameće:
+
+@ccode{zbir n = zbir (n - 1) + n}
+
+@p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo zbir prva 4 prirodna broja i dodati @code{5} na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati @code{4} na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (zbir nula prirodnih brojeva - prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj, slučaj u kom ne koristimo rekurzivnu definiciju, nazivamo @em{bazni slučaj}. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
+
+@codeBlock{
+zbir :: Int -> Int
+zbir n
+    | n == 0    = 0
+    | otherwise = zbir (n - 1) + n
+}{Ovde možete i koristiti @em{if then else} notaciju da bi ste definisali @code{zbir} u jednoj liniji.}
+
+@p Pogledajmo na primeru kako napisani program radi. Svaki korak u narednom nizu predstavlja ili izračunavanje ili poziv funkcije @code{zbir}:
+
+@eq{
+\begin{aligned}
+\mathtt{zbir} \; \mathtt 3 &= \mathtt{zbir \; (3 - 1) + 3} \\
+& = \mathtt{zbir \; 2 + 3} \\
+& = (\mathtt{zbir \; (2 - 1) + 2) + 3} \\
+& = (\mathtt{zbir \; 1 + 2) + 3} \\
+& = ((\mathtt{zbir \; (1 - 1) + 1) + 2) + 3} \\
+& = ((\mathtt{zbir \; 0 + 1) + 2) + 3} \\
+& = \mathtt{(((0 + 1) + 2) + 3 = 6}
+\end{aligned}
+}
+
+@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} tako da vraća @code{0} za negativne argumente:
+
+@codeBlock{
+zbir :: Int -> Int
+zbir n
+    | n <= 0 = 0
+    | otherwise = zbir (n - 1) + n
+}
+
+@problem{U matematici, faktorijel prirodnog broja @m{n!} predstavlja proizvod svih prirodnih brojeva manjih ili jednakih sa @m{n} tj. @m{n! = 1 \cdot 2 \cdot 3 \cdots (n-1) \cdot n}. Napisati funkciju @code{faktorijel} koja vraća faktorijel @m{n!} prirodnog broja.}
+{@p Možemo primetiti da se @m{n!} može izračunati kao proizvod @m{(n - 1)!} sa @m{n}. Postupajući kao u prethodnom primeru dobijamo sledeći Haskel kod:
+
+@codeBlock{
+faktorijel' n
+    | n <= 0 = 1
+    | otherwise = faktorijel' (n - 1) * n
+}}
+
+@problem{Napisati rekurzivnu funkciju koja računa sumu prvih @m{k+1} članova aritmetičkog niza čiji je prvi član @m{a}, a korak (razlika između dva susedna člana niza) @m{d}. Tačnije napisati rekurzivnu funkciju koja računa sumu @eq{a+(a+d)+(2+2d)+\cdots+(a+dk).}}
+
+@section{Par-nepar}
+
+@problem{
+Implementirati funkciju @code{paran :: Int -> Bool} koja proverava da li je broj prirodan paran. Pretpostaviti da će argument funkcije biti pozitivan broj.
+}
+
+@p Korišćenjem funkcije @code{mod}, možemo dati odmah sledeće rešenje
+
+@codeBlock{
+paran :: Int -> Bool
+paran n = 0 == mod n 2
+}{Izraz @code{0 == mod x 2} ima vrednost @code{True} ako je @code{n} paran broj, prema tome ovde nama potrebe da koristimo @em{if then else}.}
+
+@p Problem možemo rešiti i rekurzivno. Znamo da je broj @code{0} paran, i ta činjenica predstavlja bazu rekurzije. Za svaki drugi prirodan broj @code{n} znamo da je paran ako i samo ako je @code{n - 1} neparan. Stoga možemo definisati dve funkcije @code{paran} i @code{neparan} koje će se međusobno pozivati:
+
+@codeBlock{
+paran :: Int -> Bool
+paran 0 = True
+paran n = not (neparan (n - 1))
+
+neparan :: Int -> Bool
+neparan 0 = False
+neparan n = not (paran (n - 2))
+}
+
+@p Demonstrirajmo izvršavanje koda na jednom primeru:
+
+@eq{
+\begin{aligned}
+\mathtt{paran} \; 3 &= \, \mathtt{not} \, (\mathtt{neparan} \; 2)\\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{paran} \; 1)) \\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, (\mathtt{neparan} \; 0))) \\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, \mathtt{False})) = \mathtt{False}
+\end{aligned}
+}
+
+@p Primetimo da navedene funkcije nisu definisane za negativne brojeve.
+
+@problem{Izmeniti funkcije @code{paran} i @code{neparan} tako da i za negativne brojeve vraćaju ispravne rezultate.}
+
+@problem{Definisati rekurzivnu funkciju @code{ostatak3 :: Int -> Int} koja određuje ostatak broja pri deljenju sa @m{3}.}
+
+@problem{Definisati rekurzivnu funkciju @code{ostatak :: Int -> Int -> Int} koja određuje ostatak prilikom deljenja prvog argumenta sa drugim argumentom.}
+
+@section{Fibonačijev niz}
+
+@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio knjigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do rezultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Zapravo, na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
+
+@p Danas definicija @em{Fibonačijevog niza} nema mnogo veze za zečevima, a niz se konstruiše po sledećem principu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
+
+@p Po navedenom principu, treći član Fibonačijevog niza je @m{2} (jer je @m{2 = 1 + 1}), četvrti član je @m{3} (jer je @m{3 = 1 + 2}), peti član je @m{5} (jer je @m{5 = 2 + 3}), šesti član je @m{8} (jer je @m{8 = 3 + 5}), i tako dalje...
+
+@p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća @m{n}-ti Fibonačijev broj (@m{n}-ti element Fibonačijevog niza) je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)} te je stoga potrebno navesti dva bazna slučaja@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista, za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
+
+@codeBlock{
+fib :: Int -> Int
+fib n
+    | n == 1    = 1 
+    | n == 2    = 1
+    | otherwise = fib (n - 1) + fib (n - 2)
+}{Aplikacija argumenta ima veći prioritet od aritmetičkih operacija, te se @code{fib (n - 1) + fib (n - 2)} interpretira kao @code{(fib (n - 1)) + (fib (n - 2))}. Iz istog razloga ne možemo pisati samo @code{fib n - 1 + fib n - 2}, jer se to interpretira kao @code{(fib n) - 1 + (fib n) - 2.}
+}
+
+@problem{
+Takozvani @em{Tribonačijev niz} se konstruiše na sledeći način: prva tri člana Tribonačijevog niza su @m{1}. Svaki naredni član Tribonačijevog niza je zbir prethodna tri člana. Implementirati funkciju koja računa @m{n}-ti element Tribonačijevog niza.
+}
+
+@section{Euklidov algoritam}
+
+@p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka. Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
+
+@p Kao što samo ime kaže, @em{najveći zajednički delilac} (@em{NZD}) prirodnih brojeva @m{a} i @m{b} je prirodni broj @m{d} takav da deli @m{a} i @m{b}, i pritom je @m{d} najveći broj sa takvom osobinom. 
+
+@example{
+@p Najveći zajednički delilac brojeva @m{15} i @m{9} je @m{3}. Najveći zajednički delilac brojeva @m{8} i @m{32} je @m{8}.
+}
+
+@p Euklidov algoritam se zasniva na veoma jednostavnoj činjenici: Ako je @m{d} NZD brojeva @m{a} i @m{b}, pri čemu je @m{a \gt b}, tada je @m{d} NZD brojeva @m{b} i @m{a - b}. Zaista, @m{d} deli razliku @m{a - b} jer deli i umanjenik i umanjilac, pa @m{d} jeste zajednički delilac brojeva @m{b} i @m{a - b}. Broj @m{d} je najveći broj koji deli i @m{b} i @m{a - b}, jer ako bi postojao još veći broj @m{d'} koji deli i @m{b} i @m{a - b} tada bi @m{d'} delio i brojeve @m{b} i @m{a = (a -b) + b}, a već znamo da je @m{d} najveći takav broj.
+
+@p Dakle, ako je @m{a > b} tada je dovoljno naći @em{NZD} od @m{b} i @m{a - b}. Ako je @m{a < b} tada je po istom argumentu dovoljno naći @em{NZD} od @m{a} i @m{b - a}. A ako je @m{a = b} tada je @em{NZD} od @m{a} i @m{b} jednak baš broju @m{a}, jer je svaki broj deljiv samim sobom i ni jedan veći broj ga ne deli. Rekurzivna implementacija je sada u potpunosti jasna:
+
+@codeBlock{
+nzd :: Int -> Int -> Int
+nzd a b
+    | a == b  = a
+    | a >  b  = nzd (a - b) b
+    | a <  b  = nzd a (b - a)
+}
+
+@example{
+@p Nađimo @em{NZD} brojeva @m{15} i @m{9}. Izraz @code{nzd 15 9} se svodi
+@ccode{nzd (15 - 9) 9 = nzd 6 9} koji se dalje svodi na
+@ccode{nzd 6 (9 - 6) = nzd 3 3 = 3}
+}
+
+@example{
+@p Nađimo @em{NZD} brojeva @m{8} i @m{32}. Izraz @code{nzd 8 32} se svodi
+@ccode{nzd 8 (32 - 8) = nzd 8 24} koji se svodi na
+@ccode{nzd 8 (24 - 8) = nzd 8 16} koji se svodi na
+@ccode{nzd 8 (16 - 8) = nzd 8 8 = 8}.
+Primetimo da smo više puta za redom oduzimali isti broj (@m{8}) od @m{32}.
+}
+
+@p Navedeni primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo neefikasno rekurzivno pozivali funkciju, možemo da podelimo argumente po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
+
+@p Neka je @m{r} ostatak deljenja @m{a} sa @m{b}. Ako je @m{r} nula, to znači da je @m{a} deljivo sa @m{b}, pa  sledi da je @em{NZD} ova dva broja bаš @m{b}. U suprotnom, dovoljno je potražiti @em{NZD} brojeva @m{b} i @m{r}. Ovo nas dovodi do narednog koda:
+
+@codeBlock{
+nzd' :: Int -> Int -> Int
+nzd' a b = if r == 0 then b else nzd' b r
+    where r = mod a b
+}
+
+@example{
+@p Nađimo još jednom @em{NZD} brojeva @m{8} i @m{32}. Kako je @code{mod 8 32 = 8}, izraz @code{nzd' 8 32} se svodi na izraz @ccode{nzd' 8 8} koji se direktno svodi na vrednost @code{8}.
+}
+
+@problem{Skakavac @em{A} se nalazi u koordinatnom početku brojevne prave, a skakavac @em{B} se nalazi u tački @m{p}, gde je @m{p} prirodan broj. Kretanje oba skakavca je ograničeno samo brojevnu pravu, i pritom @em{A} uvek skače @m{m} jedinica (levo ili desno), a @em{B} uvek skače @m{n} jedinica (takođe, levo ili desno). Brojevi @m{m} i @m{n} su takođe prirodni. Napisati funkciju @ccode{susret :: Int -> Int -> Int -> Bool} koja na osnovu tri prirodna broja @m{p}, @m{m} i @m{n} određuje da li je moguće da se skakavci ikad susretnu u jednoj tački.}{
+@p Oba skakavca se mogu nalaziti samo u celobrojnim tačkama. Pretpostavimo da su se nakon @m{\mu} skokova skakavaca @em{A} i @m{\nu} skokova skakavaca @em{B}, dva skakavca susrela u celom broju @m{z}. Tada važi @m{z = \mu m = p + \nu n,} odnosno @eq{p = \mu m - \nu n.} Neka je @m{d} @em{NZD} brojeva @m{m} i @m{n}. Ako važi navedena jednakost, tada @m{d} mora deliti broj @m{p}. Obratno, ako @m{d} deli @m{p} tada Bezuovom stavu garantuje gornju jednakost za neke @m{\mu} i @m{\nu}. Dakle, skakavci se mogu susresti, ako i samo ako @m{d} deli @m{p}.
+
+@p Neophodno je razmotriti još specijalne slučajeve. Ako su i @m{m} i @m{n} jednaki nuli, tada se skakavci mogu susresti samo ako su već u istoj tački. Ako je samo @m{m} jednak nuli, tada se skakavci mogu susresti samo ako @m{n} deli početnu razdaljinu @m{p}. I slično važi ako je samo @m{n} jednak nuli.
+
+@codeBlock{
+susret :: Int -> Int -> Int -> Bool
+susret p 0 0 = p == 0
+susret p m 0 = mod p m == 0
+susret p 0 n = mod p n == 0
+susret p m n = mod p (gcd n m) == 0
+}
+}
+
+@section{Hanojske kule}
+
+@p Francuski matematičar Edvard Lukas@note{Inače, upravo je Lukas dao ime Fibonačijevom nizu kog smo obradili gore.} je krajem devetnaestog veka smislio igru koja je danas poznata kao @em{Hanojske kule}@note{Iako su od samog početka igru pratile mistične priče o poreklu u budističkim hramovima Dalekog istoka, za sada nema nikakvog dokaza o takvom poreklu.}. 
+
+@p Igru igra jedan igrač na sledeći način: Postavljena su tri vertikalna štapa koja označavamo sa @m{A}, @m{B} i @m{C}, i dato je @m{n} diskova različite veličine. Diskovi su probušeni u centru tako da se štap može provući kroz rupu u disku. Na početku igre, diskovi su složeni po veličini na štapu @m{A}, od najmanjeg na vrhu do najvećeg na dnu (videti narednu ilustraciju). Igrač u svakom potezu može napraviti jedan potez koji se sastoji samo od pomeranja jednog diska sa jednog štapa na drugi štap. Pritom, disk koji se pomera uvek mora da bude gornji disk na nekom štapu i ne sme se postaviti na manji disk. Cilj je pomeriti diskove tako da se svi diskovi nalaze na štapu @m{C}.
+
+@figure{hanoi1}
+
+@p Za osobu nije teško da sama dođe do rešenja nakon malo početnog igranja. Ali je na prvi pogled veoma teško napisati program koji formira rešenje za proizvoljan broj diskova.
+
+@p Prvo ćemo utvrditi kako želimo da prezentujemo rešenje, i koji ulazni parametri su potrebni. Rešenje možemo predstaviti kao listu poteza, od kojih je svaki potez uređen par karaktera koji označavaju štap sa kog i štap na koji prebacujemo disk. Na primer, uređen par @code{('A', 'B')} predstavlja potez u kom se sa prvi disk sa štapa @m{A} prebacuje na štap @m{B}. Sa druge strane, rešenje zadatka zavisi samo od broja diskova @m{n}. Stoga, naš zadatak je da napišemo funkciju @ccode{kule :: Int -> (Char, Char)} koja pronalazi jedno rešenje@note{Primetimo da rešenje nije jedinstveno. Igru možemo odigrati na mnogo načina.}.
+
+@example{
+@p Lista @ccode{[('A', 'B'), ('A', 'C'), ('B', 'C')]} predstavlja rešenje slučaja kada za @m{n = 2}. 
+}
+
+@p Naravno, problem ćemo rešiti rekurzivno. Kako problem suštinski zavisi samo od broja diskova, rekurziju ćemo vršiti po @m{n}. U najjednostavnijem slučaju, kad je @m{n=1}, jasno je da je rešenje jednočlana lista @code{[('A', 'C')]}, tj. par koji se sastoji od početnog i krajnjeg diska. Pretpostavimo zato da je @m{n>1} i da znamo da rešimo slučajeve za manje diskova. Tada možemo postupiti na sledeći način: prvih @m{n-1} diskova ćemo prebaciti sa početnog na pomoćni (@m{B}) štap, zatim ćemo prebaciti najveći disk sa početnog na krajnji, i na kraju ćemo pomeriti @m{n-1} diskova sa pomoćnog na krajni štap. Ova strategija je prikazana na narednoj ilustraciji.
+
+@figure{hanoi2}
+
+@p Kao što vidimo u rekurzivnom koraku @m{n-1} diskova prebacujemo prvo sa štapa @m{A} na štap @m{B}. Stoga za rekurzivni poziv, osim broja diskova, mora biti navedeno i sa kog štapa i na koji štap se diskovi prebacuju. Naravno, rešenje ne može koristiti samo dva štapa@note{Osim u trivijalnom slučaju kada se prebacuje jedan disk.}, već se mora iskoristiti i onaj treći štap kao pomoćni. Stoga funkcija za rekurzivno pronalaženje rešenja uzima četiri parametra: broj diskova, početni štap, krajnji štap i pomoćni štap. Ova rekurzivna funkcija će imati potpis @ccode{pomeri :: Int -> Char -> Char -> Char -> [(Char, Char)]}.
+Ako je funkcija @code{pomeri} implementirana, tada "glavnu" funkciju @code{kule} možemo jednostavno implementirati:
+@codeBlock{
+kule :: Int -> (Char, Char)
+kule n = pomeri n 'A' 'C' 'B'
+}{Rešenje početnog problema su potezi koji pomeraju @m{n} diskova sa @m{A} na @m{C}.}
+
+@p Potrebno je još implementirati funkciju @code{pomeri}, ali to je sasvim jednostavno ako uzmemo u obzir opis rešenja koje smo izložili:
+
+@codeBlock{
+pomeri :: Int -> Char -> Char -> Char -> [(Char, Char)]
+pomeri 1 pocetak kraj _       = [(pocetak, kraj)]
+pomeri n pocetak kraj pomocni = p1 ++ [(pocetak, kraj)] ++ p2
+    where
+        p1 = pomeri (n - 1) pocetak pomocni kraj
+        p2 = pomeri (n - 1) pomocni kraj pocetak
+}
+
+@problem{
+Od koliko poteza se sastoji rešenje koje daje ovaj algoritam? Možete li matematičkom indukcijom da dokažete pravilnost?
+}
+
+@todo{Šetnji po mreži}
+
+@section{Složenost rekurzivnih algoritama}
+
+@todo{dopuniti opise}
+
+@p Lepota rekurzivnih algoritama leži u tome što programer na jednostavan način može implementirati komplikovane funkcionalnosti. Programiranje baznog slučaja i rekurzivnog koraka su dovoljni da bi se i naizgled nemogući problemi jednostavno rešili. Primeri i zadaci koji su navedeni u ovoj lekciji bi trebalo da demonstriraju tu elegantnost.
+
+@p Ipak, lepota rekurzivnih funkcija dolazi po ceni da su one često manje efikasne od odgovarajućih nerekurzivnih funkcija.
+
+@example{
+@p Neka je @m{S_n = 1 + \cdots + n}, suma koju smo posmatrali na početku ove lekcije. Ako članove sume raspišemo u dva reda, pri čemu ćemo u drugom redu obrnuti poredak sabiraka, dobijamo šemu: @eq{\begin{array}{ccccc}1  &2 &\cdots &n-1 & n\\ n &n-1 &\cdots &2 & 1\end{array}} Odavde vidimo da u ovoj sumi imamo @m{n} parova brojeva koji odgovaraju kolonama, pri čemu je zbir svakog para @m{n+1}. Stoga je @m{2S_n = n(n+1)}, pa je @eq{S_n=\frac{n(n+1)}{2}.}
+
+@p Dobijeni rezultat možemo iskoristiti za alternativnu implementaciju funkcije @code{zbir}:
+
+@codeBlock{
+zbir' :: Int -> Int
+zbir' n = div (n * (n+1)) 2
+}{Možemo ignorisati vrednosti funkcije za negativne argumente, pošto ionako traženje zbira negativno mnogo brojeva nema mnogo smisla.}
+
+@p Navedena alternativna definicija nije mnogo kraća od rekurzivne, ali je značajno brža. Vreme potrebno za računanje vrednosti @code{zbir n} proporcionalno sa @code{n}: za @code{zbir n} potrebno je izračunati @code{zbir (n-1)}, a za računanje te vrednosti potrebno je izračunati @code{zbir (n-2)}, i tako dalje sve do @code{zbir 1}. Sa druge strane, vreme potrebno za izračunavanje @code{zbir' n} ne zavisi od @code{n}, jer je funkcija sačinjena od konstantnog broja računskih operacija koje se izvršavaju u nekoliko procesorskih taktova.
+}
+
+@example{
+@p Gore su navedene dve definicije funkcije koja računa parnost broja. Prva funkicja, funkcija koja koristi @code{mod} funkciju, se izvršava u konstantnom vremenu, jer procesor u jednom ciklusu može da podeli dva broja sa ostatkom. Naredna, rekurzivna, definicija funkcije zahteva @code{n} rekurzivnih poziva za izračunavanje izraza @code{paran n}.
+}
+
+@example{
+@p Metodama linearne algebre moguće je dokazati da je @m{n}-ti član @m{F_n} Fibonačijevog niza dat sa @eq{F_n = \frac{1}{\sqrt 5} \left(\left(\frac{1+\sqrt 5}{2}\right)^n - \left(\frac{1-\sqrt 5}{2}\right)^n\right).} Ova formula se može iskoristiti za nerekurzivnu definiciju funkcije @code{fib}:
+@codeBlock{
+fib' :: Int -> Int
+fib' n = round ((a^n - b^n)/t)
+    where t = sqrt 5
+          a = (1 + t)/2
+          b = (1 - t)/2
+}{Ugrađena funkcija @code{round} zaokružuje @code{Float} broj u @code{Int}.}
+
+@p Navedena definicija omogućava da se @code{n}-ti član Fibonačijevog niza izračuna u konstantnom broju koraka (broj koraka ne zavisi od veličine parametra @code{n}).
+
+@p Sa druge strane, definicija koju smo dali ranije zahteva značajno više koraka pri izvršavanju. Za izračunavanje @code{fib (n -1)} potrebno je izračunati @code{fib (n-1)} i @code{fib (n-2)}. Za svaku od navedenih vrednosti potrebno je izračunati po još dve vrednosti i tako dalje. Odavde sledi da je broj koraka potreban za izračunavanje @code{fib n} proporcionalan sa @m{2^n}. Primetimo da se vrednosti računaju više puta: na primer @code{fib (n-2)} je potrebno izračunati za @code{fib n} ali i za @code{fib (n-1)}.
+
+@figure{fibonacci}{Šematski prikaz rekurzivnog računanja vrednosti @m{F_5}.}
+}
+
+@p Kao što vidimo u prethodnim primerima, implementacija nerekurzivnih funkcija je ponekad značajno složenija nego implementacija rekurzivnih jer su neophodna dodatna znanja iz matematike i teorije algoritama. Sa druge strane, nerekurzivne funkcije mogu posedovati znatno bolju vremensku i prostornu složenost. Prema tome, na programeru je da odluči na koji način će pristupiti problemu: da li je prihvatljivo žrtvovati performanse zarad jednostavnije definicije? Odgovor na ovo pitanje je nemoguće dati jer zavisi od konteksta. U svakom slučaju, tehnika rekurzije je odličan izbor za prvi korak pri rešavanju problema koji deluje značajno teško. Često kada se algoritam savlada rekurzijom, nerekurzivno rešenje postane mnogo jasnije.
+
+@section{Totalne i parcijalne funkcije}
+
+@p Po matematičkoj definiciji funkcije, vrednost @m{f(x)} mora biti definisana za svako @m{x} koje pripada domenu funkcije @m{f}. Tako na primer, funkcija @m{f(x)=1/x} ne može za domen imati ceo skup realnih brojeva @m{\mathbb R}, već u najboljem slučaju@note{Naravno mi možemo definisati ovu funkciju na bilo kom podskupu od @m{\mathbb R} koji ne sadrži nulu. Upravo zbog toga smatramo da je funkcija u potpunosti određena kada su navedeni domen, kodomen, i pravilo pridruživanja.} @m{\mathbb R\setminus\{0\}}. Slično, funkcija korenovanja @m{s(x)=\sqrt{x}} može za domen imati samo podskup skupa pozitivnih brojeva@note{Ovde u potpunosti ignorišemo kompleksne brojeve.}.
+
+@p U računarstvu je malo drugačije. Funkcija tipa @code{A -> B} u Haskelu ne mora biti definisana za sve vrednosti tipa @code{A}. To smo videli na primeru prve definicije funkcije koja sabira aritmetičku sumu @m{1 + \cdots + n}:
+
+@codeBlock{
+zbir :: Int -> Int
+zbir n
+    | n == 0    = 0
+    | otherwise = zbir (n - 1) + n
+}
+
+@p Za negativne argumente funkcija @code{zbir} ulazi u beskonačnu petlju, pa samim tim izraz @code{zbir x} nije definisan za svaku vrednost @code{x :: Int}.
+
+@p Funkciju koja nije definisana za svaku vrednost domena, nazivamo @def{parcijalna funkcija}, dok funkciju koja je definisana za svaku vrednost domena nazivamo @def{totalna funkcija}. Prema tome, pojam funkcija u matematici odgovara pojmu totalnih funkcija u računarstvu.
+
+@p Rekurzivne funkcije su čest primer funkcija koje nisu totalne, ali ne i jedini@note{Ranije smo videli funkcije koje nisu totalne, a to su funkcije za rad sa listama @code{head}, @code{tail}, @code{init} i @code{last}. Ako se prazna lista prosledi bilo kojoj od navedenih funkcija doći će do izuzetka. U narednoj lekciji uverićemo se da funkcije @code{head} i @code{tail} nisu rekurzivne}. Najjednostavniji način za definisanje nerekurzivne parcijalne funkcije je upotrebom podudaranja oblika (ili ograđenih izraza), pri čemu nisu obrađeni svi mogući oblici argumenta:
+
+@codeBlock{
+p :: Int -> Int
+p 0 = 1
+}{Funkcija @code{p} je definisana samo za argument @code{0}.}
+
+@terminal{
+ghci> p 10
+*** Exception: <interactive>:3:1-16: Non-exhaustive patterns in function p
+}{Pokretanje @code{p x} za bilo koju vrednost @code{x} različiti od @code{0} dovodi do izuzetka.}
+
+@p Postavlja se pitanje, zašto jezik poput Haskela dozvoljava da radimo sa parcijalnim funkcijama? Zašto se umesto toga ne ograničimo na totalne funkcije kao u matematici? Razlog tome je što je nemoguće kreirati programski jezik koji ne bi sadržao parcijalne funkcije a koji bi i dalje bio dovoljno ekspresivan za izražavanje svakog algoritma.
+
+@p Iako sistem tipova u Haskelu može značajno olakšati rad sa parcijalnim funkcijama (videćemo ovo kroz kasnije lekcije), programer uvek mora biti svestan do kakvih problema može doći. Što se tiče rekurzivnih algoritama, bitno je uočiti slučajeve kada rekurzivni algoritam može ući u beskonačnu petlju, a zatim izmenom tog algoritma obezbediti da do beskonačne petlje nikad ne dođe.
+
+@section{Zadaci}
+
+@problem{Napisati funkciju koja određuje @m{n}-ti stepen broja.}
+
+@problem{Napisati funkciju koja određuje zbir neparnih cifara prirodnog broja.}
+
+@problem{Napisati funkciju koja određuje količnik dva prirodna broja na @m{k} decimala.}
+
+@problem{Napisati funkciju koja određuje binomni koeficijent @m{n \choose k}.}
+
+@problem{Za nisku @code{a} kažemo da deli nisku @code{s} ako je @code{s} oblika @code{a ++ a ++ ... ++ a}. Na primer, niska @code{"Abc"} deli nisku @code{"AbcAbcAbc"}. Takođe, smatra se da prazna niska @code{""} deli svaku nisku. Napisati funkciju @ccode{nzd :: [Char] -> [Char] -> [Char]} koja određuje @em{najveći zajednički delilac} dve niske, odnosno najdužu nisku koja deli obe niske.}
+
+@problem{Spratovi jedne zgrade se kreče u zeleno, plavo ili crveno. Svaki sprat se kreči u jednu od te tri boje. Na koliko načina je moguće okrečiti zgradu, ako važi pravilo da se dva susedna sprata ne smeju okrečiti istom bojom.}
+
+@problem{Za proizvoljan prirodan broj @m{n} definišemo njegov Kolacov niz na sledeći način: @m{x_0 = n}, @m{x_{m+1} = x_m / 2} ako je @m{x_n} parno, odnosno @m{x_{m+1} = 3 x_m + 1} ako je @m{x_m} neparno. Pritom ako je @m{x_{m+1} = 1} niz se prekida. Na primer Kolacov niz za @m{n = 12} je @m{12, 6, 3, 10, 5, 16, 8, 4, 2, 1}. Pretpostavlja se da će se Kolacov niz svakog prirodnog broja eventualno prekinuti, tj. da će se pojaviti @m{1} u njemu. Naći prirodan broj manji od @m{10000} koji ima najduži Kolacov niz.}
+
+@problem{@em{Metoda polovljenja intervala} je numerička metoda određivanja korena neprekidne funkcija tipa @m{\mathbb R\to \mathbb R}. Posmatrajmo interval @m{[a, b]}. Ako za funkciju @m{f} važi da je @m{f(a) < 0} i @m{f(b) > 0} (ili da je @m{f(a) > 0} i @m{f(b) < 0}) za neke brojeve @m{a < b}, tada zbog neprekidnosti znamo da postoji @m{x}, @m{a < x < b}, takvo da je @m{f(x) = 0}. Uzmimo @m{c = (a + b) / 2}. Ako je @m{f(c) \ne 0} postupak možemo da ponovimo za jedan od intervala @m{[a , c]} ili @m{[c, b]} (naravno, ako je @m{f(c) = 0}, postupak prekidamo). Na ovaj način dobijamo niz intervala čija dužina se prepolovljava, i za koje znamo da sadrže barem jedno rešenje jednačine @m{f(x) = 0}. Stoga, u @m{n} koraka možemo odrediti koren jednačine sa greškom manjom od @m{(b-a)/2^n}. Koristeći ovaj metod, naći koren polinoma @m{p(x) = 2x^3-4x^2-6x+2} na intervalu @m{[1, 4]} sa greškom ne većom od @m{0.001}.}
+

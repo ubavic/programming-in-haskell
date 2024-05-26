@@ -1,0 +1,621 @@
+@chapter{Liste}
+
+@p Liste u Haskelu su strukture podataka koje predstavljaju linearno uređenu kolekciju proizvoljno mnogo vrednosti istog tipa. Liste se konstruišu navođenjem vrednosti unutar uglastih zagrada. Na primer, zapis @ccode{[5, 8, 13, 21, 34]} predstavlja listu od pet elemenata. Međutim, zapis poput navedenog, predstavlja samo skraćeni oblik zapisa @ccode{5:(8:(13:(21:(34:[]))))}. Operacija @code{:} nadovezuje element na početak neke postojeće liste i predstavlja jedan od @em{konstruktora vrednosti liste}, odnosno funkcije kojom se konstruiše neka lista. Drugi konstruktor vrednosti liste je konstruktor prazne liste koji se označava sa @code{[]}. Važno je napomenuti da su ovo jedini konstruktori vrednosti liste, i da se svaka druga funkcija koja vraća neku listu svodi na neki način na upotrebu ova dva konstruktora. Takođe, ova činjenica povlači i da je svaka lista prazna (dobijena konstruktorom prazne liste), ili poseduje prvi član (odnosno, nastala je nadovezivanjem neke vrednosti na postojeću listu). 
+
+@section{Funkcije za rad sa listama}
+
+@p U prethodnim lekcijama već smo se upoznali sa nekim funkcijama za rad sa listama:
+
+@list{
+@li @code{(++) :: [a] -> [a] -> [a]} spaja dve liste
+@li @code{length :: [a] -> Int} vraća dužinu liste
+@li @code{elem :: Eq a => a -> [a] -> Bool} ispituje da li se element nalazi u listi
+@li @code{reverse :: [a] -> [a]} obrće poredak elemena u listi
+@li @code{head :: [a] -> a} vraća prvi element liste. Ako je lista prazna dolazi do izuzetka
+@li @code{init :: [a] -> a} vraća sve elemente osim poslednjeg. Ako je lista prazna dolazi do izuzetka
+@li @code{tail :: [a] -> a} vraća sve elemente osim prvog. Ako je lista prazna dolazi do izuzetka
+@li @code{last :: [a] -> a} vraća poslednji element. Ako je lista prazna dolazi do izuzetka
+}
+
+@p Primetimo da se sve navedene funkcije, osim funkcije @code{elem}, mogu koristiti sa listom proizvoljnog tipa jer poseduju parametarski polimorfan tip. Funkcija @code{elem} može se koristiti samo sa instancama @code{Eq} klase@note{Podsećamo, instance @code{Eq} klase su tipovi čije vrednosti se mogu porediti sa @code{==} i @code{\=}. Prema tome, sasvim je jasno zašto je neophodno da @code{elem} ima ovakvo klasno ograničenje.}.
+
+@p Prelid obezbeđuje neke korisne funkcije za rad sa listama karaktera:
+
+@list{
+@li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od jedne nikse dobijaju "reči".
+@li @code{unwords :: [[Char]] -> [Char]} spaja listu niski u jedinstvenu nisku dodavajući razmak između. Na primer: @code{unwords ["boža", "zvani", "pub"]} nam daje @code{"boža zvani pub"}.
+@li @code{lines :: [Char] -> [[Char]]} rastavlja nisku na linije, vršeći prelom na karakteru za novi red @code{'\n'}.
+@li @code{unlines :: [[Char]] -> [Char]} spaja listu niski u jedinstvenu nisku, dodavajući @code{'\n'} između.
+}
+
+@p Ovde je zgodno napomenuti kako se u Haskel kodu mogu navesti niske u više redova. Neophodno je na kraju i početku svake linije koja pripada nisci dodati znak @code{\}, osim u prvoj i poslednjoj na mestima gde je @pre{"}:
+
+@codeBlock{
+stih :: [Char]
+stih = "Ti, međutim, rasteš, uz zornjaču jasnu,\
+\sa Avalom plavom, u daljini, kao breg.\
+\Ti treperiš, i kad ovde zvezde gasnu,\
+\i topiš, ko Sunce, i led suza, i lanjski sneg." 
+}
+
+@p Ipak, ovako definisana niska @em{neće} sadržati karaktere za novi red! Neophodno ih je dodati na svakom mestu:
+
+@codeBlock{
+stih :: [Char]
+stih = "Ti, međutim, rasteš, uz zornjaču jasnu,\n\
+\sa Avalom plavom, u daljini, kao breg.\n\
+\Ti treperiš, i kad ovde zvezde gasnu,\n\
+\i topiš, ko Sunce, i led suza, i lanjski sneg.\n" 
+}
+
+@p Ako u @em{GHCi} interpreteru evaluiramo vrednost @code{stih}, niska će se ispisati unutar dvostrukih navodnika u jednoj (ali dugačkoj) liniji terminala@note{Takođe, u zavisnosti od verzije @em{GHCi} programa, može se desiti da slova koja ne pripadaju engleskom alfabetu (@em{đ}, @em{ž}, @em{ć} i @em{č}) budu zamenjena odgovarajućim kodovima.}. Probajte i uverite se sami. Zbog toga je zgodno iskoristi metod @code{putStr} koji sadržaj ispisuje u terminal onako kao bismo i očekivali:
+
+@terminal{
+ghci> putStr stih
+Ti, međutim, rasteš, uz zornjaču jasnu,
+sa Avalom plavom, u daljini, kao breg.
+Ti treperiš, i kad ovde zvezde gasnu,
+i topiš, ko Sunce, i led suza, i lanjski sneg.
+}
+
+@problem{
+Napisati funkciju @ccode{brojReči :: [Char] -> Int} koja broji reči u nisci.
+}{
+@codeBlock{
+brojReči :: [Char] -> Int
+brojReči x = length (words x)
+}
+}
+
+@section{Rasponi}
+
+@p Neretko se javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @m{1} do @m{n} ili liste brojeva od @m{m} do @m{n} itd... Iako nije teško implementirati rekurzivne funkcije koje vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{eng. @em{ranges}} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg elementa liste, između kojih se postavljaju dve (spojene) tačke. Naredni primeri ilustruju sintaksu raspona:
+
+@terminal{
+ghci> a = [1 .. 10]
+ghci> a
+[1,2,3,4,5,6,7,8,9,10]
+ghci> [-3 .. 3]
+[-3,-2,-1,0,1,2,3]
+ghci> [10 .. 1]
+[]
+}{Ako je poslednji element manji od prvog, tada će biti konstruisana prazna lista.}
+
+@p Sa rasponima je moguće konstruisati i liste u kojima je korak različit od @m{1}. U tom slučaju, potrebno je navesti i drugi član liste na osnovu koga će korak biti izračunat.
+
+@terminal{
+ghci> [1, 3 .. 11]
+[1,3,5,7,9,11]
+ghci> [0, 10 .. 100]
+[0,10,20,30,40,50,60,70,80,90,100]
+ghci> [1, 5 .. 11]
+[1,5,9]
+}{Primetimo u poslednjem primeru da lista uključuje sve brojeve aritmetičke progresije manje @code{11}. Dakle, gornja granica respona ne mora biti uključena u listu.}
+
+@p Navođenjem koraka progresije moguće je lako konstruisati liste i koje su opadajuće:
+
+@terminal{
+ghci> [10, 9 .. 1]
+[10,9,8,7,6,5,4,3,2,1]
+}
+
+@p Rasponi se takođe mogu koristiti i sa racionalnim brojevima:
+
+@terminal{
+ghci> [1.0 .. 5.0]
+[1.0,2.0,3.0,4.0,5.0]
+ghci> [1.0, 1.5 .. 5.0]
+[1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0]
+}
+
+@p Ipak, treba biti pažljiv pri korišćenju raspona racionalnih brojeva, jer se računska greška može lako ukazati@note{Kao što u decimalnom sistemu ne možemo sa konačno simbola zapisati vrednost @m{1/3}, tako u binarnom sistemu ne možemo tačno zapisati vrednost @m{1/10} koristeći konačno bitova. Racionalni brojevi koji se tačno mogu zapisati u IEEE 754 zapisu (koji je osnova za @code{Float} i @code{Double} tipove) su oblika @m{k/2^i} gde @m{i,k \in\mathbb Z}.}
+
+@terminal{
+ghci> [0.1, 0.3 .. 1]
+[0.1,0.3,0.5,0.7,0.8999999999999999,1.0999999999999999]
+}
+
+@p Opsezi dozvoljavaju samo definisanje aritmetičkih progresija. Za definisanje geometrisjke (ili neke druge progresije), korisnik će morati sam da implementira odgovarajuće funkcije.
+
+@p Međutim, rasponi mogu da se koriste i sa tipovima koji nisu numerički. Na primer, rasponi karaktera su često korisni
+
+@terminal{
+ghci> ['A' .. 'W']
+"ABCDEFGHIJKLMNOPQRSTUVW"
+ghci> ['a' .. 'd']
+"abcd"
+ghci> ['a', 'c' .. 'w']
+"acegikmoqsuw"
+}{Lista karaktera je naravno niska te se @code{['a', 'b', 'c', 'd']} prikazuje kao @code{"abcd"} u terminalu.}
+
+
+@p Da bi neki tip mogao da se koristi sa rasponima, mora pripadati tipskoj klasi @code{Enum}. Ova klasa sadrži sve tipove čije vrednosti se mogu enumerisati. Svaki tip @code{a} iz @code{Enum} klase mora da implementira funkcije @code{fromEnum :: a -> Int} i @code{toEnum :: Int -> a} koje redom kodiraju i dekodiraju vrednosti tog tipa kroz cele brojeve. Vrednosti dobijene ovim kodiranjem koriste se za konstrukciju opsega.
+
+@example{
+@p Tip @code{Char} pripada klasi @code{Enum}. Funkcija @code{fromEnum} primenjena na karakter vraća poziciju tog karaktera u @em{Unicode} tabeli.
+
+@terminal{
+ghci> fromEnum 'a'
+97
+ghci> toEnum 100 :: Char
+'d'
+}{Kako je @code{toEnum} tipa @code{Int -> a} kompajler ne može zaključiti tip izraza @code{toEnum 100} (na koji instancu @code{Enum} klase se ovaj izraz odnosi?). Zbog toga je neophodno eksplicitno deklarisati tip izraza. Više o ovome kasnije...}
+}
+
+@p Kada napišemo raspon poput @code{['a', 'c' .. 'g']}, taj raspon se tumači kao raspon @ccode{[fromEnum 'a', fromEnum 'c' .. fromEnum 'g']}, odnosno kao @code{[97, 99 .. 103]}. Time se dobija lista @code{[97,99,101,103]} koja se primenom funkcije @code{toEnum} na svaki od elemenata transformiše u listu @code{"aceg"}.
+
+@problem{Napisati funkciju @code{velikoSlovo :: Char -> Bool} koja proverava da li je uneto slovo veliko latinično.}
+{@p Možemo iskoristi funkciju @code{elem} koja proverava da li element pripada listi.
+@codeBlock{
+velikoSlovo :: Char -> Bool
+velikoSlovo c = elem c ['A' .. 'W'] 
+}}
+
+@section{Rekurzija nad listama}
+
+@p Liste imaju prirodnu rekurzivnu strukturu. Svaka lista osim prazne je nastala nadovezivanjem nekog elementa na početak neke kraće liste. Mnogi algoritmi za rad sa listama se mogu implementirati rekurzijom po dužini liste. Baza rekurzije čini slučaj prazne liste, dok rekurzivni korak predstavlja svođenje problema na isti problem za kraću listu.
+
+@example{
+@p Funkciju @code{zbir :: [Int] -> Int} koja sabira sve elemente liste možemo napisati ovako:
+
+@codeBlock{
+zbir :: [Int] -> Int
+zbir xs =
+    if null xs
+    then 0
+    else head xs + zbir (tail xs)
+}
+
+@p Uslovom @code{null xs} se proverava da li je lista prazna. Ako jeste, tada vraćamo @code{0}. U suprotnom, vrednost prvog elementa dodajemo na zbir repa liste.
+}
+
+@p Tehnika podudaranja oblika liste je posebno korisna za implementaciju rekurzivnih algoritama. Sa ovom tehnikom, kôd algoritma često postaje elegantniji:
+
+@example{
+@p Funkciju @code{zbir} možemo napisati i ovako:
+
+@codeBlock{
+zbir :: [Int] -> Int
+zbir [] = 0
+zbir (x:xs) = x + zbir xs
+}
+}
+
+@problem{
+Implementirati funkciju @code{proizvod :: [Int] -> Int} koja pronalazi proizvod elemenata liste.
+}{
+@p Po ugledu na prethodne primere, lako dolazimo do rešenja
+@codeBlock{
+proizvod :: [Int] -> Int
+proizvod [] = 1
+proizvod (x:xs) = x * proizvod xs
+}
+
+@p Osim promene same operacije, promenili smo i povratnu vrednost za praznu listu. Za svaki drugi izbor vrednosti @code{proizvod []}, dobio bi se pogrešan rezultat. Štaviše, u slučaju da smo definisali @code{proizvod [] = 0}, tada bi proizvod svake liste bio @code{0}.
+}
+
+@example{
+@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekurzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkcije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
+
+@codeBlock{
+last' :: [a] -> a
+last' [x] = x
+last' (_:xs) = last xs
+}{Pošto nas u drugom slučaju ne interesuje glava liste, iskoristili smo džoker @code{_}.}
+}
+
+@problem{
+Reimplementirati funkcije za rad sa listama poput: @code{tail}, @code{reverse}, @code{elem}, @code{unique}.
+}
+
+@p Ponekad je potrebno implementirati funkcije koje su rekurzivne po više argumenata.
+
+@example{
+@p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodniska :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodniska} je naravno tehnika rekurzije.
+
+@p Pretpostavimo da su nam date dve neprazne niske @code{igla} i @code{seno}@note{U literaturi je uobičajno da se niske imenuju @em{igla} i @em{seno}, jer to jasno sugeriše u kojoj od niska očekujemo da se nalazi druga niska.}, i da se pitamo da li se @code{igla} sadrži u nisci @code{seno}. Tada postoje dve mogućnosti:
+
+@list{
+    @li Niska @code{igla} predstavlja početak niske @code{seno}. U ovom slučaju, odgovor je na pitanje da li se igla nalazi u senu je potvrdan.
+    @li Niska @code{igla} nije početak niske @code{seno}. U ovom slučaju, ako se niska @code{igla} nalazi u nisci @code{seno}, tada se mora nalaziti u repu te niske. Stoga pretragu možemo da ograničimo na rep niske @code{seno}.
+}
+
+@p Ako je niska @code{seno} prazna, tada se niska @code{igla} nalazi u njoj ako i samo ako je @code{igla} prazna niska. Da bi proverili da li je neka lista (specijalno niska) prazna, možemo iskoristiti funkciju @code{null :: [a] -> Bool} iz prelida.
+
+@p Na osnovu ove analize, implementacija @code{daLiJePodniska} je jednostavna:
+
+@codeBlock{
+daLiJePodniska :: [Char] -> [Char] -> Bool
+daLiJePodniska igla "" = null igla 
+daLiJePodniska igla seno =
+    if daLiJePočetak igla seno
+        then True
+        else daLiJePodniska igla (tail seno)
+}
+
+@p Ostaje nam još da implementiramo funkciju @ccode{daLiJePočetak :: [Char] -> [Char] -> Bool} koja proverava da li prva prosleđena niska predstavlja početak druge prosleđene niske. Ponovo ćemo koristiti rekurziju, ali ćemo sada vršiti rekurziju po oba argumenta. 
+
+@p Ako su glave obe prosleđene niske iste, tada možemo da nastavimo da poredimo repove. U suprotnom možemo da budemo sigurni da druga niska ne počinje sa prvom niskom. Baza indukcije su slučajevi u kojima je jedna od niski prazna. Ako je prva niska prazna, onda druga niska započinje prvom niskom. Ako je druga niska prazna, a prva niska nije prazna, tada znamo da se prva niska ne sadrži u drugoj nisci
+
+
+@codeBlock{
+daLiJePočetak :: [Char] -> [Char] -> Bool
+daLiJePočetak "" _ = True
+daLiJePočetak _ "" = False
+daLiJePočetak (x:xs) (y:ys) =
+    if x == y
+        then daLiJePočetak xs ys
+        else False
+}
+
+@p Primetimo da se funkcija @ccode{daLiJePodlista :: Eq a => [a] -> [a] -> Bool} može implementirati na gotovo isti način.
+}
+
+@problem{Definisati funkciju @code{dupliraj :: Num a => [Int] -> [Int]} koja duplira svaki element liste brojeva. Redosled dupliranih vrednosti treba da odgovara redosledu vrednosti u originalnoj listi. Na primer @ccode{dupliraj [2, 3, 4]} je @code{[4, 6, 8]}, a @code{dupliraj []} je @code{[]}.}
+
+@problem{Definisati funkciju @code{dužine :: [[Char]] -> [Int]} koja listu niski preslikava u listu brojeva, pri čemu svaki broj predstavlja dužinu niske. Pritom, redosled brojeva je isti kao redosled odgovarajućih niski. Na primer, @ccode{dužine ["Pop","Ćira","i","pop","Spira"]} je @code{[3,4,1,3,5]}.}
+
+@problem{Definisati funkciju @code{parni :: [Int] -> [Int]} koje listu brojeva preslikava u listu brojeva koja je dobijana uklanjanjem svih neparnih brojeva iz početne liste. Na primer, @code{parni [1,2,3,4]} je @code{[2,4]}.}
+
+@problem{Definisati funkciju @code{zbirCifara :: Int -> Int} koja određuje zbir cifara broja zapisanog u dekadnom zapisu. Koristeći ovu funkciju, naći sve prirodne brojeve @m{n} manje od @m{100}, takve da je zbir cifara broja @m{n^2} deljiv sa @m{5}.}
+
+
+@section{Funkcije višeg reda}
+
+@p Implementacijom mnogih rekurzivnih algoritama nad listama uvidećemo da se neki šabloni konstrukcije algoritama ponavljaju. Zbog toga su definisane funkcije višeg reda sa rad sa listama. Korišćenjem ovih funkcija možemo da izbegnemo eksplicitnu rekurziju u mnogim slučajevima.
+
+@subsection{@em{Filter}}
+
+@p Funkcija višeg reda @code{filter :: (a -> Bool) -> [a] -> [a]} iz liste izdvaja samo elemente koji zadovoljavaju neki uslov.
+
+@p Prvi argument funkcije je funkcija tipa @code{a -> Bool} koju nazivamo @def{predikat}. Predikat treba da vrati vrednost @code{True} ako element treba da se nađe u povratnoj listi. Drugi argument funkcije je lista koju filtriramo. Rezultat je lista iz koje su uklonjeni elementi koji ne zadovoljavaju predikat, pri čemu poredak elemenata ostaje isti.
+
+@example{
+@p Ako želimo da "uzmemo" parne prirodne brojeve manje od @code{10} možemo napisati:
+
+@terminal{
+ghci> filter (\x -> mod x 2 == 0) [1 .. 10]
+[2, 4, 6, 8, 10]
+}
+}
+
+@problem{
+Data je lista @code{visine :: [Float]} koja predstavlja visine svih učenika jedne škole. Odrediti broj učenika viših od @m{180\mathrm{cm}}.
+}{
+@codeBlock{
+brojVisokihUčenika = length visokiUčenici
+    where visokiUčenici = filter (\x -> x >= 180) visine
+}
+}
+
+@problem{
+Svaka osoba je predstavljena sa uređenim parom tipa @code{([Char], Int)} koji sadrži ime osobe i njene godine. Implementirati funkciju @ccode{punoletne :: [([Char], Int)] -> [([Char], Int)]} koja iz liste osoba eliminiše maloletne osobe. Dati rešenja sa i bez funkcije @code{filter}.
+}
+
+@problem{
+Reimplementirati funkciju @code{filter}.
+}{
+@p Iskoristićemo tehniku rekurzije. Ako funkciju @code{filter' p} primenimo na praznu listu, tada je logično da dobijemo praznu listu bez obzira na predikat @code{p}. Ovaj slučaj predstavlja bazu rekurzije.
+
+@p Ako lista nije prazna, tada je možemo rastaviti na glavu @code{x} i rep @code{xs}. Ako je @code{p x} tačno, tada se @code{x} nalazi na početku liste koju vraćamo, a u suprotnom ne. Za ostatak liste @code{xs} iskoristićemo rekurzivni poziv, da bismo isfiltrirali @code{xs}.
+
+@codeBlock{
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' _ [] = []
+filter' p (x:xs) = if p x then x : filter p xs else filter p xs
+}{Pošto nas u baznom slučaju ne interesuje predikat, iskoristili smo džoker @code{_}.}
+}
+
+@subsection{@em{Map}}
+
+@p Još jedna funkcija višeg reda koja se često koristi sa listama je @ccode{map :: (a -> b) -> [a] -> [b]}. Funkcija @code{map} primenjuje datu funkciju na svaki element liste i vraća listu dobijenih vrednosti tj. važi@note{Primetimo da navedena jednakost nije validan Haskel kôd, već samo zapis koji ilustruje funkciju @code{map}.} @ccode{map f [x₁, x₂, ... xₙ] = [f x₁, f x₂, ... f xₙ]}.
+
+@p Prvi argument funkcije je funkcija tipa @code{a -> b}, a drugi argument je lista tipa @code{[a]}. Rezultat je lista tipa @code{[b]} koja je nastala od prosleđene liste primenom prosleđene funkcije na svaki element liste.
+
+@example{
+@p Ako želimo da kvadriramo svaki element liste @code{[1, 2, 3, 4]}, možemo napisati
+
+@codeBlock{
+ghci> map (\x -> x^2) [1, 2, 3, 4]
+[1, 4, 9, 16]
+}}
+
+@problem{
+Reimplementirati funkciju @code{map}.
+}{
+@p Iskoristićemo ponovo tehniku rekurzije. Funkcija @code{map'} treba da primeni neku funkciju @code{f} na svaki element liste @code{l}. Ako je lista @code{l} prazna, tada je i @code{map f l} prazna lista. Ovaj slučaj predstavlja bazu rekurzije.
+
+@p Ako lista nije prazna, tada ćemo na glavu liste @code{x} primeniti funkciju @code{f}, čime dobijamo prvi element tražene liste. Za dobijanje ostatka liste, rekurzivno ćemo pozvati @code{map' f} nad repom liste @code{xs}.
+
+@codeBlock{
+map' :: (a -> b) -> [a] -> [b]
+map' _ [] = []
+map' f (x:xs) = f x : map' f xs 
+}
+}
+
+@subsection{@em{Fold}}
+
+@p Funkcije @code{foldl} i @code{foldr} koriste neku binarnu funkciju da bi "presavile" složenu vrednost (poput liste) u jednu vrednost. Ove funkcije se mogu koristiti sa tipovima koji pripadaju @code{Foldable} klasi, a liste su osnovni primer takvih tipova. Zapravo, upravo je implementacija funkcija @code{foldr} nophodna za instanciranje @code{Foldable} klase@note{Kao što je na primer funkcija @code{show} neophodna za instanciranje @code{Show} klase.}. Nadalje, možemo zaboraviti na @code{Foldable} klasu, i posmatrati funkcije @code{foldl} i @code{foldr} samo kroz kontekst lista.
+
+@p Razlika između @code{foldl} i @code{foldr} funkcije je tome što @code{foldl} počinje od početka liste (levog kraja), dok @code{foldr} počinje od desnog kraja.
+
+@p Pogledajmo prvo funkciju @code{foldr}. Tip funkcije @code{foldr} je@note{Zapravo, tip navedene funkcije je @code{Foldable t => (a -> b -> b) -> b -> t a -> b}, ali se za sada možemo ograničiti samo na liste.} @ccode{foldr :: (a -> b -> b) -> b -> [a] -> b}. Prvi argument funkcije @code{foldr} je binarna funkcija tipa @code{a -> b -> b}. Drugi argument je @def{početna vrednost}, a treći argument je lista koju želimo da "presavijemo". Funkcija @code{foldr} "prolazi" kroz datu listu s desna na levo pozivajući nad svakim elementom datu binarnu funkciju. Za svaki taj poziv, rezultat poziva nad prethodnim elementom se koristi kao drugi argument binarne funkcije. Inicijalna vrednost se koristi kao drugi argument pri prvom pozivu (a to je poziv nad poslednjim elementom u listi). Komplikovano objašnjenje će postati jasnije kroz naredne primere.
+
+@example{
+@p Uz pomoć @code{foldr} možemo sabrati sve elemente jedne liste. Binarna funkcija koju ćemo koristiti je funkcija koja sabira argumente @code{saberi = \a b -> a + b}.
+
+@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo početnu vrednost@note{Ovo je uvek tačno za obe @em{fold} funkcije, pozivanjem nad prznom listom dobijamo početnu vrednost, jer u listi nije bilo elementa na koje je prosleđena binarna funkcija mogla biti primenjena.}:
+
+@terminal{
+ghci> foldr saberi 0 []
+0
+}
+
+@p Ako @code{foldr saberi 0} pozovemo nad jednočlanom listom, dobićemo rezultat primene funkcije @code{saberi} nad jedinim elementom liste i inicijalnom vrednošću (tj. @code{saberi 1 0}):
+
+@terminal{
+ghci> foldr saberi 0 [1]
+1
+}{Navedeni izraz se svodi na @code{saberi 1 0}, tj. na primenu prosleđene funkcije na jedini element niza, pri čemu je inicijalna vrednost iskorišćena kao drugi argument.}
+
+@p U slučaju dvočlane liste, prosleđena funkcija biće dva puta pozvana. Pri drugom pozivu biće iskorišćena povratna vrednost prvog poziva.
+
+@terminal{
+ghci> foldr saberi 0 [2, 1]
+3
+}{Navedeni izraz se svodi na @code{saberi 2 (saberi 1 0)}}
+
+@p Za listu od više elemenata imamo:
+
+@terminal{
+ghci> foldr saberi 0 [3, 2, 1]
+6
+}
+
+@p Prethodih izraz je ekvivalentan izrazu @ccode{saberi 3 (saberi 2 (saberi 1 0))} koji je naravno ekvivalentan izrazu @ccode{3 + (2 + (1 + 0))}
+
+@p Isti rezultat se dobija i sa @code{foldl} funkcijom, koja primenjuje funkciju sa leva na desno. Izraz @code{foldl saberi 0 [3, 2, 1]} svodi se na izraz @ccode{((0 + 3) + 2) + 1}.
+}
+
+@p U prethodnim primerima, obe funkcije su dale isti rezultat jer smo koristili funkciju @code{saberi} koja je simetrična po parametrima (tj. @code{saberi a b} daje isti rezultat kao @code{saberi b a}). Ali nije neophodno da rezultati primene @code{foldl} i @code{foldr} funkcija budu isti:
+
+@terminal{
+ghci> g = \a b -> a / b
+ghci> foldl g 1 [2, 3]
+0.16666
+ghci> foldr g 1 [2, 3]
+1.5
+}{Prvi izraz se svodi na @code{(1 / 2) / 3}, dok se drugi izraz svodi na @code{1 / (2 / 3)}.}
+
+@p Često je zgodno da umesto posebne inicjalne vrednosti, iskorisimo prvi (ili poslednji) element liste. Tada nam mogu pomoći funkcije @ccode{foldl1 :: (a -> a -> a) -> [a] -> a} i @ccode{foldr1 :: (a -> a -> a) -> t a -> a} koje se razlikuju od @code{foldl} i @code{foldr} funkcija po tome što nemaju i inicijalnu vrednost kao jedan od parametara.
+
+@example{
+@p Binarna funkcija @code{min :: Ord a => a -> a -> a} vraća manju od dve vrednosti@note{Setimo se, klasa @code{Ord} sadrži sve one tipove čiji se vrednosti mogu porediti sa @code{<}, @code{==}, @code{>}, itd... Prema tome za dve vrednosti nekog tipa iz @code{Ord}, uvek možemo odrediti koja je manja.}. Ako želimo da odredimo najmanju vrednost u tročlanoj listi, dovoljno je da prvo odredimo najmanju vrednost od prva dva elementa, a zatim tu vrednost uporedimo sa trećim elemntom. Slično važi i za liste veće dužine. Prema tome, funkcija @code{min} nam je dovoljna za implementaciju funkcije @code{najmanji :: Ord a => [a] -> a}:
+
+@codeBlock{
+najmanji :: Ord a => [a] -> a
+najamnji xs = foldl1 min xs
+}
+
+@terminal{
+ghci> najmanji [3, 4, 1, 2]
+1
+}{Poziv @code{najamnji [3, 4, 1, 2]}, svodi se na izraz @code{min (min (min 3 4) 1) 2}, koji se naravno redukuje u @code{1}}
+
+@p Treba napomenuti da funkcije @code{foldl1} i @code{foldr1} očekuju neprazan niz. Ako se ovim funkcijama prosledi prazan niz, doći će do izuzetka (jer ove funkcije jednostano "nemaju" vrednost da vrate). Sa druge strane, kao što smo napomenuli, funkcije @code{foldl} i @code{foldr} mogu se primeniti i na prazan niz.
+}
+
+@p Da bi ste shvatili prednost @code{foldl1} i @code{foldr1} funkcija, pokušajte da implementirate funkciju iz prethonog primera koristeći @code{foldl} ili @code{foldr}. Uvidećete da izbor inicijalne vrednosti nije uvek trivijalna stvar. Obratite pažnju da lista može da sadrži i negativne vrednosti.
+
+@problem{
+Implementirati funkciju @code{najveći :: Ord a => [a] -> a} koja vraća najveći element liste. Pretpostaviti da lista neće biti prazna.
+}
+
+@problem{
+Implementirati funkciju @code{svi :: [Bool] -> Bool}, koja vraća @code{True} samo ako su svi elementi u prosleđenoj listi tačni. Navesti implementaciju i sa @code{foldl} i sa @code{foldl1} funkcijom.
+}
+
+@problem{
+Implementirati funkciju @code{baremJedan :: [Bool] -> Bool} koja vraća @code{True} ako je barem jedna elemenet u prosleđenoj listi tačan.
+}
+
+@problem{
+Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju tipa @code{Int -> Float} koja u zavisnosti od parametra @m{n} računa sumu @eq{\sum^{n}_{i=1} \frac{1}{i}.}
+}
+
+@problem{
+U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u ceobrojnu vrednost. Na primer, @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće bit prazna i sadržaće samo cifre).}
+{@p Koristeći funkcije @code{map} i @code{uCifru} nisku možemo prevesti u listu cifara tj. vrednost tipa @code{[Int]}. Na primer @code{map uCifru "123"} nam daje @code{[1,2,3]}. Sada je potrebno rekurzivno proći kroz ovakav niz cifara i formirati broj. Za to ćemo napisati pomoćnu funkciju @code{cifreUbroj :: [Int] -> Int}
+
+@p Algoritam je najlakše sprovesti rekurzijom po poslednjem elementu liste (pokušajte i da implementirate algoritam rastavljajući listu na glavu i rep). Bazu rekurzije čini slučaj jednočlanog niza. U tom slučaju kao povratnu vrednost vraćamo jedini element te liste (jer je vrednost jednocifrenog broja jednaka vrednosti jedine cifre tog broja). U suprotnom, rastavljamo listu na početak i na poslednji element, i računamo vrednost koju predstavlja početak. Tu vrednost početka pomeramo za jedno decimalno mesto (množeći sa @code{10}) i na to dodajemo vrednost poslednjeg elementa. Konkretno, ako nam je data lista @code{[1, 2, 3]}, rekurzivno nalazimo vrednost @code{cifreUBroj [1, 2]} što bi trebalo da nam da @code{12}. Množenjem sa @code{10} dobijamo vrednost @code{120}, koja kad je saberemo sa poslednjim elementom liste daje traženu vrednost funkcije. Kada razumemo postpak, kod nije teško napisati:
+
+@codeBlock{
+cifreUbroj :: [Int] -> Int
+cifreUbroj [] = 0
+cifreUbroj [x] = x
+cifreUBroj xs = (cifreUBroj (init x)) * 10 + (last x)
+}{Slučaj prazne liste je dodat radi totalnosti}
+
+@p Koristeći navedenu pomoćnu funkciju, zadatak je lako rešiti
+
+@codeBlock{
+uBroj :: [Char] -> Int
+uBroj s = cifreUBroj (map uCifru s)
+}
+}
+
+@problem{Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.}
+
+@problem{Reimplementirati funkciju @code{filter} koristeći funkciju @code{foldl}.}
+
+@problem{Reimplementirati funkciju @code{id :: [a] -> [a]} koristeći funkciju @code{foldl}.}
+
+@subsection{Zip}
+
+@p Za uparivanje dve liste član-po-član u listu parova koristi se funkcija @ccode{zip :: [a] -> [b] -> [(a, b)]}. Pritom, dužina liste parova koja se dobija kao rezultat je jednaka dužini kraćoj od prosleđenih lista.
+
+@example{
+@p Funkcija @code{zip} se često koristi za "numerisanje" članova neke liste. Tako možemo lako numerisati listu dana u nedelji:
+
+@terminal{
+ghci> dani = ["Pon", "Uto", "Sre", "Čet", "Pet", "Sub", "Ned"]
+ghci> dani2 = zip [1 .. 7] dani
+ghci> dani2
+[(1,"Pon"),(2,"Uto"),(3,"Sre"),(4,"Čet"),(5,"Pet"),(6,"Sub"),(7,"Ned")]
+}
+}
+
+@p Kada na rezultat @code{zip} funkcije primenjujemo @code{map} funkciju, tada je zgodnije koristiti funkciju @ccode{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}. Funkcija @code{zipWith} kombinuje dve liste element-po-element koristeći prosleđenu funkciju.
+
+@example{
+@p (@em{Nastavak prethodnog primera}) Listu numerisanih dana možemo pretvoriti u listu niski na sledeći način
+
+@terminal{
+ghci> f (a, b) = show a ++ ". " ++ b
+ghci> numerisaniDani = map f dani2
+ghci> numerisaniDani
+["1. Pon","2. Uto","3. Sre","4. Čet","5. Pet","6. Sub","7. Ned"]
+ghic> head numerisaniDani
+"1. Pon"
+}{Funkcija @code{f} spaja broj i nisku u nisku. Primetimo da smo ovde koristili poklapanje oblika za definisanje funkcije.}
+
+@p Ali, ako nam je potrebna samo vrednost @code{numerisaniDani} a ne i @code{dani2}, možemo preskočiti korak u kom kreiramo vrednost @code{dani2}, i iskoristiti funkciju @code{zipWith}:
+
+@terminal{
+ghci> numerisaniDani = zipWith f [1 .. 7] dani
+}
+}
+
+@problem{Reimplementirati funkciju @code{zipWith} koristeći rekurziju.}
+
+@problem{Reimplementirati funkciju @code{zip} koristeći funkciju @code{zipWith}.}
+
+@problem{Reimplementirati funkciju @code{zipWith} koristeći funkcije @code{zip} i @code{map}.}
+
+@section{Primer: Cezarova šifra}
+
+@p Po rimskom istoričaru Svetoniju, Julije Cezar je šifrovao vojne poruke tako što bi slovo @em{A} zamenio slovom @em{D}, slovo @em{B} slovom @em{E}, slovo @em{C} slovom @em{F}, i tako dalje, zamenjujući svako slovo latinskog alfabeta sa slovom koje se nalazi tri mesta nakon tog slova. Na primer, reč @em{CLEOPATRA} bi pri ovom šifrovanju postala @em{FOHRSDYVD}@note{Za ovaj primer smo koristili rimski alfabet koji ne sadrži @em{J}, @em{U} i @em{W}. Nadalje koristimo engleski alfabet.}. Onaj ko bi primio poruku, dešifrovao bi poruku tako što bi uradio sličnu zamenu, ali ovog puta zamenjujući svako slovo sa slovom koje se u alfabetu nalazi tri mesta pre. Iako Cezar nije prvi iskoristio ovakvu šifru, danas šifra nosi ime po njemu. Štaviše, pod istim imenom nazivaju se šifre koje "pomeraju" slova za @m{n} mesta, gde @m{n} ne mora biti baš @m{3}.
+
+@p Za implementaciju Cezarove šifre prvo ćemo konstruisati listu parova odgovarajućih karaktera (svaki par će sadržati slovo i šifrovano slovo). To možemo učiniti sa @code{zip} funkcijom
+
+@codeBlock{
+šifra :: [(Char, Char)]
+šifra = zip ['A' .. 'Z'] ['D' .. 'Z']
+}
+
+@p Navedenim kodom smo uparili listu @code{['A' .. 'Z']} sa listom @code{['D' .. 'Z']}. Time dobijamo listu koja redom sadrži parove @code{('A','D')},  @code{('B','E')}, @code{('C','F')}, itd.. Međutim, kako @code{['A' .. 'Z']} ima 26, a @code{['D' .. 'Z']} samo 23 člana, lista @code{šifra} će imati samo 23 člana, i slova @code{'X'}, @code{'Y'} i @code{'Z'} neće imati para. 
+
+@p Da bismo prevazišli problem, na kraj liste @code{['D' .. 'Z']} dodaćemo karaktere @code{['A', 'B', 'C']}. Na ovaj način @code{'X'} će se šifrovati u (upariti sa) @code{'A'}, @code{'Y'} u @code{'B'} i @code{'Z'} u @code{'C'}.
+
+@codeBlock{
+šifra :: [(Char, Char)]
+šifra = zip ['A' .. 'Z'] (['D' .. 'Z'] ++ ['A', 'B', 'C'])
+}
+
+@terminal{
+ghci> šifra
+[('A','D'),('B','E'),('C','F'),('D','G'),('E','H'),('F','I'),('G','J'),('H','K'),('I','L'),
+('J','M'),('K','N'),('L','O'),('M','P'),('N','Q'),('O','R'),('P','S'),('Q','T'),('R','U'),
+('S','V'),('T','W'),('U','X'),('V','Y'),('W','Z'),('X','A'),('Y','B'),('Z','C')]
+}
+
+@p Sada listu @code{sifra} možemo da iskoristimo da šifrujemo pojedinačne karaktere. Ideja je sledeća: za dati karakter @code{k :: Char}, iz liste @code{šifra} uzećemo par čija prva koordinata je jednaka vrednosti @code{k}. Šifrovan karakter će biti druga koordinata tog para. Za pronalazak odgovarajućeg para, koristimo funkciju @code{filter}.
+
+@codeBlock{
+šifrujKarakter :: Char -> Char
+šifrujKarakter k = snd (head šifrovano)
+  where
+    šifrovano = filter (\par -> fst par == k) šifra
+}{Na primer, ako je @code{k = 'A'}, tada će @code{filter} u listi @code{sifrovano} ostaviti samo uređene parove čija je prva koordinata @code{'A'}, a to je samo par @code{('A', 'D')}. Dakle, @code{šifrovano} će biti @em{lista} @code{[('A', 'D')]}. Prvom i jedinom elementu te liste ćemo pristupiti sa funkcijom @code{head}, a drugoj koordinati tog elementa ćemo pristupiti sa funkcijom @code{snd}. Time dobijamo @code{šifrujKarakter 'A' = 'D'}.}
+
+@p Funkcija @code{šifrujKarakter} šifruje velika slova engleske abecede. Ali, ako pozovemo @code{šifrujKarakter} nad karakterima @code{'a'}, @code{'9'} ili @code{'ш'}, doći će do katastrofalnih rezultata. Naime, u takvim slučajevima lista @code{šifrovano} će biti prazna, a pokušaj pristupa prvom članu prazne liste (@code{head šifrujKarakter}) će dovesti do prekida programa. Zbog toga, pre pristupa elementu liste @code{šifrovano} moramo proveriti da li je lista prazna. Ako jeste prazna, onda ćemo vratiti prosleđeni karakter, a u suprotnom ćemo vratiti šifrovan karakter.
+
+@codeBlock{
+šifrujKarakter :: Char -> Char
+šifrujKarakter k
+  | null šifrovano = k
+  | otherwise      = snd (head šifrovano)
+  where
+    šifrovano = filter (\par -> fst par == k) šifra
+}
+
+@p Šifrovana niska dobija se primenom funkcije @code{šifrujKarakter} na svaki karakter te niske:
+
+@codeBlock{
+šifruj :: [Char] -> [Char]
+šifruj niska = map šifrujKarakter niska
+}
+
+@terminal{
+ghci> šifruj "NAPAD NA GALE VECERAS U OSAM"
+"QDSDG QD JDOH YHFHUDV X RVDP"
+}{Pošto se razmak @code{' '} ne nalazi u listi @code{šifra}, važi @code{šifrujKarakter ' ' = ' '}. Samim tim, prilikom šifrovanja razmaci se čuvaju.}
+
+@p Funkcija koja dešifruje poruku je potpuno analogna funkciji koja je šifruje, samo što je uloga koordinata obrnuta. Pretragu vršimo po drugoj koordinati, a vraćamo prvu:
+
+@codeBlock{
+dešifrujKarakter :: Char -> Char
+dešifrujKarakter k
+  | null dešifrovano = k
+  | otherwise      = fst (head dešifrovano)
+  where
+    dešifrovano = filter (\par -> snd par == k) šifra
+
+dešifruj :: [Char] -> [Char]
+dešifruj niska = map dešifrujKarakter niska
+}
+
+@problem{
+Implementacija Cezarove šifra koju smo prezentovali gore je dobra za demonstraciju rada sa listama u Haskelu, ali nije mnogo efikasna. Umesto da za svako slovo pretražujemo listu @code{šifra}, možemo iskoristiti @code{fromEnum :: Enum a => a -> Int} i @code{toEnum :: Enum a => Int -> a} funkcije da bi konvertovali slova u @em{ASCII} vrednosti i obrnuto. Koristeći navedene funkcije, kao i funkciju ostataka @code{mod}, dati alternativnu definiciju funkcije @code{šifrujKarakter}.
+}
+
+@problem{
+Koristeći prethodni zadatak, implementirati Cezarovu šifru sa proizvoljnim pomerajem @m{n}.
+}
+
+@problem{
+Vižnerova šifra (po francuskom kriptografu Blezu de Vižneru) predstavlja uopštenje Cezarove šifre. Za Vižnerovu šifru, potrebno je odabrati @em{ključ} koji će se koristiti prilikom šifrovanja i dešifrovanja. Ključ je jedna reč, čija slova određuju pomeraje za Cezarovu šifru. Uzmimo ponovo prethodni primer tajne poruke @ccode{"NAPAD NA GALE VECERAS U OSAM"}, a za ključ uzmimo @code{"RIM"}. Pri Vižnerovom šifrovanju, prvi karakter poruke, @code{'N'}, će se šifrovati sa Cezarovom šifrom sa pomerajem @m{18}, jer je prvi karakter ključa, @code{'R'}, osamnaesto slovo u abecedi. Drugi karakter će se šifrovati sa pomerajem @m{9} (jer je @code{'I'} deveto slovo abecede), a treći sa pomerajem @m{13} (jer je @code{'M'} trinaesto slovo abecede). Pošto smo stigli do kraja ključa, ključ koristimo ispočetka, i četvrto slovo poruke, @code{'A'} šifrujemo sa pomerajem @m{18}. Ovaj proces nastavljamo, ponavljajući ključ, sve dok ne stignemo do kraja poruke. Implementirati Vižnerovu šifru. 
+}
+
+@section{Zadaci}
+
+@problem{
+Napisati program koji vraća listu prvih @m{n} Fibonačijevih brojeva.
+}
+
+@problem{
+Svi prirodni brojevi manji od 10 koji su deljivi sa @m{3} ili @m{5} su @m{3}, @m{5}, @m{6} i @m{9}. Njihov zbir je @m{23}. Naći zbir svih prirodnih brojeva manjih od @m{100} koji su deljivi sa @m{3} ili @m{5}.
+}
+
+@problem{
+Palindromski broj je prirodan broj koji se čita isto i sa leva i sa desna. Najveći palindromski broj koji je proizvod dva dvocifrena broja je @m{9009}, jer je @eq{9009 = 91 \cdot 99.} Naći najveći palindromski broj koji je proizvod dva trocifrena broja.
+}
+
+@problem{
+Implementirati funkciju @code{dekartovProizvod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProizvod [1, 2, 3] ['a', 'b']} daje @ccode{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.
+}
+
+@problem{
+Naći sve početke date liste. Na primer @code{poceci [1, 2, 3]} bi trebalo da nam vrati @code{[[], [1], [1, 2], [1, 2, 3]]}.
+}
+
+@problem{
+Napisati funkciju @code{kodiraj :: [Char] -> [(Char, Int)]} koja kodira nisku tako što je predstavlja kao listu uređenih parova karaktera i prirodnih brojeva. Broj označava dužinu uzastopnog ponavljanja datog karaktera. Na primer: @code{kodiraj "aaaabb"} daje @ccode{[('a', 4), ('b', 2)]}, a @code{kodiraj "Google"} daje @ccode{[('G', 1), ('o', 2), ('g', 1), ('l', 1), ('e', 1)]}. Napisati i funkciju @code{dekodiraj :: [(Char, Int)] -> [Char]}.
+}
+
+@problem{
+Napisati funkciju @code{rotiraj :: Int -> [a] -> [a]} koja "rotira" listu tako što svaki element pomera za @code{n} mesta u levo, pri čemu se elementi sa kraja liste vraćaju na početak: @code{rotiraj 1 "ABCD"} daje @code{"BCDA"}, a @code{rotiraj 2 "ABCD"} daje @code{"CDAB"}, itd...
+}{
+@p @em{Pomoć:} Implementirati pomoćnu funkciju koja rotira listu za jedan element. Opštu funkciju implementirati rekurzijom po broju rotiranja koristeći pomoćnu funkciju.
+}
+
+
+@problem{
+Implementirati funkciju @ccode{srednjaVrednost :: [Float] -> Float} koja računa srednju vrednost liste. Implementirati funkciju @ccode{disperzija :: [Float] -> Float} koja računa disperziju vrednosti liste.
+}
+
+@problem{
+Data je lista prirodnih brojeva sa @m{n>0} članova. Element na poziciji @m{k \le n} predstavlja cenu neke akcije na berzi u @m{k}-tom danu. Potrebno je u jednom od ponuđenih dana kupiti akciju, a zatim u nekom od narednih dana (uključujući i dan kupovine) i prodati akciju. Naravno, cilj je ostvariti što veći profit (profit računamo kao razliku prodajne i kupovne cene).
+Napisati funkciju @code{profit :: [Int] -> Int} koja uzima cene akcija tokom vremena, i vraća najveći profit koji je moguće ostvariti trgovinom akcija. Akcija se može samo jednom kupiti i prodati, prodaja se mora odviti nakon kupovine ili istog dana. Pretpostaviti da prosleđena lista nije prazna. Na primer @code{profit [7,1,5,3,6,4] = 5} jer kupovinom drugog dana i prodajom petog dana ostvarujemo profit \(6 - 1 = 5\). Ne možemo ostvariti dobit \(7 - 1 = 5\) jer se prodaja mora ostvariti nakon kupovine.
+}

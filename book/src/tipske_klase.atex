@@ -1,0 +1,440 @@
+@chapter{Tipske klase}
+
+@p @def{Tipska klasa} predstavlja kolekciju tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz metode@note{@em{Metod} je samo naziv za funkciju (specijalno operator) koju klasa deklariše.} koje "rade" sa svim tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
+
+@p U lekciji o polimorfizmu videli smo da nam tipske klase omogućuju da pišemo polimorfne funkcije koje koriste neke određene metode koje nisu dostupne svakom tipu@note{Na primer, koristeći klasu numeričkih tipova @code{Num}, moguće sa jednom definicijom implementirati numeričku formulu za svaki tipom koji pripada klasi @code{Num}.}. U ovoj lekciji ćemo prikazati kako i sami možemo definisati naše klase, i kroz primere predefinisanih klase videćemo razne tehnike koje je moguće koristiti pri radu sa klasama.
+
+@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova metoda koje instanca mora da implementira:
+
+@codeBlock{
+class C a where
+  f1 :: T1
+  f2 :: T2 
+  ....
+}{Ovde @code{a} je tipska promenljiva koja predstavlja neku instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku promenljivu @code{a}.}
+
+@p Da bi neki tip @code{T} pridružili klasi tipova @code{C}, koristimo narednu konstrukciju nakon koje slede definicije metoda koje propisuje klasa:
+
+@codeBlock{
+instance C T where
+  f1 = ...
+  f2 = ... 
+  ...
+}{U okviru definicije instance ne navode se tipovi metoda.}
+
+@section{Jedan primer}
+
+@p Gotovo da nema uvodne knjige o programiranju u nekom jeziku koja ne sadrži primer sa geometrijskim figurama poput pravougaonika, trougla i kruga. Implementirati strukture koje predstavljaju figure i funkcije koje računaju obim i površinu figura je jednostavno u svakom popularnom jeziku, ali može da posluži za odličnu ilustraciju mnogobrojnih pojedinosti nekog programskog jezika. Nama će poslužiti da ilustrujemo zašto su klase tipova korisne.  
+
+@p Prvo ćemo definisati tri tipa podatka koji predstavljaju figure u Dekartovoj ravni:
+
+@list{
+  @li Svaki pravougaonik se može odrediti sa jednim temenom, širinom i visinom (jednostavnosti radi, pretpostavljamo da su stranice pravougaonika paralelne sa koordinatnim osama). Kako teme možemo predstaviti sa dve koordinate, ceo kvadrat možemo predstaviti sa četiri @code{Double} vrednosti.
+  @li Trougao je u potpunosti određen sa tri temena. Prema tome, za predstavljanje trougla nam je potrebna struktura podataka koja sadrži šest @code{Double} vrednosti.
+  @li Krug je određen centrom i poluprečnikom. Stoga struktura koja predstavlja krug sadrži tri @code{Double} vrednosti.
+}
+
+@p Kada znamo šta strukture sadrže, lako ih je implementirati kao uređene @m{n}-torke:
+
+@codeBlock{
+newtype Pravougaonik = Pravougaonik (Double, Double, Double, Double)
+  deriving Show
+
+newtype Trougao = Trougao (Double, Double, Double, Double, Double, Double)
+  deriving Show
+
+newtype Krug = Krug (Double, Double, Double)
+  deriving Show
+}{Iz navedenog koda nije jasno šta navedene koordinate predstavljaju. U slučaju pravougaonika prve dve koordinate su koordinate "levog donjeg" temena, dok druge dve koordinate predstavljaju visinu i širinu. U slučaju trougla, prve dve koordinate predstavljaju koordinate prvog temena, druge dve drugog, i poslednje dve koordinate predstavljaju koordinate trećeg temena. U slučaju kruga, prve dve koordinate predstavljaju koordinate centra, dok treća koordinata predstavlja poluprečnik.}
+
+@p Implementacija funkcija koje računaju obim navedenih figura je takođe jednostavna:
+
+@codeBlock{
+obimPravougaonika :: Pravougaonik -> Double
+obimPravougaonika (Pravougaonik (x, y, a, b)) = 2 * (a + b)
+
+obimTrougla :: Trougao -> Double
+obimTrougla (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
+  where
+    a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+    b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
+    c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
+
+obimKruga :: Krug -> Double
+obimKruga (Krug (x, y, r)) = 2 * pi * r 
+}{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
+
+@p Navedeni kôd je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli primeniti jedinstvenu funkciju @code{obim} na svaku figuru@note{Baš kao što funkciju @code{show} možemo primeniti i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a operator @code{+} možemo koristiti i sa @code{Int} i sa @code{Float} vrednostima, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
+
+@p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo metod @code{obim} u definiciji klase ćemo navesti samo jednu dekleraciju tipa. 
+
+@codeBlock{
+class Figura a where
+  obim :: a -> Double
+}
+
+@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do neprazne linije koja nije nazubljena.
+
+@p Slobodna tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja proizvoljnu instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
+
+@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, te je potrebno tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učiniti instancama klase @code{Figura}.
+
+@p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instanciranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
+
+@codeBlock{
+instance Figura Pravougaonik where
+  obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
+
+instance Figura Trougao where
+  obim (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
+    where
+      a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+      b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
+      c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
+
+instance Figura Krug where
+  obim (Krug (x, y, r)) = 2 * pi * r
+}{Definicije funkcija su u potpunosti iste kao definicije funkcija @code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}.}
+
+@p Linijom @code{instance ... } započinje se blok definicija metoda. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
+
+@p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnije pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
+
+@p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da se @code{obim} može primeniti na razne tipove figura
+
+@terminal{
+ghci> trougao = Trougao (0, 0, 1, 0, 0, 1)
+ghci> obim trougao
+3.414213562373095
+ghci> pravougaonik = Pravougaonik (0, 0, 2, 2)
+obim pravougaonik
+8.0
+ghci> krug = Krug (0, 0, 10)
+ghci> obim krug
+62.83185307179586
+}
+
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{površina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{površina}. Površinu Pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+
+@codeBlock{
+class Figura a where
+  obim :: a -> Double
+  površina :: a -> Double
+
+
+instance Figura Pravougaonik where
+  obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
+
+  površina (Pravougaonik (x, y, a, b)) = a * b
+
+
+instance Figura Trougao where
+  obim (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
+    where
+      a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+      b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2 
+      c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2
+  
+  površina (Trougao (x1, y1, x2, y2, x3, y3)) = sqrt . prod $ [s, s-a, s-b, s-c]
+      where
+        a = sqrt $ (x1 - x2)^2 + (y1 - y2)^2
+        b = sqrt $ (x2 - x3)^2 + (y2 - y3)^2
+        c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2
+        s = (a + b + c) / 2
+
+
+instance Figura Krug where
+  obim (Krug (x, y, r)) = 2 * pi * r
+  
+  površina (Krug (x, y, r)) = pi * r^2
+}
+
+@p Više o klasama tipova naučićemo na primerima poznatih klasa koje su već definisane u Haskelu.
+
+@section{@em{Equality}}
+
+@p U klasi @code{Eq} nalaze se svi tipovi čije vrednosti je moguće porediti pomoću funkcija @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
+
+@codeBlock{
+class Eq a where
+  (==) :: a -> a -> Bool
+  (/=) :: a -> a -> Bool
+}
+
+@p Klasa @code{Eq} deklariše dva operatora koje vraćaju logičke vrednosti. Ta dva operatora služe za poređenje vrednosti tipa @code{a}.
+
+@example{
+@p Definišimo tip koji predstavlja racionalan broj. Kako je svaki racionalan broj oblika @m{a/b} za neka sva cela broja @m{a} i @m{b\ne 0}, to tip @code{Racionalan} možemo definisati kao uređen par celih brojeva:
+
+@codeBlock{
+newtype Racionalan = R (Int, Int)
+}
+
+@p Pokušaj korišćenja vrednosti tipa @code{Racionalan} sa operatorima klase @code{Eq} dovešće do greške, jer tip @code{Racionalan} nije instanca ove klase:
+
+@terminal{
+ghci> a = R (1, 2)
+ghci> b = R (5, 10) 
+ghci> a == b 
+
+<interactive>:1:3: error:
+    • No instance for (Eq Racionalan) arising from a use of ‘==’
+    • In the expression: a == b
+      In an equation for ‘it’: it = a == b
+}
+
+@p Da bismo mogli da poredimo vrednosti tipa @code{Racionalan}, instanciraćemo @code{Eq Racionalan}:
+
+@codeBlock{
+instance Eq Racionalan where
+    (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
+    (Racionalan (a, b)) /= (Racionalan (c, d)) = a * d /= c * b
+}
+
+@p Ponovnim učitavanjem koda u @em{GHCi}, dobijamo mogućnost poređenja vrednosti tipa @code{Racionalan}:
+
+@terminal{
+ghci> a = R (1, 2)
+ghci> b = R (5, 10) 
+ghci> a == b 
+True
+ghci> a /= b
+False 
+}
+}
+
+@p Primetimo da deluje nepotrebno definisati obe funkcije @code{==} i @code{/=}. Zaista, ako bi smo poznavali jednu od ove dve funkcije, bilo bi prirodno da izvedemo onu drugu kao njenu negaciju (ako su dve vrednosti jednake onda nisu različite, i obrnuto). Haskel jezik nam omogućuje i to. Osim što u klasi možemo deklarisati tipove funkcija, možemo definisati i neke od tih funkcija preko ostalih a zatim navesti minimalni skup funkcija koje moraju biti definisane u instanci@note{Pritom, taj skup neophodnih definicija ne mora bita jedinstven...}.
+
+@p Konkretno, puna definicija klase @code{Eq} je@note{Gore smo naveli izmenjenu definiciju klase @code{Eq}, radi jednostavnosti}:
+
+@codeBlock{
+class Eq a where
+  (==), (/=)           :: a -> a -> Bool
+  
+  x /= y               = not (x == y)
+  x == y               = not (x /= y)
+  @@{ -# MINIMAL (==) | (/=) #-@@}
+}
+
+@p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati. Kroz naredne primere upoznaćemo se detaljnije sa sintaksom pragme @em{MINIMAL}.
+
+@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{\=}, a @code{\=} kao negaciju @code{==}, tada bi svako poređenje dovelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
+
+@example{
+@p @em{Nastavak prethodnog primera}. Za instancu @code{Racionalan}, dovoljno je napisati sledeće
+
+@codeBlock{
+instance Eq Racionalan where
+    (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
+}{Umesto definicije za @code{==}, mogli smo da napišemo i samo definiciju za @code{/=}.}
+}
+
+@section{@em{Ordering}}
+
+@p Klasu @code{Ord} čine svi tipovi koje je moguće porediti pomoću funkcija @code{<}, @code{<=}, @code{>} i @code{>=}. Definicija klase @code{Ord} je sledeća:
+
+@codeBlock{
+class (Eq a) => Ord a where
+    compare              :: a -> a -> Ordering
+    (<), (<=), (>), (>=) :: a -> a -> Bool
+    max, min             :: a -> a -> a
+
+    compare x y = if x == y then EQ
+                  else if x <= y then LT
+                  else GT
+
+    x <= y = case compare x y of
+      GT -> False;
+      _ -> True
+
+    x >= y = y <= x
+    x > y = not (x <= y)
+    x < y = not (y <= x)
+
+    max x y = if x <= y then y else x
+    min x y = if x <= y then x else y
+    @@{ -# MINIMAL compare | (<=) #-@@}
+}
+
+@p Ovde vidimo nešto drugačiju definiciju klase. Umesto sa @code{class Ord a where} definicija klase započinje sa @code{class (Eq a) => Ord a where}. Izraz @code{(Eq a) =>} predstavlja klasno ograničenje. Kao i kod tipova vrednosti, klasnim ograničenjima ograničavamo skup tipova koji mogu biti postavljeni na mesto tipske promenljive @code{a}. U ovom slučaju, sa klasnim ograničenjem garantujemo da će neki tip pripadati nekoj drugoj klasi pre nego što ga pridružimo ovoj klasi. 
+
+@p U slučaju klase @code{Ord}, ima smisla zahtevati da tip već pripada klasi @code{Eq} jer pojam jednakosti vrednosti neophodan za razlikovanje funkcija @code{>} i @code{>=}@note{Drugim rečima, ako možemo da poredimo vrednosti sa @code{>} i @code{>=}, tada @code{a == b} možemo definisati kao @ccode{(a >= b) && not (a > b)}. Sa druge strane ako možemo da poredimo vrednosti sa @code{==} i @code{\=}, to nam ništa ne govori o poređenju vrednosti u smislu operatora @code{<}, @code{<=}, @code{>}, @code{>=}. Dakle, funkcije koje definiše klasa @code{Eq} su elementarnije od onih funkcija klase @code{Ord}. Stoga ima smisla zahtevati da @code{Ord} bude podklasa klase @code{Eq}.}. Prema tome, klasa @code{Ord} je podklasa klase @code{Eq}.
+
+@p Klasa @code{Ord} propisuje funkciju @code{compare :: a -> a -> Ordering} koja upoređuje dve vrednosti, uobičajene relacije (operatore koje vraćaju logičke vrednosti) za poređenje elementa kao i dve binarne funkcije @code{min} i @code{max} koje respektivno vraćaju manji odnosno veći od argumenata.
+
+@p Tip @code{Ordering} je tip koji sadržati tri vrednosti @code{LT}, @code{EQ}, @code{GT} koje označavaju rezultat poređenja dve vrednosti. Vrednost @code{compare a b} je @code{LT}, @code{EQ}, @code{GT} ako je vrednost @code{a} strogo manja, jednaka, strogo veća od vrednosti @code{b}.
+
+@p Definicije operatora @code{<}, @code{>}, @code{>=} koriste operator @code{<=} i prilično su jasne. Jasne su i definicije binarnih funkcija @code{min} i @code{max} koje takođe koriste operator @code{<=}. Operator @code{<=} je definisan preko funkcije @code{compare}. Funkcija @code{compare} preko funkcije @code{<=}. Kao i kod klase @code{Eq}, i ovde imamo slučaj beskonačne rekurzije kroz definicije. Stoga je potrebno, i dovoljno, u instanci definisati samo jednu od funkcija @code{<=} ili @code{comapre}.
+
+@p I ovde imamo @pre{MINIMAL} pragmu koja sugeriše kompajleru da je neophodno da instanca sadrži barem definiciju funkcije @code{comapre} ili @code{<=}. U instanci je moguće definisati i ostale funkcije (u tom slučaju te definicije instance će potisnuti definicije u definiciji klase), ali za tako nečim gotovo nikad nema potrebe.
+
+@example{
+@p Načinimo tip @code{Racionalan} instancom @code{Ord} klase. Pošto smo već u prethodnim primerima implementirali @code{Eq Racionalan} instancu, dovoljno je da implementiramo @code{compare} funkciju.
+
+@codeBlock{
+instance Ord Racionalan where
+  compare (R (a, b)) (R (c, d)) = compare (a * d) (c * b)
+}{U implementaciji smo iskoristili činjenicu da je odnos između brojeva @m{a/b} i @m{c/d} isti kao odnos između brojeva @m{a\cdot d} i @m{c \cdot b}.}
+}
+
+@section{@em{Show} i @em{Read}}
+
+@p Klasu @code{Show} čine oni tipovi čije se vrednosti mogu prezentovati u vidu niske. Za nas je važno da definicija klase @code{Show} podrazumeva funkciju @code{show}:
+
+@codeBlock{
+class Show a where
+  show :: a -> String
+}{Ovde nismo naveli kompletnu definiciju klase, ali je dovoljno znati da minimalno instanciranje @code{Show} klase podrazumeva samo implementaciju funkcije @code{show}.}
+
+@p Klasa @code{Show} je neophodna za ispisivanje vrednosti u @em{GHCi} okruženju. Do sada smo koristili @code{deriving (Show)} konstrukciju koja je omogućavala da se tip automatski pridruži @code{Show} klasi tj . da se @em{izvede} instanca. Sada znamo kako možemo implementirati sopstvene instance.
+
+@example{
+
+@p Ako želimo da izvedemo @code{Show Racionalan}, dovoljno je definiciju tipa promenimo u sledeću:
+
+@codeBlock{
+newtype Racionalan = R (Int, Int) deriving (Show)
+}
+
+@p Pri izvođenju, @code{show} funkcija će kreirati nisku koja liči veoma na sam kod s kojim je konstruisana vrednost.
+
+@terminal{
+ghci> a = R (2, 3)
+ghci> show a
+"R (2,3)"
+ghci> a
+R (2,3)
+}{Kada u @em{GHCi} unesemo neki izraz, taj izraz će se evaluirati, i dobijena vrednost će se prikazati kao niska dobijena primenom @code{show} funkcije.}
+
+@p Za tip @code{Racionalan} je bolje implementirati posebnu @code{show} funkciju, i ne koristiti izvođenje. U tom slučaju treba ukloniti @code{deriving (Show)}, a dodati instancu @code{Show Racionalan}:
+
+@codeBlock{
+instance Show Racionalan where
+  show (R (x, y)) = show x ++ "/" ++ show y
+}{Primetimo da u definiciji koristimo takođe @code{show} funkciju, ali primenjenu na celobrojne vrednosti. Možemo da kažemo da @code{show} sa leve i desne strane znaka @code{=}, ne predstavljaju iste funkcije.}
+
+@p Prikazivanje vrednosti je sada smislenije:
+
+@terminal{
+ghci> a = R (2, 3)
+ghci> show a
+"2/3"
+ghci> a
+2/3
+}
+}
+
+@p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definiciju klase.
+
+@p Zgodno je ipak znati za funkciju @code{read :: Read a => a -> String} koja se može koristiti sa instancama klase @code{Read}.
+
+@example{
+@p Ugrađeni tipovi poput numeričkih su instance klase @code{Read}. Stoga, sa @code{read} funkcijom možemo pročitati vrednost iz niske.
+
+@terminal{
+ghci> read "233"
+*** Exception: Prelude.read: no parse
+}
+
+@p Razlog zašto smo dobili izuzetak je taj zato što interpreter ne kakva vrednost je zapisana u nici. Tip funkcije @code{read} je @code{Read a => String -> a}. Vidimo da je kodomen parametrizovan, što znači da tip izraza @code{read "233"} @em{a priori} može da bude bilo koji tip klase @code{Read}. Stoga je potrebno deklarisati tip izraza @code{read "233"}:
+
+@terminal{
+ghci> read "233" :: Int
+233
+ghci> read "233" :: Float
+233.0
+ghci> read "-233" :: Double
+-233
+}
+
+@p Mnogi drugi tipovi su takođe instance klase @code{Read}:
+
+@terminal{
+ghci> read "True" :: Bool
+True
+ghci> read "[1,2,3,4]" :: [Int]
+[1,2,3,4]
+ghci> read "(42,'a')" :: (Int, Char)
+(42,'a')
+}
+}
+
+@section{@em{Number} i @em{Fractional}}
+
+@p Klasu @code{Num} čine svi tipovi koji predstavljaju nekakav skup brojeva (celih, racionalnih, realnih, kompleksnih...). Definicija klase @code{Num} je:
+
+@codeBlock{
+class Num a where
+  (+) :: a -> a -> a
+  (-) :: a -> a -> a
+  (*) :: a -> a -> a
+  negate :: a -> a
+  abs :: a -> a
+  signum :: a -> a
+  fromInteger :: Integer -> a 
+}
+
+@p Ova klasa propisuje tri operatora @code{+}, @code{- } i @code{*} za koje je jasno šta predstavljaju. Funkcija @code{negate} negira vrednost (daje inverz u odnosu na sabiranje). Funkcija @code{abs} daje apsolutnu vrednost, dok @code{signum} daje znak. Funkcija @code{fromInteger} prevodi vrednost tipa @code{Integer}@note{Setimo se, @code{Integer} je tip koji predstavlja celobrojne vrednosti u proizvoljnoj preciznosti} u vrednost instance.
+
+@p Klasa @code{Fractional} je podklasa klase @code{Num} koja dozvoljava i deljenje vrednosti:
+
+@codeBlock{
+class Num a => Fractional a where
+  (/) :: a -> a -> a
+  recip :: a -> a
+  fromRational :: Rational -> a
+  @@{ -# MINIMAL fromRational, (recip | (/)) #-@@}
+}
+
+@p Funkcija @code{fromRational} transformiše vrednost tipa @code{Rational} u vrednost instance. Do sada tip @code{Rational} nismo spominjali, ali u pitanju je tip koji se koristi za prezentovanje racionalnih brojeva u proizvoljnoj tačnosti.
+
+@p Funkcija @code{recip} daje recipročnu vrednost broja@note{Recipročna vrednost vrednosti @m{x} je vrednost @m{y} takva da je @m{xy=1}. U kontekstu @code{Fractional} klase, smatra se da važi @ccode{x * y = fromRational 1}, iako to nije propisano standardom.}. Dovoljno je implementirati samo jednu od funkcija @code{(/)} i  @code{recip}, jer su one u definiciji klase definisane jedna preko druge:
+
+@codeBlock{
+recip x = 1 / x
+x / y   = x * recip y
+}
+
+@p Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama @em{prstena} i @em{polja}.
+
+@example{
+@p Uvedimo tip @code{Racionalan} u navedene klase. Imajući na umu zakone poput @eq{\frac{a}{b} \pm \frac{c}{d} = \frac{ad\pm cb}{cd} \qquad \frac{a}{b} \cdot \frac{c}{d} = \frac{ab}{cd} \qquad  \left\lvert\frac{a}{b}\right\rvert=\frac{\lvert a\rvert}{\lvert b\rvert}} kodiranje je veoma jednostavno:
+
+@codeBlock{
+instance Num Racionalan where
+  (R (a, b)) + (R (c, d)) = R (a*d + c*b, c*d)
+  (R (a, b)) - (R (c, d)) = R (a*d - c*b, c*d)
+  (R (a, b)) * (R (c, d)) = R (a*d + c*b, c*d)
+  negate (R (a, b)) = R (negate a, b)
+  abs (R (a, b)) = R (abs a, abs b)
+  signum (R (a, b)) = signum a * signum B
+  fromInteger n = R (fromIntegral a, fromIntegral b)
+}
+
+@p instanciranje @code{Fractional Racionalan} je još jednostavnije, jer je dovoljno implementirati samo dve funkcije
+ 
+@codeBlock{
+instance Fractional Racionalan where
+  recip (R (a, b)) = R (b, a)
+  fromRational r = R (numerator r, denominator r) 
+}{Funkcije @code{numerator} i @code{denominator} su funkcije kojima se može pristupiti brojiocu i imeniocu vrednosti tipa @code{Rational}.}
+}
+
+@p Jasno je da tipovi poput @code{Int}, @code{Integer}, @code{Float}, @code{Double} i @code{Rational} pripadaju klasi @code{Num}. Od navedenih tipova, samo prva dva ne pripadaju klasi @code{Fractional}. Iako deluje da su samo ovakvi tipovi instance ovih klasa, @code{Num} i @code{Fractional} mogu sadržati još mnoge zanimljive primere što pokazuju naredni zadaci.
+
+@problem{Definisati tip kompleksnih brojeva sa @ccode{newtype Kompleksan = K (Int, Int)}. Instancirati @code{Num Kompleksan} i @code{Fractional Kompleksan}. Apsolutnu vrednost implementirati kao normu kompleksnog broja, a znak kompleksnog broja implementirati tako da važi @ccode{abs z * signum z = z}.}
+
+@p U narednim zadacima, funkcije @code{abs} i @code{signum} implementirati proizvoljno.
+
+@problem{Definisati tip @code{Z4} koji predstavlja skup ostataka pri deljenju sa @m{4} tj @eq{\mathbb Z_4 = \{0, 1, 2, 3\}.} Ovaj tip definisati kao @ccode{newtype Z4 = Z4 Int}. Instancirati @code{Num Z4} pri čemu voditi računa da se sve operacije vrše po modulu @m{4.} Na primer @m{3 + 2 =_4 1} i @m{2 \cdot 2 =_4 0}.
+}
+
+@problem{Analogno prethodnom zadatku definisati tip @code{Z5} koji prezentuje @eq{\mathbb Z_5 = \{0, 1, 2, 3, 4\},} i instancirati @code{Num Z5}.
+Kreirati (sa ili bez računara) tablicu množenja za u skupu @m{\mathbb Z_5} (naravno, u odnosu na množenje modulo @m{5}). Utvrditi da je množenje u @m{\mathbb Z_5} @em{regularno} tj. da je proizvod dva nenula elementa uvek različit od nule (iz prethodnog primera vidimo da to ne važi za @m{\mathbb Z_4}).
+Koristeći ovu činjenicu, definisati recipročnu vrednost svakog elementa iz @m{\mathbb Z_5} i instancirati @code{Fractional Z5}}
+
+@problem{
+Definisati tip za predstavljanje polinoma sa celobrojnim koeficijentima kao @ccode{newtype Polinom = Polinom [Int]}. Uvesti ovaj tip u klase @code{Eq}, @code{Show} i @code{Num}.
+}
+
+@todo{Automatska derivacija klasa}

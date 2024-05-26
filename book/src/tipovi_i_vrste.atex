@@ -1,0 +1,346 @@
+@chapter{Tipovi i vrste}
+
+@p U dosadašnjem izlaganju uvideli smo koliko je sistem tipova bitan za Haskel. Razmotrili smo neke osnovne tipove, navikli smo da govorimo o tipu funkcija i tipskim promenljivama, i ukratko smo opisali klase tipova kao kolekcije tipova.
+
+@section{Dva posebna tipa}
+
+@p Najjednostavniji tip sa kojim smo se upoznali je @code{Bool} koji sadrži samo dve vrednosti. Sada ćemo predstaviti tip koji sadrži samo jednu vrednost, kao i tip koji ne sadrži nijednu vrednost.
+
+@p Tip koji sadrži jednu vrednost označavamo sa @code{()} i nazivamo @def{jedinični tip}@note{@em{unit type}}. Jedinu vrednost ovog tipa označavamo takođe sa @code{()}. Dakle @code{() :: ()}.
+
+@p Svaka totalna@note{U nastavku isključivo govorimo o totalnim funkcijama, odnosno o funkcijama koje su definisane za svaku vrednost domena.} funkcija je u potpunosti određena sa slikama svih vrednosti domena te funkcije. Ako je data totalna funkcija @code{f :: () -> A}, za neki tip @code{A}, tada je ta funkcija u potpunosti određena sa @code{f ()}. Možemo da kažemo da @code{f} "bira" jedinstvenu vrednost tipa @code{A}.
+
+@figure{unit_function2}
+
+@p Sa druge strane, ako je data totalna funkcija @code{g :: A -> ()}, tada za svaku vrednost @code{x :: A} mora važiti @code{g x = ()} (jer je @code{()} jedina vrednost kodomena). Stoga, za svaki tip @code{A} važi da postoji @em{samo jedna} totalna funkcija tipa @code{A -> ()}, i ta funkcija je definisana sa @ccode{\_ -> ()}.
+
+@figure{unit_function1}
+
+@p Tip koji ne sadrži nijednu vrednost označava se sa @code{Void} i nazivamo ga @def{prazan tip}@note{@em{void type}}.
+
+@p Posmatrajmo sada totalnu funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} mora biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina totalna funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
+
+@p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena totalna funkcija@note{Takva polimorfna funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
+
+@p Primetiomo da tip @code{Void} ne odgovara pojmu @pre{void} koji se može naći u drugim programskim jezicima popout C-a, C++-a, Jave. U takvim programskim jezicima, @pre{void} se koristi za funkcije čija povratna vrednost nas ne interesuje. Prema tome, takav pojam odgovara jediničnom tipu u Haskelu@note{Videćemo u narednoj lekciji da se tip @code{()} u Haskelu koristi kad nas ne interesuje povratna vrednost.}.
+
+@problem{
+Koliko postoji funkcija tipa @code{() -> Bool}?
+}{
+@p Postoji onoliko funkcija tipa @code{() -> T} koliko postoji vrednosti tipa @code{T}. Prema tome, postoje dve funkcije tipa @code{() -> Bool}, koje su definisane sa
+
+@codeBlock{
+f1 () = True
+
+f2 () = False
+}{Kako tip @code{()} sadrži samo jednu vrednost, podudaranje oblika je trivijalno. Zapravo, kako su obe navedene funkcije konstantne, mogli smo da koristimo i džoker @code{_}.}
+}
+
+@p Iako tipovi @code{()} i @code{Void} na prvi pogled deluju beskorisno, ti tipovi imaju i teorijsku i praktičnu važnost. Takođe, ova dva tipa će nam poslužiti kao dodatni primeri pri ilustraciju naprednih koncepata.
+
+@problem{Koliko vrednosti sadrži tip @code{[Void]}?}
+{@p Tip @code{[Void]} sadrži samo jednu vrednost: @code{[]}.}
+
+@problem{Koliko vrednosti sadrži tip @code{((), ())}?}
+{@p Tip @code{((), ())} sadrži samo jednu vrednost: @code{((), ())}.}
+
+@problem{Koliko vrednosti sadrži tip @code{(Bool, Void)}?}
+
+@problem{Posmatrajmo i parcijalne funkcije (funkcije koje nisu totalne). Koliko postoji funkcija (parcijalnih i totalnih) tipa @code{() -> Bool}?}
+
+@section{Tipski sinonimi}
+
+@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{a1}, @code{a2}, ... @code{an} možemo napraviti odgovarajući tip uređenih ntorki @code{(a1, a2, ... an)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira tri dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
+
+@p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Sinonim se definiše sa dekleracijom poput naredne:
+
+@codeBlock{
+type Ime = PostojeciTip
+}{Novo ime, kao i ime svakog tipa, mora početi velikim slovom. Naravno, nije dozvoljeno koristiti već zauzeta imena tipova.}
+
+@example{
+@p Možemo tipu @code{Bool} dodeliti sinonim @code{Logicki} na sledeći način
+
+@codeBlock{
+type Logicki = Bool
+}
+
+@p Sada na svim mestima na kojima se pojavljuje @code{Bool}, možemo koristiti ime @code{Logicki}:
+
+@codeBlock{
+a :: Logicki
+a = True || False
+}
+
+@p Učitavanjem navedog koda u @em{GHC}-i, možemo proveriti tipove:
+
+@terminal{
+ghci> :t a
+Logicki
+ghci> a && False
+False
+ghci> :t (a && False)
+Bool
+}{Tip @code{Logicki} je u potpunosti isti kao tip @code{Bool}. Ali, ako tip neke vrednosti nije eksplicitno definisana kao @code{Logicki}, tada će "prednost imati" originalno ime.}
+}
+
+@p Naravno, sinonim za već kratko ime nije mnogo koristan. Pogledajmo zato reprezentativniji primer.
+
+@example{
+@p Uređenoj trojci @code{Float} brojeva možemo dodeliti kratko ime @code{Vektor3}:
+
+@codeBlock{
+type Vektor3 = (Float, Float, Float)
+}
+
+@p Sa ovakvim sinonimom, definicije postaju mnogo preglednije
+
+@codeBlock{
+zbirVektora :: Vektor3 -> Vektor3 -> Vektor3
+zbirVektora (a, b, c) (x, y, z) = (a + x, b + y, c + z)
+}
+}
+
+@p U prelidu već je definisan naredni tipski sinonim
+
+@codeBlock{
+type String = [Char]
+}
+
+@section{Novi tipovi}
+
+@p Slično definisanju tipskog sinonima, možemo definisati i potpuno novi tip od postojećeg tipa. Definicija novog tipa ima naredni oblik
+
+@codeBlock{
+newtype NoviTip = Konstruktor PostojeciTip
+}
+
+@p Gornjim kodom definisan je tip @code{NoviTip}, koji se može shvatiti kao kopija tipa @code{PostojeciTip}. Svaka vrednost u tipu @code{NoviTip} odgovara nekoj vrednosti u tipu @code{PostojeciTip}, ali ova dva tipa nemaju zajedničke vrednosti!
+
+@p U gore navedenoj definiciji, reč @code{Konstruktor} predstavlja ime @em{konstruktora}. @def{Konstruktor} je @em{funkcija} kojim se konstruišu vrednosti tipa @code{NoviTip}. Svaka vrednost tipa @code{NoviTip} je oblika @code{Konstruktor x} za neko @code{x :: PostojeciTip}. Ime konstruktora i ime novog tipa, ne smeju biti već zauzeti i moraju počinjati velikim slovom@note{S obzirom da su konstuktori funkcije, u ovom slučaju nije ispoštovano pravilo da su imena sa velikim početnim slovom rezervisna za tipove, a imena sa malim početnim slovom za vrednosti. Ali kako su konstruktori uvek "vezani" za tipove, ovakvo odstupanje ima smisla.}. Međutim, dozvoljeno je da tip i konstruktor imaju isto ime.
+
+@p Veoma bitna razlika između tipova definisanih sa @code{newtype} i tipskih sinonima je ta što sa @code{newtype} dobijamo u potpunosti novi tip. Stoga nije moguće novi tip koristiti sa funkcijama koje su namenjene za postojeći tip (kao što je to bio slučaj sa tipskim sinonimima).
+
+@example{
+@p Od tipa @code{Bool} možemo kreirati novi tip @code{MyBool}:
+
+@codeBlock{
+newtype MyBool = MkMyBool Bool
+}{Često se za ime konstruktora uzima ime tipa ispred kojeg se stavlja @em{Mk} (skraćeno od @em{Make}), jer konstruktor predstavlja jedini način da se "napravi" vrednost tipa @code{MyBool}.}
+
+@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriti da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
+
+@terminal{
+ghic> a = (MkMyBool True) || (MkMyBool False)
+
+<interactive>:1:6: error:
+    • Couldn't match expected type ‘Bool’ with actual type ‘MyBool’
+    • In the first argument of ‘(||)’, namely ‘(MkMyBool True)’
+      In the expression: (MkMyBool True) || (MkMyBool False)
+      In an equation for ‘a’: a = (MkMyBool True) || (MkMyBool False)
+
+<interactive>:1:25: error:
+    • Couldn't match expected type ‘Bool’ with actual type ‘MyBool’
+    • In the second argument of ‘(||)’, namely ‘(MkMyBool False)’
+      In the expression: (MkMyBool True) || (MkMyBool False)
+      In an equation for ‘a’: a = (MkMyBool True) || (MkMyBool False)
+}
+
+@p Prema tome za vrednosti tipa @code{MyBool} moramo implementirati posebnu funkciju disjunkcije:
+
+@codeBlock{
+ili :: MyBool -> MyBool -> MyBool
+ili (MkMyBool False) (MkMyBool False) = MkMyBool False
+ili _ _ = MkMyBool True
+}{Svaka vrednost tipa @code{MyBool} je oblika @code{MkMyBool x}. Haskel dozvoljava da upotrebimo tehniku podudaranja oblika u ovom slučaju. Prva linija definicije odnosi se samo na slučaj kada su obe prosleđene vrednosti baš @code{MkMyBool False}. Svi ostali slučajevi su obuhvaćeni drugom linijom, u kojoj se koriste džokeri.}
+
+@p Nakon učitavanja navedenog koda, možemo naći disjunkciju novih logičkih vrednosti
+
+@terminal{
+ghci> a = ili (MkMyBool True) (MkMyBool False)
+}
+
+@p Za sada sve deluje dobro. Kreirali smo novi tip, i napisali smo jednu funkciju čiji je domen i kodomen novi tip. Ali ako u interaktivnom okruženju pokušamo da ispišemo vrednost @code{a}, dobićemo grešku:
+
+@codeBlock{
+ghci> a
+
+<interactive>:1:1: error:
+    • No instance for (Show MyBool) arising from a use of ‘print’
+    • In a stmt of an interactive GHCi command: print it
+}
+
+@p Razlog nastanka greške je taj što program @em{GHCi} ne zna kako da ispiše vrednost tipa @code{MyBool}. Za ispisivanje svih vrednosti, @em{GHCi} koristi @code{show} funkciju koja je deklarisana u @code{Show} klasi tipova. Kako tip @code{MyBool} nije instanca ove klase, @em{GHCi} ne može da iskoristi funkciju @code{show} sa vrednostima tipa @code{MyBool}.
+
+@p Navedeni problem se rešava uvođenjem tipa @code{MyBool} u klasu @code{Show}, što će biti detaljno objašnjeno u lekciji @em{Klase tipova}. Srećom, u ovom slučaju instanciranje može biti automatsko. Dovoljno je nakon definicije tipa dopisati @code{deriving Show}. Automatsko instanciranje poput navedenog nazivamo @def{izvođenje}.
+
+@codeBlock{
+newtype MyBool = MkMyBool Bool deriving Show
+}{Za sada nećemo detaljnije objašnjavati @code{deriving Show}.}
+
+@p Ponovnim učitavanjem koda, možemo bez problema ispisivati vrednosti novog tipa
+
+@terminal{
+ghci> a = ili (MkMyBool True) (MkMyBool False)
+ghci> a
+MkMyBool True
+}
+}
+
+@p Zašto je @code{newtype} konstrukcija korisna ako već imamo tipske sinonime? Deluje da sa @code{newtype} samo komplikujemo kod. Funkcije koje smo ranije koristili, moramo reimplementirati za novi tip. Dobar razlog korišćenja @code{newtype}-a je taj, što ponekad namerno želimo da budemo ograničeni sa sistemom tipova, što prikazuje primer koji sledi.
+
+@example{
+@p Zamislimo da radimo na bankarskom programu, koji se mora osposobiti za rad sa svotama u evrima i dolarima. U kodu možemo definisati dva tipa, čije vrednosti predstavljaju svote novca:
+
+@codeBlock{
+newtype Eur = MkEur Double
+
+newtype Usd = MkUsd Double
+}
+
+@p Vrednosti oba definisana tipa sadrže suštinski iste podatke (jedan @em{double} broj). Kako su u pitanju različiti tipovi, kompajler neće dozvoliti proizvoljno mešanje ovih tipova (kao što bi bio slučaj sa tipskim sinonimima). Na taj način, na primer, možemo napisati funkciju koju je moguće isključivo primeniti na svote novca u evrima. Pokušaj primene takve funkcije na svote u dolarima dovešće do tipske greške i program neće biti iskompajliran.
+
+@p Ograničenja poput opisanih ne deluju mnogo korisna kada se posmatraju mali programi. Ali sa programima s milionskim brojem linija ovakva ograničenja značajno "umanjuju brigu" pri menjanju koda. Na primer, promena funkcija koje koriste tip @code{Eur} neće uopšte uticati na funkcije koje koriste tip @code{Usd}.
+
+@p Naravno, razdvajanje valuta ima smisla samo na onom delu programa koji različito obrađuje svote u evrima i dolarima (u ovom slučaju to može biti obračunavanje poreza koji je specifičan za valutu, i sl.). Deo logike koji je isti za obe valute, ne treba duplirati. Izbegavanje dupliranja koda se može postići sa tipskim klasama, što će biti prikazano u narednoj lekciji.
+}
+
+@p Takođe, @code{newtype} konstrukcija je specijalan slučaj jedne opštije, i mnogo korisnije konstrukcije, kojoj je posvećena lekcija @em{Algebarski tipovi podataka}.
+
+@section{Apstraktni tipovi}
+
+@p Ponekad je slučaj da se u kodu konstruiše nekoliko sličnih tipova, koji se samo razlikuju u jednom "delu":
+
+@example{
+@p Za predstavljanje trodimenzionalnih vektora možemo konstruisati tipove:
+
+@codeBlock{
+newtype VecInt = MkVecInt (Int, Int, Int)
+newtype VecFloat = MkVecFloat (Float , Float, Float)
+newtype VecDouble = MkVecDouble (Double, Double, Double)
+}
+
+@p Za ovako definisane tipove nije teško konstruisati odgovarajuće funkcije sabiranja, skaliranja, vektorskog i skalarnog množenja, itd..
+
+@codeBlock{
+sumVecInt :: VecInt -> VecInt -> VecInt
+sumVecInt (MkVecInt (a,b,c)) (MkVecInt (x,y,z)) = MkVecInt (a+x, b+y, c+z)
+
+sumVecFloat :: VecFloat -> VecFloat -> VecFloat
+sumVecFloat (MkVecFloat (a,b,c)) (MkVecFloat (x,y,z)) = MkVecFloat (a+x, b+y, c+z)
+
+sumVecDouble :: VecDouble -> VecDouble -> VecDouble
+sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y, c+z)
+}
+
+@p Kao što vidimo, svaki numerički tip (@code{Int}, @code{Float}, @code{Double}, ...) zahteva posebnu definiciju odgovarajućeg tipa vektora, što dovodi do toga da imamo mnogo međusobno sličnih definicija.
+}
+
+@p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smislu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promenljive@note{Ovakva definicija podseća na podudaranje oblika kod "običnih" funkcija.}.
+
+@example{
+@p Za jednobraznu konstrukciju trodimenzionalnih vektora, možemo koristiti naredni apstraktni tip
+
+@codeBlock{
+newtype Vec a = MkVec (a, a, a)
+}
+
+@p Na opisani način konstruisana je jedna funkcija na nivou tipova. Ova funkcija proizvoljan tip preslikava u tip @code{(a, a, a)}. Na primer, @code{Vec Char} predstavlja tip @code{(Char,Char,Char)}.
+
+@p Tipovi iz prethodnog primera nam nisu više neophodni, i sada možemo da koristimo @code{Vec Int}, @code{Vec Float} i @code{Vec Double}:
+
+@codeBlock{
+sumVecInt :: Vec Int -> Vec Int -> Vec Int
+sumVecInt (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
+
+sumVecFloat :: Vec Float -> Vec Float -> Vec Float
+sumVecFloat (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
+
+sumVecDouble :: Vec Double -> Vec Double -> Vec Double
+sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
+}
+
+@p I dalje se nismo umanjili broj definicija funkcija, ali možemo primetiti da je karakteristično za tipove @code{Int}, @code{Float} i @code{Double} to što se vrednosti ovih tipova mogu sabirati. Sva tri navedena tipa pripadaju @code{Num} klasi, pa možemo tri definicije zameniti sa jednom:
+
+@codeBlock{
+sumVec :: Num a => Vec a -> Vec a -> Vec a
+sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
+}
+}
+
+@p Nije nužno da apstraktan tip zavisi samo od jednog parametra, ili da ne sadrži konstantne tipove u sebi. Na primer, sledeći apstraktni tip je u potpunosti validan
+
+@codeBlock{
+data A a b c = MkA (a, [b], Int -> c)
+}{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{A Char Bool Float} predstavlja tip @code{(Char, [Bool], Int -> Float)}.}
+
+@p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipove. U tom smislu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
+
+@p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduše, oba apstraktna tipa imaju specificnu sintaksu, koja se razlikuje od onog što smo gore opisali.
+
+@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Možda će biti jasnije ako @code{[A]} zapišemo kao @code{[] A} (što je validan zapis u kodu). Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}.}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
+
+@p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno označava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi ništa drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jeziku.
+
+@section{Vrste}
+
+@p Apstraktni tipovi jesu funkcije koje tipove preslikavaju u tipove. Ali kao i sa svim preslikavanjima, potrebno je biti pažljiv pri primeni funkcija na vrednost.
+
+@p Vratimo se za trenutak korak u nazad, i posmatrajmo vrednosti. Sistem tipova nam govori nema smisla primeniti funkciju tipa @code{Int -> Int} na vrednost tipa @code{Char}. Još manje smisla ima primena vrednosti tipa @code{Bool} na vrednost tipa @code{Int}, jer prva vrednost nije čak ni funkcija.
+
+@p Iz istih razloga potrebno je klasifikovati tipove i apstraktne tipove na sličan način kao što su vrednosti klasifikovane u tipove. Drugim rečima, potrebno je uvesti pojam "tipa" za tipove@note{Klase tipova jesu kolekcije tipova, ali su nedovoljne za klasifikaciju koja nam je potrebna. Klase tipova nisu disjunktne (jedan isti tip može pripadati različitim klasama), a nama su ovde potrebne disjunktne kolekcije.}. Ovakav "tip tipa" nazivamo @def{vrsta}@note{@em{kind}}.
+
+@p Ako neki tip ili apstraktni tip @code{T} poseduje vrstu @code{v}, tada to označavamo sa @code{T :: v}, baš kao i tip vrednosti.
+
+@p U Haskelu, vrsta koja obuhvata sve tipove koji nisu apstraktni označava se sa @code{*}. Za svaki tip @code{T} koji nije apstraktan kažemo da je vrste @code{*}, i pišemo @code{T :: *}. Za ovakve tipove kažemo još da su @def{konkretni tipovi} (ili @em{monotipovi}).
+
+@p Sa druge strane, apstraktni tipovi poseduju vrstu oblika @code{P -> Q} gde su @code{P} i @code{Q} takođe neke vrste. Vrsta oblika @code{P -> Q} sugeriše da su apstraktni tipovi funkcije koje tipove preslikavaju tipove.
+
+@example{
+@p Tipovi @code{Bool}, @code{Int}, @code{Float}, @code{[Int]}, @code{Bool -> Int}, @code{()}, @code{(Int, [Bool])}, itd... su svi vrste @code{*}. 
+}
+
+@example{
+@p Neka je apstraktni tip @code{AbsType} definisan sa
+@ccode{newtype AbsType a = MkAbsType a}.
+Tip @code{AbsType} uzima jedan konkretan tip i konstruiše konkretan tip, pa je @code{AbsType} vrste @code{* -> *}. Prema tome, izraz @code{AbsType AbsType} nema smisla, ali izraz @code{AbsType Int} ima smisla i predstavlja tip.
+}
+
+@example{
+@p Uzmimo primer apstraktnog tipa iz prošle sekcije
+
+@codeBlock{
+data A a b c = MkA (a, [b], Int -> c)
+}
+
+@p Navedeni apstraktan tip ima vrstu @code{* -> (* -> (* -> *))} koja se naravno jednostavno zapisuje kao @ccode{* -> * -> * -> *}. 
+}
+
+@p I kao što @em{GHCi} naredba @code{:type} može odrediti tip neke vrednosti, tako i naredba @code{:kind} može odrediti vrstu nekog tipa.
+
+
+@example{
+@p Nastavimo sa prethodnim primerom u interaktivnom okruzenju:
+@terminal{
+ghci> data A a b c = MkA (a, [b], Int -> c)
+A :: * -> * -> * -> *
+}
+}
+
+@example{
+@p Ako niste do sad verovali, @code{[]} zaista jeste apstraktan tip:
+
+@terminal{
+ghci> :kind []
+* -> *
+}
+}
+
+@example{
+@p I strelica jeste apstraktan tip. Strelica uzima dva konkretna tipa da bi dala konkretan tip:
+@terminal{
+ghci> :kind (->)
+(->) :: * -> * -> *
+}{Obratite paznju da strelica u tipu i strelica u vrsti ne predstavlja istu stvar.}
+}
+

@@ -1,0 +1,7 @@
+{
+  "editor.wordWrap": "on",
+  "editor.snippetSuggestions": "top",
+  "haskell.formattingProvider": "none",
+  "editor.formatOnSave": true,
+  "cSpell.language": "en,sr-Latn"
+}

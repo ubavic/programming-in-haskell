@@ -1,0 +1,37 @@
+{
+    "code": {
+        "prefix": "code",
+        "body": "@code{$1}",
+        "description": ""
+    },
+    "codeBlock": {
+        "prefix": "codeBlock",
+        "body": "@codeBlock{\n$1\n}",
+        "description": ""
+    },
+    "terminal": {
+        "prefix": "terminal",
+        "body": "@terminal{\n$1\n}",
+        "description": ""
+    },
+    "example": {
+        "prefix": "example",
+        "body": "@example{\n$1\n}",
+        "description": ""
+    },
+    "problem": {
+        "prefix": "problem",
+        "body": "@problem{\n$1\n}",
+        "description": ""
+    },
+    "section": {
+        "prefix": "section",
+        "body": "@section{$1}",
+        "description": ""
+    },
+    "subsection": {
+        "prefix": "subsection",
+        "body": "@subsection{$1}",
+        "description": ""
+    }
+}

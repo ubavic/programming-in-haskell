@@ -1,0 +1,43 @@
+{
+  "name": "atex",
+  "displayName": "Atex",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "atex",
+        "aliases": [
+          "Atex",
+          "atex"
+        ],
+        "extensions": [
+          ".atex"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "atex",
+        "scopeName": "source.atex",
+        "path": "./syntaxes/atex.json",
+        "embeddedLanguages": {
+          "source.haskell": "haskell"
+        }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "atex",
+        "path": "./snippets/atex.json"
+      }
+    ]
+  }
+}

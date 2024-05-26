@@ -1,0 +1,380 @@
+@chapter{Prvi koraci}
+
+@p Naredna lekcija sadrži informacije neophodne za razumevanje svih ostalih lekcija. Ako neku lekciju ne bi trebalo da preskočite, to je definitivno ova. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
+
+@p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda. Ove sekcije se mogu površno preći prilikom prvog čitanja.
+
+@section{Haskel kompajler}
+
+@p Iako je tokom istorije Haskela razvijeno nekoliko kompajlera, danas se koristi samo @em{Glasgow Haskell Compiler} (GHC). Osim kompajlera, za ozbiljnije projekte potrebno je koristiti i jedan od paketa menadžera, @em{Stack} ili @em{Cabal}.
+
+@p @em{GHC} instalacija korisniku pruža dva programa. Prvi program je sam kompajler @pre{ghc} koji Haskel kôd kompajlira u izvršnu datoteku. Drugi program je @pre{ghci} koji se koristi kao interaktivno okruženje za interpretaciju Haskel koda. Značajan deo ove knjige biće prikazan kroz rad u @em{GHCi} okruženju (detalji će biti objašnjeni uskoro).
+
+@p Razvojna okruženja za Haskel ne postoje, ali postoji @em{Haskell Language Server} (HSL) koji može da nadomesti ovaj nedostatak.
+
+@p Instalacija navedenih programa može se razlikovati u zavisnosti od sistema. Trenutno se za sve operativne sisteme (Linux, Windows, Mac) preporučuje @url{GHCup}{https://www.haskell.org/ghcup/} kao alat za automatsku instalaciju svih potrebnih programa. Na sajtu @em{GHCup} projekta možete pronaći instrukcije za instalaciju@note{Korisnici @em{Windows} operativnog sistema moraju da instaliraju @url{Msys2}{https://www.msys2.org/} pre pokretanja @em{GHCup} instalacije.}. Preporučljivo je da da prilikom instalacije instalirate sve programe (@em{Stack}, @em{Cabal}, @em{HSL}).
+
+@p Uz instaliran @em{GHC} potreban Vam je još samo i editor koda. Naravno, svaki editor koda može se koristiti u svrhu pisanja Haskel koda. Moja preporuka je @url{VS Code}{https://code.visualstudio.com/} sa instaliranim ekstenzijama @url{Haskell}{https://marketplace.visualstudio.com/items?itemName=haskell.haskell} i @url{Haskell Syntax Highlighting}{https://marketplace.visualstudio.com/items?itemName=justusadam.language-haskell}.
+
+@p Ipak, za prve korake u Haskelu nije čak ni potrebno instalirati kompajler lokalno, već je sasvim dovoljno koristiti neko od onlajn razvojnih okruženja, kao što je @url{Replit}{https://replit.com/languages/haskell}.
+
+@section{Struktura Haskel koda}
+
+@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se imenima (labelama) pridružuju vrednosti nekog izraza. Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
+
+@codeBlock{
+dana_u_nedelji = 7
+
+sati_u_danu = 24
+}{U ovoj datoteci, imenu @code{dana_nedelji} odnosno @code{sati_u_danu} je pridružena vrednost @code{7} odnosno @code{24}.}
+
+@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova@note{Ovo uključuje i slova srpske latinice i ćirilice.}, brojeve kao i karaktere @code{_} i @code{'}.
+
+@p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, nije dozvoljeno u jednoj @code{.hs} datoteci imati više definicija sa istim imenom. Naravno, različitim imenima možemo dodeliti iste vrednosti. Takođe, poredak definicija nije bitan.
+
+@p@def{Tip} neke vrednosti predstavlja kolekciju kojoj ta vrednost pripada. Svaka vrednost pripada jednom i samo jednom tipu. Ako neka vrednost @code{v} pripada tipu @code{T} tada za tu vrednost kažemo da @em{poseduje tip} @code{T} ili da još @em{da je tipa} @code{T} i to označavamo sa @code{v :: T}. Za razliku od imena funkcije, ime tipa uvek počinje velikim slovom.
+
+@p Na primer, vrednosti koje smo dodelili imenima @code{meseci_u_godini} i @code{dana_u_nedelji} poseduju tip @code{Int}. Tip @code{Int} možemo da shvatimo kao kolekciju vrednosti koja sadrži sve cele brojeve koji se mogu prezentovati na računaru.
+@todo{Dodati sliku sa sa tipom Int}
+
+@p U Haskel kodovima osim samih definicija, moguće je (i poželjno) navesti i tipove vrednosti. Dekleracija tipa ima oblik @code{ime :: Tip}. Tako bi prethodni primer sa punim dekleracijama tipova bio:
+
+@codeBlock{
+dana_u_nedelji :: Int
+dana_u_nedelji = 7
+
+sati_u_danu :: Int
+sati_u_danu = 24
+}
+
+@p Iako nije neophodno da se dekleracije tipa nalaze neposredno pre definicije, u praksi se to pravilo uvek poštuje.
+
+@section{Izvršavanje Haskel koda}
+
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
+
+@codeBlock{
+dana_u_nedelji :: Int
+dana_u_nedelji = 7
+
+sati_u_danu :: Int
+sati_u_danu = 24
+
+dana_u_godini :: Int
+dana_u_godini = 28 + 4 * 30 + 7 * 31
+
+sati_u_nedelji :: Int
+sati_u_nedelji = dana_nedelji * sati_u_danu
+}{Definicija labele @code{sati_u_nedelji} koristi definicije @code{dana_u_nedelji} i @code{sati_u_danu}. Imena uvek predstavljaju vrednosti koje su im dodeljene prilikom definicije, i mogu se koristiti umesto tih konkretnih vrednosti.}
+
+@p Lista definicija nije sama po sebi mnogo korisna ako ne možemo utvrditi vrednosti izraza. Tako je u prethodnom primeru zgodno saznati koliko to sati ima u nedelji, a da bi smo saznali tu vrednost potrebno je da izvršimo Haskel kôd. Postoje dva načina na koje je moguće izvršiti Haskel kôd:
+
+@list{
+@li @em{Kompilacijom koda}. Uz pomoć @em{GHC} kompajlera, moguće je kompajlirati kôd u izvršni fajl. U ovom slučaju u kodu mora biti definisano ime @code{main :: IO ()} koja služi kao početna tačka izvršavanja programa.
+
+@li @em{Interpretacijom koda}. Uz pomoć programa @em{GHCi} moguće je učitati definicije u interaktivno okruženje i evaluirati te definicije.
+}
+
+@p Iz određenih razloga koji će biti pojašnjeni kasnije, definisanje imena @code{main} zahteva poznavanje nešto naprednijeg programiranja u Haskelu. Stoga će demonstracija kompilacije programa biti odložena za neku narednu lekciju, a do tada ćemo koristiti isključivo @em{GHCi} program.
+
+@p Rad u programu @em{GHCi} zahteva da prvo sačuvamo prethodni primer u datoteku sa ekstenzijom @code{.hs}. Na primer, neka je to datoteka @code{prviProgram.hs}. Zatim je potrebno da otvorimo terminal i promenimo aktivni direktorijum tog terminala u direktorijum u kom se nalazi datoteka @code{prviProgram.hs}. Nakon toga možemo pokrenuti @pre{ghci} program@note{Ako koristite @em{repl.it} web okruženje, dovoljno je da samo pokrenete komandu @pre{ghci} u terminalu koji se nalazi sa desne strane editora koda. Editor koda koji se nalazi na levoj strani prikazuje kôd koji se nalazi u datoteci @code{main.hs}. }. Nakon pokretanja komande @pre{ghci} komande pojaviće se tekst poput sledećeg:
+
+@terminal{
+C:\Users\User\Desktop>ghci
+GHCi, version 9.0.2: https://www.haskell.org/ghc/  :? for help
+ghci>
+}{Izgled terminala nakon pokretanja @em{GHCi} programa na @em{Windows} operativnom sistemu.}
+
+@p Pokretanjem @pre{ghci} programa otvara se novi prompt@note{Prompt je jedan ili više karaktera kojim se označava mesto korisničkog unosa. @em{GHCi} prompt je @pre{ghci>}.} u koji možemo da upišemo Haskel kôd ili @em{GHCi} naredbe. @em{GHCi} naredbe je moguće koristiti samo unutar @em{GHCi} okruženja, i imena tih naredbi počinju sa @pre{:}. Jedna od tih naredbi je i @pre{:load} uz pomoć koje možemo da učitamo sadržaj neke @pre{.hs} datoteke.
+
+@p Na primer, učitavanje datoteke @pre{prviProgram.hs} izgleda ovako:
+
+@terminal{
+ghci> :load prviProgram.hs
+[1 of 1] Compiling Main             ( prviProgram.hs, interpreted )
+Ok, one module loaded.
+ghci>
+}{Ako niste pokrenuli @pre{ghci} iz direktorijuma u kom se nalazi datoteka @pre{prviProgram.hs} dobićete grešku @pre{error: can't find file: prviProgram.hs}. U tom slučaju, možete u naredni prompt navesti putanju do željene datoteke @pre{:l putanja\do\prviProgram.hs}}
+
+@p Nakon što je datoteka @pre{prviProgram.hs} učitana, možemo koristiti definisane vrednosti. Ako upišemo @code{dana_u_nedelji} i pritisnemo @pre{Enter}, vrednost dodeljena ovom imenu će biti ispisana, i nakon toga će pojaviti prompt spreman za novi unos:
+
+@terminal{
+ghci> dana_u_nedelji
+7
+ghci>
+}
+
+@p Mnogo bitnije je ono što dobijamo nakon unosa imena @code{sati_u_nedelji}. U ovom slučaju, @em{GHCi} će interpretirati Haskel kôd @code{dana_nedelji * sati_u_nedelji} odnosno iskoristiće definicije navedenih vrednosti a zatim i izvršiti naznačeno množenje. Rezultat će biti ispisan:
+
+@terminal{
+ghci> sati_u_nedelji
+168
+}
+
+@p Možda opisani postupak deluje trivijalno, ali predstavlja suštinu rada u interaktivnom okruženju@note{@em{GHCi} je primer @em{REPL} (Read-evaluate-print loop) programa čiji se rad sastoji od uzimanja korisničkih komandi, izvršavanja tih komadni i ispisivanja rezultata nazad u komandnu liniju, nakon čega program ponovo čeka korisnički unos.}.
+
+@p Ako želimo, u datoteku @pre{prviProgram.hs} možemo dodati još definicija poput @code{sekundi_u_danu = 24 * 60 * 60} itd... Da bismo mogli da koristimo nove definicije, neophodno je da sačuvamo izmene datoteke @code{prviProgram.hs} a zatim da ponovo učitamo datoteku u @em{GHCi}. To možemo da učinimo ponovo sa naredbom @pre{:load prviProgram.hs} ili sa naredbom @pre{:reload} koja ponovo učitava sve datoteke koje su do tada bile učitane:
+
+@terminal{
+ghci> :reload
+Ok, one module loaded.
+ghci> sekundi_u_danu
+86400
+}{Naredba @pre{:reload} je pogotovu korisna kada se u @em{GHCi} učita više datoteka od jednom. O tome nismo govorili, ali je moguće i to učiniti uz opreznost da se nazivi labela ne ponavljaju.}
+
+@p U @em{GHCi} prompt je moguće direktno unositi i Haskel izraze koji će se odmah evaluirati:
+
+@terminal{
+ghci> 10
+10
+ghci> 10 * 10 + 1
+101
+}{Prvi korisnički unos nije mogao biti dodatno evaluiran, te je stoga ispisan isti nazad. Drugi unos je sveden na jedinstven broj i taj broj je ispisan nazad.}
+
+@p Zapravo u @em{GHCi} prompt je moguće uneti i definicije. Ove definicije će važiti samo dok je trenutna sesija aktivna i neće biti upisane ni u jednu datoteku. Važno je znati da je u @em{GHCi} okruženju dozvoljeno predefinisati već postojeće definicije. Tom prilikom, ime će predstavljati onaj izraz koji mu je dodeljen poslednjom definicijom, a sve prethodna definicija će biti izgubljena. Komandom @pre{:reload} sve definicije napisane u @em{GHCi} okruženju se odbacuju.
+
+@terminal{
+ghci> a = 100 + 10
+ghci> a
+110
+ghci> a = 200 + 10
+ghci> a
+210
+ghci> :reload
+Ok, one module loaded.
+ghci> a
+<interactive>:1:1: error: Variable not in scope: a
+}{Prilikom definisanja nekog imena, vrednost dodeljenog izraza se neće ispisati u terminal. Tek unosom imena u prompt ispisujemo vrednost.}
+
+@p Za izlazak iz @em{GHCi} programa, koristi se naredba @pre{:quit}.
+
+@section{@em{Let ... in}}
+
+@p Prilikom pisanja izraza neretko se javlja potreba da neke vrednosti privremeno dodelimo novom imenu. Upravo nam to omogućuje @em{let in} konstrukcija.
+
+@p Na primer, želeli bismo da napišemo izraz kojim računamo površinu kvadra visine @code{10} širine @code{5} i dužine @code{3}. Koristeći formulu @m{P=2(ab + bc + ca)} dobijamo kôd:
+
+@codeBlock{
+površina :: Int
+površina = 2*(10*5 + 5*3 + 3*10)
+}
+
+@p Navedena definicija je malo nepregledna. Takođe, ako želimo da izračunamo zapreminu nekog drugog kvadra, svaku od dimenzija moramo da promenimo na dva mesta što predstavlja potencijalni izvor greške. Zbog toga ćemo iskoristiti @em{let in} sintaksu da bismo lokalno definisali imena @code{a}, @code{b} i @code{c}@note{Naravno, moguće je i globalno definisati imena @code{a}, @code{b} i @code{c}, ali time nepotrebno rezervišemo ta imena.}:
+
+@codeBlock{
+površina :: Int
+površina = let a = 10; b = 5; c = 3 in 2*(a*b + b*c + c*a)
+}
+
+@p Dakle, sa @em{let ... in} konstrukcijom moguće je lokalno definisati jedno ili više imena koja će biti dostupna samo u nekom izrazu. Opšti oblik @em{let ... in} izraza sastoji se od niza definicija koje su razdvojene znakom @code{;}, i nakon čega sledi i izraz u kom želimo da te definicije budu dostupne:
+
+@codeBlock{
+let ime1 = izraz1; ...; imeN = izrazN in izraz
+}
+
+@p Naravno, imena definisana u @em{let ... in} konstrukciji dostupna su samo unutar te @em{let ... in} konstrukcije.
+
+@p Napominjemo da @em{let ... in} predstavlja jedan @em{izraz}, i da @em{let ... in} sintaksa nije nužno vezana za definicije. Zbog toga @em{GHCi} uspešno pronalazi vrednost izraza @code{let a = 2 in a + 3}:
+
+@terminal{
+ghci> let a = 2 in a + 3
+5
+}
+
+@p Samim tim, moguće je ugnježdavati @em{let ... in} izraze:
+
+@terminal{
+ghci> let a = 2 in (let b = 3 in a + b)
+5
+}{Navedeni Haskel izraz je ekvivalentan izrazu @code{let a = 2; b = 3 in a + b}.}
+
+@section{@em{Where}}
+
+@p Sa @em{where} sintaksom takođe je moguće uvesti lokalne definicije kao i sa @pre{let ... in} sintaksom. Za razliku od @em{let in} konstrukcije koja predstavlja izraz, @em{where} sintaksa se isključivo koristi uz definicije. Opšti oblik @em{where} sintakse je:
+
+@codeBlock{
+ime = izraz where ime1 = izraz1; ...; imeN = izrazN
+}
+
+@p Primer sa površinom kvadra iz prethodne sekcije bi mogao i ovako da se napiše:
+
+@codeBlock{
+površina :: Int
+površina = 2*(a*b + b*c + c*a) where a = 10; b = 5; c = 3 
+}
+
+@p Za razliku @em{let in} sintakse, sintaksa @em{where} se ne može koristiti van definicija:
+
+@terminal{
+ghci> broj = a + 3 where a = 3
+ghci> broj
+5
+ghci> a + 3 where a = 3
+<interactive>:1:7: error: parse error on input ‘where’
+}{Kôd @code{a + 3 where a = 3} nije validan izraz, zbog čega je došlo do sintaksne greške.}
+
+
+@p Važno je znati da je u okviru @em{let in} ili @em{where} sintakse moguće lokalno predefinisati neka već definisana imena. Zbog toga, u narednom primeru, ime @code{b} predstavlja vrednost @code{11} a ne @code{21}:
+
+@codeBlock{
+a :: Int
+a = 20
+
+b :: Int
+b = a + 1 where a = 10
+}
+
+@terminal{
+ghci> b
+11
+}
+
+@section{Prelom i nazubljivanje}
+
+@p Često nije zgodno pisati ceo izraz u jednoj liniji. U tom slučaju, možemo prelomiti linije poštujući pravila o nazubljivanju@note{Nazubljivanje je dodavanje praznog prostora na početak linije.} Haskel koda. Kako su opisi tih pravila dosta tehnički, ovde navodimo neformalna pravila koja dobro sažimaju ta tehnička pravila:
+
+@list{
+@li Nazubljivanje Haskel koda se vrši isključivo sa razmacima.
+@li Početak definicije ne sme da bude nazubljen.
+@li Svaki izraz se može prelomiti na proizvoljnom razmaku. Ostatak prelomljenog izraza mora da bude nazubljen više nego linija u kojoj počinje izraz koji sadrži taj kod.
+@li Niz definicija u @em{let ... in } i @em{where} sintaksi može se prelomiti u više linija. Tada, početak svake definicije mora da bude postavljen tačno ispod početka prve definicije.
+}
+
+@p Što se tiče prvog pravila, ono se odnosi na polemiku između razmaka i tabova. Iako će kompajler često iskompajlirati kôd koji sadrži tabove, pri kompajliranju će se javiti upozorenja.
+
+@p Drugo pravilo je takođe jednostavno, i njim se zabranjuje nazubljivanje samog početka neke definicije:
+
+@codeBlock{
+dobraDefinicija = 1
+
+  lošaDefinicija = 1
+}
+
+@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Phyton} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri koda su primeri validnog preloma istog izraza:
+
+@codeBlock{
+a = 10 * 10 + 1
+}
+
+@codeBlock{
+a = 10 * 10
+  + 1
+}
+
+@codeBlock{
+a = 10 *
+        10
+  + 1
+}{Broj razmaka nije bitan pri nazubljivanju. Ako neka linija sadrži barem jedan više razmak na početku nego druga, onda ćemo smatrati da je prva linija više nazubljena od druge.}
+
+@p Naredni kôd @em{nije} dobro formatiran, jer linija @code{+ 1} nije dodatno nazubljena u odnosu na početak @code{a =}:
+
+@codeBlock{
+a =
+    10 * 10
++ 1
+}
+
+@p Kako i @em{let ... in} sintaksa predstavlja izraz, i taj izraz možemo prelomiti:
+
+@codeBlock{
+površina :: Int
+površina = let a = 10; b = 5; c = 3
+    in 2*(a*b + b*c + c*a)
+}
+
+@codeBlock{
+površina :: Int
+površina = let
+              a = 10; b = 5; c = 3
+           in
+              2*(a*b + b*c + c*a)
+}{Oba primera su dobro nazubljena}
+
+@p Takođe, i @em{where} sintaksu je moguće prelomiti:
+
+@codeBlock{
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
+    where a = 10; b = 5; c = 3 
+}
+
+@codeBlock{
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
+    where
+        a = 10; b = 5; c = 3 
+}{Oba primera su dobro nazubljena}
+
+
+@p Četvrto pravilo se odnosi na niz definicija u @em{let ... in} i @em{where} sintaksama. Po ovom pravilu, niz je moguće prelomiti u više linija, pri čemu se znaci @code{;} mogu izostaviti. Pri prelomu sve definicije se moraju postaviti tačno jedna ispod druge. Naredni kodovi su dobro nazubljeni:
+
+@codeBlock{
+površina :: Int
+površina = let
+            a = 10
+            b = 5
+            c = 3
+           in 2*(a*b + b*c + c*a)
+}
+
+
+@codeBlock{
+površina :: Int
+površina = let a = 10
+               b = 5
+               c = 3
+           in 2*(a*b + b*c + c*a)
+}
+
+@codeBlock{
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
+    where
+        a = 10
+        b = 5
+        c = 3 
+}
+
+@codeBlock{
+površina :: Int
+površina = 2*(a*b + b*c + c*a)
+    where a = 10
+          b = 5
+          c = 3 
+}
+
+
+@p Zapravo, ovakvi blokovi definicija se mogu shvatiti kao male @code{.hs} datoteke. I kao što u @code{.hs} datoteci svaka definicija mora da počne od leve ivice, tako u bloku definicija sve definicije moraju da počnu od iste kolone@note{Ovo objašnjava četvrto pravilo.} (a ta kolona je uspostavljena početkom prve definicije).
+
+@codeBlock{
+w :: Int
+w = 2 * v
+    where
+        v :: Int
+        v = 10 * 3
+}{Osim definicija, u bloku je moguće navesti i dekleracije tipova, ali se to retko radi u praksi.}
+
+@section{Komentari}
+
+@p Kao i svi drugi programskim jezici, Haskel podržava pisanje komentara odnosno delova koda koji ne utiču na izvršavanje. U Haskelu postoje dve vrste komentara:
+
+@list{
+@li @em{Linijski komentari} jesu komentari koji se nalaze samo u jednoj liniji koda. Linijski komentari počinju sa @pre{--} i obuhvataju (desni) ostatak linije. Linijski komentari se mogu postaviti i u linijama u kojima se nalazi kôd.
+
+@li @em{Višelinijski komentari} jesu komentari koji pružaju kroz jednu ili više linija koda. Ovi komentari se nalaze između @pre{@@{-} i @pre{-@@}}
+}
+
+@codeBlock{
+-- ovo je komentar
+
+a = 2 * 10 + 1 -- i ovo je komentar
+
+@@{-
+Ovo
+je
+takođe
+komentar
+-@@}
+}{Primer komentara u @pre{.hs} datoteci.}
+
