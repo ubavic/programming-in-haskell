@@ -18,6 +18,15 @@ const addNoteEventListeners = () => {
     });
 };
 
+const addDetailsEventListeners = () => {
+    const details = [...document.querySelectorAll("details")]
+    details.forEach(d => {
+        d.addEventListener("toggle", () => {
+            setNotePositions()
+        })
+    })   
+}
+
 const setNotePositions = () => {
     let lastNoteEnd = 0;
 
@@ -36,6 +45,7 @@ const setNotePositions = () => {
 };
 
 addNoteEventListeners();
+addDetailsEventListeners();
 setNotePositions();
 
 setTimeout(setNotePositions, 100);
