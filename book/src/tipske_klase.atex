@@ -422,7 +422,7 @@ instance Fractional Racionalan where
 
 @p Jasno je da tipovi poput @code{Int}, @code{Integer}, @code{Float}, @code{Double} i @code{Rational} pripadaju klasi @code{Num}. Od navedenih tipova, samo prva dva ne pripadaju klasi @code{Fractional}. Iako deluje da su samo ovakvi tipovi instance ovih klasa, @code{Num} i @code{Fractional} mogu sadržati još mnoge zanimljive primere što pokazuju naredni zadaci.
 
-@problem{Definisati tip kompleksnih brojeva sa @ccode{newtype Kompleksan = K (Int, Int)}. Instancirati @code{Num Kompleksan} i @code{Fractional Kompleksan}. Apsolutnu vrednost implementirati kao normu kompleksnog broja, a znak kompleksnog broja implementirati tako da važi @ccode{abs z * signum z = z}.}
+@problem{Definisati tip kompleksnih brojeva sa @ccode{newtype Kompleksan = K (Double, Double)}. Instancirati @code{Num Kompleksan} i @code{Fractional Kompleksan}. Apsolutnu vrednost implementirati kao normu kompleksnog broja, a znak kompleksnog broja implementirati tako da važi @ccode{abs z * signum z = z}.}
 
 @p U narednim zadacima, funkcije @code{abs} i @code{signum} implementirati proizvoljno.
 

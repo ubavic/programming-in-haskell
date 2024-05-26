@@ -74,7 +74,7 @@ Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba
 
 @p Pažljiv čitalac će uvideti da smo koncept proizvoda tipova već imali kod uređenih @m{n}-torki. I zaista tip @code{Osoba} iz prethodnog primera je u nekom smislu ekvivalentan tipu @code{([Char], Int, Bool)}@note{Preciznije, između navedenih tipova postoji bijekcija: uzajamno jednoznačna korenspondencija.}. Svaku vrednost tipa @code{Osoba} možemo konvertovati u vrednost tipa @code{([Char], Int, Bool)} i obrnuto@note{Napišite funkcije koje uspostavljaju bijekciju.}.
 
-@p Sličnost nije slučajna, uređene @m{n}-torke jesu proizvodi tipova. Na primer, uređen par je @em{apstraktni} tip definisan sa @ccode{data (,) a b = (,) a b}. Slično su definisane i druge uređene @m{n}-torke @ccode{data (,,) a b c = (,,) a b c}, @ccode{data (,,,) a b c d = (,,,) a b c d} i tako dalje. Primetimo da tipovi i konstruktori imaju isto ime!
+@p Sličnost nije slučajna, jer uređene @m{n}-torke jesu proizvodi tipova. Na primer, uređen par je @em{apstraktni} tip definisan sa @ccode{data (,) a b = (,) a b}. Slično su definisane i druge uređene @m{n}-torke @ccode{data (,,) a b c = (,,) a b c}, @ccode{data (,,,) a b c d = (,,,) a b c d} i tako dalje. Primetimo da tipovi i konstruktori imaju isto ime!
 
 @p Haskel kompajler dozvoljava da se ovaj konstruktor upotrebljava na malo drugačiji način, pa se može pisati @code{(1, 'a')} umesto @code{(,) 1 'a'}.
 
@@ -85,6 +85,10 @@ ghci> :t (,)
 (,) :: a -> b -> (a, b)
 ghci> :k (,)
 (,) :: * -> * -> *
+}
+
+@problem{
+Koristeći proizvod tipova (bez korišćenja uređenih parova), definisati tip kompleksnih brojeva @code{Kompleksan} oslanjajući se na @code{Double} vrednosti. Instancirati @code{Num Kompleksan} i @code{Fractional Kompleksan}.
 }
 
 @subsection{Jedinični tip}
@@ -202,6 +206,10 @@ data Dan = Ponedeljak
     | Subota
     | Nedelja 
 }{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neophodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicija nije podeljena na više delova sa praznim linijama.}
+}
+
+@problem{
+U lekciji o rekurziji pokazan je zadatak sa Hanojskim kulama. U tom zadatku, iskoristili smo tip @code{Char} da bismo predstavili različite štapove (@m{A}, @m{B} ili @m{C}). Definisati tip @code{Štap} koji sadrži tri vrednosti, i prepraviti rešenje pomenutog zadataka tako da se umesto tipa @code{Char} koristi novi tip.
 }
 
 @section{Možda-tip}
