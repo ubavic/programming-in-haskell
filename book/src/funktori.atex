@@ -717,7 +717,7 @@ Nothing
 }
 }
 
-@p Parseri koje smo do sad konstruisali uglavnom su bili "atomični". Za kreiranje složenijih parsera, poput onih koji parsiraju čitav kôd nekog programskog jezika, potrebno je atomične parsere ukombinovati u složenije. Takvo ukombinovanje vršimo pomoću funkcija koje nazivamo @def{parser kombinatori}. Parser kombinatori uzimaju nekoliko parsera (najčešće istog tipa), i vraćaju parser.
+@p Parseri koje smo do sad konstruisali uglavnom su bili "atomički". Za kreiranje složenijih parsera, poput onih koji parsiraju čitav kôd nekog programskog jezika, potrebno je jednostavnije parsere ukombinovati u složenije. Takvo kombinovanje vršimo pomoću funkcija koje nazivamo @def{parser kombinatori}. Parser kombinatori uzimaju nekoliko parsera (najčešće istog tipa), i vraćaju parser.
 
 @p Najjednostavniji primer parser kombinatora je funkcija koja uzima dva parsera i kreira novi parser koji pokušava da pokrene prvi ili drugi parser. Ovakav kombinator ima sasvim jednostavnu definiciju:  
 
@@ -738,7 +738,7 @@ ghci> parsiraj logičkaVrednost "True"
 Just ("","True")
 ghci> parsiraj logičkaVrednost "False"
 Just ("","False")
-}{Kombinator @code{ili} je veoma zgodno postaviti u infiksni oblik kako je prikazno u prvoj liniji. Iako možda deluje neobičnao, ovakva sintasa doprinosi čitljivosti jer zapis podeća na prirodne rečenice: @em{parsirati nisku "True" ili nisku "False"}.}
+}{Kombinator @code{ili} je veoma zgodno postaviti u infiksni oblik kako je prikazno u prvoj liniji. Iako možda deluje neobično, ovakva sintaksa doprinosi čitljivosti jer zapis podseća na prirodne rečenice: @em{parsirati nisku "True" ili nisku "False"}.}
 }
 
 @problem{

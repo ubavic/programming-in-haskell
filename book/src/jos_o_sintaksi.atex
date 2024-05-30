@@ -11,8 +11,8 @@
 
 @section{Argumenti komande linije}
 
-@problem{Napisati program koji ispisuje sadržaj tekstualne datotke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{cat} program). Ako argument nije pristutan, program treba da ispiše pokruku o grešci (bez izuzetka).}
+@problem{Napisati program koji ispisuje sadržaj tekstualne datoteke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{cat} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci (bez izuzetka).}
 
-@problem{Napisati program koji ispisuje broj reči u tekstualnoj datoteci čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{wc} program). Ako argument nije pristutan, program treba da ispiše pokruku o grešci (bez izuzetka).}
+@problem{Napisati program koji ispisuje broj reči u tekstualnoj datoteci čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{wc} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci (bez izuzetka).}
 
 @section{Nasumične vrednosti}

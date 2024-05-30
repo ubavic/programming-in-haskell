@@ -381,7 +381,7 @@ saberi3 (x, y, z) = x + y + z
 @p U lambda izrazima moguće je upotrebiti podudaranje oblika za dekonstrukciju argumenta. Zbog same forme lambda izraza, moguće je navesti samo jedan oblik po kom se vrši podudaranje. Taj oblik postavljamo između "lambde" i strelice.
 
 @example{
-@p Funkciju @code{head} možemo elegantno da definišemo kao @ccode{\(x:xs) -> x}. Naravno, ova funkcija neće biti definsana za sve vrednosti, jer slučaj prazne liste nije obrađen (niti može biti obrađen ako je funkcija definisana sa lambda izrazom).
+@p Funkciju @code{head} možemo elegantno da definišemo kao @ccode{\(x:xs) -> x}. Naravno, ova funkcija neće biti definisana za sve vrednosti, jer slučaj prazne liste nije obrađen (niti može biti obrađen ako je funkcija definisana sa lambda izrazom).
 }
 
 @p Podudaranje oblika u lambda izrazima retko se koristi sa listama, baš iz razloga zato što možemo proveriti samo jedan oblik argumenta (što je retko kad dovoljno u slučaju lista). Ali, kako je oblik uređenih @m{n}-torki u potpunosti određen tipom, sa takvim tipovima se često koristi podudaranje oblika u lambda izrazima.

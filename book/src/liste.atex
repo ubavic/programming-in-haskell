@@ -10,7 +10,7 @@
 @li @code{(++) :: [a] -> [a] -> [a]} spaja dve liste
 @li @code{length :: [a] -> Int} vraća dužinu liste
 @li @code{elem :: Eq a => a -> [a] -> Bool} ispituje da li se element nalazi u listi
-@li @code{reverse :: [a] -> [a]} obrće poredak elemena u listi
+@li @code{reverse :: [a] -> [a]} obrće poredak elemenata u listi
 @li @code{head :: [a] -> a} vraća prvi element liste. Ako je lista prazna dolazi do izuzetka
 @li @code{init :: [a] -> a} vraća sve elemente osim poslednjeg. Ako je lista prazna dolazi do izuzetka
 @li @code{tail :: [a] -> a} vraća sve elemente osim prvog. Ako je lista prazna dolazi do izuzetka
@@ -90,7 +90,7 @@ ghci> [0, 10 .. 100]
 [0,10,20,30,40,50,60,70,80,90,100]
 ghci> [1, 5 .. 11]
 [1,5,9]
-}{Primetimo u poslednjem primeru da lista uključuje sve brojeve aritmetičke progresije manje @code{11}. Dakle, gornja granica respona ne mora biti uključena u listu.}
+}{Primetimo u poslednjem primeru da lista uključuje sve brojeve aritmetičke progresije manje @code{11}. Dakle, gornja granica raspona ne mora biti uključena u listu.}
 
 @p Navođenjem koraka progresije moguće je lako konstruisati liste i koje su opadajuće:
 
@@ -115,7 +115,7 @@ ghci> [0.1, 0.3 .. 1]
 [0.1,0.3,0.5,0.7,0.8999999999999999,1.0999999999999999]
 }
 
-@p Opsezi dozvoljavaju samo definisanje aritmetičkih progresija. Za definisanje geometrisjke (ili neke druge progresije), korisnik će morati sam da implementira odgovarajuće funkcije.
+@p Opsezi dozvoljavaju samo definisanje aritmetičkih progresija. Za definisanje geometrijske (ili neke druge progresije), korisnik će morati sam da implementira odgovarajuće funkcije.
 
 @p Međutim, rasponi mogu da se koriste i sa tipovima koji nisu numerički. Na primer, rasponi karaktera su često korisni
 
@@ -195,7 +195,7 @@ proizvod (x:xs) = x * proizvod xs
 }
 
 @example{
-@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekurzije lako možemo da reimplementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkcije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
+@p Do sada smo se upoznali sa funkcijom @code{last :: [a] -> a} koja vraća poslednji element neprazne liste. Tehnikom rekurzije lako možemo da sami implementiramo ovu funkciju@note{Uvek kada govorimo o reimplementaciji neke funkcije @code{f}, tu reimplementaciju ćemo označavati sa @code{f'}. Znak @code{'} je validan deo imena u Haskelu i često se koristi na kraju imena baš u ovom kontekstu (tj. kada se funkcije reimplementiraju).}. Baza rekurzije je sada jednočlana lista, jer nema smisla vraćati poslednji element prazne liste. Ako prosleđena lista nije prazna tada je njen poslednji element baš poslednji element repa te liste. Na ovaj način, sveli smo problem na rekurzivni poziv. 
 
 @codeBlock{
 last' :: [a] -> a
@@ -336,7 +336,7 @@ map' f (x:xs) = f x : map' f xs
 
 @subsection{@em{Fold}}
 
-@p Funkcije @code{foldl} i @code{foldr} koriste neku binarnu funkciju da bi "presavile" složenu vrednost (poput liste) u jednu vrednost. Ove funkcije se mogu koristiti sa tipovima koji pripadaju @code{Foldable} klasi, a liste su osnovni primer takvih tipova. Zapravo, upravo je implementacija funkcija @code{foldr} nophodna za instanciranje @code{Foldable} klase@note{Kao što je na primer funkcija @code{show} neophodna za instanciranje @code{Show} klase.}. Nadalje, možemo zaboraviti na @code{Foldable} klasu, i posmatrati funkcije @code{foldl} i @code{foldr} samo kroz kontekst lista.
+@p Funkcije @code{foldl} i @code{foldr} koriste neku binarnu funkciju da bi "presavile" složenu vrednost (poput liste) u jednu vrednost. Ove funkcije se mogu koristiti sa tipovima koji pripadaju @code{Foldable} klasi, a liste su osnovni primer takvih tipova. Zapravo, upravo je implementacija funkcija @code{foldr} neophodna za instanciranje @code{Foldable} klase@note{Kao što je na primer funkcija @code{show} neophodna za instanciranje @code{Show} klase.}. Nadalje, možemo zaboraviti na @code{Foldable} klasu, i posmatrati funkcije @code{foldl} i @code{foldr} samo kroz kontekst lista.
 
 @p Razlika između @code{foldl} i @code{foldr} funkcije je tome što @code{foldl} počinje od početka liste (levog kraja), dok @code{foldr} počinje od desnog kraja.
 
@@ -345,7 +345,7 @@ map' f (x:xs) = f x : map' f xs
 @example{
 @p Uz pomoć @code{foldr} možemo sabrati sve elemente jedne liste. Binarna funkcija koju ćemo koristiti je funkcija koja sabira argumente @code{saberi = \a b -> a + b}.
 
-@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo početnu vrednost@note{Ovo je uvek tačno za obe @em{fold} funkcije, pozivanjem nad prznom listom dobijamo početnu vrednost, jer u listi nije bilo elementa na koje je prosleđena binarna funkcija mogla biti primenjena.}:
+@p Ako @code{foldr} pozovemo nad praznom listom, dobićemo početnu vrednost@note{Ovo je uvek tačno za obe @em{fold} funkcije, pozivanjem nad praznom listom dobijamo početnu vrednost, jer u listi nije bilo elementa na koje je prosleđena binarna funkcija mogla biti primenjena.}:
 
 @terminal{
 ghci> foldr saberi 0 []
@@ -388,25 +388,25 @@ ghci> foldr g 1 [2, 3]
 1.5
 }{Prvi izraz se svodi na @code{(1 / 2) / 3}, dok se drugi izraz svodi na @code{1 / (2 / 3)}.}
 
-@p Često je zgodno da umesto posebne inicjalne vrednosti, iskorisimo prvi (ili poslednji) element liste. Tada nam mogu pomoći funkcije @ccode{foldl1 :: (a -> a -> a) -> [a] -> a} i @ccode{foldr1 :: (a -> a -> a) -> t a -> a} koje se razlikuju od @code{foldl} i @code{foldr} funkcija po tome što nemaju i inicijalnu vrednost kao jedan od parametara.
+@p Često je zgodno da umesto posebne inicijalne vrednosti, iskoristimo prvi (ili poslednji) element liste. Tada nam mogu pomoći funkcije @ccode{foldl1 :: (a -> a -> a) -> [a] -> a} i @ccode{foldr1 :: (a -> a -> a) -> t a -> a} koje se razlikuju od @code{foldl} i @code{foldr} funkcija po tome što nemaju i inicijalnu vrednost kao jedan od parametara.
 
 @example{
-@p Binarna funkcija @code{min :: Ord a => a -> a -> a} vraća manju od dve vrednosti@note{Setimo se, klasa @code{Ord} sadrži sve one tipove čiji se vrednosti mogu porediti sa @code{<}, @code{==}, @code{>}, itd... Prema tome za dve vrednosti nekog tipa iz @code{Ord}, uvek možemo odrediti koja je manja.}. Ako želimo da odredimo najmanju vrednost u tročlanoj listi, dovoljno je da prvo odredimo najmanju vrednost od prva dva elementa, a zatim tu vrednost uporedimo sa trećim elemntom. Slično važi i za liste veće dužine. Prema tome, funkcija @code{min} nam je dovoljna za implementaciju funkcije @code{najmanji :: Ord a => [a] -> a}:
+@p Binarna funkcija @code{min :: Ord a => a -> a -> a} vraća manju od dve vrednosti@note{Setimo se, klasa @code{Ord} sadrži sve one tipove čiji se vrednosti mogu porediti sa @code{<}, @code{==}, @code{>}, itd... Prema tome za dve vrednosti nekog tipa iz @code{Ord}, uvek možemo odrediti koja je manja.}. Ako želimo da odredimo najmanju vrednost u tročlanoj listi, dovoljno je da prvo odredimo najmanju vrednost od prva dva elementa, a zatim tu vrednost uporedimo sa trećim elementom. Slično važi i za liste veće dužine. Prema tome, funkcija @code{min} nam je dovoljna za implementaciju funkcije @code{najmanji :: Ord a => [a] -> a}:
 
 @codeBlock{
 najmanji :: Ord a => [a] -> a
-najamnji xs = foldl1 min xs
+najmanji xs = foldl1 min xs
 }
 
 @terminal{
 ghci> najmanji [3, 4, 1, 2]
 1
-}{Poziv @code{najamnji [3, 4, 1, 2]}, svodi se na izraz @code{min (min (min 3 4) 1) 2}, koji se naravno redukuje u @code{1}}
+}{Poziv @code{najmanji [3, 4, 1, 2]}, svodi se na izraz @code{min (min (min 3 4) 1) 2}, koji se naravno redukuje u @code{1}}
 
 @p Treba napomenuti da funkcije @code{foldl1} i @code{foldr1} očekuju neprazan niz. Ako se ovim funkcijama prosledi prazan niz, doći će do izuzetka (jer ove funkcije jednostano "nemaju" vrednost da vrate). Sa druge strane, kao što smo napomenuli, funkcije @code{foldl} i @code{foldr} mogu se primeniti i na prazan niz.
 }
 
-@p Da bi ste shvatili prednost @code{foldl1} i @code{foldr1} funkcija, pokušajte da implementirate funkciju iz prethonog primera koristeći @code{foldl} ili @code{foldr}. Uvidećete da izbor inicijalne vrednosti nije uvek trivijalna stvar. Obratite pažnju da lista može da sadrži i negativne vrednosti.
+@p Da bi ste shvatili prednost @code{foldl1} i @code{foldr1} funkcija, pokušajte da implementirate funkciju iz prethodnog primera koristeći @code{foldl} ili @code{foldr}. Uvidećete da izbor inicijalne vrednosti nije uvek trivijalna stvar. Obratite pažnju da lista može da sadrži i negativne vrednosti.
 
 @problem{
 Implementirati funkciju @code{najveći :: Ord a => [a] -> a} koja vraća najveći element liste. Pretpostaviti da lista neće biti prazna.
@@ -417,7 +417,7 @@ Implementirati funkciju @code{svi :: [Bool] -> Bool}, koja vraća @code{True} sa
 }
 
 @problem{
-Implementirati funkciju @code{baremJedan :: [Bool] -> Bool} koja vraća @code{True} ako je barem jedna elemenet u prosleđenoj listi tačan.
+Implementirati funkciju @code{baremJedan :: [Bool] -> Bool} koja vraća @code{True} ako je barem jedan element u prosleđenoj listi tačan.
 }
 
 @problem{
@@ -425,10 +425,10 @@ Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju ti
 }
 
 @problem{
-U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u ceobrojnu vrednost. Na primer, @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće bit prazna i sadržaće samo cifre).}
+U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u celobrojnu vrednost. Na primer, @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće bit prazna i sadržaće samo cifre).}
 {@p Koristeći funkcije @code{map} i @code{uCifru} nisku možemo prevesti u listu cifara tj. vrednost tipa @code{[Int]}. Na primer @code{map uCifru "123"} nam daje @code{[1,2,3]}. Sada je potrebno rekurzivno proći kroz ovakav niz cifara i formirati broj. Za to ćemo napisati pomoćnu funkciju @code{cifreUbroj :: [Int] -> Int}
 
-@p Algoritam je najlakše sprovesti rekurzijom po poslednjem elementu liste (pokušajte i da implementirate algoritam rastavljajući listu na glavu i rep). Bazu rekurzije čini slučaj jednočlanog niza. U tom slučaju kao povratnu vrednost vraćamo jedini element te liste (jer je vrednost jednocifrenog broja jednaka vrednosti jedine cifre tog broja). U suprotnom, rastavljamo listu na početak i na poslednji element, i računamo vrednost koju predstavlja početak. Tu vrednost početka pomeramo za jedno decimalno mesto (množeći sa @code{10}) i na to dodajemo vrednost poslednjeg elementa. Konkretno, ako nam je data lista @code{[1, 2, 3]}, rekurzivno nalazimo vrednost @code{cifreUBroj [1, 2]} što bi trebalo da nam da @code{12}. Množenjem sa @code{10} dobijamo vrednost @code{120}, koja kad je saberemo sa poslednjim elementom liste daje traženu vrednost funkcije. Kada razumemo postpak, kod nije teško napisati:
+@p Algoritam je najlakše sprovesti rekurzijom po poslednjem elementu liste (pokušajte i da implementirate algoritam rastavljajući listu na glavu i rep). Bazu rekurzije čini slučaj jednočlanog niza. U tom slučaju kao povratnu vrednost vraćamo jedini element te liste (jer je vrednost jednocifrenog broja jednaka vrednosti jedine cifre tog broja). U suprotnom, rastavljamo listu na početak i na poslednji element, i računamo vrednost koju predstavlja početak. Tu vrednost početka pomeramo za jedno decimalno mesto (množeći sa @code{10}) i na to dodajemo vrednost poslednjeg elementa. Konkretno, ako nam je data lista @code{[1, 2, 3]}, rekurzivno nalazimo vrednost @code{cifreUBroj [1, 2]} što bi trebalo da nam da @code{12}. Množenjem sa @code{10} dobijamo vrednost @code{120}, koja kad je saberemo sa poslednjim elementom liste daje traženu vrednost funkcije. Kada razumemo postupak, kod nije teško napisati:
 
 @codeBlock{
 cifreUbroj :: [Int] -> Int

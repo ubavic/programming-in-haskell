@@ -1,6 +1,6 @@
 @chapter{Algebarski tipovi podataka}
 
-@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicij tipa @code{T} sada će počinjati sa @code{data T =}, a umesto jednog konstruktora od sada ćemo potencijalno imati više konstruktora.
+@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicija tipa @code{T} sada će počinjati sa @code{data T = ...}, a umesto jednog konstruktora od sada ćemo potencijalno imati više konstruktora.
 
 @p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaju @def{algebarski tipovi podataka}.
 
