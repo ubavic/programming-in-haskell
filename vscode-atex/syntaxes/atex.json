@@ -66,6 +66,21 @@
 			]
 		},
 		{
+			"begin": "(@ccode)(\\s*)\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.control.atex"
+				}
+			},
+			"end": "\\}",
+			"contentName": "source.haskell",
+			"patterns": [
+				{
+					"include": "source.haskell"
+				}
+			]
+		},
+		{
 			"begin": "(@chapter)(\\s*)\\{",
 			"beginCaptures": {
 				"0": {
