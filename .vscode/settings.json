@@ -3,5 +3,14 @@
   "editor.snippetSuggestions": "top",
   "haskell.formattingProvider": "none",
   "editor.formatOnSave": true,
-  "cSpell.language": "en,sr-Latn"
+  "cSpell.language": "en,sr-Latn",
+  "cSpell.enableFiletypes": [
+    "atex"
+  ],
+  "prettier.embeddedLanguageFormatting": "off",
+  "cSpell.words": [
+    "funktor",
+    "Haskel",
+    "Haskelu"
+  ]
 }
