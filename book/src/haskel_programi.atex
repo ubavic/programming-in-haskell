@@ -47,10 +47,10 @@ Hello World!
 @codeBlock{
 main :: IO ()
 main = do
-	putStrLn "Hello World!"
-	putStrLn "Don't worry,"
-	putStrLn "Be happy."
-	putStrLn "Bye!"
+    putStrLn "Hello World!"
+    putStrLn "Don't worry,"
+    putStrLn "Be happy."
+    putStrLn "Bye!"
 }{Obratite pažnju na ključnu reč @code{do}. Ova reč otvara blok linija, a svaka akcija mora se navesti u posebnoj liniji.}
 
 @p Kompilacijom i izvršavanjem programa dobijamo očekivani rezultat
@@ -71,18 +71,18 @@ Bye!
 @codeBlock{
 pozdrav :: String -> IO ()
 pozdrav x = do
-	putStrLn ("Zdravo " ++ x ++ "!")
+    putStrLn ("Zdravo " ++ x ++ "!")
 
 main :: IO ()
 main = do
-	pozdrav "Nikola"
-	pozdrav "Marina"
+    pozdrav "Nikola"
+    pozdrav "Nikolina"
 }{Kada se u @code{do} bloku nalazi samo jedna akcija (kao u slučaju @code{pozdrav} funkcije), tada nije potrebno otvarati @code{do} blok. Pogledati kako je u gore definisana @code{main} akcija sa jednom akcijom.}
 
 @terminal{
 $ ./hello
 Zdravo Nikola!
-Zdravo Marina!
+Zdravo Nikolina!
 }
 
 @p Osim @code{putStrLn} funkcije, u Prelidu su dostupne i funkcije @code{putChar :: Char -> IO ()} i @code{putStr :: String -> IO ()}. Funkcija @code{putStrLn} se razlikuje od @code{putStr} samo po tome što dobijana akcija uz prosleđenu nisku ispisuje i karakter za novi red. Funkcija @code{putChr} daje akciju koja će ispisati jedan karakter.
@@ -92,9 +92,9 @@ Zdravo Marina!
 @codeBlock{
 main :: IO ()
 main = do
-	putStr "Vaše ime je: "
-	ime <- getLine
-	putStrLn ("Zdravo " ++ ime ++ "!")
+    putStr "Vaše ime je: "
+    ime <- getLine
+    putStrLn ("Zdravo " ++ ime ++ "!")
 }{Strelicom @code{<-} se vrednost tipa @code{T} "otpakuje" iz vrednosti tipa @code{IO T}.}
 
 @terminal{
@@ -111,11 +111,11 @@ inicijali ime prezime = (head ime) ++ "." ++ (head prezime) ++ "."
 
 main :: IO ()
 main = do
-	putStr "Vaše ime: "
-	ime <- getLine
-	putStr "Vaše prezime: "
-	prezime <- getLine
-	putStrLn (inicijali ime prezime)
+    putStr "Vaše ime: "
+    ime <- getLine
+    putStr "Vaše prezime: "
+    prezime <- getLine
+    putStrLn (inicijali ime prezime)
 }
 
 @p Unutar @code{do} bloka je dozvoljeno definisati vrednosti koristeći @code{let} ključnu reč. U @code{do} blokovima definicije moraju imati smisleni redosled: definicije koje sadrže definisane (ili "otpakovane") vrednosti moraju se nalaziti nakon tih definicija. Prethodni primer smo mogli i da napišemo ovako:
@@ -126,12 +126,12 @@ inicijali ime prezime = (head ime) ++ "." ++ (head prezime) ++ "."
 
 main :: IO ()
 main = do
-	putStr "Vaše ime: "
-	ime <- getLine
-	putStr "Vaše prezime: "
-	prezime <- getLine
-	let inic = inicijali ime prezime
-	putStrLn inic
+    putStr "Vaše ime: "
+    ime <- getLine
+    putStr "Vaše prezime: "
+    prezime <- getLine
+    let inic = inicijali ime prezime
+    putStrLn inic
 }
 
 @problem{
@@ -140,10 +140,10 @@ U jednoj od prošlih lekcija smo konstruisali funkciju @code{uBroj :: String -> 
 @codeBlock{
 main :: IO ()
 main = do
-	a <- getLine
-	b <- getLine
-	let zbir = (uBroj a) + (uBroj b)
-	putStrLn (show zbir)
+    a <- getLine
+    b <- getLine
+    let zbir = (uBroj a) + (uBroj b)
+    putStrLn (show zbir)
 }
 }
 
@@ -227,20 +227,20 @@ main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++sho
 @codeBlock{
 main :: IO ()
 main = do
-	a1
+    a1
 
 a1 :: IO ()
 a1 = do
-	putStrLn "Hello"
-	a3
+    putStrLn "Hello"
+    a3
 
 a2 :: IO ()
 a2 = do
-	putStrLn "Ciao"
+    putStrLn "Ciao"
 
 a3 :: IO ()
 a3 = do
-	putStrLn "Zdravo"
+    putStrLn "Zdravo"
 }
 
 @p Razliku između definisanja i pokretanja akcije je moguće uvideti i u narednom kodu. Znak jednakosti u prvoj liniji @code{do} bloka određuje definiciju akcije @code{a} koja nije pokrenuta! Sa druge strane, strelica @code{<-} u narednoj liniji pokreće akciju sa desne strane, i rezultat pokretanja te akcije dodeljuje imenu @code{r}. Kako je @code{putStr :: String -> IO ()}, to će vrednost @code{r} imati tip (a i vrednost) @code{()}. 
@@ -248,16 +248,15 @@ a3 = do
 @codeBlock{
 main :: IO ()
 main = do
-	let a = putStr "Hello"
-	r <- putStr "Zdravo"
-	putStrLn "!"
+    let a = putStr "Hello"
+    r <- putStr "Zdravo"
+    putStrLn "!"
 }{Kako je prva akcija samo definisana, a druga pokrenuta, ispis u konzoli će biti @em{Zdravo!}}
 }
 
 @p Za korisnike drugih programskih jezika, ovakvo razdvajanje pojma akcija od pojma funkcija deluje kao nepotrebno komplikovanje. Ali zapravo se ovde radi o prednosti Haskel jezika u odnosu na druge jezike. Dok u mnogim drugim jezicima (C/C++, Python, Java, Javaskript, Go, itd..) ne postoji nikakva kontrola interakcije programa sa spoljnim svetom@note{Na primer, ako radite na projektu koji sadrži hiljade procedura koje pozivaju jedna drugu, tada ne možete lako znati da li će neka funkcija koju pozovete imati neki efekat koji ne želite. Šta ako funkcija koju pozivate, dalje poziva neke funkcije koje štampaju šifre u konzolu ili brišu tabele iz baze? Čak i ako analizirate sav kôd koji pozivate, ne možete biti sigurni da vaš kolega kasnije neće slučajno izmeniti kôd na neželjen način.}, u Haskelu je kroz sistem tipova (tj. @code{IO} tip) obezbeđeno jasno razdvajanje dela koda koji intereaguje sa spoljnim svetom od dela koda koji to ne čini. Na taj način postignuto je se mnoge potencijalne greške (bagovi), uoče i isprave tokom kompilacije programa.
 
 @p U navedenim programskim jezicima postoji slična podela koda. Programeri često govore o @def{čistom}@note{@em{pure}} i @def{nečistom}@note{@em{impure}} kodu. Čiste funkcije su one funkcije koje zadovoljavaju dva pravila: za iste parametre vraćaju iste povratne vrednosti i nemaju propratne efekte. To su upravo one dve osobine koje smo naveli za Haskel funkcije. Prema tome možemo reći da su Haskel funkcije uvek čiste dok su akcije nečiste. Primetimo da u navedenim programskim jezicima razlika između čistog i nečistog kod nije uspostavljena kroz kompajler (kao što je to slučaj sa Haskelom), već programer mora sam da zaključi o kakvom kodu se radi. 
-
 
 @section{Rad sa datotekama}
 
@@ -305,9 +304,90 @@ main = do
     writeFile "novaPesma.txt" pesma
 }{Pokretanjem navedenog programa, sadržaj datoteke @pre{pesma.txt} će biti prekopiran u datoteku @pre{novaPesma.txt}, a u terminalu neće biti prikazana bilo kakva poruka. Kao što vidimo, jedina svrha ovog programa je da kopira tekstualnu datoteku sa određenim imenom.}
 
-@p Pri radu sa funkcijama @code{readFile} i @code{writeFile} trebalo bi imati na umu da ove funkcije mogu dovesti do izuzetka koji prekida rad programa. Na primer, ako pokušamo čitanje datoteke koja ne postoji, ili upisavanje u datoteku za koju nemamo odgovarajuće dozvole. Videćemo kasnije kako se izuzeci mogu kontrolisati.
+@p Pri radu sa funkcijama @code{readFile} i @code{writeFile} trebalo bi imati na umu da ove funkcije mogu dovesti do izuzetka koji prekidaju rad programa ako se ne obrade. Na primer, ako pokušamo čitanje datoteke koja ne postoji, ili upisavanje u datoteku za koju nemamo odgovarajuće dozvole. Videćemo uskoro kako se izuzeci mogu kontrolisati.
+
+@problem{Koristeći funkciju @code{lines :: String -> [String]} naći broj liniji u nekoj određenoj datoteci (npr @pre{pesma.txt}).}
+
+@section{Kratak osvrt na module}
+
+@p Pre nego što nastavimo sa akcijama, moramo napraviti kratku digresiju i upoznati se sa Haskel modulima. U Haskelu, @def{modul} je osnovna jedinica podele programa. Jedan modul sastoji se iz definicija funkcija, tipova, klasa, i drugih stvari sa kojima ćemo se upoznati... Ime modula mora početi velikim slovom i može sadržati samo alfanumeričke karaktere kao i znak tačke. Moduli omogućuju bolju organizaciju koda: kodu jednog modula nisu dostupne definicije iz drugog modula osim ako se eksplicitno ne @em{uvedu} u modul. Ovim je olakšano razdvajanje koda u smislene celine i organizacija koda. Sa druge strane, uvodeći module možemo iskoristiti funkcije ili akcije koje nismo sami napisali@note{Upravo zbog ovoga i spominjemo ovde module}.
+
+@p Svaka Haskel datoteka čini jedan poseban modul. U dosadašnjem izlaganju, implicitno smo radili sa @code{Main} modulom@note{Ime ovog modula možete da vidite prilikom kompilacije.} koji se podrazumeva ako neki drugi modul nije naveden. Za sve datoteke koje smo napisali, podrazumevalo se da definišu @code{Main} modul. Takođe, još jedan modul nam je bi "sakriven pred očima": to je prelid, odnosno @code{Prelude} modul koji se implicitno učitava u svaki Haskel program.
+
+@p Za nas će do kraja ove sekcije biti korisno da znamo kako možemo učitati određene funkcije iz standardnih modula. Da bismo uvezli neku funkciju @code{funkcija} iz modula @code{NekiModul} potrebno da na početku datoteke, pre svih drugih definicija napišemo liniju @ccode{import NekiModul (funkcija)}. Na ovaj način uvedena funkcija je dostupna našem kodu kao da smo je sami napisali. Ako iz modula @code{NekiModul} želimo da uvezemo više funkcija, na primer @code{funkc1} i @code{funkc2}, kôd ćemo započeti sa @code{import NekiModul (funkc1, funkc2)}. Ako uvozimo funkcije iz različitih modula, tada poredak uvoza nije bitan - bitno je samo da se svi uvozi nalaze pre definicija i dekleracija.
+
+@p Naravno, imena funkcija koje uvozimo iz drugih modula ne smeju se podudarati sa funkcijama koje smo sami definisali. Iako nam sistem modula omogućuje prevazilaženje ovog problema, za nas će za sada biti dovoljne samo informacije koje smo ovde dali. 
+
+@section{Rad sa argumentima komande linije}
+
+@p Komandna linija, ili terminal, predstavlja interfejs u kom korisnik upisuje komande koje računar treba da izvrši. Specijalno, kroz komandnu liniju korisnik može da pokrene programe, što smo i videli u ovoj lekciji. U terminalima lokalni programi (poput programa koje smo sami iskompajlirali) pokreću se navođenjem putanje do tog programa. Prilikom pokretanja programa moguće je proslediti i @def{argumente komandne linije} koji su navode nakon imena programa. Nulti argument je putanja programa. Svi argumenti prosleđuju se pokrenutom programu i na tom programu je da interpretira značenje tih argumenata.
+
+@example{
+@p I u @em{Unix} i u @code{Windows} terminalima moguće je pokrenuti program @code{rm}@note{skraćeno od @em{remove}} koji briše datoteke. Ako u terminalu pokrenemo komandu @pre{rm pesma.txt}, tada će terminal pokrenuti program @pre{rm} i proslediće mu listu@note{Ovde smo iskoristili Haskel sintaksu da predstavimo listu (niz) niski, ali bez obzira na jezik u kom je napisan program, princip je isti.} argumenata @pre{["rm", "pesma.txt"]}.
+}
+
+@p Koristeći akcije @code{getProgName :: IO String} i @code{getArgs :: IO [String]} iz modula @code{System.Environment} možemo pristupiti argumentima komande linije. Akcija @code{getProgName} vraća nulti argument tj. ime programa, dok @code{getArgs} vraća sve ostale argumente. U najjednostavnijem slučaju možemo samo ispisati prosleđene argumente:
+
+@codeBlock{
+import System.Environment
+
+main :: IO ()
+main = do
+    imePrograma <- getProgName
+    putStrLn imePrograma
+    argumenti <- getArgs
+    putStrLn (show argumenti)
+}{Sadržaj datoteke @pre{argumenti.hs}}
+
+@terminal{
+$ ghc argumenti.hs
+[1 of 2] Compiling Main             ( argumenti.hs, argumenti.o )
+
+$ ./argumenti
+argumenti
+[]
+
+$ ./argumenti a b C DDD 123
+argumenti
+["a","b","C","DDD","123"]
+
+$ ./argumenti argument1 "drugi argument"
+argumenti
+["argument1","drugi argument"]
+}{Kompilacija navedenog programa i tri primera pokretanja. Svaka reč nakon imena programa se interpretira kao poseban argument. Poslednji primer ilustruje mogućnost prosleđivanja argumenta sačinjenog od više reči korišćenjem navodnika.}
+
+@p Sada kako znamo da pristupimo argumentima komande linije, možemo napraviti jednostavnije verzije nekih poznatih @em{Unix} alata:
+
+@problem{Napisati program koji ispisuje sadržaj tekstualne datoteke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{cat} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci.}{
+@p Akcije za učitavanje i ispis datoteke postavićemo u posebnu funkciju @code{učitajIspiši}. U akciji @code{main} proverićemo da li lista argumenata sadrži barem jedan element i na osnovu toga pokrenuti sledeću akciju:
+
+@codeBlock{
+import System.Environment
+
+učitajIspiši :: String -> IO ()
+učitajIspiši imeDatoteke = do
+    sadržaj <- readFile imeDatoteke
+    putStrLn sadržaj
 
 
+main :: IO ()
+main = do
+    argumenti <- getArgs
+    if null argumenti
+        then putStrLn "Navedite barem jedan argument!"
+        else učitajIspiši (head argumenti)
+}
+}
 
+@problem{Napisati program koji ispisuje broj reči u tekstualnoj datoteci čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{wc} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci.}
 
+@problem{Napisati program koji sadržaj datoteke čije ime je navedeno kao prvi argument kopira u datoteku čije ime je navedeno kao drugi argument komandne linije (ovo je takozvani @em{cp} program). Ako svi argumenti nisu prisutni, program treba da ispiše poruku o grešci.}
+
+@problem{Napisati program koji ispisuje prvih pet linija tekstualne datoteke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{head} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci. Ako je prisutan drugi argument, proveriti da li taj argument predstavlja prirodan broj, i u potvrdnom slučaju ispisati broj linija u skladu sa tim argumentom.}
+
+@todo{Datum i vreme}
+
+@todo{Izuzeci}
+
+@todo{Nasumične vrednosti}
 
