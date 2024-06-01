@@ -371,7 +371,7 @@ ghci> ime osoba3
 "Miloš"
 }{Vrednosti koordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
 
-@p Pri poklapanju šablona, moguće je "uhvatiti" samo labele koje su potrebne. Tako bi se funkcije od malopre mogla ovako napisati:
+@p Pri podudaranju oblika, moguće je "uhvatiti" samo labele koje su nam potrebne. Tako bi se funkcije od malopre mogla ovako napisati:
 
 @codeBlock{
 punoIme :: Osoba -> String

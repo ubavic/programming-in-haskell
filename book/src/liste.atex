@@ -434,16 +434,20 @@ U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @co
 cifreUbroj :: [Int] -> Int
 cifreUbroj [] = 0
 cifreUbroj [x] = x
-cifreUBroj xs = (cifreUBroj (init x)) * 10 + (last x)
+cifreUbroj xs = (cifreUbroj (init x)) * 10 + (last x)
 }{Slučaj prazne liste je dodat radi totalnosti}
 
 @p Koristeći navedenu pomoćnu funkciju, zadatak je lako rešiti
 
 @codeBlock{
 uBroj :: [Char] -> Int
-uBroj s = cifreUBroj (map uCifru s)
+uBroj s = cifreUbroj (map uCifru s)
 }
 }
+
+@problem{Napisati funkciju @code{daLiJeBroj :: [Char] -> Bool} koja provera da li je data niska validan zapis prirodnog broja (tj. sastoji se samo od cifara).}
+
+@problem{Napisati funkciju @code{daLiJeCeoBroj :: [Char] -> Bool} koja provera da li je data niska validan zapis celog broja (tj. sastoji se od cifara sa eventualnim znakom @pre{-} na početku).}
 
 @problem{Reimplementirati funkciju @code{map} koristeći funkciju @code{foldl}.}
 
@@ -478,7 +482,7 @@ ghci> numerisaniDani
 ["1. Pon","2. Uto","3. Sre","4. Čet","5. Pet","6. Sub","7. Ned"]
 ghic> head numerisaniDani
 "1. Pon"
-}{Funkcija @code{f} spaja broj i nisku u nisku. Primetimo da smo ovde koristili poklapanje oblika za definisanje funkcije.}
+}{Funkcija @code{f} spaja broj i nisku u nisku. Primetimo da smo ovde koristili podudaranje oblika za definisanje funkcije.}
 
 @p Ali, ako nam je potrebna samo vrednost @code{numerisaniDani} a ne i @code{dani2}, možemo preskočiti korak u kom kreiramo vrednost @code{dani2}, i iskoristiti funkciju @code{zipWith}:
 

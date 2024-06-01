@@ -76,7 +76,7 @@ id = \x -> x
 @codeBlock{
 head :: [a] -> a
 head (x:_) = x
-}{Poklapanjem oblika liste, možemo rastaviti listu na glavu i rep.}
+}{Podudaranjem oblika liste, možemo rastaviti listu na glavu i rep.}
 
 @p U ovoj funkciji, vidimo da se tipska promenljiva pojavljuje unutar zagrada @code{[]}. Prema tome @code{[a]} ne predstavlja svaki tip, vec predstavlja svaki tip lista. Npr. tip @code{Int} nije oblika @code{[a]}, i stoga @code{head 3} nije dobro tipiziran izraz. Sa druge strane, ako @code{head} primenimo na @code{[True, True, False]} tada Haskel "poklapa" domen @code{[a]} sa tipom @code{[Bool]}, odakle sledi da @code{a} mora biti @code{Bool}. Prema tome, @code{head [True, True, False]} je vrednost tipa @code{Bool}.
 
