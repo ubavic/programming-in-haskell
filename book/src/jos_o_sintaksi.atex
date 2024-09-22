@@ -1,13 +1,231 @@
 @chapter{Još o sintaksi}
 
+@p Postoji još par pojedinosti Haskel sintakse koje nismo do sada obradili, a koje ćemo u nastavku prezentovati.
+
+@section{Podudaranje oblika}
+
+@p Nakon što smo se upoznali sa algebarskim tipovima, možemo dati nešto precizniji opis mehanizma podudaranja oblika. Podudaranje oblika smo koristili pri definisanju funkcija. U opštem slučaju, ovakve definicije su sačinjene od više linija koje predstavljaju primenu funkcije na @em{oblike}@note{eng. @em{pattern}}. Svaka linija ima formu @em{jednakosti} @ccode{f x₁ x₂ … xₘ = y} gde su @code{x₁}, @code{x₂} itd. neki oblici. Oblik može biti nešto od sledećeg:
+
+@list{
+    @li Literal broja, odnosno izraz poput @code{2}, @code{3.14}, @code{0x3A}, itd...
+    @li Literal karaktera, odnosno izraz poput @code{'a'}, @code{'B'}, @code{'ш'}, itd...
+    @li Literal niske, odnosno izraz poput @code{"hello"}, @code{"world!!"}, itd...
+    @li Proizvoljno ime, odnosno izraz poput @code{x}, @code{ys}, @code{n}, itd...
+    @li Džoker @code{_}
+    @li Literal uređene @m{n}-torka oblika, odnosno izraz poput @code{(1, 'a')}, @code{(x, y, z)}, @code{(_,1,_,x)} itd... 
+    @li Literal liste oblika, odnosno izraz poput @code{[]}, @code{[5]}, @code{[x,y,_]}, itd...
+    @li Konstruktor primenjen na oblike ili zapise, odnosno izraz poput @code{True}, @code{Maybe x}, @code{Vektor x y _} itd...
+}
+
+@p Svako podudaranje oblika koje možemo konstruisati samo kombinovanjem prethodno navedenih oblika. Primetimo da oblici @m{n}-torke, liste i algebarskog tipa podatka, dozvoljavaju da se konstruišu oblici proizvoljne složenosti@note{Na primer, @code{Maybe x}, ali @code{Maybe (Maybe x)}, i @code{Maybe (Maybe (Maybe x))}, itd...}. 
+
+@p Numerički literal, karakter ili niska u obliku će se podudariti sa argumentom funkcije, ako i samo ako je taj argument jednak@note{U smislu operatora @code{==}} tom literalu. Oblik sačinjen od imena, podudariće se sa svakim argumentom, i to ime će imati vrednost argumenta sa desne strane jednakosti. Jedno ime može se koristi samo na jednom mestu sa leve strane jednakosti@note{Npr. ne možemo sa oblikom @code{[x, x]} podudariti dvočlane liste sa istim prvim i drugim argumentom.}. Džoker @code{_} takođe se podudara sa svakom vrednošću argumenta, ali za razliku od imena džoker se može pojavljivati na više mesta sa leve strane jednakosti. Vrednost argumenata koji se podudario sa džokerom, ne može se iskoristiti sa desne strane jednakosti.
+
+@p Oblici sa listama, @m{n}-torkama, i konstruktorima uglavnom u sebi sadrže neke druge @em{podoblike} (npr. literale). Ovi oblici će se podudariti sa argumentom funkcije ako i samo ako se svi podoblici podudare sa odgovarajućim vrednostima.
+
+@p Primetimo da se liste mogu podudariti na dva načina: ili preko literala liste (npr @code{[1,2,3]}) ili korišćenjem konstruktora liste (npr: @code{x:xs}). Nekad se ova dva pristupa podudaranju lista koriste istovremeno (npr. u obliku @code{x:[_]}). Ovo takođe važi i za uređene @code{n}-torke koji se mogu podudariti korišćenjem konstruktora poput @code{(,)}, @code{(,,,)}. itd. ali se ovakav pristup retko koristi u praksi.
+
+@subsection{@em{As} sintaksa}
+
+@p Konstruktori se mogu koristiti na dva načina: kao funkcije pomoću kojih se konstruišu vrednosti nekog tipa (otuda i samo ime), ali i za @em{dekonstrukciju} vrednosti podudaranjem oblika. Neretko se dešava da u definiciji funkcije neki argument dekonstruišemo da bi u telu funkcije istu tu vrednost konstruisali.
+
+@example{
+@p Neka je dat tip koji predstavlja petodimenzionalni vektor:
+
+@codeBlock{
+data Vektor = Vektor Float Float Float Float Float
+}
+
+@p Neka su date i dve funkcije @code{g1, g2 :: Vektor -> Float}. Zamislimo da je potrebno napisati funkciju @code{f :: Vektor -> Int} koja za dati vektor @code{v} vraća vraća vrednost @code{g1 v} ako je prva koordinata vektora @code{v} pozitivna, a suprotnom @code{g2 v}. Jedna implementacija tražene funkcije bi mogla da glasi ovako:
+
+@codeBlock{
+f :: Vektor -> Float
+f (Vektor x y z w q) =
+    if x >= 0
+        then g1 (Vektor x y z w q)
+        else g2 (Vektor x y z w q)
+}
+
+@p Vidimo da u kodu nepotrebno uvodimo promenljive @code{y}, @code{z}, @code{w}, @code{q}. Vrednosti koje predstavljaju ove promenljive nisu bitne za samu funkciju @code{f}. Situacija bi nešto bolja bila da smo iskoristili @code{let in} ili @code{where} konstrukciju, ali i osnovni problem bi i dalje ostao: istu vrednost dekonstruišemo pa konstruišemo.
+}
+
+@p @em{As} sintaksa nam omogućuje da isti argument istovremeno vežemo za jedno ime ali i da iskoristimo podudaranje oblika. Sintaksa ima oblik @ccode{ime@@@ oblik}, pri čemu se @code{ime} ne nalazi u obliku. Na ovaj način vrednost čitavog argumenta će biti dostupna kao @code{ime} sa desne strane jednakosti.
+
+@example{
+@p Koristeći @em{as} sintaksu za prethodni primer, funkciju @code{f} možemo definisati kao
+
+@codeBlock{
+f :: Vektor -> Float
+f v@@@(Vektor x y z w q) =
+    if x >= 0
+        then g1 v
+        else g2 v
+}{@em{As} sintaksom smo istovremeno izvršili podudaranje oblika, u ovom slučaju to podudaranje oblika dekonstruiše vektor na koordinate, ali smo i imenu @code{v} dodelili vrednost čitavog vektora.}
+
+@p Zapravo, kako nas vrednosti @code{y}, @code{z}, @code{w}, @code{q} uopšte ne interesuju, možemo ih zameniti džokerima:
+
+@codeBlock{
+f :: Vektor -> Float
+f v@@@(Vektor x _ _ _ _) =
+    if x >= 0
+        then g1 v
+        else g2 v
+}
+}
+
 @section{@em{Case} notacija}
 
-@section{Izlistavanje}
+@p Podudaranje oblika je do sada bilo isključivo vezano za definicije funkcija: da bismo iskoristili podudaranje oblika, morali smo da definišemo novu funkciju@note{Osim u slučaju podudaranja oblika u parametru lambda funkcije, koji se može iskoristiti samo za dekonstrukciju jednog oblika.}. @em{Case} konstrukcija nam omogućava podudaranje oblika unutar @em{izraza}, bez potrebe za definicijom funkcije.
+
+@p @em{Case} izraz započinje sa kodom @code{case x of} gde je @code{x} vrednost čiji oblik želimo da ispitamo. Nakon ovog početka, potrebno je navesti blok sačinjen od oblika i rezultata razdvojenih strelicom @code{->}.
+
+@codeBlock{
+dužina :: [a] -> Int
+dužina []     = 0
+dužina (x:xs) = 1 + dužina xs
+
+dužina' :: [a] -> Int
+dužina' = (\ss -> case ss of
+    []    -> 0
+    x:xs  -> 1 + dužina' xs
+)
+
+dužina'' :: [a] -> Int
+dužina'' ss = case ss of
+    []    -> 0
+    x:xs  -> 1 + dužina'' xs
+}{Tri definicije funkcije koja računa dužinu liste. Prva definicija nam je dobro poznata. U drugoj definiciji je iskorišćen je @code{case} izraz unutar lambda izraza. Primetimo da je ovako napisan lambda izraz mogao da se navede bilo gde u kodu, i da nije bilo potrebe da se dodeljuje imenu @code{dužina}. Treća definicija je mešavina prethodne dve: parametar @code{ss} je vezan tehnikom podudaranja oblika (pri čemu je naveden samo jedan, opšti, oblik), a u telu funkcije je iskorišćena @em{case} notacija. Primetimo kako u @em{case} izrazu oblik @code{x:xs} nismo morali da obuhvatimo sa za zagradama kao što je to slučaj u prvoj definiciji.}
+
+@p Za blok oblika koji sledi nakon koda @code{case x of} važe iste napomene kao i za blokove poput @code{where} ili @code{let in} blokova. Blok se može napisati i u jednoj liniji razdvajanjem slučajeva sa znakom @code{;}. Ako se blok prelomi u više linija, tada počeci svih linija moraju biti poravnati po vertikali.
+
+@example{
+@p Iskoristimo primer iz prethodne glave za demonstraciju različitog preloma @em{case} izraza. Sve naredne definicije definišu istu funkciju
+
+@codeBlock{
+data Dužina = Metar Float | Milja Float | SvetlosnaSekunda
+    Float deriving (Show)
+
+uMetre' :: Dužina -> Dužina
+uMetre' l = case l of
+    Milja m -> Metar (1609.344 * m)
+    SvetlosnaSekunda s -> Metar (299792458 * s)
+    x -> x
+
+uMetre'' :: Dužina -> Dužina
+uMetre'' l = case l of Milja m -> Metar (1609.344 * m)
+                       SvetlosnaSekunda s -> Metar (299792458 * s)
+                       x -> x
+
+uMetre''' :: Dužina -> Dužina
+uMetre''' l = case l of Milja m -> Metar (1609.344 * m); SvetlosnaSekunda s -> Metar (299792458 * s); x -> x
+}
+}
+
+@p Možda isprava ne deluje kao mnogo korsina, ali @em{case} notacija može skratiti kôd.
+
+@problem{Napisati funkciju @code{moždaZbir :: Maybe [Maybe Int] -> Int} koja sabira sve vrednosti različite od @code{Nothing} u datom možda-nizu možda-brojeva. Iskoristiti @em{case} notaciju}
+
+@todo{Ograđena Case notacija}
+
+
+@todo{Izlistavanje}
+
+@section{Pragme i ekstenzije}
+
+@p @def{Pragma} je instrukcija za Haskel kompajler smeštena u kodu. Pragme se zapisuju u obliku @pre{@@{ -# WORD ... #-@@}}, gde @pre{WORD} označava tip pragme, nakon čega mogu slediti dodatne informacije. Neki od dostupnih, i najčešće prisutnih, tipova pragmi su:
+
+@list{
+ @li @pre{LANGUAGE} omogućava ekstenzije Haskel jezika. O ekstenzijama ćemo govoriti u nastavku.
+ @li @pre{OPTIONS_GHC} prosleđuje opcije @em{GHC} kompajleru, koje bi se inače prosledile kao opcije pri pokretanju kompajlera.
+ @li @pre{WARNING} i @pre{DEPRECATED} omogućava ispis poruka upozorenja prilikom kompilacije koda.
+ @li @pre{MINIMAL} određuje minimalan skup metoda koje instanca neke klase mora da implementira.
+ @li @pre{INLINE} i @pre{NOINLINE} sugerišu kompajleru da (ne) izvrši određenu optimizaciju (@em{inlining}) prilikom generisanja izvršne datoteke.
+}
+
+@p Mi smo se u prošloj lekciji upoznali sa @pre{MINIMAL} pragmom koju ćemo imati prilike ponekad da koristimo. Ostale pragme ćemo ređe koristiti, osim @pre{LANGUAGE} pragme koja je verovatno najčešće korišćena pragma i koja je prisutna u gotovo svakom netrivijalnom Haskel projektu.
+
+@subsection{Ekstenzije}
+
+@p Pragma @pre{LANGUAGE} omogućuje aktivaciju @em{Haskel ekstenzije} koja na neki način menja Haskel jezik. Ekstenzije mogu da dozvole određenu sintaksu koja nije validna bez te ekstenzije, da promene neku pojedinost sistema tipova, sistem modula, integraciju sa drugim jezicima, ili jednostavno da zabrane neke konstrukcije, itd.. Skup ekstenzija se menjao tokom decenija: nove ekstenzije su se dodavale i nastavljaju da se dodaju, neke ekstenzije su prevaziđene, a neke su postale deo standardnog jezika. 
+
+@p Pragma @pre{LANGUAGE} mora se navesti na vrhu datoteke, pre dekleracije modula, i odnosi se samo na modul u kom je navedena:
+
+@codeBlock{
+@@{ -# LANGUAGE LambdaCase #-@@}
+module Main where
+
+...
+}{Primer aktivacije ekstenzije @pre{LambdaCase}. Ako se aktivira više ekstenzija, tada se može navesti više pragmi, ili se u jednu pragmu postaviti više imena ekstenzija razdvojenih zarezima.}
+
+@p Većina ekstenzija je van domašaja ove lekcije, ali za sada možemo razumeti naredne:
+
+@list{
+    @li @pre{BinaryLiterals} dozvoljava pisanje celobrojnih literala u binarnom obliku. Ovakvi literali moraju se započeti sa @code{0b} ili @code{0B}. Na primer, literal @code{0b100} predstavlja @m{4}.
+    @li @pre{DuplicateRecordFields} dozvoljava da različiti zapisi imaju polja sa istim imenom.
+    @li @pre{HexFloatLiterals} dozvoljava korišćenje heksadecimalnih brojeva sa zarezom: literal @code{0x0.1} predstavlja @m{\frac{1}{16}}, literal @code{0x0.0F} predstavlja @m{\frac{15}{256}}, itd...
+    @li @pre{InstanceSigs} dozvoljava da se prilikom instanciranja klase navedu tipovi metoda. 
+    @li @pre{LambdaCase} dozvoljava da se lambda izraz oblika @ccode{\x -> case x of @@{ p₁ -> e₁; ...; pₙ -> eₙ@@}} zapiše kao @ccode{\case @@{ p₁ -> e₁; ...; pₙ -> eₙ@@}}. Ovo je jedna od najkorišćenijih ekstenzija.
+    @li @pre{MagicHash} dozvoljava da se na kraju imena postavi znak @pre{#}, i uvodi još neke oblike literala. Ova ekstenzija se najčešće koristi pri radu sa nekim @em{low-level} tipovima Haskel jezika.
+    @li @pre{NoImplicitPrelude} stopira implicitni uvoz @em{Prelude} modula. Ovo oslobađa prostor imena.
+    @li @pre{NumericUnderscores} dozvoljava zapis numeričkih literala sa znakom @code{_} radi bolje čitljivosti. To omogućava da npr. vrednost milion zapiše kao @code{1_000_000}. Ako je ova ekstenzija aktivirana, znak @code{_} u numeričkom literalu se u potpunosti ignoriše od strne kompajlera.
+    @li @pre{OverloadedRecordDot} dozvoljava da se polju @code{b} nekog zapisa @code{a} pristupi sa @code{a.b} umesto sa @code{b a}. Ovakva sintaksa je analogna drugim jezicima gde se sa tačkom pristupa poljima nekog objekta (strukture). 
+    @li @pre{UnicodeSyntax} Dozvoljava da se umesto ASCII nizova poput @pre{::}, @pre{->}. @pre{<-}, @pre{=>}, itd, koriste UTF simboli poput @pre{∷}, @pre{→}, @pre{←}, @pre{⇒}, itd... Ovo omogućava zapise poput @code{f ∷ Num a ⇒ a → Int}.
+}
+
+@p Ekstenzije su moćan deo Haskel jezika koje omogućuju programerima da olakšaju programiranje, ali i da istraže nove pravce u kojima bi Haskel jezik mogao da se razvija u budućnosti. Sa velikom moći dolazi i velika odgovornost, te je stoga potrebno razmisliti o posledicama@note{Na primer, kada govorimo o ekstenzijama koje menjaju sintaksu, to su posledice koje se tiču čitljivosti koda.} pre aktiviranja ekstenzija. U praksi, neke ekstenzije su često prisutne na projektima (npr. @pre{LambdaCase}), dok se neke ekstenzije zaobilaze u širokom luku (npr. @pre{UnicodeSyntax}).
+
+@problem{Uključiti ekstenziju @pre{LambdaCase} i ponovo definisati funkciju @code{uMetre :: Dužina -> Dužina} koristeći novu sintaksu.}
+
 
 @section{Programiranje bez tačaka}
 
-@section{Još o podudaranju oblika}
+@p Tehnika @def{programiranja bez tačaka}@note{eng. @em{point-free programming}, poznato još kao i @em{tacit programming}} je stil pisanja programskog koda u kom se ne navode parametri funkcija. Ova tehnika je moguća zahvaljujući osobinama sintakse Haskela zbog čega je navodimo ovde (iako sama po sebi nije deo Haskel sintakse).
 
-@todo{Paramatričnost}
+@p Suština programiranja bez tačaka leži u osobini da se lambda funkcija @code{\x -> f x} može zameniti sa funkcijom @code{f}. Zaista, funkcija koja primenjuje @code{f} na argument @code{x} i vraća dobijeni rezultat, ne razlikuje se od same funkcije @code{f}, i možemo ih smatrati istima@note{U Haskelu funkcije @code{f}, @code{g} smatramo istim ako poseduju iste tipove, i za sve vrednosti @code{x} domena važi @code{f x = g x}. Napominjemo da se ovde radi "meta" rezonovanju, a u samom Haskelu je nemoguće u opštem slučaju porediti funkcije sa operatorom @code{==} (ili bilo kojim drugim). Razlozi ovog ograničenja nemaju veze sa Haskelom već sa teoretskim ograničenjima računarstva. Ipak možemo dati jednostavan argument u terminima Haskela: tip @code{[Bool]} sadrži beskonačno mnogo vrednosti, te se stoga dve funkcije @code{f, g :: [Bool] -> Bool} ne mogu uporediti jer bi to zahtevalo proveru @code{f x == g x} za beskonačno mnogo nizova @code{x}. Dakle, u opštem slučaju jednakost funkcija u Haskelu ne može se definisati.}. Zamena @code{\x -> f x} naziva se @def{eta konverzija}.
+
+@p Eta konverzija je jednostavan princip, ali u kodu često koristimo podudaranje oblika umesto lambda izraza, zbog čega prilika za eta redukcijom može biti skrivena "ispred nosa". Na primer, neka je data funkcija @code{h :: Int -> Int -> Bool} i neka je funkcija @code{g :: Int -> Bool} definisana sa @ccode{g x = h 10 x}. Ovakvo jednostavno podudaranje oblika nije ništa drugo nego skraćenica za definiciju sa lambda izrazom @ccode{g = (\x -> h 10 x)}. Uzimajući u obzir da je @code{h 10 x} zapravo @code{(h 10) x}, vidimo da lambda izraz @ccode{(\x -> (h 10) x)} možemo eta konverzijom da svedemo na @code{h 10}. Samim tim originalna definicija funkcije @code{g} je postala sada @ccode{g = h 10}. Dakle, eta konverzija nam omogućuje "skraćivanje" najdesnijeg parametra u definicijama oblika @ccode{g x₁ ... xₙ = IZRAZ xₙ}, pod pretpostavkom da se @code{xₙ} ne pojavljuje u @code{IZRAZ}@note{Ovaj uslov nam zabranjuje da uradimo eta redukciju definicije @code{g x = max x x}, jer se @code{x} pojavljuje u izrazu @code{max x}}.
+
+@example{
+@p Funkciju @code{zbir :: [Int] -> Int} koja vraća zbir svih elemenata liste, možemo definisati:
+
+@codeBlock{
+zbir xs = foldr (+) 0 xs
+}
+
+@p "Skraćivanjem" parametra @code{xs} dobijamo kod 
+
+@codeBlock{
+zbir = foldr (+) 0
+}
+}
+
+@p Primetimo da u definiciji @code{sum = foldr (+) 0} iz primera, ne pojavljuje se parametar funkcije @code{sum}. Stoga za ovu definiciju kažemo da je napisana u stilu bez tačaka. Izraz @em{bez tačaka} potiče iz matematike, gde se često za argument funkcije kaže @em{tačka}@note{često čujemo izraz @em{vrednost funkcije u tački}} (iako možda ta funkcija nema veze sa geometrijskim tačkama). Kôd bez tačaka može biti elegantniji od "koda sa tačkama", ali ta elegantnost može vrlo lako da preraste u nečitljivost@note{navedene osobine koda su subjektivne. Čak i za najjednostavniji kod bez tačaka, kakav smo videli u primeru, možemo reći da je nečitljiv, jer iz oblika definicije nije odmah jasno da je @code{zbir} funkcija.}. Ipak, dobro je razumeti ovu tehniku, jer je popularna među Haskel programerima i može se videti u svim projektima. 
+
+@example{
+@p Napišimo definiciju @ccode{f x = 2 * x - 1} u stilu bez tačaka. Prvo možemo izdvojiti operator oduzimanja u prefiksnu poziciju čime dobijamo @ccode{f x = (-) (2 * x) 1}. Pošto je za eta konverziju neophodno da parametar bude smešten na desnoj strani izraza, iskoristićemo @code{flip :: f -> a -> b -> b -> a} kombinator koji obrće redosled parametara funkcija. Kombinator ćemo primeniti na funkciju @code{(-)}, čime stižemo do definicije @ccode{f x = flip (-) 1 (x * 2)}. Ako postavimo i @code{*} u prefiksnu poziciju dobijamo @ccode{f x = flip (-) 1 ((*) 2 x)}. Vidimo da se ovde radi o kompoziciji funkcija @code{flip (-) 1} i @code{(*) 2} primenjenoj na @code{x}, pa je @ccode{f x = ((flip (-) 1) . ((*) 2)) x}. Prostom eta redukcijom stižemo do @ccode{f = (flip (-) 1) . ((*) 2)}
+
+@p U ovom primeru vidimo da ne treba po svaku cenu pisati kod u stilu bez tačaka@note{Protivnici programiranja bez tačaka nazivaju ovaj still @em{pointless} umesto @em{pointfree}.}.
+}
+
+@p Ironično, u stilu bez tačaka često se pojavljuje operator kompozicije koji se zapisuje sa tačkom. Ovo često buni početnike, te je dobro napomenuti da stil bez tačaka samo podrazumeva da se funkcije definišu bez navođenja parametara, a da ne podrazumeva ništa o upotrebi operatora kompozicije.
+
+@p Pokušajmo sad da rešimo "problem" koji se često može sresti u Haskel kodu. Neka su date funkcije @code{f' :: A -> B -> C} i @code{g' :: C -> D}. U kodu nam je potrebna funkcija @code{h = \x y -> g' (f' x y)}, i voleli bismo ovu funkciju napišemo u stilu bez tačaka. Prva ideja koja nam pada na pamet je da iskoristimo operator kompozicije @code{.} i definišemo @code{h = g' . f'}. Međutim dobićemo tipsku grešku čim ovako definišemo @code{h}. Razlog tome je što je kodomen funkcije @code{f} tip @code{B -> C}@note{Podsećamo da je u tipovima strelica @code{->} desnoasocijativna, što znači da je tip @code{f :: A -> B -> C} zapravo tip @code{f' :: A -> (B -> C)}}. To znači da domen funkcije @code{g'} mora biti isto @code{B -> C} ako želimo izvršimo kompoziciju, što naravno nije za naš primer. Dakle, funkcije više promenljivih ne možemo uvek lako komponovati sa @code{.}.
+
+@p Pri traženju definicije bez tačaka, uvek je dobro krenuti od definicije za koju znamo da je dobra @ccode{h x y = g' (f' x y)}. Videli smo da @code{h} nije kompozicija @code{g'} i @code{f'}, ali @code{h x} jeste kompozicija funkcija @code{g'} i @code{f' x}: @ccode{h x y = (g' . (f' x)) y}. Sada možemo izvršiti eta konverziju, čime dobijamo @ccode{h x = g' . (f' x)}. Pomeranjem operatora kompozicije u prefiksnu poziciju dobijamo @ccode{h x = (.) g' (f' x)}, što se može shvatiti kao primena funkcije @code{(.) g'} na @code{f' x}. Drugim rečima, ovde se radi o kompoziciji @ccode{h x = (((.) g') . f') x} koja se može eta konvertovati u @ccode{h = ((.) g') . f'}. Ovim smo stigli do definicije "kompozicije" @code{f'} i @code{g'} koja je u stilu bez tačaka.
+
+@note{dodati sliku}
+
+@p Ovaj postupak možda želimo da proizvoljne funkcije @code{f :: a -> b -> c} i @code{g :: c -> d}, a ne samo određene @code{f'} i @code{g'}. Stoga definišemo kombinator @ccode{comp_1_2 :: (c -> d) -> (a -> b -> c) -> (a -> b -> d)} sa @ccode{comp_1_2 g f = ((.) g) . f}. Jasno, za funkciju @code{h} iz prethodnog paragrafa važi @code{h = comp_1_2 g' f'}. Međutim, definicija @code{comp_1_2} više nije u stilu bez tačaka. Stoga transformišimo i ovu definiciju u stil bez tačaka. Prebacivanjem operatora kompozicije u prefiksnu poziciju od @ccode{comp_1_2 g f = ((.) g) . f} dobijamo @ccode{comp_1_2 g f = (.) ((.) g) f}, odakle eta konverzijom dobijamo @ccode{comp_1_2 g = (.) ((.) g)}. Ovde imamo kompoziciju dve @code{(.)} funkcije, odnosno @ccode{comp_1_2 g = ((.) . (.)) g}. Poslednjom eta konverzijom dobijamo @ccode{comp_1_2 = (.) . (.)}.
 
 
+@problem{
+Napisati funkciju koja računa aritmetičku sredinu dva broja u stilu bez tačaka.
+}
+
+@problem{
+U stilu bez tačaka dati definiciju kombinatora koji vrši kompoziciju jedne unarne funkcije i jedne ternarne funkcije @ccode{comp_1_3 ::(d -> e) -> (a -> b -> c -> d) -> (a -> b -> c -> e)}
+}
+
+@problem{
+U stilu bez tačaka dati definiciju kombinatora koji vrši kompoziciju tri unarne funkcije @ccode{comp_1_1_1 :: (c -> d) -> (b -> c) -> (a -> b) -> (a -> d)}.
+}

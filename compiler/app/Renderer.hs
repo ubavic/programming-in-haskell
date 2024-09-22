@@ -118,7 +118,7 @@ renderIndexPage chapters date = pageHTML body "Programiranje u Haskelu" date
                 h1 $ string "Programiranje u Haskelu"
                 p $ string "Knjiga o funkcionalnom programiranju"
             main $ do
-                ol ! A.id "index" $ mapM_ f chapters
+                ol ! A.id "index" ! A.start "0" $ mapM_ f chapters
         f (path, name, sections) = do
             li $ do
                 a ! A.href (stringValue path) $ string name

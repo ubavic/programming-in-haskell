@@ -254,7 +254,7 @@ f 0 = 1
 f _ = 0
 }
 
-@p Sa podudaranjem oblika, možemo lako definisati i funkcije više argumenta. Tako na primer naredna dva koda definišu istu funkciju:
+@p Sa podudaranjem oblika, možemo lako definisati i funkcije više parametara. Tako na primer naredna dva koda definišu istu funkciju:
 
 @codeBlock{
 g :: Int -> Int -> Int
@@ -389,8 +389,6 @@ saberi3 (x, y, z) = x + y + z
 @example{
 @p Umesto funkcija @code{fst} i @code{snd} možemo koristiti lambda funkcije @code{\(x, y) -> x} i @code{\(x, y) -> y}.
 }
-
-@todo{case}
 
 @section{Zadaci}
 

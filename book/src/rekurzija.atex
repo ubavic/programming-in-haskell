@@ -254,7 +254,7 @@ zbir' n = div (n * (n+1)) 2
 }
 
 @example{
-@p Gore su navedene dve definicije funkcije koja računa parnost broja. Prva funkicja, funkcija koja koristi @code{mod} funkciju, se izvršava u konstantnom vremenu, jer procesor u jednom ciklusu može da podeli dva broja sa ostatkom. Naredna, rekurzivna, definicija funkcije zahteva @code{n} rekurzivnih poziva za izračunavanje izraza @code{paran n}.
+@p Gore su navedene dve definicije funkcije koja računa parnost broja. Prva funkcija, funkcija koja koristi @code{mod} funkciju, se izvršava u konstantnom vremenu, jer procesor u jednom ciklusu može da podeli dva broja sa ostatkom. Naredna, rekurzivna, definicija funkcije zahteva @code{n} rekurzivnih poziva za izračunavanje izraza @code{paran n}.
 }
 
 @example{
@@ -319,11 +319,9 @@ ghci> p 10
 
 @problem{Napisati funkciju koja određuje binomni koeficijent @m{n \choose k}.}
 
-@problem{Za nisku @code{a} kažemo da deli nisku @code{s} ako je @code{s} oblika @code{a ++ a ++ ... ++ a}. Na primer, niska @code{"Abc"} deli nisku @code{"AbcAbcAbc"}. Takođe, smatra se da prazna niska @code{""} deli svaku nisku. Napisati funkciju @ccode{nzd :: [Char] -> [Char] -> [Char]} koja određuje @em{najveći zajednički delilac} dve niske, odnosno najdužu nisku koja deli obe niske.}
-
 @problem{Spratovi jedne zgrade se kreče u zeleno, plavo ili crveno. Svaki sprat se kreči u jednu od te tri boje. Na koliko načina je moguće okrečiti zgradu, ako važi pravilo da se dva susedna sprata ne smeju okrečiti istom bojom.}
 
-@problem{Za proizvoljan prirodan broj @m{n} definišemo njegov Kolacov niz na sledeći način: @m{x_0 = n}, @m{x_{m+1} = x_m / 2} ako je @m{x_n} parno, odnosno @m{x_{m+1} = 3 x_m + 1} ako je @m{x_m} neparno. Pritom ako je @m{x_{m+1} = 1} niz se prekida. Na primer Kolacov niz za @m{n = 12} je @m{12, 6, 3, 10, 5, 16, 8, 4, 2, 1}. Pretpostavlja se da će se Kolacov niz svakog prirodnog broja eventualno prekinuti, tj. da će se pojaviti @m{1} u njemu. Naći prirodan broj manji od @m{10000} koji ima najduži Kolacov niz.}
+@problem{Za proizvoljan prirodan broj @m{n} definišemo njegov Kolacov niz (eng. @em{Collatz sequence}) na sledeći način: @m{x_0 = n}, @m{x_{m+1} = x_m / 2} ako je @m{x_n} parno, odnosno @m{x_{m+1} = 3 x_m + 1} ako je @m{x_m} neparno. Pritom ako je @m{x_{m+1} = 1} niz se prekida. Na primer Kolacov niz za @m{n = 12} je @m{12, 6, 3, 10, 5, 16, 8, 4, 2, 1}. Pretpostavlja se da će se Kolacov niz svakog prirodnog broja eventualno prekinuti, tj. da će se pojaviti @m{1} u njemu. Naći prirodan broj manji od @m{10000} koji ima najduži Kolacov niz.}
 
 @problem{@em{Metoda polovljenja intervala} je numerička metoda određivanja korena neprekidne funkcija tipa @m{\mathbb R\to \mathbb R}. Posmatrajmo interval @m{[a, b]}. Ako za funkciju @m{f} važi da je @m{f(a) < 0} i @m{f(b) > 0} (ili da je @m{f(a) > 0} i @m{f(b) < 0}) za neke brojeve @m{a < b}, tada zbog neprekidnosti znamo da postoji @m{x}, @m{a < x < b}, takvo da je @m{f(x) = 0}. Uzmimo @m{c = (a + b) / 2}. Ako je @m{f(c) \ne 0} postupak možemo da ponovimo za jedan od intervala @m{[a , c]} ili @m{[c, b]} (naravno, ako je @m{f(c) = 0}, postupak prekidamo). Na ovaj način dobijamo niz intervala čija dužina se prepolovljava, i za koje znamo da sadrže barem jedno rešenje jednačine @m{f(x) = 0}. Stoga, u @m{n} koraka možemo odrediti koren jednačine sa greškom manjom od @m{(b-a)/2^n}. Koristeći ovaj metod, naći koren polinoma @m{p(x) = 2x^3-4x^2-6x+2} na intervalu @m{[1, 4]} sa greškom ne većom od @m{0.001}.}
 

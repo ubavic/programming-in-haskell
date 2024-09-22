@@ -101,7 +101,7 @@ zbirVektora (a, b, c) (x, y, z) = (a + x, b + y, c + z)
 }
 }
 
-@p U prelidu već je definisan naredni tipski sinonim
+@p U Prelidu već je definisan naredni tipski sinonim
 
 @codeBlock{
 type String = [Char]

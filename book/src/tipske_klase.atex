@@ -1,6 +1,6 @@
 @chapter{Tipske klase}
 
-@p @def{Tipska klasa} predstavlja kolekciju tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz metode@note{@em{Metod} je samo naziv za funkciju (specijalno operator) koju klasa deklariše.} koje "rade" sa svim tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
+@p @def{Tipska klasa} jeste kolekcija tipova koji imaju neke zajedničke osobine. Te zajedničke osobine izražavaju se kroz metode@note{@em{Metod} je samo naziv za funkciju (specijalno operator) koju klasa deklariše.} koji se mogu pozivati nad tipovima te klase. Svaki tip koji pripada nekoj klasi naziva se @def{instanca} te klase.
 
 @p U lekciji o polimorfizmu videli smo da nam tipske klase omogućuju da pišemo polimorfne funkcije koje koriste neke određene metode koje nisu dostupne svakom tipu@note{Na primer, koristeći klasu numeričkih tipova @code{Num}, moguće sa jednom definicijom implementirati numeričku formulu za svaki tipom koji pripada klasi @code{Num}.}. U ovoj lekciji ćemo prikazati kako i sami možemo definisati naše klase, i kroz primere predefinisanih klase videćemo razne tehnike koje je moguće koristiti pri radu sa klasama.
 
@@ -29,7 +29,7 @@ instance C T where
 @p Prvo ćemo definisati tri tipa podatka koji predstavljaju figure u Dekartovoj ravni:
 
 @list{
-  @li Svaki pravougaonik se može odrediti sa jednim temenom, širinom i visinom (jednostavnosti radi, pretpostavljamo da su stranice pravougaonika paralelne sa koordinatnim osama). Kako teme možemo predstaviti sa dve koordinate, ceo kvadrat možemo predstaviti sa četiri @code{Double} vrednosti.
+  @li Svaki pravougaonik se može odrediti sa jednim temenom, širinom i visinom (jednostavnosti radi, pretpostavljamo da su stranice pravougaonika paralelne sa koordinatnim osama). Kako teme možemo predstaviti sa dve koordinate, ceo kvadrat možemo predstaviti sa četiri @code{Double} vrednosti (dve za koordinate jednog temena, dve za dužine stranica).
   @li Trougao je u potpunosti određen sa tri temena. Prema tome, za predstavljanje trougla nam je potrebna struktura podataka koja sadrži šest @code{Double} vrednosti.
   @li Krug je određen centrom i poluprečnikom. Stoga struktura koja predstavlja krug sadrži tri @code{Double} vrednosti.
 }
@@ -51,7 +51,7 @@ newtype Krug = Krug (Double, Double, Double)
 
 @codeBlock{
 obimPravougaonika :: Pravougaonik -> Double
-obimPravougaonika (Pravougaonik (x, y, a, b)) = 2 * (a + b)
+obimPravougaonika (Pravougaonik (_, _, a, b)) = 2 * (a + b)
 
 obimTrougla :: Trougao -> Double
 obimTrougla (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
@@ -61,7 +61,7 @@ obimTrougla (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
     c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
 
 obimKruga :: Krug -> Double
-obimKruga (Krug (x, y, r)) = 2 * pi * r 
+obimKruga (Krug (x, y, r)) = 2 * pi * r
 }{Za računanje obima trougla, prvo smo izračunali dužinu stranica korišćenjem Pitagorine teoreme.}
 
 @p Navedeni kôd je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli primeniti jedinstvenu funkciju @code{obim} na svaku figuru@note{Baš kao što funkciju @code{show} možemo primeniti i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a operator @code{+} možemo koristiti i sa @code{Int} i sa @code{Float} vrednostima, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
@@ -73,17 +73,17 @@ class Figura a where
   obim :: a -> Double
 }
 
-@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve dok se ne stigne do neprazne linije koja nije nazubljena.
+@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve do linije koja nije nazubljena.
 
 @p Slobodna tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja proizvoljnu instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 
-@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neki vrednost tipa @code{a}, pri čemu taj tip @code{a} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje, te je potrebno tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učiniti instancama klase @code{Figura}.
+@p Navedeni kôd već možemo učitati u @em{GHCi}. Korišćenjem komande @code{:type} možemo uvideti da je tip funkcije @code{obim} dat sa @code{Figura a => a -> Double}. Ovo nam govori da se funkcija @code{obim} može primeniti samo na neku vrednost tipa @code{A}, pri čemu taj tip @code{A} pripada klasi @code{Figura}. Za sada takvi tipovi ne postoje: potrebno je tipove @code{Pravougaonik}, @code{Trougao} i @code{Krug} učiniti instancama klase @code{Figura}.
 
 @p Pošto klasa @code{Figura} pripisuje samo jednu funkciju (@code{obim}), instanciranje podrazumeva implementaciju funkcije @code{obim} za svaki od navedenih tipova.
 
 @codeBlock{
 instance Figura Pravougaonik where
-  obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
+  obim (Pravougaonik (_, _, a, b)) = 2 * (a + b)
 
 instance Figura Trougao where
   obim (Trougao (x1, y1, x2, y2, x3, y3)) = a + b + c
@@ -93,14 +93,14 @@ instance Figura Trougao where
       c = sqrt $ (x3 - x1)^2 + (y3 - y1)^2 
 
 instance Figura Krug where
-  obim (Krug (x, y, r)) = 2 * pi * r
+  obim (Krug (_, _, r)) = 2 * pi * r
 }{Definicije funkcija su u potpunosti iste kao definicije funkcija @code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}.}
 
 @p Linijom @code{instance ... } započinje se blok definicija metoda. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
 @p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnije pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
 
-@p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da se @code{obim} može primeniti na razne tipove figura
+@p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da se funkcija @code{obim} može primeniti na razne figure:
 
 @terminal{
 ghci> trougao = Trougao (0, 0, 1, 0, 0, 1)
@@ -114,7 +114,7 @@ ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{površina} koja nam daje površinu figure. Sada u svakoj instanci moramo implementirati i funkciju @code{površina}. Površinu Pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{površina} koja nam daje površinu figure. Nakon dodavanja nove dekleracije u definiciji klase, u svakoj instanci moramo implementirati i funkciju @code{površina}. Površinu pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where
@@ -123,9 +123,9 @@ class Figura a where
 
 
 instance Figura Pravougaonik where
-  obim (Pravougaonik (x, y, a, b)) = 2 * (a + b)
+  obim (Pravougaonik (_, _, a, b)) = 2 * (a + b)
 
-  površina (Pravougaonik (x, y, a, b)) = a * b
+  površina (Pravougaonik (_, _, a, b)) = a * b
 
 
 instance Figura Trougao where
@@ -144,24 +144,22 @@ instance Figura Trougao where
 
 
 instance Figura Krug where
-  obim (Krug (x, y, r)) = 2 * pi * r
+  obim (Krug (_, _, r)) = 2 * pi * r
   
-  površina (Krug (x, y, r)) = pi * r^2
+  površina (Krug (_, _, r)) = pi * r^2
 }
 
 @p Više o klasama tipova naučićemo na primerima poznatih klasa koje su već definisane u Haskelu.
 
 @section{@em{Equality}}
 
-@p U klasi @code{Eq} nalaze se svi tipovi čije vrednosti je moguće porediti pomoću funkcija @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
+@p U klasi @code{Eq} nalaze se svi tipovi čije vrednosti je moguće porediti pomoću operatora @code{==} i @code{/=}. Definicija klase @code{Eq} je sasvim jednostavna:
 
 @codeBlock{
 class Eq a where
   (==) :: a -> a -> Bool
   (/=) :: a -> a -> Bool
 }
-
-@p Klasa @code{Eq} deklariše dva operatora koje vraćaju logičke vrednosti. Ta dva operatora služe za poređenje vrednosti tipa @code{a}.
 
 @example{
 @p Definišimo tip koji predstavlja racionalan broj. Kako je svaki racionalan broj oblika @m{a/b} za neka sva cela broja @m{a} i @m{b\ne 0}, to tip @code{Racionalan} možemo definisati kao uređen par celih brojeva:
@@ -218,20 +216,20 @@ class Eq a where
 
 @p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati. Kroz naredne primere upoznaćemo se detaljnije sa sintaksom pragme @em{MINIMAL}.
 
-@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{\=}, a @code{\=} kao negaciju @code{==}, tada bi svako poređenje dovelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija funkcija @code{==} i @code{/=}. 
+@p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{\=}, a @code{\=} kao negaciju @code{==}, tada bi svako poređenje dovelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija operatora @code{==} ili @code{/=}. 
 
 @example{
-@p @em{Nastavak prethodnog primera}. Za instancu @code{Racionalan}, dovoljno je napisati sledeće
+@p @em{Nastavak prethodnog primera}. Za instancu @code{Racionalan}, dovoljno je bilo napisati sledeće
 
 @codeBlock{
 instance Eq Racionalan where
     (Racionalan (a, b)) == (Racionalan (c, d)) = a * d == c * b
-}{Umesto definicije za @code{==}, mogli smo da napišemo i samo definiciju za @code{/=}.}
+}{Umesto definicije za @code{==}, mogli smo da definišemo @code{/=}.}
 }
 
 @section{@em{Ordering}}
 
-@p Klasu @code{Ord} čine svi tipovi koje je moguće porediti pomoću funkcija @code{<}, @code{<=}, @code{>} i @code{>=}. Definicija klase @code{Ord} je sledeća:
+@p Klasu @code{Ord} čine svi tipovi koje je moguće porediti pomoću operatora @code{<}, @code{<=}, @code{>} i @code{>=}. Definicija klase @code{Ord} je sledeća:
 
 @codeBlock{
 class (Eq a) => Ord a where
@@ -326,7 +324,7 @@ ghci> a
 
 @p Klasa @code{Read} je suprotnost klasi @code{Show}. Instance klase @code{Read} su tipovi čije se vrednosti mogu "pročitati" iz niske. Kako je "čitanje" vrednosti iz niske značajno složenije nego zapisivanje u nisku i definicija klase @code{Read} je složenija. Stoga ovde nećemo navoditi definiciju klase.
 
-@p Zgodno je ipak znati za funkciju @code{read :: Read a => a -> String} koja se može koristiti sa instancama klase @code{Read}.
+@p Zgodno je ipak znati za funkciju @code{read :: Read a => String -> a} koja se može koristiti sa instancama klase @code{Read}.
 
 @example{
 @p Ugrađeni tipovi poput numeričkih su instance klase @code{Read}. Stoga, sa @code{read} funkcijom možemo pročitati vrednost iz niske.

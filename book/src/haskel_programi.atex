@@ -1,6 +1,6 @@
 @chapter{Haskel programi}
 
-@p U dosadašnjim lekcijama prikazali smo iskljičivo rad u interaktivnom okruženju @em{GHCi}. Sada ćemo se upoznati sa Haskel kompajlerom i naučićemo kako da kompajliramo Haskel kod u izvršne datoteke. Takođe ćemo se upoznati sa metodama koje nam omogućavaju ulaz i izlaz iz programa (bilo kroz terminal, bilo kroz datoteke), kao i nekim osnovama organizacije Haskell koda.
+@p U dosadašnjim lekcijama prikazali smo iskljičivo rad u interaktivnom okruženju @em{GHCi}. Sada ćemo se upoznati sa Haskel kompajlerom i naučićemo kako da kompajliramo Haskel kôd u izvršne datoteke. Takođe ćemo se upoznati sa metodama koje nam omogućavaju ulaz i izlaz iz programa (bilo kroz terminal, bilo kroz datoteke), kao i nekim osnovama organizacije Haskell koda.
 
 @section{@em{Hello World!}}
 
@@ -36,7 +36,7 @@ Hello World!
 
 @p Za neki tip @code{T}, tip @code{IO T} predstavlja proceduru (u najširem smislu te reči), koja se može izvršiti tokom izvršavanja programa, i čiji rezultat je vrednost tipa @code{T}. Vrednosti koje poseduju tip oblika @code{IO T} nazivamo @def{akcije}. Prema tome, @code{main} je jedna akcija koja će se izvršiti tokom izvršavanja programa i čiji rezultat je vrednost tipa @code{()}, odnosno baš @code{()}. 
 
-@p Zapravo @code{main} je akcija koja ima poseban status: to je akcija koja se uvek prva izvršava pri radu programa, i poziva ostale akcije. U navedenom programu, akcija @code{main} je pozvala akciju @code{putStrLn "Hello World!"}. Funkcija @code{putStrLn} poseduje@note{U šta se možete uveriti pomoću @code{:type} naredbe u @em{GHCi} programu.} tip @code{String -> IO ()}, pa vrednost primene @code{putStrLn} na neku nisku je akcija tipa @code{IO ()} koja se može dodeliti imenu @code{main}. Dakle, @code{putStrLn} je funkcija koja nisku preslikava u akciju koja će ispisati tu nisku, ali vrednost @code{putStrLn} nije akcija!
+@p Zapravo @code{main} je akcija koja ima poseban status: to je akcija koja se uvek prva izvršava pri radu programa, i poziva ostale akcije. U navedenom programu, akcija @code{main} je pozvala akciju @code{putStrLn "Hello World!"}. Funkcija @code{putStrLn} poseduje@note{U šta se možete uveriti pomoću @code{:type} naredbe u @em{GHCi} programu.} tip @code{String -> IO ()}, pa vrednost primene @code{putStrLn} na neku nisku je akcija tipa @code{IO ()} koja se može dodeliti imenu @code{main}. Dakle, @code{putStrLn} je funkcija koja nisku preslikava u akciju koja će ispisati tu nisku, ali vrednost @code{putStrLn} sama za sebe nije akcija.
 
 @p Za sada nismo objasnili zašto tako naizgled jednostavna funkcija poput @code{main} ima tako neobičan tip, niti smo objasnili kako se funkcija poput @code{putStrLn} može iskoristiti unutar funkcija koje smo do sada pisali. Tip @code{IO} je za sada otvara više pitanja nego što daje odgovora, ali ćemo pokušati da kroz ovu lekciju odgovorimo na neka od tih pitanja. 
 
@@ -197,7 +197,7 @@ $ ./quine
 main = putStrLn ((\s->s++" "++s++")") main = putStrLn ((\s->s++" "++s++")"))
 }
 
-@p Rešenje sad deluje dosta blizu. Neophodno je sad postaviti drugi deo ispsa u navodnike i dodati kose crte. Tj. potrebno je nisku ispisati u obliku u kom bi bila zapisana kao Haskel literal. Upravo to radi @code{show} funkcija. Sada je dovoljno umesto @code{\s->s++" "++s++")"} napisati @code{\s->s++" "++show s++")"}.
+@p Rešenje sad deluje dosta blizu. Neophodno je sad postaviti drugi deo ispisa u navodnike i dodati kose crte. Tj. potrebno je nisku ispisati u obliku u kom bi bila zapisana kao Haskel literal. Upravo to radi @code{show} funkcija. Sada je dovoljno umesto @code{\s->s++" "++s++")"} napisati @code{\s->s++" "++show s++")"}.
 
 @codeBlock{
 main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
@@ -211,13 +211,13 @@ main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++sho
 
 @section{Akcije i funkcije}
 
-@p Haskel početnici često poistovećuju @em{akcije} (poput @code{putStrLn "Hello World" :: IO ()} i @code{getLine :: IO Stringq}) sa @em{funkcijama} jer pojam funkcije u drugim programskim jezicima obuhvata oba pojma u Haskelu. Na primer, u C jeziku postoji funkcija (funkcija u smislu C jezika) @pre{getline} koja je u potpunosti analogna Haskel akciji @code{getLine} (čak imaju i skoro identično ime). Ali kao što ćemo uskoro videti, Haskel akcije ne mogu biti Haskel funkcije! Prema tome, pojam @em{funkcije} u drugim jezicima je širi pojam od pojma funkcije u Haskelu.
+@p Haskel početnici često poistovećuju @em{akcije} (poput @code{putStrLn "Hello World" :: IO ()} i @code{getLine :: IO String}) sa @em{funkcijama} jer pojam funkcije u drugim programskim jezicima obuhvata oba pojma u Haskelu. Na primer, u C jeziku postoji funkcija (funkcija u smislu C jezika) @pre{getline} koja je u potpunosti analogna Haskel akciji @code{getLine} (čak imaju i skoro identično ime). Ali kao što ćemo uskoro videti, Haskel akcije ne mogu biti Haskel funkcije! Prema tome, pojam @em{funkcije} u drugim jezicima je širi pojam od pojma funkcije u Haskelu.
 
-@p U Haskelu funkcije predstavljaju @em{pravilnosti} po kojima se vrednostima nekog tipa pridružuju vrednosti drugog tipa. Ključna reč u navedenoj definiciji je "pravilnosti", jer ona označava osobinu funkcija da imaju istu povratnu vrednost kada se primene na iste argumente. Tačnije, ako je @m{x=y}, tada je i @m{f(x)=f(y)}. U tom smislu, vrednost @code{getLine} ne može biti funkcija: njena vrednost prilikom svakog "pozivanja" može biti drugačija (zavisi od toga šta je korisnik konzole uneo). Sličan argument važi za sve ostale procedure čija povratna vrednost zavisi od vrednosti koje se "nalaze" van samog programa. Na primer, to mogu biti procedure koje vraćaju sadržaj neke datoteke, korisnički unos, vreme, sadržaj nekog resursa na internetu, podatke iz baze, i tako dalje. Gledano iz ugla Haskel programa, sve ovakve prcedure vraćaju vrednosti iz @em{spoljnog sveta}. Pod terminom @def{spoljni svet} smatraju se sve vrednosti koje nisu definisane unutar (Haskel) programa.
+@p U Haskelu funkcije predstavljaju @em{pravilnosti} po kojima se vrednostima nekog tipa pridružuju vrednosti drugog tipa. Ključna reč u navedenoj definiciji je "pravilnosti", jer ona označava osobinu funkcija da imaju istu povratnu vrednost kada se primene na iste argumente. Tačnije, ako je @m{x=y}, tada je i @m{f(x)=f(y)}. U tom smislu, vrednost @code{getLine} ne može biti funkcija: njena vrednost prilikom svakog "pozivanja" može biti drugačija (zavisi od toga šta je korisnik konzole uneo). Sličan argument važi za sve ostale procedure čija povratna vrednost zavisi od vrednosti koje se "nalaze" van samog programa. Na primer, to mogu biti procedure koje vraćaju sadržaj neke datoteke, korisnički unos, vreme, sadržaj nekog resursa na internetu, podatke iz baze, i tako dalje. Gledano iz ugla Haskel programa, sve ovakve procedure vraćaju vrednosti iz @em{spoljnog sveta}. Pod terminom @def{spoljni svet} smatraju se sve vrednosti koje nisu definisane unutar (Haskel) programa.
 
 @p Osim što su akcije neophodne za "preuzimanje" informacija iz spoljnog sveta, akcije moramo koristiti i kada "šaljemo" informacije u spoljni svet. Na primer, ako štampamo tekst u terminal, čuvamo podatke na disk, šaljemo zahteve veb serverima i tako dalje. Navedene procedure poseduju @def{propratne efekte}@note{@em{side effects}} što znači da menjaju stanje spoljnog sveta. Haskel funkcije nemaju propratne efekte, dok Haskel akcije mogu imati propratne efekte.
 
-@p Takođe, primetimo još jednu razliku između funkcija i akcija. Funkcije uvek moramo primeniti na vrednost (što takođe nazivamo i @em{pozivanje sa vrednošću}), tj. moramo napisati kod poput @code{f x}. Sa druge strane, akcije ne primenjujemo na vrednosti@note{Na prvi pogled deluje da se primer poput @code{putStrLn :: Sting -> IO ()} kosi sa ovom izjavom. Ali, obratimo pažnju da @code{putStrLn} nije akcija već funkcija! Rezultat primene ove funkcije na neku nisku je akcija.}. Zbog toga za akcije kažemo da se @em{pokreću} unutar @code{do} bloka.
+@p Takođe, primetimo još jednu razliku između funkcija i akcija. Funkcije uvek moramo primeniti na vrednost (što takođe nazivamo i @em{pozivanje sa vrednošću}), tj. moramo napisati kôd poput @code{f x}. Sa druge strane, akcije ne primenjujemo na vrednosti, zbog čega za akcije kažemo da se @em{pokreću} unutar @code{do} bloka.
 
 @p Apstraktni tip @code{IO} predstavlja "most" koji spaja spoljni svet sa programom. Sva komunikacija programa sa spoljnim svetom mora se odviti @em{pokretanjem} akcija sa @code{IO} tipom, a svaku @code{IO} akciju je moguće pokrenuti samo iz neke druge @code{IO} akcije. Zaista, nemoguće je pokrenuti@note{Pokušajte, ali nećete uspeti. Akcije možete pokrenuti unutar @code{do} bloka, a @code{do} blok sam za sebe predstavlja jednu @code{IO} akciju...} akcije unutar funkcija. Dakle, akcije su uvek pokrenute od strane drugih akcija, i tako dalje, sve do @code{main} akcije.
 
@@ -383,11 +383,8 @@ main = do
 
 @problem{Napisati program koji sadržaj datoteke čije ime je navedeno kao prvi argument kopira u datoteku čije ime je navedeno kao drugi argument komandne linije (ovo je takozvani @em{cp} program). Ako svi argumenti nisu prisutni, program treba da ispiše poruku o grešci.}
 
-@problem{Napisati program koji ispisuje prvih pet linija tekstualne datoteke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{head} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci. Ako je prisutan drugi argument, proveriti da li taj argument predstavlja prirodan broj, i u potvrdnom slučaju ispisati broj linija u skladu sa tim argumentom.}
-
-@todo{Datum i vreme}
-
-@todo{Izuzeci}
+@problem{Napisati program koji ispisuje prvih pet linija tekstualne datoteke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{head} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci. Ako je prisutan drugi argument, proveriti da li taj argument predstavlja prirodan broj, i u potvrdnom slučaju ispisati broj linija u skladu sa tim argumentom. Iskoristiti funkcije @code{uBroj} i @code{daLiJeBroj} iz lekcije o listama.}
 
 @todo{Nasumične vrednosti}
 
+@todo{IO u interaktivnom okruženju}

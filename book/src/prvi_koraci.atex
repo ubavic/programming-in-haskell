@@ -20,7 +20,7 @@
 
 @section{Struktura Haskel koda}
 
-@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se imenima (labelama) pridružuju vrednosti nekog izraza. Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
+@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se @def{imenima}@note{Koriste se još i izrazi @em{labele} i @code{identifikatori}} pridružuju vrednosti nekog izraza. Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
 
 @codeBlock{
 dana_u_nedelji = 7
@@ -30,7 +30,9 @@ sati_u_danu = 24
 
 @p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova@note{Ovo uključuje i slova srpske latinice i ćirilice.}, brojeve kao i karaktere @code{_} i @code{'}.
 
-@p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, nije dozvoljeno u jednoj @code{.hs} datoteci imati više definicija sa istim imenom. Naravno, različitim imenima možemo dodeliti iste vrednosti. Takođe, poredak definicija nije bitan.
+@p Ime ne sme biti jedna od ključnih reči@note{Ovo su sve ključne reči Haskela, i u ovoj knjizi ćemo ih sve pojasniti.} @code{as}, @code{class}, @code{data}, @code{default}, @code{deriving}, @code{do}, @code{else}, @code{hiding} @code{if}, @code{import}, @code{in}, @code{infix}, @code{infixl}, @code{infixr}, @code{instance}, @code{let}, @code{module}, @code{newtype}, @code{of}, @code{then}, @code{type}, @code{where}, @code{qualified}.
+
+@p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, poredak definicija nije bitan.
 
 @p@def{Tip} neke vrednosti predstavlja kolekciju kojoj ta vrednost pripada. Svaka vrednost pripada jednom i samo jednom tipu. Ako neka vrednost @code{v} pripada tipu @code{T} tada za tu vrednost kažemo da @em{poseduje tip} @code{T} ili da još @em{da je tipa} @code{T} i to označavamo sa @code{v :: T}. Za razliku od imena funkcije, ime tipa uvek počinje velikim slovom.
 

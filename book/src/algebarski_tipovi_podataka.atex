@@ -153,7 +153,7 @@ uMetre (SvetlosnaSekunda x) = Metar (299792458 * x)
 uMetre x = x
 }
 
-@p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno različite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Int}
+@p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno različite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Float}
 }
 
 @p Napomenimo da poredak konstruktora u sumi nije od značaja. Tako na primer, definicija @ccode{data SlovoIliBroj = Slovo Char | Broj Int} definiše isti@note{Tačnije, svaka od ove dve definicije se može zameniti sa onom drugom u kodu, i ostatak koda neće morati da se promeni.} tip kao i definicija @code{data SlovoIliBroj = Broj Int | Slovo Char}. Za razliku od toga, u proizvodima poredak tipova je bitan. Tako na primer, definicija @ccode{data SlovoIBroj = SIB Int Char} je sasvim različita od definicije@note{Ove dve definicije su naravno ekvivalentne u smislu da mogu predstaviti vrednosti koje su u jednoznačnoj korenspodenciji. Međutim, ako se jedna od ove dve definicije zameni sa drugom, ta zamena će zahtevati i promenu ostatka koda (na svim mestima u kodu gde su iskorišćeni konstruktori).} @ccode{data SlovoIBroj = SIB Char Int}

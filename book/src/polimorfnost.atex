@@ -29,10 +29,10 @@ f x = x*x + x
 }
 }
 
-@p Prethodni primer je trivijalan, ali demonstrira probleme koji se sreću na iole većim projektima bez obzira na programski jezik. Srećom, mnogi jezici su našli rešenja za navedene probleme, pa tako i Haskel. U Haskelu, moguće je definisati vrednosti koje ne pripadaju jednom određenom tipu, već čitavoj kolekciji tipova. Ovakvi tipovi se nazivaju @def{polimorfni tipovi}@note{Naziv potiče od grčkih reči @em{πολύς} (mnogo) i @em{μορφή} (oblik). Prema tome polimorfni tipovi su oni tipovi koji imaj više oblika.}.
+@p Prethodni primer je trivijalan, ali demonstrira probleme koji se sreću na iole većim projektima bez obzira na programski jezik. Srećom, mnogi jezici su našli rešenja za navedene probleme, pa tako i Haskel. U Haskelu, moguće je definisati vrednosti (posebno, funkcije) za koje deluje da ne pripadaju jednom određenom tipu, već čitavoj kolekciji tipova. Ovakvi tipovi se nazivaju @def{polimorfni tipovi}@note{Naziv potiče od grčkih reči @em{πολύς} (mnogo) i @em{μορφή} (oblik). Prema tome polimorfni tipovi su oni tipovi koji imaj više oblika.}.
 
 @example{
-@p Do sada smo već imali prilike da se susretnemo sa polimorfnom vrednošću (vrednošću koja ima polimorfni tip). To je bila prazna lista @code{[]}. Ova vrednost pripada svakom tipu lista. U nastavku ćemo videti kog je tačno tipa @code{[]}. 
+@p Do sada smo već imali prilike da se susretnemo sa polimorfnom vrednošću (vrednošću koja ima polimorfni tip). To je bila prazna lista @code{[]}. Za ovu vrednost možemo smatrati da pripada svakom tipu lista. U nastavku ćemo videti kog je tačno tipa @code{[]}. 
 }
 
 @example{
@@ -58,9 +58,9 @@ konstantnoTačno :: a -> Bool
 konstantnoTačno = \x -> True
 }
 
-@p Navedenom definicijom, definisano je zapravo beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada možemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
+@p Navedenom definicijom, kao@note{Ističemo reč @em{kao}. Pomenuta definicija definiše samo jednu funkciju čiji je tip polimorfan. Taj tip se može konkretizovati na beskonačno mnogo načina, ali je funkcija samo jedna.} da je definisano beskonačno mnogo funkcija sa različitim domenima: za svaki tip @code{T} po jedna funkcija tipa @code{T -> Bool}. Sve te funkcije nazivamo istim imenom @code{konstantnoTačno}. Kada u Haskel programu primenimo funkciju @code{konstantnoTačno} na neku određenu vrednost, tada tipska promenljiva @code{a} u tipu funkcije preuzima tip vrednosti na koju primenjujemo funkciju. Na primer, ako napisemo @code{konstantnoTačno 'a'} tada možemo smatrati da ime @code{konstantnoTačno} u navedenom izrazu predstavlja funkciju tipa @code{Char -> Bool} (jer je samo funkciju tog tipa moguće primeniti na vrednost tipa @code{Char}).
 
-@p Nesto složeniji primer funkcije sa polimorfnim tipom je identička funkcija, definisana u prelidu kao @code{id}:
+@p Nesto složeniji primer funkcije sa polimorfnim tipom je identička funkcija, definisana u Prelidu kao @code{id}:
 
 @codeBlock{
 id :: a -> a
@@ -88,13 +88,13 @@ Kog tipa je funkcija @code{null} koja određuje da li je lista prazna?
 @p Funkcija @code{null} se može primeniti na listu bilo kog tipa, te je njen domen @code{[a]}. Rezultat provere je logička vrednost. Stoga je @ccode{null :: [a] -> Bool}.
 }
 
-@p Nije nuzno da vrednost polimorfnog tipa bude funkcija.
+@p Nije nužno da vrednost polimorfnog tipa bude funkcija.
 
 @example{
-@p prazna lista @code{[]} je sama za sebe vrednost tipa @code{[a]}, i samim tim predstavlja praznu listu bilo kog tipa. Ali to ne znači da, na primer, prazne liste u izrazima @code{[] ++ [True]} i @code{[] ++ ['a']}, predstavljaju iste vrednosti. Jedna od navedenih praznih lista je tipa @code{[Bool]} a druga @code{[Char]}. Ove dve vrednosti nisu iste, ali poseduju isto ime@note{Kao sto dve različite osobe mogu da dele isto ime}.
+@p prazna lista @code{[]} je sama za sebe vrednost tipa @code{[a]}, i samim tim predstavlja praznu listu bilo kog tipa. Ali to ne znači da, na primer, prazne liste u izrazima @code{[] ++ [True]} i @code{[] ++ ['a']}, predstavljaju iste vrednosti. Jedna od navedenih praznih lista je tipa @code{[Bool]} a druga @code{[Char]}. Ove dve vrednosti nisu iste, ali poseduju isto ime@note{Kao što dve različite osobe mogu da dele isto ime}.
 }
 
-@p Iz prethodnih redova vidimo da polimorfne vrednosti poprimaju različiti tip u zavisnosti od izraza u kojima se nalaze (otuda i naziv @em{poli-morfne}). 
+@p Iz prethodnih redova vidimo da polimorfne vrednosti poprimaju različiti tip u zavisnosti od izraza u kojima se nalaze (otuda i naziv @em{poli-morfne}).
 
 @p Ponekad nije dovoljno da tip poseduje samo jednu promenljivu. Ako se u tipu nalaze dve ili vise razlicitih promenljiva, tada su te promenljive nezavisne.
 
@@ -116,6 +116,10 @@ fst3 (x, _, _) = x
 }{Pošto ne koristimo vrednosti druge i treće koordinate, te vrednosti ne moramo da vezujemo novim imenom, već možemo iskoristi džoker.}
 }
 
+@problem{Implementirati funkciju @ccode{zameni :: (a, b) -> (b, a)} koja menja mesta koordinatama uređenog para.}
+
+@problem{Implementirati funkciju @code{razmeni :: (a, b) -> (c, d) -> ((a, d), (c, b))} koja razmenjuje koordinate dva uređena para.}
+
 @p Iz prethodnih primera , vidimo da su tipovi sa slobodnim tipskim promenljivama izuzetno korisni. Mnoge funkcije iz prelida koje smo već koristili su parametarski polimorfne. Ipak, tehnika parametarskog polimorfizma i dalje ne rešava konkretan problem koji smo opisali na početku lekcije. Tada smo hteli da implementiramo funkciju koja bi prihvatala razne numeričke tipove. Tu funkciju ne možemo definisati sa sledećim kodom, koliko god to bilo privlačno:
 
 @codeBlock{
@@ -129,7 +133,7 @@ f x = 253 * x + 17
 
 @p Slobodne tipske promenljive mogu predstavljati bilo koji tip. Ponekad je poželjno ograničiti tipsku promenljivu na neku specifičnu kolekciju tipova. Upravo takva ograničenja se izražavaju kroz klase tipova.
 
-@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija (i operacija) nad tipovima te klase. Često te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
+@p @def{Tipska klasa} (ili skraćeno klasa@note{Kad god govorimo o klasama u Haskelu uvek mislimo na tipske klase. Pojam tipske klase nema nikakve veze sa pojmom @em{klase} koji se koristi u objektno orijentisanim jezicima.}) je kolekcija tipova koji dozvoljavaju pozivanje određenih funkcija nad tipovima te klase. Često te funkcije nazivamo @def{metode klase}. Ime konkretne klase uvek počinje velikim slovom. Za svaki tip koji pripada nekoj klasi kažemo da je @def{instanca} te klase.
 
 @example{
 @p U Haskelu je definisana klasa @code{Show} koja poseduje metodu @code{show}. Tipovi poput @code{Int} ili @code{Bool} pripadaju ovoj klasi, i nad njima se moze pozivati funkcija @code{show} koja vrednost nekog tipa predstavlja kao nisku.
@@ -190,7 +194,7 @@ f :: Num a => a -> a
 f x = x*x + x
 }
 
-@p Gornji kôd je dobro tipiziran iz narednog razloga: za svaku vrednost @code{x :: N} gde je @code{N} neki tip iz klase @code{Num}, važi da je @code{x * x} dobro tipizaran izraz tipa @code{N}. Kako su izrazi @code{x*x} i @code{x} takođe tipa @code{N}, sledi da je @code{x*x + x :: N}. Prema tome, primenom funkcije @code{f} na neku vrednost @code{x :: N} dobijamo takođe vrednost @code{N}.
+@p Gornji kôd je dobro tipiziran iz narednog razloga: za svaku vrednost @code{x :: N} gde je @code{N} neki tip iz klase @code{Num}, važi da je @code{x*x} dobro tipizaran izraz tipa @code{N}. Kako su izrazi @code{x*x} i @code{x} takođe tipa @code{N}, sledi da je @code{x*x + x :: N}. Prema tome, primenom funkcije @code{f} na neku vrednost @code{x :: N} dobijamo takođe vrednost @code{N}.
 
 @p Ako definišemo naredne numeričke konstante različitih tipova, uverićemo se da je @code{f} moguće primeniti na svaku od njih:
 
@@ -259,12 +263,12 @@ ghci> f y4
 
 @subsection{Klase i složeni tipovi}
 
-@p Videli smo u lekciji o tipovima, da je od postojećih tipova moguće dobiti nove tipove lista i proizvode (npr. od @code{Int} dobijamo @code{[Int]}). Deluje prirodno da se neke osbine tipova prenose pri ovom procesu. Tačnije, ako tip @code{T} pripada nekoj klasi @code{C}, tada je nekad smisleno da i @code{T} pripada istoj to klasi. Srećom, ovakava "nasleđivanja" su moguća i prisutna u Haskelu.
+@p Videli smo u lekciji o tipovima, da je od postojećih tipova moguće dobiti nove tipove lista i proizvode (npr. od @code{Int} dobijamo @code{[Int]}). Deluje prirodno da se neke osobine tipova prenose pri ovom procesu. Tačnije, ako tip @code{T} pripada nekoj klasi @code{C}, tada je nekad smisleno da i @code{[T]} ili @code{(T,T)} pripadaju istoj to klasi. Srećom, ovakva "nasleđivanja" su moguća i prisutna u Haskelu.
 
 @p Ako neki tip @code{A} pripada klasi @code{Eq}, tada i tip @code{[A]} pripada klasi @code{Eq}. To praktično znači da ako se vrednosti nekog tipa mogu porediti sa operatorima @code{==} i @code{/=}, tada se i liste tog tipa mogu porediti sa istim operatorima. Poređenja lista se vrše član po član. Analogno važi i za klase @code{Ord} i @code{Show}: ako tip @code{A} pripada nekoj od ovih klasa, tada i @code{[A]} pripada istoj klasi. Prema tome, tipovi poput @code{[Bool]}, @code{[Int]}, @code{[Char]} ali i @code{[[Bool]]}, @code{[[[Int]]]} itd... pripadaju klasama @code{Eq}, @code{Ord} i @code{Show}.
 
 @example{
-@p Kako @code{Int} pripada klasi @code{show}, sledi da i tipovi @code{[Int]} i @code{[[Int]]} pripadaju istoj klasi.
+@p Kako tip @code{Int} pripada klasi @code{show}, sledi da i tipovi @code{[Int]} i @code{[[Int]]} pripadaju istoj klasi.
 
 @terminal{
 ghci> show [1,2,3]
@@ -296,8 +300,16 @@ True
 }
 
 @p Dva uređena para će biti jednaka samo ako su im jednake prve koordinate i jednake druge koordinate.
-}
 
+@p Što se tiče poređenja sa @code{>} i @code{<}, ono se kao i kod lista vrši leksikografski, koordinate se porede par po par.
+
+@terminal{
+ghci> (2, 'a') < (3, 'b')
+True
+ghci> (100, 'W') < (100, 'A')
+False
+}{Prvo poređenje je tačno jer je @code{2 < 3}, i pri ovom poređenju nije ni došlo do provere @code{'a' < 'b'}. Rezultat drugog poređenja sledi iz činjenice da je @code{'A' < 'W'} a ne @code{'W' < 'A'}.}
+}
 
 @problem{
 Da li tip @code{[(Int, Char)]} pripada klasi @code{Eq}?

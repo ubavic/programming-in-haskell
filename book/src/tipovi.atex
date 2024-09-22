@@ -94,7 +94,7 @@ ghci> 3 * (-2)
 
 @p Za deljenje celobrojnih vrednosti, koristi se funkcija @code{div} sa dva parametra. Prvi parametar je deljenik (broj koji se deli) a drugi je delilac (broj kojim se deli). Rezultat deljenja je @em{celobrojna} vrednost odnosno vrednost tipa @code{Int}. 
 
-@p I pri radu sa funkcijama više promenljivih argumenti se razdvajaju razmacima@note{Česta početnička greška je da se sintaksa pozivanja funkcija iz drugih jezika prenese u Haskel, odnosno da se argumenti funkcije postave u zagrade i razdvoje zarezom. Zato početnici često pokušavaju da podele dva broja sa @code{div (5, 7)} što dovodi do sintaksne greške. Uverite se i sami.}:
+@p I pri radu sa funkcijama više parametara, argumenti se razdvajaju razmacima@note{Česta početnička greška je da se sintaksa pozivanja funkcija iz drugih jezika prenese u Haskel, odnosno da se argumenti funkcije postave u zagrade i razdvoje zarezom. Zato početnici često pokušavaju da podele dva broja sa @code{div (5, 7)} što dovodi do sintaksne greške. Uverite se i sami.}:
 
 @terminal{
 ghci> div 7 2
@@ -206,11 +206,11 @@ ghci> pi * r**2
 maliProstiBrojevi :: [Int]
 maliProstiBrojevi = [2,3,5,7,11,13,17,19]
 
-logickeVrednosti :: [Bool]
-logickeVrednosti = [True,False]
+logičkeVrednosti :: [Bool]
+logičkeVrednosti = [True,False]
 
-vazneKonstante :: [Double]
-vazneKonstante = [3.14159,2.71828,0.57721]
+važneKonstante :: [Double]
+važneKonstante = [3.14159,2.71828,0.57721]
 }{Definicije tri liste različitog tipa.}
 
 @p U specijalnom slučaju, možemo definisati i listu lista, i listu lista lista, itd...
@@ -284,23 +284,23 @@ ghci> 1 ++ [2,3,4,5]
 
 @terminal{
 ghci> mojaLista = [10,20,30,40,50,60]
-ghci> length a
+ghci> length mojaLista
 6
-ghci> head a
+ghci> head mojaLista
 10
-ghci> last a
+ghci> last mojaLista
 60
-ghci> init a
+ghci> init mojaLista
 [10,20,30,40,50]
-ghci> tail a
+ghci> tail mojaLista
 [20,30,40,50,60]
-ghci> reverse a
+ghci> reverse mojaLista
 [60,50,40,30,20,10]
-ghci> elem 10 a
+ghci> elem 10 mojaLista
 True
-ghci> elem 100 a
+ghci> elem 100 mojaLista
 False
-ghci> null [10, 9, 8, 7]
+ghci> null
 False
 ghci> null []
 True
@@ -388,17 +388,17 @@ True
 ghci> niska = "Hello" ++ "!"
 ghci> niska
 "Hello!"
-ghci> length a
+ghci> length niska
 6
-ghci> head a
+ghci> head niska
 'H'
-ghci> last a
+ghci> last niska
 '!'
-ghci> init a
+ghci> init niska
 "Hello"
-ghci> tail a
+ghci> tail niska
 "ello!"
-ghci> reverse a
+ghci> reverse niska
 "!olleH"
 ghci> null ""
 True

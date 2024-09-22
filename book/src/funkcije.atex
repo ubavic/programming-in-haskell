@@ -195,11 +195,13 @@ ghci> h 2
 
 @problem{Deklarisati tipove funkcija iz prethodnih zadataka ove lekcije.}
 
-@section{Funkcije više promenljiva}
+@section{Funkcije više promenljivih}
+
+@todo{parametri i argumenti}
 
 @p Do sada je prikazano kako se mogu definisati funkcije samo sa jednim parametrom, ali su u prethodnoj lekciji korišćene funkcije sa dva parametara (kao što je funkcija @code{mod} koja određuje ostatak pri deljenju ili funkcija @code{elem} koja ispituje da li se element nalazi u listi). Postavlja se pitanje kako se ovakve funkcije definišu?
 
-@p Pažljivi čitalac koji se seća sadržaja prethodne lekcije mogao je sam da konstruiše funkcije sa dva parametara. Naime, u prethodnoj sekciji smo videli kako se uređeni parovi mogu konstruisati. Prema tome, ako želimo funkciji da prosledimo dve vrednosti, dovoljno je da napišemo funkciju koja uzima jedan uređen par@note{Kada bismo znali kako da pristupimo članovima uređene trojke, četvorke itd... tada bismo na sličan način mogli da definišemo i "funkcije sa više parametara". Međutim, to će biti prikazano tek u narednoj lekciji.}.
+@p Pažljivi čitalac koji se seća sadržaja prethodne lekcije mogao je sam da konstruiše funkcije sa dva parametara. Naime, u prethodnoj sekciji smo videli kako se uređeni parovi mogu konstruisati. Prema tome, ako želimo funkciji da prosledimo dve vrednosti, dovoljno je da napišemo funkciju koja uzima jedan uređen par@note{Kada bismo znali kako da pristupimo članovima uređene trojke, četvorke itd... tada bismo na sličan način mogli da definišemo i "funkcije sa više parametara". Međutim, rad sa @m{n}-torkama će biti prikazan tek u narednoj lekciji.}.
 
 @codeBlock{
 ljubav :: (String, String) -> String
@@ -244,7 +246,7 @@ ghci> aritm 20 100
 
 @p Kog tipa je funkcija @code{aritm}? Za trenutak pretpostavimo da su parametri @code{x} i @code{y} tipa @code{Double}@note{Zapravo, za ovako napisano definiciju kompajler će zaključiti nešto drugačiji tip, ali to ne treba da nas brine trenutno.}. Funkcija @code{aritm} uzima vrednost tipa @code{Double} i vraća neku funkciju, nazovimo je @code{g}. Funkcija @code{g} uzima i vraća vrednost tipa @code{Double} te je njen tip @code{Double -> Double}. Sada možemo da zaključimo da funkcija @code{aritm} poseduje tip @code{Double -> (Double -> Double)} jer uzima vrednost tipa @code{Double} i vraća vrednost tipa @code{Double -> Double}.
 
-@p Koristeći opisan postupak, možemo konstruisati funkcije koje uzimaju tri ili više argumenata@note{Primetimo da mi zapravo radimo samo sa funkcijama koje uzimaju jedan argument. Funkcija @code{aritm} zaista uzima samo jeda argument! Ipak često ćemo za ovakve funkcije reći da uzimaju @code{k} argumenta, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{T₁ -> (T₂ -> ( ... -> (Tₙ -> B)))} gde tipovi @code{T₁}, ..., @code{Tₙ} predstavljaju tipove parametara funkcije od @m{n} argumenata, a @code{B} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{T₁ -> (T₂ -> ( ... -> (Tₙ -> B)))} na vrednost tipa @code{T₁} dobija se funkcija tipa @ccode{T₂ -> (T₃ -> ... -> (Tₙ -> B))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{T₂} čime se dobija funkcija tipa @ccode{T₃ -> ... -> (Tₙ -> B)}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{B}.
+@p Koristeći opisan postupak, možemo konstruisati funkcije koje poseduju tri ili više parametara@note{Primetimo da mi zapravo radimo samo sa funkcijama koje imaju jedan parametar. Funkcija @code{aritm} zaista ima samo jedan parametar! Ipak često ćemo za ovakve funkcije reći da imaju @code{k} parametara, znajući iz konteksta o čemu se radi.}. Tom prilikom konstruišemo funkcije tipa @ccode{T₁ -> (T₂ -> ( ... -> (Tₙ -> B)))} gde tipovi @code{T₁}, ..., @code{Tₙ} predstavljaju tipove parametara funkcije, a @code{B} povratnu vrednost takve funkcije. Primenom funkcije @code{f} tipa @ccode{T₁ -> (T₂ -> ( ... -> (Tₙ -> B)))} na vrednost tipa @code{T₁} dobija se funkcija tipa @ccode{T₂ -> (T₃ -> ... -> (Tₙ -> B))}. Novodobijena funkcija može se primeniti na vrednost tipa @code{T₂} čime se dobija funkcija tipa @ccode{T₃ -> ... -> (Tₙ -> B)}. Postupak se može ponavljati sve dok se ne stigne do vrednosti tipa @code{B}.
 
 @p Funkcija koja "uzima" ili "vraća" neku drugu funkciju naziva se @def{funkcija višeg reda}. Mnogi programski jezici nemaju podršku za funkcije višeg reda, ali kao što vidimo, u Haskelu je ovaj pojam je sasvim prirodan.
 

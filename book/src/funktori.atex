@@ -178,16 +178,16 @@ maybeSum (Just a) (Just b) = Just $ a + b
 maybeSum  _        _       = Nothing
 }
 
-@p Lako je definisati funkciju poput @code{maybeSum}, ali kao i ranije, ne želimo da ponavljamo kod. Umesto toga, želimo da već postojeće funkcije od dva (ili više) argumenta podignemo na uniforman način do funkcija koja "rade" sa možda-tipovima. Kao što funkcija @code{fmap} omogućava da funkciju tipa @code{a -> b} primenimo na (vrednost tipa) @code{Maybe a} i dobijemo @code{Maybe b}, tako sad želimo način da funkciju tipa @code{a -> b -> c} primenimo na @code{Maybe a} i @code{Maybe b} i dobijemo @code{Maybe c}. Imitirajući implementaciju @code{maybeSum} stižemo do funkcije @code{maybeMap2}:
+@p Lako je definisati funkciju poput @code{maybeSum}, ali kao i ranije, ne želimo da ponavljamo kod. Umesto toga, želimo da već postojeće funkcije od dva (ili više) parametra podignemo na uniforman način do funkcija koja "rade" sa možda-tipovima. Kao što funkcija @code{fmap} omogućava da funkciju tipa @code{a -> b} primenimo na (vrednost tipa) @code{Maybe a} i dobijemo @code{Maybe b}, tako sad želimo način da funkciju tipa @code{a -> b -> c} primenimo na @code{Maybe a} i @code{Maybe b} i dobijemo @code{Maybe c}. Imitirajući implementaciju @code{maybeSum} stižemo do funkcije @code{maybeMap2}:
 
 @codeBlock{
 maybeMap2 :: (a -> b -> c) -> Maybe a -> Maybe b -> Maybe c
 maybeMap2 f (Just a) (Just b) = Just $ f a b
 maybeMap2 _  _        _       = Nothing
-}{Funkcija @code{maybeMap2} podiže funkciju od dva argumenta do funkcije koja "radi" sa možda-tipovima.}
+}{Funkcija @code{maybeMap2} podiže funkciju od dva parametra do funkcije koja "radi" sa možda-tipovima.}
 
 
-@p Funkcija @code{maybeMap2} značajno olakšava rad sa funkcijama dva argumenta, ali ne rešava problem sa funkcijama tri i više argumenata. Naravno, lako možemo implementirati odgovarajuće funkcije @code{maybeMap3}, @code{maybeMap4}, @code{maybeMap5}, ... ali nas to ponovo vodi ka ružnom kodu@note{Npr. ako u nekom trenutku promenimo broj argumenata funkcije koju podižemo, tada na svakom mestu gde podižemo tu funkciju moramo i da menjamo odgovarajuću @code{maybeMap} funkciju.}. I dalje nećemo imati uniforman način podizanja funkcija više argumenata na nivo možda-tipova.
+@p Funkcija @code{maybeMap2} značajno olakšava rad sa funkcijama dva parametra, ali ne rešava problem sa funkcijama tri i više parametara. Naravno, lako možemo implementirati odgovarajuće funkcije @code{maybeMap3}, @code{maybeMap4}, @code{maybeMap5}, ... ali nas to ponovo vodi ka ružnom kodu@note{Npr. ako u nekom trenutku promenimo broj parametara funkcije koju podižemo, tada na svakom mestu gde podižemo tu funkciju moramo i da menjamo odgovarajuću @code{maybeMap} funkciju.}. I dalje nećemo imati uniforman način podizanja funkcija više parametara na nivo možda-tipova.
 
 
 @p Vratimo se korak u nazad, i pogledajmo zašto dobro poznata funkcija @code{fmap} nije zgodna za rad sa funkcijama dve promenljive. Neka je @code{sum' = (+) :: Int -> Int -> Int}. Primenom @code{fmap} na @code{sum'} i jednu @code{Maybe} vrednost dobijamo funkciju "upakovanu" u @code{Maybe} strukturu:
@@ -425,7 +425,7 @@ instance Applicative FromInt where
 
 @problem{Dokazati da gorenavedena instanca @code{Applicative FromInt} zadovoljava pet zakona aplikativnih funktora.}
 
-@p Kao i do sada, uvek želimo da uopštimo kôd, tako da se odnosi na što više tipova. Prethodni argumenti za tip @code{FromInt} mogu se od reči do reči ponoviti za bilo koji drugi tip. Stoga, za svaki tip @code{T}, učinićemo tip @code{(->) T} instancom klasa @code{Functor} i @code{Applicative}. Srećem, Haskel dozvoljava da ovakva opšta definicija izrazi kroz dekleraciju klase korišćenjem polimorfnog tipa @code{(->) t}. Upravo tako su i definisane instance strelice u prelidu:
+@p Kao i do sada, uvek želimo da uopštimo kôd, tako da se odnosi na što više tipova. Prethodni argumenti za tip @code{FromInt} mogu se od reči do reči ponoviti za bilo koji drugi tip. Stoga, za svaki tip @code{T}, učinićemo tip @code{(->) T} instancom klasa @code{Functor} i @code{Applicative}. Srećem, Haskel dozvoljava da ovakva opšta definicija izrazi kroz dekleraciju klase korišćenjem polimorfnog tipa @code{(->) t}. Upravo tako su i definisane instance strelice u Prelidu:
 
 @codeBlock{
 instance Functor ((->) t) where
