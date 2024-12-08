@@ -8,7 +8,7 @@
 
 @list{
     @li Literal broja, odnosno izraz poput @code{2}, @code{3.14}, @code{0x3A}, itd...
-    @li Literal karaktera, odnosno izraz poput @code{'a'}, @code{'B'}, @code{'ш'}, itd...
+    @li Literal karaktera, odnosno izraz poput @code{'a'}, @code{'B'}, @code{'ш'}, @code{'貓'} itd...
     @li Literal niske, odnosno izraz poput @code{"hello"}, @code{"world!!"}, itd...
     @li Proizvoljno ime, odnosno izraz poput @code{x}, @code{ys}, @code{n}, itd...
     @li Džoker @code{_}
@@ -128,7 +128,61 @@ uMetre''' l = case l of Milja m -> Metar (1609.344 * m); SvetlosnaSekunda s -> M
 @todo{Ograđena Case notacija}
 
 
-@todo{Izlistavanje}
+@section{Izlistavanje}
+
+@p U matematici, često se koristi zapis @eq{ \left\{x\in A \mid  \Phi\left(x\right)\right\}} za definisanje skupa svih elemenata @m{x} iz skupa @m{A} takvih da važi neko svojstvo @m{\Phi}. Na primer, @m{\left\{x\in \mathbb Z \mid x \equiv_2 0 \right\}} je skup svih celih brojeva deljivih sa @m{2} (odnosno skup svih parnih brojeva), a skup @m{\left\{x\in \mathbb C \mid x^3 = 1\right\}} predstavlja skup svih rešenja jednačine @m{x^3 - 1 = 0}, itd... Ovakva notacija je podložna promenama, pa se umesto opisanog oblika koristi i @eq{ \left\{x \mid  x\in A, \Phi\left(x\right)\right\}.} Takođe, često se koristi i zapis @eq{ \left\{ f(x) \mid  x\in A, \Phi\left(x\right)\right\}} koji označava skup slika pri funkciji @m{f} svih elemenata iz @m{A} koji poseduju svojstvo @m{\Phi}. Na primer, @m{\left\{x^2 \mid x \in \mathbb Z, x \equiv_2 0 \right\}} je skup kvadrata svih parnih brojeva. 
+
+@p Haskel je preuzeo ovu korisnu matematičku sintaksu za @em{izlistavanje lista}@note{eng. @em{list comprehension}}. Izlistavanje se navodi između uglastih zagrada (kako je to i slučaj sa listama u Haskelu), a koristi se i uspravna crta kao u matematičkom zapisu. Sa desne strana uspravne crte navodi se lista iz koje se neka promenljiva @em{izdvaja}, kao i niz predikata@note{izraza tipa @code{Bool}} koje vrednost promenljive mora da zadovolji. Na primer, ako je definisana lista @ccode{xs = [-3, -2, -1, 0, 1, 2, 3, 4] :: [Int]}, tada se izraz@note{Setimo se, @code{even :: Integral a => a -> Bool} je funkcija koja određuje da li je broj paran.} @ccode{[x | x <- xs, even x]} evaluira u listu @code{[-2, 0, 2, 4]}, a izraz @ccode{[x^2 | x <- xs, even x]} se evaluira u listu @code{[4, 0, 4, 16]}.
+
+@p Kao što vidimo iz poslednjeg primera, pri izlistavanju Haskel lista je bitan poredak i ponavljanje elementa je dozvoljeno, dok je za skupove u matematici poredak nebitan, a elementi u njima ne mogu da se ponavljaju. Poredak pri izlistavanju Haskel lista je uslovljen poretkom izdvajanja elementa iz liste sa operatorom@note{Mnogo više o ovom operatoru će biti rečeno u lekciji o monadama.} @code{<-}. Elementi će biti "obrađeni" onim redom kojim su navedeni u listi iz koje se izdvajaju.
+
+@p Predikata može biti više, pri čemu se predikati razdvajaju zarezom. Na primer, nastavljajući sa prethodnim primerima, zapis @ccode{[x | x <- xs, even x, (x `mod` 3) == 0]} se evaluira na listu svih brojeva iz liste @code{xs} koji su deljivi i sa @code{2} i sa @code{3}, a to je @code{[0]}. Takođe, moguće je u potpunosti izostaviti predikate, pa se @ccode{[x^2 | x <- xs]} evaluira u listu kvadrata svih elementa liste @code{xs}.
+
+@p Osim izdvajanja i predikata, sa desne strane uspravne crte moguće je uvesti i lokalne dekleracije sa @code{let … = …}. Ovako deklarisana imena mogu se koristiti u izrazima koji slede nakon dekleracije. Na primer, lista svih brojeva iz @code{xs} deljivih sa @m{3} može se dobiti evaluacijom izraza @ccode{[x | x <- xs, let y = x `mod` 3, y == 0]}
+
+@problem{
+Zapisati listu kvadrata svih prirodnih brojeva manjih od @m{100} koji su deljivi sa svojom poslednjom cifrom.
+}
+
+@p Sintaksa izlistavanja jeste elegantna, ali ne donosi nam suštinski ništa novo. Svaki izraz oblika@note{Ovo takođe važi i za izlistavanja u kojima se nalaze i dekleracije, što se može pokazati jednostavnim argumentom.} @ccode{[f x | x <- xs, Φ₁(x), … , Φₙ(x)]}  gde su @code{Φ₁}, ..., @code{Φₙ} neki predikati, definiše istu listu kao i izraz @ccode{map f . filter Φₙ . … . filter Φ₁ $ xs}. Na programeru je da odluči koju od sintaksa će iskoristiti.
+
+@problem{
+Rešiti prethodni zadatak korišćenjem @code{map} i @code{filter} funkcija.
+}
+
+@subsection{Izlistavanje i podudaranje oblika}
+
+@p Prilikom izlistavanja, sa leve strane operatora @code{<-} moguće je postaviti i neki oblik. Tada će iz liste biti izdvojeni samo elementi koji se podudaraju sa tim oblikom.
+
+@example{
+@p Iz liste možda-brojeva @ccode{xs = [Just 2, Nothing, Just 6, Just 8, Nothing]} moguće je izdvojiti vrednosti iz @code{Just} "omotača" prostim izlistavanjem @ccode{[x | Just x <- xs]}. Navedeno izlistavanje će se evaluirati u listu @code{[2, 6, 8]}.
+}
+
+@problem {
+Iz liste lista brojeva, tj. iz liste tipa @code{[[Int]]}, izdvojiti prve elemente svih lista dužine @m{2}.
+}
+
+@p Podudaranje oblika kod operatora @code{<-} je jedna od prednosti izlistavanja u odnosu na pristup sa @code{map} i @code{filter} funkcijama. Iako je i ovom slučaju moguće izraziti iste programe i sa jednom i sa drugom tehnikom, tehnika izlistavanja dovodi do konciznijeg koda.
+
+@problem{
+Iz liste možda-brojeva izdvojiti samo vrednosti iz @code{Just} konstruktora kao u prethodnom primeru, koristeći @code{map} i @code{filter} funkcije.
+}
+
+@subsection{Izlistavanje iz više lista}
+
+@p Sa izlistavanjem moguće je iz više lista izdvojiti elemente, dako što će se sa desne strane uspravne crte navesti više izdvajanja sa operatorom @code{<-}. U slučaju izdvajanja iz dve liste, prvo će se "izdvojiti" svi elementi druge liste sa prvim elementom prve liste, pa svi elementi druge liste sa drugim elementom prve liste i tako dalje.... Sledeći primer ilustruje izdvajanja iz više lista. 
+
+@example{
+@p Sa izlistavanjem iz liste brojeva i liste karaktera možemo lako generisati listu svih polja šahovske table. Svako polje predstavićemo kao uređen par prirodnog broja i karaktera na sledeći način @ccode{[(a, b) | a <- [1 .. 8], b <- ['A' .. 'H']]}. Ovim dobijamo listu sa @m{64} elementa @ccode{[(1,'A'),(1,'B'),(1,'C') … (8,'H')]}
+
+@p Ako poredak izdvajanja preokrenemo, dobićemo listu sa istim elementima ali u drugačijem poretku. Preciznije, izlistavanje @ccode{[(a, b) | b <- ['A' .. 'H'], a <- [1 .. 8]]} se evaluira u listu @ccode{[(1,'A'),(2,'A'),(3,'A') … (8,'H')]}.
+}
+
+@p Pri dodeli vrednosti sa operatorom @code{<-}, deklarisano ime će biti dostupno u svim narednim izrazima sa desne strane dodele (ali ne i u levim). Tako, možemo definisati i sledeće izlistavanje @ccode{[(a, b) | a <- [1 .. 3], b <- [1 .. a]]} koje se evaluira u @ccode{[(1,1),(2,1),(2,2),(3,1),(3,2),(3,3)]}.
+
+@problem{
+Naći sve pravougle trouglove obima manjeg od @m{100} čije su stranice celi brojevi. Trouglove predstaviti kao uređene trojke.
+}
 
 @section{Pragme i ekstenzije}
 
@@ -213,7 +267,7 @@ zbir = foldr (+) 0
 
 @p Pri traženju definicije bez tačaka, uvek je dobro krenuti od definicije za koju znamo da je dobra @ccode{h x y = g' (f' x y)}. Videli smo da @code{h} nije kompozicija @code{g'} i @code{f'}, ali @code{h x} jeste kompozicija funkcija @code{g'} i @code{f' x}: @ccode{h x y = (g' . (f' x)) y}. Sada možemo izvršiti eta konverziju, čime dobijamo @ccode{h x = g' . (f' x)}. Pomeranjem operatora kompozicije u prefiksnu poziciju dobijamo @ccode{h x = (.) g' (f' x)}, što se može shvatiti kao primena funkcije @code{(.) g'} na @code{f' x}. Drugim rečima, ovde se radi o kompoziciji @ccode{h x = (((.) g') . f') x} koja se može eta konvertovati u @ccode{h = ((.) g') . f'}. Ovim smo stigli do definicije "kompozicije" @code{f'} i @code{g'} koja je u stilu bez tačaka.
 
-@note{dodati sliku}
+@todo{dodati sliku}
 
 @p Ovaj postupak možda želimo da proizvoljne funkcije @code{f :: a -> b -> c} i @code{g :: c -> d}, a ne samo određene @code{f'} i @code{g'}. Stoga definišemo kombinator @ccode{comp_1_2 :: (c -> d) -> (a -> b -> c) -> (a -> b -> d)} sa @ccode{comp_1_2 g f = ((.) g) . f}. Jasno, za funkciju @code{h} iz prethodnog paragrafa važi @code{h = comp_1_2 g' f'}. Međutim, definicija @code{comp_1_2} više nije u stilu bez tačaka. Stoga transformišimo i ovu definiciju u stil bez tačaka. Prebacivanjem operatora kompozicije u prefiksnu poziciju od @ccode{comp_1_2 g f = ((.) g) . f} dobijamo @ccode{comp_1_2 g f = (.) ((.) g) f}, odakle eta konverzijom dobijamo @ccode{comp_1_2 g = (.) ((.) g)}. Ovde imamo kompoziciju dve @code{(.)} funkcije, odnosno @ccode{comp_1_2 g = ((.) . (.)) g}. Poslednjom eta konverzijom dobijamo @ccode{comp_1_2 = (.) . (.)}.
 
