@@ -10,16 +10,16 @@
 class C a where
   f1 :: T1
   f2 :: T2 
-  ....
-}{Ovde @code{a} je tipska promenljiva koja predstavlja neku instancu klase @code{C}. Tipovi @code{T1}, @code{T2},... mogu (i ne moraju) da sadrže tipsku promenljivu @code{a}.}
+  ⋮
+}{Ovde @code{a} je tipska promenljiva koja predstavlja neku instancu klase @code{C}. Tipovi @code{T1}, @code{T2}... mogu (i ne moraju) da sadrže tipsku promenljivu @code{a}.}
 
 @p Da bi neki tip @code{T} pridružili klasi tipova @code{C}, koristimo narednu konstrukciju nakon koje slede definicije metoda koje propisuje klasa:
 
 @codeBlock{
 instance C T where
-  f1 = ...
-  f2 = ... 
-  ...
+  f1 = …
+  f2 = … 
+  ⋮
 }{U okviru definicije instance ne navode se tipovi metoda.}
 
 @section{Jedan primer}
@@ -73,7 +73,7 @@ class Figura a where
   obim :: a -> Double
 }
 
-@p Linijom @code{class ...} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve do linije koja nije nazubljena.
+@p Linijom @code{class …} započinje se blok definicije klase. Sve linije (nakon prve) u ovom bloku moraju biti nazubljene u odnosu na prvu liniju@note{Broj razmaka sa kojim se vrši nazubljivanje nije bitan, ali je neophodno da taj broj bude jednak za sve linije unutar tog bloka.}. Blok se prostire sve do linije koja nije nazubljena.
 
 @p Slobodna tipska promenljiva @code{a} u liniji @code{class Figura a where} predstavlja proizvoljnu instancu klase @code{Figura}. Ova promenljiva, kao i svaka druga, može biti proizvoljno imenovana. Svako pojavljivanje promenljive @code{a} unutar bloka odnosi se na isti tip.
 

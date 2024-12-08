@@ -69,7 +69,7 @@ brojReči x = length (words x)
 
 @section{Rasponi}
 
-@p Neretko se javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @m{1} do @m{n} ili liste brojeva od @m{m} do @m{n} itd... Iako nije teško implementirati rekurzivne funkcije koje vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{eng. @em{ranges}} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg elementa liste, između kojih se postavljaju dve (spojene) tačke. Naredni primeri ilustruju sintaksu raspona:
+@p Neretko se javlja potreba da se konstruiše lista poput liste prirodnih brojeva od @m{1} do @m{n} ili liste brojeva od @m{m} do @m{n} itd... Iako nije teško implementirati rekurzivne funkcije koje vraćaju ovakve liste, Haskel jezik poseduje sintaksu za @def{raspone}@note{eng. @em{ranges}} koja značajno olakšava konstrukciju ovakvih lista. Raspon se konstruiše navođenjem prvog i poslednjeg elementa liste, između kojih se postavljaju dve (spojene) tačke@note{Napomenimo da se u voj knjizi na nekim mestima koristi trotačka … da bi se skratio neki Haskel izraz. Izraz za trotačkom nije validan Haskel izraz. Rasponi se isključivo definišu sa dve, spojene, tačke.}. Naredni primeri ilustruju sintaksu raspona:
 
 @terminal{
 ghci> a = [1 .. 10]
@@ -259,7 +259,7 @@ daLiJePočetak (x:xs) (y:ys) =
 
 @problem{Definisati funkciju @code{zbirCifara :: Int -> Int} koja određuje zbir cifara broja zapisanog u dekadnom zapisu. Koristeći ovu funkciju, naći sve prirodne brojeve @m{n} manje od @m{100}, takve da je zbir cifara broja @m{n^2} deljiv sa @m{5}.}
 
-@problem{Za nisku @code{a} kažemo da deli nisku @code{s} ako je @code{s} oblika @code{a ++ a ++ ... ++ a}. Na primer, niska @code{"Abc"} deli nisku @code{"AbcAbcAbc"}. Takođe, smatra se da prazna niska @code{""} deli svaku nisku. Napisati funkciju @ccode{nzd :: [Char] -> [Char] -> [Char]} koja određuje @em{najveći zajednički delilac} dve niske, odnosno najdužu nisku koja deli obe niske.}
+@problem{Za nisku @code{a} kažemo da deli nisku @code{s} ako je @code{s} oblika @code{a ++ a ++ … ++ a}. Na primer, niska @code{"Abc"} deli nisku @code{"AbcAbcAbc"}. Takođe, smatra se da prazna niska @code{""} deli svaku nisku. Napisati funkciju @ccode{nzd :: [Char] -> [Char] -> [Char]} koja određuje @em{najveći zajednički delilac} dve niske, odnosno najdužu nisku koja deli obe niske.}
 
 
 @section{Funkcije višeg reda}
@@ -310,7 +310,7 @@ filter' p (x:xs) = if p x then x : filter p xs else filter p xs
 
 @subsection{@em{Map}}
 
-@p Još jedna funkcija višeg reda koja se često koristi sa listama je @ccode{map :: (a -> b) -> [a] -> [b]}. Funkcija @code{map} primenjuje datu funkciju na svaki element liste i vraća listu dobijenih vrednosti tj. važi@note{Primetimo da navedena jednakost nije validan Haskel kôd, već samo zapis koji ilustruje funkciju @code{map}.} @ccode{map f [x₁, x₂, ... xₙ] = [f x₁, f x₂, ... f xₙ]}.
+@p Još jedna funkcija višeg reda koja se često koristi sa listama je @ccode{map :: (a -> b) -> [a] -> [b]}. Funkcija @code{map} primenjuje datu funkciju na svaki element liste i vraća listu dobijenih vrednosti tj. važi@note{Primetimo da navedena jednakost nije validan Haskel kôd, već samo zapis koji ilustruje funkciju @code{map}.} @ccode{map f [x₁, x₂, … xₙ] = [f x₁, f x₂, … f xₙ]}.
 
 @p Prvi parametar funkcije je funkcija tipa @code{a -> b}, a drugi parametar je lista tipa @code{[a]}. Rezultat je lista tipa @code{[b]} koja je nastala od prosleđene liste primenom prosleđene funkcije na svaki element liste.
 

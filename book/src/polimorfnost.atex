@@ -278,7 +278,7 @@ ghci> show [[1,2],[3,4],[5,6]]
 }
 }
 
-@p Za uređene @m{n}-torke važi sličan princip. Ako tipovi @code{A}, @code{B}, ... @code{T} pripadaju klasi @code{Eq}, tada i tip @code{(A, B,..., T)} pripada klasi @code{Eq}. Ovo takođe važi i za klase @code{Ord} i @code{Show}.
+@p Za uređene @m{n}-torke važi sličan princip. Ako tipovi @code{A}, @code{B}, ... @code{T} pripadaju klasi @code{Eq}, tada i tip @code{(A, B, … T)} pripada klasi @code{Eq}. Ovo takođe važi i za klase @code{Ord} i @code{Show}.
 
 @example{
 @p Već znamo da vrednosti tipa @code{Int} i @code{Char} možemo da poredimo sa @code{==}:
@@ -375,7 +375,7 @@ ghci> :type 2
 
 @p Kog tipa je funkcija @code{k}? Funkcija @code{k} uzima funkciju tipa @code{(A, B) -> C} i vraća funkciju tipa @code{A -> (B -> C)}. Stoga je tip ove funkcije @code{((A, B) -> C) -> (A -> (B -> C))}. 
 
-@p Kada smo utvrdili tip, možemo da implementiramo @code{k}. Pretpostavimo da je @code{f :: (A, B) -> C} funkcija koju želimo da transformišemo. Pošto primena @code{k f} predstavlja vrednost tipa @code{A -> (B -> C)}, podudaranjem oblika možemo definisati da @code{k f} predstavlja neki lambda izraz @code{\x y -> ...}. U telu ovog lambda izraza mora se nalaziti rezultat primene @code{f} na uređen par @code{(x, y)}. Prema tome, @code{k} možemo da definišemo sa narednim kodom
+@p Kada smo utvrdili tip, možemo da implementiramo @code{k}. Pretpostavimo da je @code{f :: (A, B) -> C} funkcija koju želimo da transformišemo. Pošto primena @code{k f} predstavlja vrednost tipa @code{A -> (B -> C)}, podudaranjem oblika možemo definisati da @code{k f} predstavlja neki lambda izraz @code{\x y -> …}. U telu ovog lambda izraza mora se nalaziti rezultat primene @code{f} na uređen par @code{(x, y)}. Prema tome, @code{k} možemo da definišemo sa narednim kodom
 
 @codeBlock{
 k :: ((A, B) -> C) -> (A -> (B -> C))
@@ -389,7 +389,7 @@ k :: ((a, b) -> c) -> (a -> (b -> c))
 k f = \x y -> f (x, y)
 }{Umesto na funkcije nekog konkretnog tipa, sada se @code{k} može primeniti na sve funkcije čiji je domen uređen par.}
 
-@p Na sličan način možemo da definišemo i inverznu funkciju @code{k'} koja funkcije tipa @code{a -> (b -> c)} transformiše u funkcije tipa @code{(a, b) -> c}. Jasno, tip funkcije @code{k'} je @code{(a -> (b -> c)) -> ((a, b) -> c)}. Ako je @code{g} funkcija tipa @code{a -> (b -> c)} tada je @code{k' g} funkcija koja uzima uređen par, te ćemo stoga takvu funkciju konstruisati sa lambda apstrakcijom @code{\(x, y) -> ...}. U telu lambda funkcije je potrebno da se nađe vrednost @code{(g x) y}. Stoga, @code{k'} možemo da definišemo sa narednim kodom
+@p Na sličan način možemo da definišemo i inverznu funkciju @code{k'} koja funkcije tipa @code{a -> (b -> c)} transformiše u funkcije tipa @code{(a, b) -> c}. Jasno, tip funkcije @code{k'} je @code{(a -> (b -> c)) -> ((a, b) -> c)}. Ako je @code{g} funkcija tipa @code{a -> (b -> c)} tada je @code{k' g} funkcija koja uzima uređen par, te ćemo stoga takvu funkciju konstruisati sa lambda apstrakcijom @code{\(x, y) -> …}. U telu lambda funkcije je potrebno da se nađe vrednost @code{(g x) y}. Stoga, @code{k'} možemo da definišemo sa narednim kodom
 
 @codeBlock{
 k' :: (a -> (b -> c)) -> ((a, b) -> c)

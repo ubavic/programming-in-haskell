@@ -2,7 +2,7 @@
 
 @p Naredna lekcija sadrži informacije neophodne za razumevanje svih ostalih lekcija. Ako neku lekciju ne bi trebalo da preskočite, to je definitivno ova. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
 
-@p Sekcije @em{Let ... in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda. Ove sekcije se mogu površno preći prilikom prvog čitanja.
+@p Sekcije @em{Let … in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda. Ove sekcije se mogu površno preći prilikom prvog čitanja.
 
 @section{Haskel kompajler}
 
@@ -168,22 +168,22 @@ površina :: Int
 površina = let a = 10; b = 5; c = 3 in 2*(a*b + b*c + c*a)
 }
 
-@p Dakle, sa @em{let ... in} konstrukcijom moguće je lokalno definisati jedno ili više imena koja će biti dostupna samo u nekom izrazu. Opšti oblik @em{let ... in} izraza sastoji se od niza definicija koje su razdvojene znakom @code{;}, i nakon čega sledi i izraz u kom želimo da te definicije budu dostupne:
+@p Dakle, sa @em{let … in} konstrukcijom moguće je lokalno definisati jedno ili više imena koja će biti dostupna samo u nekom izrazu. Opšti oblik @em{let … in} izraza sastoji se od niza definicija koje su razdvojene znakom @code{;}, i nakon čega sledi i izraz u kom želimo da te definicije budu dostupne:
 
 @codeBlock{
-let ime1 = izraz1; ...; imeN = izrazN in izraz
+let ime1 = izraz1; …; imeN = izrazN in izraz
 }
 
-@p Naravno, imena definisana u @em{let ... in} konstrukciji dostupna su samo unutar te @em{let ... in} konstrukcije.
+@p Naravno, imena definisana u @em{let … in} konstrukciji dostupna su samo unutar te @em{let … in} konstrukcije.
 
-@p Napominjemo da @em{let ... in} predstavlja jedan @em{izraz}, i da @em{let ... in} sintaksa nije nužno vezana za definicije. Zbog toga @em{GHCi} uspešno pronalazi vrednost izraza @code{let a = 2 in a + 3}:
+@p Napominjemo da @em{let … in} predstavlja jedan @em{izraz}, i da @em{let … in} sintaksa nije nužno vezana za definicije. Zbog toga @em{GHCi} uspešno pronalazi vrednost izraza @code{let a = 2 in a + 3}:
 
 @terminal{
 ghci> let a = 2 in a + 3
 5
 }
 
-@p Samim tim, moguće je ugnježdavati @em{let ... in} izraze:
+@p Samim tim, moguće je ugnježdavati @em{let … in} izraze:
 
 @terminal{
 ghci> let a = 2 in (let b = 3 in a + b)
@@ -192,10 +192,10 @@ ghci> let a = 2 in (let b = 3 in a + b)
 
 @section{@em{Where}}
 
-@p Sa @em{where} sintaksom takođe je moguće uvesti lokalne definicije kao i sa @pre{let ... in} sintaksom. Za razliku od @em{let in} konstrukcije koja predstavlja izraz, @em{where} sintaksa se isključivo koristi uz definicije. Opšti oblik @em{where} sintakse je:
+@p Sa @em{where} sintaksom takođe je moguće uvesti lokalne definicije kao i sa @pre{let … in} sintaksom. Za razliku od @em{let in} konstrukcije koja predstavlja izraz, @em{where} sintaksa se isključivo koristi uz definicije. Opšti oblik @em{where} sintakse je:
 
 @codeBlock{
-ime = izraz where ime1 = izraz1; ...; imeN = izrazN
+ime = izraz where ime1 = izraz1; …; imeN = izrazN
 }
 
 @p Primer sa površinom kvadra iz prethodne sekcije bi mogao i ovako da se napiše:
@@ -277,7 +277,7 @@ a =
 + 1
 }
 
-@p Kako i @em{let ... in} sintaksa predstavlja izraz, i taj izraz možemo prelomiti:
+@p Kako i @em{let … in} sintaksa predstavlja izraz, i taj izraz možemo prelomiti:
 
 @codeBlock{
 površina :: Int

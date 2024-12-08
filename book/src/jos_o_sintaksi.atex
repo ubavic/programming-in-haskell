@@ -144,7 +144,7 @@ uMetre''' l = case l of Milja m -> Metar (1609.344 * m); SvetlosnaSekunda s -> M
 Zapisati listu kvadrata svih prirodnih brojeva manjih od @m{100} koji su deljivi sa svojom poslednjom cifrom.
 }
 
-@p Sintaksa izlistavanja jeste elegantna, ali ne donosi nam suštinski ništa novo. Svaki izraz oblika@note{Ovo takođe važi i za izlistavanja u kojima se nalaze i dekleracije, što se može pokazati jednostavnim argumentom.} @ccode{[f x | x <- xs, Φ₁(x), … , Φₙ(x)]}  gde su @code{Φ₁}, ..., @code{Φₙ} neki predikati, definiše istu listu kao i izraz @ccode{map f . filter Φₙ . … . filter Φ₁ $ xs}. Na programeru je da odluči koju od sintaksa će iskoristiti.
+@p Sintaksa izlistavanja jeste elegantna, ali ne donosi nam suštinski ništa novo. Svaki izraz oblika@note{Ovo takođe važi i za izlistavanja u kojima se nalaze i dekleracije, što se može pokazati jednostavnim argumentom.} @ccode{[f x | x <- xs, Φ₁(x), … Φₙ(x)]}  gde su @code{Φ₁}, ..., @code{Φₙ} neki predikati, definiše istu listu kao i izraz @ccode{map f . filter Φₙ . … . filter Φ₁ $ xs}. Na programeru je da odluči koju od sintaksa će iskoristiti.
 
 @problem{
 Rešiti prethodni zadatak korišćenjem @code{map} i @code{filter} funkcija.
@@ -186,7 +186,7 @@ Naći sve pravougle trouglove obima manjeg od @m{100} čije su stranice celi bro
 
 @section{Pragme i ekstenzije}
 
-@p @def{Pragma} je instrukcija za Haskel kompajler smeštena u kodu. Pragme se zapisuju u obliku @pre{@@{ -# WORD ... #-@@}}, gde @pre{WORD} označava tip pragme, nakon čega mogu slediti dodatne informacije. Neki od dostupnih, i najčešće prisutnih, tipova pragmi su:
+@p @def{Pragma} je instrukcija za Haskel kompajler smeštena u kodu. Pragme se zapisuju u obliku @pre{@@{ -# WORD … #-@@}}, gde @pre{WORD} označava tip pragme, nakon čega mogu slediti dodatne informacije. Neki od dostupnih, i najčešće prisutnih, tipova pragmi su:
 
 @list{
  @li @pre{LANGUAGE} omogućava ekstenzije Haskel jezika. O ekstenzijama ćemo govoriti u nastavku.
@@ -218,7 +218,7 @@ module Main where
     @li @pre{DuplicateRecordFields} dozvoljava da različiti zapisi imaju polja sa istim imenom.
     @li @pre{HexFloatLiterals} dozvoljava korišćenje heksadecimalnih brojeva sa zarezom: literal @code{0x0.1} predstavlja @m{\frac{1}{16}}, literal @code{0x0.0F} predstavlja @m{\frac{15}{256}}, itd...
     @li @pre{InstanceSigs} dozvoljava da se prilikom instanciranja klase navedu tipovi metoda. 
-    @li @pre{LambdaCase} dozvoljava da se lambda izraz oblika @ccode{\x -> case x of @@{ p₁ -> e₁; ...; pₙ -> eₙ@@}} zapiše kao @ccode{\case @@{ p₁ -> e₁; ...; pₙ -> eₙ@@}}. Ovo je jedna od najkorišćenijih ekstenzija.
+    @li @pre{LambdaCase} dozvoljava da se lambda izraz oblika @ccode{\x -> case x of @@{ p₁ -> e₁; … pₙ -> eₙ@@}} zapiše kao @ccode{\case @@{ p₁ -> e₁; … pₙ -> eₙ@@}}. Ovo je jedna od najkorišćenijih ekstenzija.
     @li @pre{MagicHash} dozvoljava da se na kraju imena postavi znak @pre{#}, i uvodi još neke oblike literala. Ova ekstenzija se najčešće koristi pri radu sa nekim @em{low-level} tipovima Haskel jezika.
     @li @pre{NoImplicitPrelude} stopira implicitni uvoz @em{Prelude} modula. Ovo oslobađa prostor imena.
     @li @pre{NumericUnderscores} dozvoljava zapis numeričkih literala sa znakom @code{_} radi bolje čitljivosti. To omogućava da npr. vrednost milion zapiše kao @code{1_000_000}. Ako je ova ekstenzija aktivirana, znak @code{_} u numeričkom literalu se u potpunosti ignoriše od strne kompajlera.
@@ -237,7 +237,7 @@ module Main where
 
 @p Suština programiranja bez tačaka leži u osobini da se lambda funkcija @code{\x -> f x} može zameniti sa funkcijom @code{f}. Zaista, funkcija koja primenjuje @code{f} na argument @code{x} i vraća dobijeni rezultat, ne razlikuje se od same funkcije @code{f}, i možemo ih smatrati istima@note{U Haskelu funkcije @code{f}, @code{g} smatramo istim ako poseduju iste tipove, i za sve vrednosti @code{x} domena važi @code{f x = g x}. Napominjemo da se ovde radi "meta" rezonovanju, a u samom Haskelu je nemoguće u opštem slučaju porediti funkcije sa operatorom @code{==} (ili bilo kojim drugim). Razlozi ovog ograničenja nemaju veze sa Haskelom već sa teoretskim ograničenjima računarstva. Ipak možemo dati jednostavan argument u terminima Haskela: tip @code{[Bool]} sadrži beskonačno mnogo vrednosti, te se stoga dve funkcije @code{f, g :: [Bool] -> Bool} ne mogu uporediti jer bi to zahtevalo proveru @code{f x == g x} za beskonačno mnogo nizova @code{x}. Dakle, u opštem slučaju jednakost funkcija u Haskelu ne može se definisati.}. Zamena @code{\x -> f x} naziva se @def{eta konverzija}.
 
-@p Eta konverzija je jednostavan princip, ali u kodu često koristimo podudaranje oblika umesto lambda izraza, zbog čega prilika za eta redukcijom može biti skrivena "ispred nosa". Na primer, neka je data funkcija @code{h :: Int -> Int -> Bool} i neka je funkcija @code{g :: Int -> Bool} definisana sa @ccode{g x = h 10 x}. Ovakvo jednostavno podudaranje oblika nije ništa drugo nego skraćenica za definiciju sa lambda izrazom @ccode{g = (\x -> h 10 x)}. Uzimajući u obzir da je @code{h 10 x} zapravo @code{(h 10) x}, vidimo da lambda izraz @ccode{(\x -> (h 10) x)} možemo eta konverzijom da svedemo na @code{h 10}. Samim tim originalna definicija funkcije @code{g} je postala sada @ccode{g = h 10}. Dakle, eta konverzija nam omogućuje "skraćivanje" najdesnijeg parametra u definicijama oblika @ccode{g x₁ ... xₙ = IZRAZ xₙ}, pod pretpostavkom da se @code{xₙ} ne pojavljuje u @code{IZRAZ}@note{Ovaj uslov nam zabranjuje da uradimo eta redukciju definicije @code{g x = max x x}, jer se @code{x} pojavljuje u izrazu @code{max x}}.
+@p Eta konverzija je jednostavan princip, ali u kodu često koristimo podudaranje oblika umesto lambda izraza, zbog čega prilika za eta redukcijom može biti skrivena "ispred nosa". Na primer, neka je data funkcija @code{h :: Int -> Int -> Bool} i neka je funkcija @code{g :: Int -> Bool} definisana sa @ccode{g x = h 10 x}. Ovakvo jednostavno podudaranje oblika nije ništa drugo nego skraćenica za definiciju sa lambda izrazom @ccode{g = (\x -> h 10 x)}. Uzimajući u obzir da je @code{h 10 x} zapravo @code{(h 10) x}, vidimo da lambda izraz @ccode{(\x -> (h 10) x)} možemo eta konverzijom da svedemo na @code{h 10}. Samim tim originalna definicija funkcije @code{g} je postala sada @ccode{g = h 10}. Dakle, eta konverzija nam omogućuje "skraćivanje" najdesnijeg parametra u definicijama oblika @ccode{g x₁ … xₙ = IZRAZ xₙ}, pod pretpostavkom da se @code{xₙ} ne pojavljuje u @code{IZRAZ}@note{Ovaj uslov nam zabranjuje da uradimo eta redukciju definicije @code{g x = max x x}, jer se @code{x} pojavljuje u izrazu @code{max x}}.
 
 @example{
 @p Funkciju @code{zbir :: [Int] -> Int} koja vraća zbir svih elemenata liste, možemo definisati:

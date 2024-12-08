@@ -42,7 +42,7 @@ primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))
 primeni = (\f -> (\par -> (f (fst par), f (snd par))))
 }
 
-@p Navedena lambda je oblika @ccode{(\f -> (\par -> ...))}. Pre svega, možemo se osloboditi zagrada oko celog izraza, a zatim svesti dvostruku apstrakciju pod jednu lambdu.
+@p Navedena lambda je oblika @ccode{(\f -> (\par -> …))}. Pre svega, možemo se osloboditi zagrada oko celog izraza, a zatim svesti dvostruku apstrakciju pod jednu lambdu.
 
 @p Tip funkcije je oblika  @code{a -> (b -> c)}, pa možemo ukloniti jedan par zagrada.
 

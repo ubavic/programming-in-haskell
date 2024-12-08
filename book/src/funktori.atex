@@ -104,14 +104,14 @@ instance Functor [] where
 }
 
 @p Već smo videli da @code{map} zadovoljava oba zakona, ali ponovimo to još jednom. Prvo,
-@ccode{fmap id [x₁, x₂, ... xₙ]}
-@ccode{= [id x₁, id x₂, ... id xₙ]}
-@ccode{= [x₁, x₂, ... xₙ]}
+@ccode{fmap id [x₁, x₂, … xₙ]}
+@ccode{= [id x₁, id x₂, … id xₙ]}
+@ccode{= [x₁, x₂, … xₙ]}
 što znači da je @ccode{fmap id xs = xs} za svaku listu @code{xs}. Dakle @code{fmap id} je identička funkcija, pa je zadovoljen prvi zakon funktora. Drugo, kako je
-@ccode{(fmap g . fmap) [x₁, x₂, ... xₙ]}
-@ccode{= fmap g (fmap f [x₁, x₂, ... xₙ])}
-@ccode{= [g (f x₁), g (f x₂), ... g (f xₙ)]}
-@ccode{= fmap (g . f) [x₁, x₂, ... xₙ]}, sledi da je @ccode{(fmap g . fmap) xs = fmap (g. f) xs} za svaku listu @code{xs}. Prema tome zadovoljen je i drugi zakon.
+@ccode{(fmap g . fmap) [x₁, x₂, … xₙ]}
+@ccode{= fmap g (fmap f [x₁, x₂, … xₙ])}
+@ccode{= [g (f x₁), g (f x₂), … g (f xₙ)]}
+@ccode{= fmap (g . f) [x₁, x₂, … xₙ]}, sledi da je @ccode{(fmap g . fmap) xs = fmap (g . f) xs} za svaku listu @code{xs}. Prema tome zadovoljen je i drugi zakon.
 
 @p U slučaju ove instance operator @code{<$} zamenjuje sve vrednosti u listi sa jednom vrednošću:
 
@@ -345,7 +345,7 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 
 @p Funkcija @code{pure} uzima vrednost nekog neodređenog tipa @code{a} i vraća vrednost tipa @code{[a]}. Kako je tip u potpunosti neodređen (nije ograničen nekom tipskom klasom), ne možemo mnogo što šta uraditi sa vrednošću. Za vrednost @code{x}, funkcija @code{pure} može vratiti @code{[]}, @code{[x]}, @code{[x, x]}, @code{[x, x, x]}, itd... Konstantna funkcija @code{\x -> []} bi bila beskorisna, dok bi funkcije poput @code{\x -> [x, x]}, @code{\x -> [x, x, x]} vraćale previše. Zbog toga, definisaćemo @code{pure} kao funkciju @code{\x -> [x]}.
 
-@p Da bismo definisali @code{<*>} neophodno je da obratimo pažnju na zakone aplikativnih funktora. Prvo, iz @ccode{fmap f x = pure f <*> x}, i iz @code{pure f = [f]} sledi da @code{[f] <*> [x1,...,xn]} mora biti @code{[f x1,...,f xn]}. Prema tome, @code{<*>} primenjuje funkcije iz leve liste na vrednosti iz desne liste. Postoji mnogo načina na koje se takva primena može definisati, i za sada nam nije jasno kako se više funkcija primenjuje na više vrednosti (za sada samo razumemo @code{[f] <*> xs})@note{Na primer, možda bi operator @code{(<*>)} funkcije i vrednosti uparivao član po član poput @code{zip} funkcije koja uparuje vrednosti dve liste u listu parova. Ali kako mora važiti prvi zakon @code{fmap f x = pure f <*> x} sledi da ovakva definicija nije moguća. U suprotnom bi bilo @ccode{[f x1,f x2]}@ccode{= fmap f [x1,x2]}@ccode{= pure f <*> [x1,x2]}@ccode{= [f] <*> [x1, x2] = [f x1]}, što naravno nije tačno.}. Zbog toga, @code{<*>} definišemo kao operaciju koja primenjuje svaku funkciju iz leve liste na svaku vrednost iz desne.
+@p Da bismo definisali @code{<*>} neophodno je da obratimo pažnju na zakone aplikativnih funktora. Prvo, iz @ccode{fmap f x = pure f <*> x}, i iz @code{pure f = [f]} sledi da @code{[f] <*> [x1, … xn]} mora biti @code{[f x1, … f xn]}. Prema tome, @code{<*>} primenjuje funkcije iz leve liste na vrednosti iz desne liste. Postoji mnogo načina na koje se takva primena može definisati, i za sada nam nije jasno kako se više funkcija primenjuje na više vrednosti (za sada samo razumemo @code{[f] <*> xs})@note{Na primer, možda bi operator @code{(<*>)} funkcije i vrednosti uparivao član po član poput @code{zip} funkcije koja uparuje vrednosti dve liste u listu parova. Ali kako mora važiti prvi zakon @code{fmap f x = pure f <*> x} sledi da ovakva definicija nije moguća. U suprotnom bi bilo @ccode{[f x1,f x2]}@ccode{= fmap f [x1, x2]}@ccode{= pure f <*> [x1, x2]}@ccode{= [f] <*> [x1, x2] = [f x1]}, što naravno nije tačno.}. Zbog toga, @code{<*>} definišemo kao operaciju koja primenjuje svaku funkciju iz leve liste na svaku vrednost iz desne.
 
 
 @section{Strelice kao funktori}

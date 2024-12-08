@@ -446,4 +446,4 @@ ghci> snd (5, 'C')
 @p Navedeni tip sadrži četiri vrednosti: @code{(True, True)}, @code{(True, False)}, @code{(False, True)} i @code{(False, False)}.
 }
 
-@problem{Ako tipovi @code{A1}, @code{A2} ... @code{Ak} sadrže redom @m{n_1}, @m{n_2} ... @m{n_k} vrednosti, koliko vrednosti sadrži tip @code{(A1, A2, ...., Ak)}?}
+@problem{Ako tipovi @code{A₁}, @code{A₂} ... @code{Aₙ} sadrže redom @m{k_1}, @m{k_2} ... @m{k_n} vrednosti, koliko vrednosti sadrži tip @code{(A₁, A₂, … , Aₙ)}?}

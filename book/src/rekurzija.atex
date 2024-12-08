@@ -9,7 +9,7 @@
 @problem{Napisati funkciju @code{zbir :: Int -> Int} koja vraća zbir prvih @code{n} prirodnih brojeva.}
 
 @p Funkciju @code{zbir} je lako implementirati u nekom imperativnom jeziku pomoću jedne petlje. Međutim, u Haskelu ne postoji pojam petlje, te moramo iskoristiti tehniku rekurzije. To podrazumeva da pri nalaženju rešenja koristimo rešenje istog problema manje složenosti. Konkretno u ovom slučaju prilikom nalaženja zbira brojeva koristimo zbir manje brojeva. Ako napišemo izraz za zbir, rešenje će nam se samo ukazati:
-@ccode{zbir n = 1 + 2 + ... + (n - 1) + n}
+@ccode{zbir n = 1 + 2 + … + (n - 1) + n}
 Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir prvih @code{n - 1} brojeva. Stoga se rešenje u kodu samo nameće:
 
 @ccode{zbir n = zbir (n - 1) + n}

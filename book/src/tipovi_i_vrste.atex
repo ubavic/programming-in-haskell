@@ -50,7 +50,7 @@ f2 () = False
 
 @section{Tipski sinonimi}
 
-@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{a1}, @code{a2}, ... @code{an} možemo napraviti odgovarajući tip uređenih n-torki @code{(a1, a2, ... an)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira tri dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
+@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{T₁}, @code{T₂}, ... @code{Tₙ} možemo napraviti odgovarajući tip uređenih n-torki @code{(T₁, T₂, … Tₙ)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira tri dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
 
 @p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Sinonim se definiše sa dekleracijom poput naredne:
 
