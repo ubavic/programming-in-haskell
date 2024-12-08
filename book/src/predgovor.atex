@@ -10,5 +10,16 @@
 
 @p Uzimajući obzir rečeno, tokom pisanja ove knjige trudio sam se da dam što više konkretnih primera, i da pravim poređenja sa drugim jezicima. Duži primeri su numerisani i izdvojeni u posebne celine da ne bi remetili glavni tok lekcije. Pored primera, u knjizi su izdvojeni i numerisani zadaci. Neki od zadataka poseduju rešenja: rešenja takvih zadataka mogu se prikazati (i sakriti) pritiskom na trougao koji se nalazi levo od oznake zadatka. Neki zadaci su trivijalni, dok ima i zadataka koji predstavljaju prave male projekte. @em{Ako bih čitaocu mogao da dam jedan jedini savet, to je da što više zadataka reši koliko god neki zadaci delovali teško ili lako. Programiranje se ne može savladati prostim čitanjem knjige, već je neophodna upotreba naučenog.}
 
-@todo{Za kraj, naveo bih literaturu o Haskelu koja je korišćena pri izradi ove knjige kao i literaturu koja može koristi čitaocu za naredna istraživanja. Literatura je navedena redosledom po naprednosti znanja koje je potrebno (od najpristupačnijih knjiga): Learn You a Haskell for Great Good!, Miran Lipovaca - besplatno dostupna, i verovatno najpoznatija knjiga o Haskelu. Neozbiljan, humoristički pristup čini je privlačnom za mnoge početnike (ali i predmetom mnogih kritika).
+@p Za kraj, naveo bih literaturu o Haskelu koja je korišćena pri izradi ove knjige kao i literaturu koja može koristi čitaocu za naredna istraživanja.
+
+@list{
+@li @em{Learn You a Haskell for Great Good!}, Miran Lipovaca - besplatno dostupna, i verovatno najpoznatija knjiga o Haskelu. Neozbiljan, humoristički pristup čini je privlačnom za mnoge početnike (ali i predmetom mnogih kritika).
+@li @em{Haskell Programming from First Principles}, Julie Moronuki, Chris Allen - opširna knjiga koja koja postepeno uvodu početnike u funkcionalno programiranje i detaljno opisuje Haskel jezik. Knjiga koju trenutno čitate, verovatno je najsličnija ovoj knjizi i pokriva nešto više od polovine tema obrađenih u @em{Haskell Programming from First Principles}.
+@li @em{Haskell in Depth}, Vitaly Bragilevsky - predstavlja uvod u naprednije teme Haskel programiranja - rad na realnim projektima (@em{web} aplikacije) i korišćenje poznatih biblioteka.
+@li @em{Functional Design and Architecture}, Alexander Granin - knjiga koja se bavi arhitekturom Haskel programa.
 }
+
+@p Postoji kvalitetnih knjiga o Haskelu koje nisu više pogodne sa učenje jer je značajan deo biblioteka koje se koriste u njima promenjen. To se posebno odnosi na knjige koje su fokusirane na rešavanje praktičnih problema poput poznate i besplatno dostupne knjige @em{Real World Haskell} (Bryan O'Sullivan, Don Stewart, John Goerzen).
+
+@p Osim knjiga postoje i mnogi drugi kvalitetni izvori informacija o Haskelu, kao što je @em{The Haskell Unfolder} serijal, @em{The Haskell Interlude} podkast, i @em{Haskellweekly} nedeljni pregled.
+ 
