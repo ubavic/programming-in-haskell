@@ -22,10 +22,10 @@
 
 @p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena totalna funkcija@note{Takva polimorfna funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
 
-@p Primetimo da tip @code{Void} ne odgovara pojmu @pre{void} koji se može naći u drugim programskim jezicima poput C-a, C++-a, Jave. U takvim programskim jezicima, @pre{void} se koristi za funkcije čija povratna vrednost nas ne interesuje. Prema tome, takav pojam odgovara jediničnom tipu u Haskelu@note{Videćemo u narednoj lekciji da se tip @code{()} u Haskelu koristi kad nas ne interesuje povratna vrednost.}.
+@p Primetimo da tip @code{Void} ne odgovara pojmu @pre{void} koji se može naći u drugim programskim jezicima poput C-a, C++-a, Jave. U takvim programskim jezicima, @pre{void} se koristi za funkcije čija povratna vrednost nas ne interesuje. U Haskelu, tip @code{()} se koristi kad nas ne interesuje povratna vrednost.
 
 @problem{
-Koliko postoji funkcija tipa @code{() -> Bool}?
+Koliko postoji totalnih funkcija tipa @code{() -> Bool}?
 }{
 @p Postoji onoliko funkcija tipa @code{() -> T} koliko postoji vrednosti tipa @code{T}. Prema tome, postoje dve funkcije tipa @code{() -> Bool}, koje su definisane sa
 
@@ -50,7 +50,7 @@ f2 () = False
 
 @section{Tipski sinonimi}
 
-@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{T₁}, @code{T₂}, ... @code{Tₙ} možemo napraviti odgovarajući tip uređenih n-torki @code{(T₁, T₂, … Tₙ)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira tri dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
+@p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{T₁}, @code{T₂}, ... @code{Tₙ} možemo napraviti odgovarajući tip uređenih n-torki @code{(T₁, T₂, … Tₙ)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira dva dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
 
 @p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Sinonim se definiše sa dekleracijom poput naredne:
 
@@ -72,7 +72,7 @@ a :: Logicki
 a = True || False
 }
 
-@p Učitavanjem navedog koda u @em{GHC}-i, možemo proveriti tipove:
+@p Učitavanjem navedenog koda u @em{GHC}-i, možemo proveriti tipove:
 
 @terminal{
 ghci> :t a
@@ -278,7 +278,9 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduše, oba apstraktna tipa imaju specificnu sintaksu, koja se razlikuje od onog što smo gore opisali.
 
-@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Možda će biti jasnije ako @code{[A]} zapišemo kao @code{[] A} (što je validan zapis u kodu). Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}.}. U lekciji @em{Rekurzivne strukture podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
+@p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Možda će biti jasnije ako @code{[A]} zapišemo kao @code{[] A} (što je validan zapis u kodu). Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}.}. U lekciji @em{Rekurzivni tipovi podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
+
+@figure{abstract_type_list}
 
 @p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno označava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi ništa drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jeziku.
 
