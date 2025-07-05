@@ -280,7 +280,7 @@ data A a b c = MkA (a, [b], Int -> c)
 
 @p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Možda će biti jasnije ako @code{[A]} zapišemo kao @code{[] A} (što je validan zapis u kodu). Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}.}. U lekciji @em{Rekurzivni tipovi podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
 
-@figure{abstract_type_list}
+@figure{abstract_type}
 
 @p Drugi apstraktni tip koji nam je poznat je konstruktor tipa funkcije @code{->}, takozvana @em{strelica}@note{eng. @em{arrow}.}. Konstruktor @code{->} uzima dva konkretna tipa @code{A} i @code{B} i daje tip funkcija iz @code{A} u @code{B}. Taj tip se naravno označava sa @code{A -> B}. Ovde je korisno napomenuti da su lambda izrazi ništa drugo nego konstruktori vrednosti za tip @code{A -> B}. Za razliku od apstraktnog tipa @code{[]}, tip @code{->} je interno implementiran u Haskel jeziku.
 
