@@ -1,3 +1,4 @@
+predgovor
 prvi_koraci
 tipovi
 funkcije
@@ -6,11 +7,12 @@ rekurzija
 polimorfnost
 liste
 tipovi_i_vrste
+#moduli
 haskel_programi
 operatori
 tipske_klase
 algebarski_tipovi_podataka
-#jos_o_sintaksi
+jos_o_sintaksi
 funktori
 rekurzivni_tipovi_podataka
 #striktnost
