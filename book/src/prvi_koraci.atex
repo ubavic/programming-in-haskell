@@ -32,7 +32,7 @@ sati_u_danu = 24
 
 @p Ime ne sme biti jedna od ključnih reči@note{Ovo su sve ključne reči Haskela, i u ovoj knjizi ćemo ih sve pojasniti.} @code{as}, @code{class}, @code{data}, @code{default}, @code{deriving}, @code{do}, @code{else}, @code{hiding} @code{if}, @code{import}, @code{in}, @code{infix}, @code{infixl}, @code{infixr}, @code{instance}, @code{let}, @code{module}, @code{newtype}, @code{of}, @code{then}, @code{type}, @code{where}, @code{qualified}.
 
-@p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja (odnosno interpretacije) programa, te imena predstavljaju konstante. Samim tim, poredak definicija nije bitan.
+@p Vrednost koja je pridružena jednom imenu ne može se više menjati u toku izvršavanja programa, te imena predstavljaju konstante. Samim tim, poredak definicija nije bitan.
 
 @p@def{Tip} neke vrednosti predstavlja kolekciju kojoj ta vrednost pripada. Svaka vrednost pripada jednom i samo jednom tipu. Ako neka vrednost @code{v} pripada tipu @code{T} tada za tu vrednost kažemo da @em{poseduje tip} @code{T} ili da još @em{da je tipa} @code{T} i to označavamo sa @code{v :: T}. Za razliku od imena funkcije, ime tipa uvek počinje velikim slovom.
 

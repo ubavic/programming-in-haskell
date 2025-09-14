@@ -200,7 +200,7 @@ newtype Usd = MkUsd Double
 
 @p Vrednosti oba definisana tipa sadrže suštinski iste podatke (jedan @em{double} broj). Kako su u pitanju različiti tipovi, kompajler neće dozvoliti proizvoljno mešanje ovih tipova (kao što bi bio slučaj sa tipskim sinonimima). Na taj način, na primer, možemo napisati funkciju koju je moguće isključivo primeniti na svote novca u evrima. Pokušaj primene takve funkcije na svote u dolarima dovešće do tipske greške i program neće biti iskompajliran.
 
-@p Ograničenja poput opisanih ne deluju mnogo korisna kada se posmatraju mali programi. Ali sa programima s milionskim brojem linija ovakva ograničenja značajno "umanjuju brigu" pri menjanju koda. Na primer, promena funkcija koje koriste tip @code{Eur} neće uopšte uticati na funkcije koje koriste tip @code{Usd}.
+@p Ograničenja poput opisanih ne deluju mnogo korisna kada se posmatraju mali programi. Ali sa programima s velikim brojem linija ovakva ograničenja značajno "umanjuju brigu" pri menjanju koda. Na primer, promena funkcija koje koriste tip @code{Eur} neće uopšte uticati na funkcije koje koriste tip @code{Usd}.
 
 @p Naravno, razdvajanje valuta ima smisla samo na onom delu programa koji različito obrađuje svote u evrima i dolarima (u ovom slučaju to može biti obračunavanje poreza koji je specifičan za valutu, i sl.). Deo logike koji je isti za obe valute, ne treba duplirati. Izbegavanje dupliranja koda se može postići sa tipskim klasama, što će biti prikazano u narednoj lekciji.
 }
@@ -325,7 +325,9 @@ data A a b c = MkA (a, [b], Int -> c)
 @p Nastavimo sa prethodnim primerom u interaktivnom okruzenju:
 @terminal{
 ghci> data A a b c = MkA (a, [b], Int -> c)
+ghci> :kind A
 A :: * -> * -> * -> *
+
 }
 }
 
