@@ -22,7 +22,7 @@
 @p Prelid obezbeđuje neke korisne funkcije za rad sa listama karaktera:
 
 @list{
-@li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od jedne nikse dobijaju "reči".
+@li @code{words :: [Char] -> [[Char]]} deli nisku na listu niska pri čemu se prelom vrši na belinama. Na primer: @code{words "a bb ccc   "} daje @code{["a", "bb", "ccc"]}. Samo ime funkcije ukazuje da se od niske dobijaju "reči".
 @li @code{unwords :: [[Char]] -> [Char]} spaja listu niski u jedinstvenu nisku dodavajući razmak između. Na primer: @code{unwords ["boža", "zvani", "pub"]} nam daje @code{"boža zvani pub"}.
 @li @code{lines :: [Char] -> [[Char]]} rastavlja nisku na linije, vršeći prelom na karakteru za novi red @code{'\n'}.
 @li @code{unlines :: [[Char]] -> [Char]} spaja listu niski u jedinstvenu nisku, dodavajući @code{'\n'} između.
@@ -48,7 +48,7 @@ stih = "Ti, međutim, rasteš, uz zornjaču jasnu,\n\
 \i topiš, ko Sunce, i led suza, i lanjski sneg.\n" 
 }
 
-@p Ako u @em{GHCi} interpreteru evaluiramo vrednost @code{stih}, niska će se ispisati unutar dvostrukih navodnika u jednoj (ali dugačkoj) liniji terminala@note{Takođe, u zavisnosti od verzije @em{GHCi} programa, može se desiti da slova koja ne pripadaju engleskom alfabetu (@em{đ}, @em{ž}, @em{ć} i @em{č}) budu zamenjena odgovarajućim kodovima.}. Probajte i uverite se sami. Zbog toga je zgodno iskoristi metod @code{putStr} koji sadržaj ispisuje u terminal onako kao bismo i očekivali:
+@p Ako u @em{GHCi} interpreteru evaluiramo vrednost @code{stih}, niska će se ispisati unutar dvostrukih navodnika u jednoj (ali dugačkoj) liniji terminala@note{Takođe, u zavisnosti od verzije @em{GHCi} programa, može se desiti da slova koja ne pripadaju engleskom alfabetu (@em{đ}, @em{ž}, @em{ć} i @em{č}) budu zamenjena odgovarajućim kodovima.}. Probajte i uverite se sami. Zbog toga je zgodno iskoristiti @code{putStr} koji sadržaj ispisuje u terminal onako kao bismo i očekivali:
 
 @terminal{
 ghci> putStr stih
@@ -255,7 +255,7 @@ daLiJePočetak (x:xs) (y:ys) =
 
 @problem{Definisati funkciju @code{dužine :: [[Char]] -> [Int]} koja listu niski preslikava u listu brojeva, pri čemu svaki broj predstavlja dužinu niske. Pritom, redosled brojeva je isti kao redosled odgovarajućih niski. Na primer, @ccode{dužine ["Pop","Ćira","i","pop","Spira"]} je @code{[3,4,1,3,5]}.}
 
-@problem{Definisati funkciju @code{parni :: [Int] -> [Int]} koje listu brojeva preslikava u listu brojeva koja je dobijana uklanjanjem svih neparnih brojeva iz početne liste. Na primer, @code{parni [1,2,3,4]} je @code{[2,4]}.}
+@problem{Definisati funkciju @code{parni :: [Int] -> [Int]} koja listu brojeva preslikava u listu brojeva koja je dobijana uklanjanjem svih neparnih brojeva iz početne liste. Na primer, @code{parni [1,2,3,4]} je @code{[2,4]}.}
 
 @problem{Definisati funkciju @code{zbirCifara :: Int -> Int} koja određuje zbir cifara broja zapisanog u dekadnom zapisu. Koristeći ovu funkciju, naći sve prirodne brojeve @m{n} manje od @m{100}, takve da je zbir cifara broja @m{n^2} deljiv sa @m{5}.}
 
@@ -268,7 +268,7 @@ daLiJePočetak (x:xs) (y:ys) =
 
 @subsection{@em{Filter}}
 
-@p Funkcija višeg reda @code{filter :: (a -> Bool) -> [a] -> [a]} iz liste izdvaja samo elemente koji zadovoljavaju neki uslov.
+@p Funkcija višeg reda @code{filter :: (a -> Bool) -> [a] -> [a]} iz liste izdvaja samo elemente koji zadovoljavaju neki uslov. 
 
 @p Prvi parametar funkcije je funkcija tipa @code{a -> Bool} koju nazivamo @def{predikat}. Predikat treba da vrati vrednost @code{True} ako element treba da se nađe u povratnoj listi. Drugi parametar funkcije je lista koju filtriramo. Rezultat je lista iz koje su uklonjeni elementi koji ne zadovoljavaju predikat, pri čemu poredak elemenata ostaje isti.
 
@@ -427,7 +427,7 @@ Naći @m{n}-tu parcijalnu sumu harmonijskog reda. Tačnije, napisati funkciju ti
 }
 
 @problem{
-U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u celobrojnu vrednost. Na primer, @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće bit prazna i sadržaće samo cifre).}
+U lekciji o sintaksi u funkcijama naveli smo u jednom od zadataka i funkciju @code{uCifru :: Char -> Int}, koja karaktere pretvara u cifre. Iskoristiti ovu funkciju za definiciju funkcije @code{uBroj :: [Char] -> Int} koja zapis prirodnog broja pretvara u celobrojnu vrednost. Na primer, @code{uBroj "123"} treba da se evaluira u vrednost @code{123}, itd... Pretpostaviti da će data niska predstavljati validan zapis prirodnog broja (tj. neće biti prazna i sadržaće samo cifre).}
 {@p Koristeći funkcije @code{map} i @code{uCifru} nisku možemo prevesti u listu cifara tj. vrednost tipa @code{[Int]}. Na primer @code{map uCifru "123"} nam daje @code{[1,2,3]}. Sada je potrebno rekurzivno proći kroz ovakav niz cifara i formirati broj. Za to ćemo napisati pomoćnu funkciju @code{cifreUbroj :: [Int] -> Int}
 
 @p Algoritam je najlakše sprovesti rekurzijom po poslednjem elementu liste (pokušajte i da implementirate algoritam rastavljajući listu na glavu i rep). Bazu rekurzije čini slučaj jednočlanog niza. U tom slučaju kao povratnu vrednost vraćamo jedini element te liste (jer je vrednost jednocifrenog broja jednaka vrednosti jedine cifre tog broja). U suprotnom, rastavljamo listu na početak i na poslednji element, i računamo vrednost koju predstavlja početak. Tu vrednost početka pomeramo za jedno decimalno mesto (množeći sa @code{10}) i na to dodajemo vrednost poslednjeg elementa. Konkretno, ako nam je data lista @code{[1, 2, 3]}, rekurzivno nalazimo vrednost @code{cifreUBroj [1, 2]} što bi trebalo da nam da @code{12}. Množenjem sa @code{10} dobijamo vrednost @code{120}, koja kad je saberemo sa poslednjim elementom liste daje traženu vrednost funkcije. Kada razumemo postupak, kod nije teško napisati:
@@ -482,7 +482,7 @@ ghci> f (a, b) = show a ++ ". " ++ b
 ghci> numerisaniDani = map f dani2
 ghci> numerisaniDani
 ["1. Pon","2. Uto","3. Sre","4. Čet","5. Pet","6. Sub","7. Ned"]
-ghic> head numerisaniDani
+ghci> head numerisaniDani
 "1. Pon"
 }{Funkcija @code{f} spaja broj i nisku u nisku. Primetimo da smo ovde koristili podudaranje oblika za definisanje funkcije.}
 
@@ -573,7 +573,7 @@ dešifruj niska = map dešifrujKarakter niska
 }
 
 @problem{
-Implementacija Cezarove šifra koju smo prezentovali gore je dobra za demonstraciju rada sa listama u Haskelu, ali nije mnogo efikasna. Umesto da za svako slovo pretražujemo listu @code{šifra}, možemo iskoristiti @ccode{fromEnum :: Enum a => a -> Int} i @ccode{toEnum :: Enum a => Int -> a} funkcije da bi konvertovali slova u @em{ASCII} vrednosti i obrnuto. Koristeći navedene funkcije, kao i funkciju ostataka @code{mod}, dati alternativnu definiciju funkcije @code{šifrujKarakter}.
+Implementacija Cezarove šifre koju smo naveli je dobra za demonstraciju rada sa listama u Haskelu, ali nije mnogo efikasna. Umesto da za svako slovo pretražujemo listu @code{šifra}, možemo iskoristiti @ccode{fromEnum :: Enum a => a -> Int} i @ccode{toEnum :: Enum a => Int -> a} funkcije da bi konvertovali slova u @em{ASCII} vrednosti i obrnuto. Koristeći navedene funkcije, kao i funkciju ostataka @code{mod}, dati alternativnu definiciju funkcije @code{šifrujKarakter}.
 }
 
 @problem{
@@ -599,7 +599,7 @@ Palindromski broj je prirodan broj koji se čita isto i sa leva i sa desna. Najv
 }
 
 @problem{
-Implementirati funkciju @code{dekartovProizvod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProizvod [1, 2, 3] ['a', 'b']} daje @ccode{[(1,'a'),(2,'a'),(3,'a'),(1,'a'),(2,'b'),(3,'b')]}.
+Implementirati funkciju @code{dekartovProizvod} koja vraća "Dekartov proizvod dve liste". Na primer: @code{dekartovProizvod [1, 2, 3] ['a', 'b']} daje @ccode{[(1,'a'),(2,'a'),(3,'a'),(1,'b'),(2,'b'),(3,'b')]}.
 }
 
 @problem{

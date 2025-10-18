@@ -135,7 +135,7 @@ obrni (Dodaj x xs) = spoji (obrni xs) x
 Za tip @code{Lista a} implementirati funkcije koje odgovaraju funkcijama @code{filter}, @code{map}, @code{zip} i @code{fold}.
 }
 
-@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implementacija te funkcije za tip @code{ListaBrojeva}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri dekleraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
+@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implementacija te funkcije za tip @code{ListaBrojeva}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri deklaraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
 
 @codeBlock{
 instance Show a => Show (Lista a) where
@@ -156,7 +156,7 @@ instance Show a => Show (Lista a) where
 data [] a = [] | a : ([] a) 
 }
 
-@p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sadrže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infiksnog konstruktora sa odgovarajućim @code{infix} dekleracijama.}, te se navodi između argumenata.
+@p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sadrže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infiksnog konstruktora sa odgovarajućim @code{infix} deklaracijama.}, te se navodi između argumenata.
 
 @p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
 

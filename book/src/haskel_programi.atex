@@ -152,7 +152,7 @@ main = do
 
 @codeBlock{
 main = putStrLn "main = putStrLn"
-}{Iskoristićemo to što u Haskelu ne moramo da navodimo dekleracije tipova da bismo pojednostavili rešenje.}
+}{Iskoristićemo to što u Haskelu ne moramo da navodimo deklaracije tipova da bismo pojednostavili rešenje.}
 
 @p Kompilacijom i pokretanjem programa dobijamo početak koda.
 
@@ -175,7 +175,7 @@ $ ./quine
 main = putStrLn "main = putStrLn"
 }{Pokretanjem rešenja uviđamo da je strategija bila naivna. Novim programom jesmo ispisali kôd prethodnog programa, ali nismo uspeli da konstruišemo @em{quine} - program koji ispisuje sopstveni kôd.}
 
-@p Kako mi dodajemo tekst u nisku to program postaje duži te moramo da dodajemo još više teksta, i tako dalje... Takav proces se nikad neće zaustaviti. Zbog toga moramo konstruisati nisku koju ćemo ispisati. Vratimo se na prvi pokušaj rešenja, tj. program @ccode{main = putStrLn "main = putStrLn"} i dodajmo funkciju @code{(\s -> s ++ s)} koja "duplira" niksu. Kôd te funkcije ćemo takođe dodati u nisku:
+@p Kako mi dodajemo tekst u nisku to program postaje duži te moramo da dodajemo još više teksta, i tako dalje... Takav proces se nikad neće zaustaviti. Zbog toga moramo konstruisati nisku koju ćemo ispisati. Vratimo se na prvi pokušaj rešenja, tj. program @ccode{main = putStrLn "main = putStrLn"} i dodajmo funkciju @code{(\s -> s ++ s)} koja "duplira" nisku. Kôd te funkcije ćemo takođe dodati u nisku:
 
 @codeBlock{
 main = putStrLn ((\s->s++s) "main = putStrLn (\\s->s++s)")
@@ -314,7 +314,7 @@ main = do
 
 @p Svaka Haskel datoteka čini jedan poseban modul. U dosadašnjem izlaganju, implicitno smo radili sa @code{Main} modulom@note{Ime ovog modula možete da vidite prilikom kompilacije.} koji se podrazumeva ako neki drugi modul nije naveden. Za sve datoteke koje smo napisali, podrazumevalo se da definišu @code{Main} modul. Takođe, još jedan modul nam je bi "sakriven pred očima": to je prelid, odnosno @code{Prelude} modul koji se implicitno učitava u svaki Haskel program.
 
-@p Za nas će do kraja ove sekcije biti korisno da znamo kako možemo učitati određene funkcije iz standardnih modula. Da bismo uvezli neku funkciju @code{funkcija} iz modula @code{NekiModul} potrebno da na početku datoteke, pre svih drugih definicija napišemo liniju @ccode{import NekiModul (funkcija)}. Na ovaj način uvedena funkcija je dostupna našem kodu kao da smo je sami napisali. Ako iz modula @code{NekiModul} želimo da uvezemo više funkcija, na primer @code{funkc1} i @code{funkc2}, kôd ćemo započeti sa @code{import NekiModul (funkc1, funkc2)}. Ako uvozimo funkcije iz različitih modula, tada poredak uvoza nije bitan - bitno je samo da se svi uvozi nalaze pre definicija i dekleracija.
+@p Za nas će do kraja ove sekcije biti korisno da znamo kako možemo učitati određene funkcije iz standardnih modula. Da bismo uvezli neku funkciju @code{funkcija} iz modula @code{NekiModul} potrebno da na početku datoteke, pre svih drugih definicija napišemo liniju @ccode{import NekiModul (funkcija)}. Na ovaj način uvedena funkcija je dostupna našem kodu kao da smo je sami napisali. Ako iz modula @code{NekiModul} želimo da uvezemo više funkcija, na primer @code{funkc1} i @code{funkc2}, kôd ćemo započeti sa @code{import NekiModul (funkc1, funkc2)}. Ako uvozimo funkcije iz različitih modula, tada poredak uvoza nije bitan - bitno je samo da se svi uvozi nalaze pre definicija i deklaracija.
 
 @p Naravno, imena funkcija koje uvozimo iz drugih modula ne smeju se podudarati sa funkcijama koje smo sami definisali. Iako nam sistem modula omogućuje prevazilaženje ovog problema, za nas će za sada biti dovoljne samo informacije koje smo ovde dali. 
 

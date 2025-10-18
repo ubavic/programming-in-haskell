@@ -14,7 +14,7 @@ Kao što vidimo, u zbiru prvih @code{n} prirodnih brojeva, pojavljuje se zbir pr
 
 @ccode{zbir n = zbir (n - 1) + n}
 
-@p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo zbir prva 4 prirodna broja i dodati @code{5} na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati @code{4} na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (zbir nula prirodnih brojeva - prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj, slučaj u kom ne koristimo rekurzivnu definiciju, nazivamo @em{bazni slučaj}. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
+@p Dakle da bismo izračunali, na primer, zbir prvih 5 prirodnih brojeva, izračunaćemo zbir prva 4 prirodna broja i dodati @code{5} na taj zbir. Da bismo izračunali zbir prva 4 prirodna broja, izračunaćemo zbir prva tri prirodna broja i dodati @code{4} na taj zbir, itd.. U jednom trenutku ćemo stići do toga da nam je potreban vrednost @code{zbir 0} (zbir nula prirodnih brojeva - prazan zbir). U tom slučaju, nećemo više koristiti vezu koju smo opisali, već ćemo prosto vratiti @code{0}. Takav slučaj nazivamo @em{baznim slučajem}, jer ne koristimo rekurzivnu definiciju.. Prema tome, funkcija za računanje zbira prvih @code{n} brojeva može se ovako zapisati:
 
 @codeBlock{
 zbir :: Int -> Int
@@ -37,7 +37,7 @@ zbir n
 \end{aligned}
 }
 
-@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Zaista, za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} tako da vraća @code{0} za negativne argumente:
+@p Ipak, postoji jedan mali problem sa konstruisanom funkcijom: ako bismo potražili npr. @code{zbir (-3)}, funkcija bi ušla u @em{beskonačnu rekurziju}. Za računanje vrednosti @code{zbir (-3)} bilo bi potrebno izračunati @code{zbir (-4)}, a za @code{zbir (-4)} bi bilo potrebno izračunati @code{zbir (-5)}, i tako u nedogled. Da bismo sprečili beskonačnu rekurziju, za sve brojeve @code{<= 0}, vratićemo @code{0} kao rezultat. Stoga definišemo funkciju @code{zbir} tako da vraća @code{0} za negativne argumente:
 
 @codeBlock{
 zbir :: Int -> Int
@@ -55,7 +55,7 @@ faktorijel' n
     | otherwise = faktorijel' (n - 1) * n
 }}
 
-@problem{Napisati rekurzivnu funkciju koja računa sumu prvih @m{k+1} članova aritmetičkog niza čiji je prvi član @m{a}, a korak (razlika između dva susedna člana niza) @m{d}. Tačnije napisati rekurzivnu funkciju koja računa sumu @eq{a+(a+d)+(2+2d)+\cdots+(a+dk).}}
+@problem{Napisati rekurzivnu funkciju koja računa sumu prvih @m{k+1} članova aritmetičkog niza čiji je prvi član @m{a}, a korak (razlika između dva susedna člana niza) @m{d}. Tačnije napisati rekurzivnu funkciju koja računa sumu @eq{a+(a+d)+(a+2d)+\cdots+(a+dk).}}
 
 @section{Par-nepar}
 
@@ -70,32 +70,28 @@ paran :: Int -> Bool
 paran n = 0 == mod n 2
 }{Izraz @code{0 == mod x 2} ima vrednost @code{True} ako je @code{n} paran broj, prema tome ovde nama potrebe da koristimo @em{if then else}.}
 
-@p Problem možemo rešiti i rekurzivno. Znamo da je broj @code{0} paran, i ta činjenica predstavlja bazu rekurzije. Za svaki drugi prirodan broj @code{n} znamo da je paran ako i samo ako je @code{n - 1} neparan. Stoga možemo definisati dve funkcije @code{paran} i @code{neparan} koje će se međusobno pozivati:
+@p Problem možemo rešiti i rekurzivno. Znamo da je broj @code{0} paran, i ta činjenica predstavlja bazu rekurzije. Za svaki drugi prirodan broj @code{n} znamo da je paran ako i samo ako @code{n - 1} nije paran. Stoga možemo dati ovakvu definiciju:
 
 @codeBlock{
 paran :: Int -> Bool
 paran 0 = True
-paran n = not (neparan (n - 1))
-
-neparan :: Int -> Bool
-neparan 0 = False
-neparan n = not (paran (n - 2))
+paran n = not (paran (n - 1))
 }
 
 @p Demonstrirajmo izvršavanje koda na jednom primeru:
 
 @eq{
 \begin{aligned}
-\mathtt{paran} \; 3 &= \, \mathtt{not} \, (\mathtt{neparan} \; 2)\\
+\mathtt{paran} \; 3 &= \, \mathtt{not} \, (\mathtt{paran} \; 2)\\
 & = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{paran} \; 1)) \\
-& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, (\mathtt{neparan} \; 0))) \\
+& = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, (\mathtt{paran} \; 0))) \\
 & = \, \mathtt{not} \, (\mathtt{not} \, (\mathtt{not} \, \mathtt{False})) = \mathtt{False}
 \end{aligned}
 }
 
-@p Primetimo da navedene funkcije nisu definisane za negativne brojeve.
+@p Primetimo da funkcija @code{paran} nije definisana za negativne brojeve.
 
-@problem{Izmeniti funkcije @code{paran} i @code{neparan} tako da i za negativne brojeve vraćaju ispravne rezultate.}
+@problem{Izmeniti definiciju funkcije @code{paran} tako da i za negativne brojeve vraća ispravne rezultate.}
 
 @problem{Definisati rekurzivnu funkciju @code{ostatak3 :: Int -> Int} koja određuje ostatak broja pri deljenju sa @m{3}.}
 
@@ -211,7 +207,7 @@ susret p m n = mod p (gcd n m) == 0
 @p Kao što vidimo u rekurzivnom koraku @m{n-1} diskova prebacujemo prvo sa štapa @m{A} na štap @m{B}. Stoga za rekurzivni poziv, osim broja diskova, mora biti navedeno i sa kog štapa i na koji štap se diskovi prebacuju. Naravno, rešenje ne može koristiti samo dva štapa@note{Osim u trivijalnom slučaju kada se prebacuje jedan disk.}, već se mora iskoristiti i onaj treći štap kao pomoćni. Stoga funkcija za rekurzivno pronalaženje rešenja uzima četiri parametra: broj diskova, početni štap, krajnji štap i pomoćni štap. Ova rekurzivna funkcija će imati potpis @ccode{pomeri :: Int -> Char -> Char -> Char -> [(Char, Char)]}.
 Ako je funkcija @code{pomeri} implementirana, tada "glavnu" funkciju @code{kule} možemo jednostavno implementirati:
 @codeBlock{
-kule :: Int -> (Char, Char)
+kule :: Int -> [(Char, Char)]
 kule n = pomeri n 'A' 'C' 'B'
 }{Rešenje početnog problema su potezi koji pomeraju @m{n} diskova sa @m{A} na @m{C}.}
 

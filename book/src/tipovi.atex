@@ -4,7 +4,7 @@
 
 @p Haskel poseduje @def{statički sistem tipova} što znači da su tipovi svih izraza poznati prilikom kompilacije (ili interpretacije). Time se otklanjaju mnoge greške koje bi mogle srušiti ceo program prilikom izvršavanja@note{Na primer, @em{GHC} neće iskompajlirati kôd u kom se broj oduzima od niske, jer takva operacija nema smisla.}. Jezici poput @em{Python}-a ili @em{JavaScript}-a nemaju statički sistem tipova, već @em{dinamički} sistem tipova. U takvim jezicima, tipovi izraza se određuju prilikom izvršavanja programa što ostavlja veliku mogućnost za pojavljivanje @em{bagova}.
 
-@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave (koji su statički tipizirani kao i Haskel) neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler (skoro) uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od ostalih jezika sa statičkim sistemom tipova. Statički tipizirani jezici poput Jave i @em{C++}-a zahtevaju od programera da eksplicitno navede tip (većine) vrednosti. 
+@p Još jedna karakteristika koja odlikuje Haskelov sistem tipova je @def{zaključivanje tipova}. Dok je u jezicima poput C-a ili Jave (koji su statički tipizirani kao i Haskel) neophodno navesti tip svake promenljive ili funkcije, Haskel kompajler (skoro) uvek može zaključiti tip izraza bez potrebe da programer eksplicitno navede tip@note{Zaključivanje tipova u Haskelu nam je omogućilo da u prethodnoj sekciji napišemo Haskel izraze bez navođenja tipova.}. Po ovome se Haskel značajno razlikuje od većine ostalih jezika sa statičkim sistemom tipova.
 
 @p Tipovi čine značajan deo Haskel jezika, i neophodno je dobro razumeti ovaj sistem. U nastavku ove lekcije upoznaćemo se sa nekim osnovnim tipovima u Haskelu, kao i operacijama i funkcijama koje se mogu koristiti sa ovim tipovima.
 
@@ -33,7 +33,7 @@ False
 
 @p Uz navedene operatore koristimo i @em{funkciju} @code{not} koja negira logičku vrednost@note{Zapravo, i operatori poput @code{&&} i @code{||} su funkcije zapisane u takozvanom @em{infiksnom zapisu}. Više o tome kasnije.}. Ovde je dobro mesto da kažemo par reči o funkcijama u Haskelu, jer funkcije predstavljaju osnovni koncept ovog jezika.
 
-@p Funkcije su vrednosti koje od vrednosti "prave" nove vrednosti. Na primer, sa imenom @code{not} je označena funkcija koja negira logičku vrednost koja joj je prosleđena, tj. od @code{True} "pravi" u @code{False} a od @code{False} "pravi" @code{True}. Da bi smo "pozvali" funkciju @code{not} potrebno je da nakon imena funkcije napišemo logičku vrednost koju želimo da negiramo. Za razliku od drugih jezika, u Haskelu ime funkcije i argument razdvajamo razmakom, a ne zagradom:
+@p Funkcije su vrednosti koje od vrednosti "prave" nove vrednosti. Na primer, imenom @code{not} označena je funkcija koja negira logičku vrednost koja joj je prosleđena, tj. od @code{True} "pravi" u @code{False} a od @code{False} "pravi" @code{True}. Da bismo "pozvali" funkciju @code{not} potrebno je da nakon imena funkcije napišemo logičku vrednost koju želimo da negiramo. Za razliku od drugih jezika, u Haskelu ime funkcije i argument razdvajamo razmakom, a ne zagradom:
 
 @terminal{
 ghci> not True
@@ -116,7 +116,7 @@ ghci> mod 7 3
 
 @subsection{@code{^}}
 
-@p Operatorom @code{^} je moguće stepenovati celobrojnu vrednost na prirodan stepen. Na primer @code{7^2} će se evaluirati u @code{49}.
+@p Operatorom @code{^} je moguće stepenovati celobrojnu vrednost na prirodan stepen. Na primer @code{7^2} se evaluira u @code{49}.
 
 @p Ako pokušamo da sa @code{^} stepenujemo broj na negativan stepen dobićemo izuzetak@note{Pokušajte da iz neke @code{.hs} datoteke učitate definiciju @code{a = 7^(-2)}. Primetićete da će se datoteka uspešno učitati. Tek kada kroz @em{GHCi} prompt potražite vrednost od @code{a} doći će do izuzetka. Ovo nam govori da se Haskel kôd ne izvršava pri učitavanju datoteke već prilikom evaluacije izraza.}:
 
@@ -155,7 +155,7 @@ ghci> True == 1
 
 @subsection{Tip @em{Integer}}
 
-@p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @pre{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da prezentuje baš proizvoljno veliki broj. Ograničenja ovog tipa su data radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
+@p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @pre{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da predstavi proizvoljno veliki broj. Ograničenja ovog tipa određena su raspoloživom radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
 
 @p Da bi demonstrirali razliku možemo napraviti mali eksperiment. U jednoj @code{.hs} datoteci definišimo jednu @code{Int} i jednu @code{Integer} konstantu:
 
@@ -180,7 +180,7 @@ ghci> b^70
 
 @section{Tipovi @em{Float} i @em{Double}}
 
-@p Za reprezentovanje realnih brojeva koriste se tipovi @code{Float} i @code{Double} koji realan broj prezentuju u skladu sa @em{IEEE 754} standardom. Jedina razlika između ova dva tipa je u tome što @code{Float} koristi jednostruku tačnost (32 bita) a @code{Double} dvostruku tačnost (64 bita). Kako moderne arhitekture računara podjednako dobro podržavaju računske operacije u jednostrukoj i dvostrukoj tačnosti, preporučeno je da se uvek koristi @code{Double}.
+@p Za reprezentovanje realnih brojeva koriste se tipovi @code{Float} i @code{Double} koji realan broj predstavljaju u skladu sa @em{IEEE 754} standardom. Jedina razlika između ova dva tipa je u tome što @code{Float} koristi jednostruku tačnost (32 bita) a @code{Double} dvostruku tačnost (64 bita). Kako moderne arhitekture računara podjednako dobro podržavaju računske operacije u jednostrukoj i dvostrukoj tačnosti, preporučeno je da se uvek koristi @code{Double}.
 
 @p Sa tipovima @code{Float} i @code{Double} moguće je koristiti operatore @code{+}, @pre{-}, @code{*}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Za deljenje realnih brojeva koristi se operator @code{/}. Uz operator @code{^}, za stepenovanje se može koristiti i operator @code{**} koji dozvoljava da stepen bude proizvoljan realan broj@note{Iako pri korišćenju operatora @code{**} neće nikad doći do izuzetka, rezultat može biti @code{NaN}.}
 
@@ -196,7 +196,7 @@ ghci> pi * r**2
 
 @p U Haskelu @def{liste} su strukture podataka koje predstavljaju uređenu kolekciju elemenata nekog tipa. U jednoj listi se ne mogu naći dve vrednosti različitog tipa.@note{Zbog toga za liste kažemo da su @em{homogene} strukture podataka.}
 
-@p U kodu, lista se konstruiše navođenjem vrednosti između uglastih zagrada, međusobno razdvojih zarezima. Na primer, lista od prva četiri prirodna broja može da se definiše kao @code{[0,1,2,3]}. Razmaci oko elemenata i zagrada nisu od bilo kakvog značaja.@note{Prema tome, navedeni primer može da se zapiše i kao @code{[0,   1,2 ,3 ]} itd..} @def{Prazna lista} se zapisuje kao @code{[]}.
+@p U kodu, lista se konstruiše navođenjem vrednosti između uglastih zagrada, međusobno razdvojenih zarezima. Na primer, lista od prva četiri prirodna broja može da se definiše kao @code{[0,1,2,3]}. Razmaci oko elemenata i zagrada nisu od bilo kakvog značaja.@note{Prema tome, navedeni primer može da se zapiše i kao @code{[0,   1,2 ,3 ]} itd..} @def{Prazna lista} se zapisuje kao @code{[]}.
 
 @figure{2_3}{Tip @code{[Bool]} sadrži beskonačno mnogo vrednosti, čak i ako tip @code{Bool} sadrži samo dve.}
 
@@ -219,7 +219,7 @@ važneKonstante = [3.14159,2.71828,0.57721]
 a :: [[Int]]
 a = [[1], [2,3], [4,5,6]]
 
-b = [[[Int]]]
+b :: [[[Int]]]
 b = [a, [[100], [200]], []]
 }{Lista @code{a} je lista lista celih brojeva. Tip ove liste je @code{[[Int]]}. Primetimo, da se u listi tipa @code{[[Int]]} ne može naći element @code{5} (jer je to vrednost tipa @code{[Int]}), ali može element @code{[5]} koji je tipa @code{[5]}.}
 
@@ -362,7 +362,7 @@ ghci> mojKarakter
 @terminal{
 ghci> fromEnum 'A'
 65
-}{Za nekoga ko ne poznaje @em{Unicode} možda deluje neobično da se @code{'A'} nalazi tek na 65 mestu. Na prvim mestima se nalaze specijalni karakteri, zatim cifre, zatim velika pa mala latinična slova, nakon toga slede interpunkcijski znaci, pa tek onda nelatinična pisma...}
+}{Nekome ko ne poznaje @em{Unicode} ili @em{ASCII} može delovati neobično da se @code{'A'} nalazi tek na 65 mestu. Na prvim mestima se nalaze specijalni karakteri, zatim cifre, zatim velika pa mala latinična slova, nakon toga slede interpunkcijski znaci, pa tek onda nelatinična pisma...}
 
 @p Karaktere, kao i brojeve, možemo porediti. To poređenje je takođe ustanovljeno pozicijom u @em{Unicode} kodnoj tabeli. Stoga imamo
 

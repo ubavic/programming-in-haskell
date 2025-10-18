@@ -18,9 +18,9 @@
 
 @p Tip koji ne sadrži nijednu vrednost označava se sa @code{Void} i nazivamo ga @def{prazan tip}@note{@em{void type}}.
 
-@p Posmatrajmo sada totalnu funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} mora biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina totalna funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
+@p Posmatrajmo sada totalnu funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} bi morala biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina totalna funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
 
-@p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena totalna funkcija@note{Takva polimorfna funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takvu funkciju ne možemo nikad "pozvati".
+@p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena totalna funkcija@note{Takva polimorfna funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takve funkcije ne možemo nikad "pozvati".
 
 @p Primetimo da tip @code{Void} ne odgovara pojmu @pre{void} koji se može naći u drugim programskim jezicima poput C-a, C++-a, Jave. U takvim programskim jezicima, @pre{void} se koristi za funkcije čija povratna vrednost nas ne interesuje. U Haskelu, tip @code{()} se koristi kad nas ne interesuje povratna vrednost.
 
@@ -52,7 +52,7 @@ f2 () = False
 
 @p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{T₁}, @code{T₂}, ... @code{Tₙ} možemo napraviti odgovarajući tip uređenih n-torki @code{(T₁, T₂, … Tₙ)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira dva dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
 
-@p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Sinonim se definiše sa dekleracijom poput naredne:
+@p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Tipski sinonim se definiše sa deklaracijom poput naredne:
 
 @codeBlock{
 type Ime = PostojeciTip
@@ -84,7 +84,7 @@ Bool
 }{Tip @code{Logicki} je u potpunosti isti kao tip @code{Bool}. Ali, ako tip neke vrednosti nije eksplicitno definisana kao @code{Logicki}, tada će "prednost imati" originalno ime.}
 }
 
-@p Naravno, sinonim za već kratko ime nije mnogo koristan. Pogledajmo zato reprezentativniji primer.
+@p Naravno, tipski sinonim za već kratko ime nije mnogo koristan. Pogledajmo zato reprezentativniji primer.
 
 @example{
 @p Uređenoj trojci @code{Float} brojeva možemo dodeliti kratko ime @code{Vektor3}:
@@ -115,7 +115,7 @@ type String = [Char]
 newtype NoviTip = Konstruktor PostojeciTip
 }
 
-@p Gornjim kodom definisan je tip @code{NoviTip}, koji se može shvatiti kao kopija tipa @code{PostojeciTip}. Svaka vrednost u tipu @code{NoviTip} odgovara nekoj vrednosti u tipu @code{PostojeciTip}, ali ova dva tipa nemaju zajedničke vrednosti!
+@p Gornjim kodom definisan je tip @code{NoviTip}, koji se može shvatiti kao kopija tipa @code{PostojeciTip}. Svaka vrednost u tipu @code{NoviTip} odgovara nekoj vrednosti u tipu @code{PostojeciTip}, ali ova dva tipa nemaju zajedničke vrednosti.
 
 @p U gore navedenoj definiciji, reč @code{Konstruktor} predstavlja ime @em{konstruktora}. @def{Konstruktor} je @em{funkcija} kojim se konstruišu vrednosti tipa @code{NoviTip}. Svaka vrednost tipa @code{NoviTip} je oblika @code{Konstruktor x} za neko @code{x :: PostojeciTip}. Ime konstruktora i ime novog tipa, ne smeju biti već zauzeti i moraju počinjati velikim slovom@note{S obzirom da su konstruktori funkcije, u ovom slučaju nije ispoštovano pravilo da su imena sa velikim početnim slovom rezervisana za tipove, a imena sa malim početnim slovom za vrednosti. Ali kako su konstruktori uvek "vezani" za tipove, ovakvo odstupanje ima smisla.}. Međutim, dozvoljeno je da tip i konstruktor imaju isto ime.
 
@@ -131,7 +131,7 @@ newtype MyBool = MkMyBool Bool
 @p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriti da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
 
 @terminal{
-ghic> a = (MkMyBool True) || (MkMyBool False)
+ghci> a = (MkMyBool True) || (MkMyBool False)
 
 <interactive>:1:6: error:
     • Couldn't match expected type ‘Bool’ with actual type ‘MyBool’
@@ -260,7 +260,7 @@ sumVecDouble :: Vec Double -> Vec Double -> Vec Double
 sumVecDouble (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 }
 
-@p I dalje se nismo umanjili broj definicija funkcija, ali možemo primetiti da je karakteristično za tipove @code{Int}, @code{Float} i @code{Double} to što se vrednosti ovih tipova mogu sabirati. Sva tri navedena tipa pripadaju @code{Num} klasi, pa možemo tri definicije zameniti sa jednom:
+@p I dalje nismo umanjili broj definicija funkcija, ali možemo primetiti da je karakteristično za tipove @code{Int}, @code{Float} i @code{Double} to što se vrednosti ovih tipova mogu sabirati. Sva tri navedena tipa pripadaju @code{Num} klasi, pa možemo tri definicije zameniti sa jednom:
 
 @codeBlock{
 sumVec :: Num a => Vec a -> Vec a -> Vec a
@@ -322,7 +322,7 @@ data A a b c = MkA (a, [b], Int -> c)
 
 
 @example{
-@p Nastavimo sa prethodnim primerom u interaktivnom okruzenju:
+@p Nastavimo sa prethodnim primerom u interaktivnom okruženju:
 @terminal{
 ghci> data A a b c = MkA (a, [b], Int -> c)
 ghci> :kind A
@@ -345,6 +345,6 @@ ghci> :kind []
 @terminal{
 ghci> :kind (->)
 (->) :: * -> * -> *
-}{Obratite paznju da strelica u tipu i strelica u vrsti ne predstavlja istu stvar.}
+}{Obratite pažnju da strelica u tipu i strelica u vrsti nema isto značenje.}
 }
 

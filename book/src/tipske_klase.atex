@@ -4,7 +4,7 @@
 
 @p U lekciji o polimorfizmu videli smo da nam tipske klase omogućuju da pišemo polimorfne funkcije koje koriste neke određene metode koje nisu dostupne svakom tipu@note{Na primer, koristeći klasu numeričkih tipova @code{Num}, moguće sa jednom definicijom implementirati numeričku formulu za svaki tipom koji pripada klasi @code{Num}.}. U ovoj lekciji ćemo prikazati kako i sami možemo definisati naše klase, i kroz primere predefinisanih klase videćemo razne tehnike koje je moguće koristiti pri radu sa klasama.
 
-@p Klasa se definiše dekleracijom klase nakon koje sledi niz dekleracija tipova metoda koje instanca mora da implementira:
+@p Klasa se definiše deklaracijom klase nakon koje sledi niz deklaracija tipova metoda koje instanca mora da implementira:
 
 @codeBlock{
 class C a where
@@ -66,7 +66,7 @@ obimKruga (Krug (x, y, r)) = 2 * pi * r
 
 @p Navedeni kôd je u potpunosti tačan. Ali u ovakvom pristupu se krije mali problem: pisanjem koda za rad sa figurama zahteva od nas da koristimo tri različite funkcije (@code{obimPravougaonika}, @code{obimTrougla}, @code{obimKruga}). Bilo bi jednostavnije kada bismo mogli primeniti jedinstvenu funkciju @code{obim} na svaku figuru@note{Baš kao što funkciju @code{show} možemo primeniti i na vrednost tipa @code{Bool} i na vrednost tipa @code{Int}, a operator @code{+} možemo koristiti i sa @code{Int} i sa @code{Float} vrednostima, itd... Bilo bi zaista nezgodno kada bi svaki tip zahtevao funkciju sa jedinstvenim imenom.}.
 
-@p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo metod @code{obim} u definiciji klase ćemo navesti samo jednu dekleraciju tipa. 
+@p Da bismo koristili jedinstvenu funkciju @code{obim} sa sva tri tipa, definisaćemo klasu @code{Figura}. Pošto želimo da sa svakom instancom klase @code{Figura} koristimo metod @code{obim} u definiciji klase ćemo navesti samo jednu deklaraciju tipa. 
 
 @codeBlock{
 class Figura a where
@@ -98,7 +98,7 @@ instance Figura Krug where
 
 @p Linijom @code{instance ... } započinje se blok definicija metoda. Kao i kod definicije klase, sve u ovom bloku mora biti nazubljeno u odnosu na početak linije.
 
-@p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnije pojasniti.}. U bloku definicija ne navode se dekleracije tipova!
+@p U bloku definicija, neophodno je definisati sve metode koje klasa deklariše@note{Postoji par izuzetaka koje ćemo kasnije pojasniti.}. U bloku definicija ne navode se deklaracije tipova!
 
 @p Nakon učitavanja navedenih definicija u @em{GHCi}, možemo se uveriti da se funkcija @code{obim} može primeniti na razne figure:
 
@@ -114,7 +114,7 @@ ghci> obim krug
 62.83185307179586
 }
 
-@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i dekleraciju funkcije @code{površina} koja nam daje površinu figure. Nakon dodavanja nove dekleracije u definiciji klase, u svakoj instanci moramo implementirati i funkciju @code{površina}. Površinu pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
+@p Figure osim što imaju obim, imaju i površinu. Stoga ćemo u definiciju klase @code{Figura} dodati i deklaraciju funkcije @code{površina} koja nam daje površinu figure. Nakon dodavanja nove deklaracije u definiciji klase, u svakoj instanci moramo implementirati i funkciju @code{površina}. Površinu pravougaonika i kruga ćemo lako izračunati, a za površinu trougla ćemo iskoristiti Heronovu formulu. Kompletan kôd sada izgleda ovako:
 
 @codeBlock{
 class Figura a where

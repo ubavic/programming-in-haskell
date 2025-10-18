@@ -6,13 +6,13 @@
 
 @section{Haskel kompajler}
 
-@p Iako je tokom istorije Haskela razvijeno nekoliko kompajlera, danas se koristi samo @em{Glasgow Haskell Compiler} (GHC). Osim kompajlera, za ozbiljnije projekte potrebno je koristiti i jedan od paketa menadžera, @em{Stack} ili @em{Cabal}.
+@p Iako je tokom istorije Haskela razvijeno nekoliko kompajlera, danas se koristi samo @em{Glasgow Haskell Compiler} (GHC). Osim kompajlera, za ozbiljnije projekte potrebno je koristiti i jedan od menadžera paketa, @em{Stack} ili @em{Cabal}.
 
 @p @em{GHC} instalacija korisniku pruža dva programa. Prvi program je sam kompajler @pre{ghc} koji Haskel kôd kompajlira u izvršnu datoteku. Drugi program je @pre{ghci} koji se koristi kao interaktivno okruženje za interpretaciju Haskel koda. Značajan deo ove knjige biće prikazan kroz rad u @em{GHCi} okruženju (detalji će biti objašnjeni uskoro).
 
-@p Razvojna okruženja za Haskel ne postoje, ali postoji @em{Haskell Language Server} (HSL) koji može da nadomesti ovaj nedostatak.
+@p Razvojna okruženja za Haskel ne postoje, ali postoji @em{Haskell Language Server} (HLS) koji može da nadomesti ovaj nedostatak.
 
-@p Instalacija navedenih programa može se razlikovati u zavisnosti od sistema. Trenutno se za sve operativne sisteme (Linux, Windows, Mac) preporučuje @url{GHCup}{https://www.haskell.org/ghcup/} kao alat za automatsku instalaciju svih potrebnih programa. Na sajtu @em{GHCup} projekta možete pronaći instrukcije za instalaciju@note{Korisnici @em{Windows} operativnog sistema moraju da instaliraju @url{Msys2}{https://www.msys2.org/} pre pokretanja @em{GHCup} instalacije.}. Preporučljivo je da da prilikom instalacije instalirate sve programe (@em{Stack}, @em{Cabal}, @em{HSL}).
+@p Instalacija navedenih programa može se razlikovati u zavisnosti od sistema. Trenutno se za sve operativne sisteme (Linux, Windows, Mac) preporučuje @url{GHCup}{https://www.haskell.org/ghcup/} kao alat za automatsku instalaciju svih potrebnih programa. Na sajtu @em{GHCup} projekta možete pronaći instrukcije za instalaciju@note{Korisnici @em{Windows} operativnog sistema moraju da instaliraju @url{Msys2}{https://www.msys2.org/} pre pokretanja @em{GHCup} instalacije.}. Preporučljivo je da prilikom instalacije instalirate sve programe (@em{Stack}, @em{Cabal}, @em{HLS}).
 
 @p Uz instaliran @em{GHC} potreban Vam je još samo i editor koda. Naravno, svaki editor koda može se koristiti u svrhu pisanja Haskel koda. Moja preporuka je @url{VS Code}{https://code.visualstudio.com/} sa instaliranim ekstenzijama @url{Haskell}{https://marketplace.visualstudio.com/items?itemName=haskell.haskell} i @url{Haskell Syntax Highlighting}{https://marketplace.visualstudio.com/items?itemName=justusadam.language-haskell}.
 
@@ -39,7 +39,7 @@ sati_u_danu = 24
 @p Na primer, vrednosti koje smo dodelili imenima @code{meseci_u_godini} i @code{dana_u_nedelji} poseduju tip @code{Int}. Tip @code{Int} možemo da shvatimo kao kolekciju vrednosti koja sadrži sve cele brojeve koji se mogu prezentovati na računaru.
 @todo{Dodati sliku sa sa tipom Int}
 
-@p U Haskel kodovima osim samih definicija, moguće je (i poželjno) navesti i tipove vrednosti. Dekleracija tipa ima oblik @code{ime :: Tip}. Tako bi prethodni primer sa punim dekleracijama tipova bio:
+@p U Haskel kodovima osim samih definicija, moguće je (i poželjno) navesti i tipove vrednosti. Deklaracija tipa ima oblik @code{ime :: Tip}. Tako bi prethodni primer sa punim deklaracijama tipova bio:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -49,7 +49,7 @@ sati_u_danu :: Int
 sati_u_danu = 24
 }
 
-@p Iako nije neophodno da se dekleracije tipa nalaze neposredno pre definicije, u praksi se to pravilo uvek poštuje.
+@p Iako nije neophodno da se deklaracije tipa nalaze neposredno pre definicije, u praksi se to pravilo uvek poštuje.
 
 @section{Izvršavanje Haskel koda}
 
@@ -113,7 +113,7 @@ ghci> sati_u_nedelji
 168
 }
 
-@p Možda opisani postupak deluje trivijalno, ali predstavlja suštinu rada u interaktivnom okruženju@note{@em{GHCi} je primer @em{REPL} (Read-evaluate-print loop) programa čiji se rad sastoji od uzimanja korisničkih komandi, izvršavanja tih komadni i ispisivanja rezultata nazad u komandnu liniju, nakon čega program ponovo čeka korisnički unos.}.
+@p Možda opisani postupak deluje trivijalno, ali predstavlja suštinu rada u interaktivnom okruženju@note{@em{GHCi} je primer @em{REPL} (Read-evaluate-print loop) programa čiji se rad sastoji od uzimanja korisničkih komandi, izvršavanja tih komandi i ispisivanja rezultata nazad u komandnu liniju, nakon čega program ponovo čeka korisnički unos.}.
 
 @p Ako želimo, u datoteku @pre{prviProgram.hs} možemo dodati još definicija poput @code{sekundi_u_danu = 24 * 60 * 60} itd... Da bismo mogli da koristimo nove definicije, neophodno je da sačuvamo izmene datoteke @code{prviProgram.hs} a zatim da ponovo učitamo datoteku u @em{GHCi}. To možemo da učinimo ponovo sa naredbom @pre{:load prviProgram.hs} ili sa naredbom @pre{:reload} koja ponovo učitava sve datoteke koje su do tada bile učitane:
 
@@ -122,7 +122,7 @@ ghci> :reload
 Ok, one module loaded.
 ghci> sekundi_u_danu
 86400
-}{Naredba @pre{:reload} je pogotovu korisna kada se u @em{GHCi} učita više datoteka od jednom. O tome nismo govorili, ali je moguće i to učiniti uz opreznost da se nazivi labela ne ponavljaju.}
+}{Naredba @pre{:reload} je pogotovo korisna kada se u @em{GHCi} učita više datoteka od jednom. O tome nismo govorili, ali je moguće i to učiniti uz opreznost da se nazivi labela ne ponavljaju.}
 
 @p U @em{GHCi} prompt je moguće direktno unositi i Haskel izraze koji će se odmah evaluirati:
 
@@ -252,7 +252,7 @@ dobraDefinicija = 1
   lošaDefinicija = 1
 }
 
-@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Phyton} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri koda su primeri validnog preloma istog izraza:
+@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Python} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri koda su primeri validnog preloma istog izraza:
 
 @codeBlock{
 a = 10 * 10 + 1
@@ -269,7 +269,7 @@ a = 10 *
   + 1
 }{Broj razmaka nije bitan pri nazubljivanju. Ako neka linija sadrži barem jedan više razmak na početku nego druga, onda ćemo smatrati da je prva linija više nazubljena od druge.}
 
-@p Naredni kôd @em{nije} dobro formatiran, jer linija @code{+ 1} nije dodatno nazubljena u odnosu na početak @code{a =}:
+@p Naredni kôd @em{nije} pravilno formatiran, jer linija @code{+ 1} nije dodatno nazubljena u odnosu na početak @code{a =}:
 
 @codeBlock{
 a =
@@ -291,7 +291,7 @@ površina = let
               a = 10; b = 5; c = 3
            in
               2*(a*b + b*c + c*a)
-}{Oba primera su dobro nazubljena}
+}{Oba primera su pravilno nazubljena}
 
 @p Takođe, i @em{where} sintaksu je moguće prelomiti:
 
@@ -355,7 +355,7 @@ w = 2 * v
     where
         v :: Int
         v = 10 * 3
-}{Osim definicija, u bloku je moguće navesti i dekleracije tipova, ali se to retko radi u praksi.}
+}{Osim definicija, u bloku je moguće navesti i deklaracije tipova, ali se to retko radi u praksi.}
 
 @section{Komentari}
 
@@ -364,7 +364,7 @@ w = 2 * v
 @list{
 @li @em{Linijski komentari} jesu komentari koji se nalaze samo u jednoj liniji koda. Linijski komentari počinju sa @pre{--} i obuhvataju (desni) ostatak linije. Linijski komentari se mogu postaviti i u linijama u kojima se nalazi kôd.
 
-@li @em{Višelinijski komentari} jesu komentari koji pružaju kroz jednu ili više linija koda. Ovi komentari se nalaze između @pre{@@{-} i @pre{-@@}}
+@li @em{Višelinijski komentari} jesu komentari koji se protežu kroz jednu ili više linija koda. Ovi komentari se nalaze između @pre{@@{-} i @pre{-@@}}
 }
 
 @codeBlock{

@@ -128,7 +128,7 @@ False
 
 @problem{Definisati operator logičke implikacije @ccode{(==>) :: Bool -> Bool -> Bool}. Implikacija @m{p\Rightarrow q} je netačna ako i samo ako je @code{p} tačno a @code{q} netačno.} 
 
-@p Moguće je deklarisati prioritet i asocijativnost operatora takozvanom @em{infix} dekleracijom. Ova dekleracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja manjeg od @code{9} koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da operator nije ni jedno ni drugo.
+@p Moguće je deklarisati prioritet i asocijativnost operatora takozvanom @em{infix} deklaracijom. Ova deklaracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja manjeg od @code{9} koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da operator nije ni jedno ni drugo.
 
 @p Ako prioritet i asocijativnost operatora nisu deklarisani, tada će se podrazumevati vrednost @code{infixl 9}.
 
@@ -173,7 +173,7 @@ ghci> '?' @@@: ('!' @@@: "Hello")
 @p Ipak, možemo deklarisati @code{@@@:} kao desnoasocijativan operator navođenjem linije:
 @codeBlock{
 infixr 9 @@@:
-}{Ovu dekleraciju je moguće postaviti bilo gde u kodu.}
+}{Ovu deklaraciju je moguće postaviti bilo gde u kodu.}
 
 @p Ako ponovo učitamo kod u @em{GHCi}-u, prethodni primer će bez problema funkcionisati:
 
@@ -183,7 +183,7 @@ ghci> '?' @@@: '!' @@@: "Hello"
 }{Sada se izraz interpretira kao @code{'?' @@@: ('!' @@@: "Hello")}, što smo i zeleli.}
 
 
-@p Nijedna dekleracija asocijativnosti i prioriteta nije pogrešna. Ipak, pažljivom upotrebom @em{infix} dekleracija možemo se osloboditi mnogih zagrada u kodu.
+@p Nijedna deklaracija asocijativnosti i prioriteta nije pogrešna. Ipak, pažljivom upotrebom @em{infix} deklaracija možemo se osloboditi mnogih zagrada u kodu.
 }
 
 @p Ako je fiksnost operatora deklarisana sa @code{infix}, tada je @em{uvek} neophodno koristiti zagrade kada se izraz sastoji od više primena operatora.

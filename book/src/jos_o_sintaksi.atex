@@ -138,13 +138,13 @@ uMetre''' l = case l of Milja m -> Metar (1609.344 * m); SvetlosnaSekunda s -> M
 
 @p Predikata može biti više, pri čemu se predikati razdvajaju zarezom. Na primer, nastavljajući sa prethodnim primerima, zapis @ccode{[x | x <- xs, even x, (x `mod` 3) == 0]} se evaluira na listu svih brojeva iz liste @code{xs} koji su deljivi i sa @code{2} i sa @code{3}, a to je @code{[0]}. Takođe, moguće je u potpunosti izostaviti predikate, pa se @ccode{[x^2 | x <- xs]} evaluira u listu kvadrata svih elementa liste @code{xs}.
 
-@p Osim izdvajanja i predikata, sa desne strane uspravne crte moguće je uvesti i lokalne dekleracije sa @code{let … = …}. Ovako deklarisana imena mogu se koristiti u izrazima koji slede nakon dekleracije. Na primer, lista svih brojeva iz @code{xs} deljivih sa @m{3} može se dobiti evaluacijom izraza @ccode{[x | x <- xs, let y = x `mod` 3, y == 0]}
+@p Osim izdvajanja i predikata, sa desne strane uspravne crte moguće je uvesti i lokalne deklaracije sa @code{let … = …}. Ovako deklarisana imena mogu se koristiti u izrazima koji slede nakon deklaracije. Na primer, lista svih brojeva iz @code{xs} deljivih sa @m{3} može se dobiti evaluacijom izraza @ccode{[x | x <- xs, let y = x `mod` 3, y == 0]}
 
 @problem{
 Zapisati listu kvadrata svih prirodnih brojeva manjih od @m{100} koji su deljivi sa svojom poslednjom cifrom.
 }
 
-@p Sintaksa izlistavanja jeste elegantna, ali ne donosi nam suštinski ništa novo. Svaki izraz oblika@note{Ovo takođe važi i za izlistavanja u kojima se nalaze i dekleracije, što se može pokazati jednostavnim argumentom.} @ccode{[f x | x <- xs, Φ₁(x), … Φₙ(x)]}  gde su @code{Φ₁}, ..., @code{Φₙ} neki predikati, definiše istu listu kao i izraz @ccode{map f . filter Φₙ . … . filter Φ₁ $ xs}. Na programeru je da odluči koju od sintaksa će iskoristiti.
+@p Sintaksa izlistavanja jeste elegantna, ali ne donosi nam suštinski ništa novo. Svaki izraz oblika@note{Ovo takođe važi i za izlistavanja u kojima se nalaze i deklaracije, što se može pokazati jednostavnim argumentom.} @ccode{[f x | x <- xs, Φ₁(x), … Φₙ(x)]}  gde su @code{Φ₁}, ..., @code{Φₙ} neki predikati, definiše istu listu kao i izraz @ccode{map f . filter Φₙ . … . filter Φ₁ $ xs}. Na programeru je da odluči koju od sintaksa će iskoristiti.
 
 @problem{
 Rešiti prethodni zadatak korišćenjem @code{map} i @code{filter} funkcija.
@@ -202,7 +202,7 @@ Naći sve pravougle trouglove obima manjeg od @m{100} čije su stranice celi bro
 
 @p Pragma @pre{LANGUAGE} omogućuje aktivaciju @em{Haskel ekstenzije} koja na neki način menja Haskel jezik. Ekstenzije mogu da dozvole određenu sintaksu koja nije validna bez te ekstenzije, da promene neku pojedinost sistema tipova, sistem modula, integraciju sa drugim jezicima, ili jednostavno da zabrane neke konstrukcije, itd.. Skup ekstenzija se menjao tokom decenija: nove ekstenzije su se dodavale i nastavljaju da se dodaju, neke ekstenzije su prevaziđene, a neke su postale deo standardnog jezika. 
 
-@p Pragma @pre{LANGUAGE} mora se navesti na vrhu datoteke, pre dekleracije modula, i odnosi se samo na modul u kom je navedena:
+@p Pragma @pre{LANGUAGE} mora se navesti na vrhu datoteke, pre deklaracije modula, i odnosi se samo na modul u kom je navedena:
 
 @codeBlock{
 @@{ -# LANGUAGE LambdaCase #-@@}
