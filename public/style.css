@@ -10,13 +10,15 @@
     --color-gray-3: #999;
     --color-gray-4: #bbb;
     --color-gray-5: #eee;
+    --color-code-bg: #f9f9f9;
+    --color-code-border: #eee;
     --border-radius: 3px;
     --main-width: 42rem;
     --left-main-margin: calc((100vw - var(--main-width))/2);
     --note-width: 20rem;
     --main-padding: 1rem;
     --note-position: calc(var(--left-main-margin) + var(--main-width) + 2*var(--main-padding));
-    --paragraph-margin: 0.8rem;
+    --paragraph-margin: 1rem;
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
 }
@@ -174,8 +176,8 @@ figure img {
 
 pre {
     padding: 0.5em 0.5em;
-    background-color: #f9f9f9;
-    border: 1px solid var(--color-gray-5);
+    background-color: var(--color-code-bg);
+    border: 1px solid var(--color-code-border);
     overflow-x: auto;
     margin: var(--paragraph-margin) 0;
     border-radius: var(--border-radius);
@@ -195,12 +197,15 @@ code {
     font-size: 0.85em;
     font-variant-caps: normal;
     font-variant-ligatures: no-contextual;
+    border-radius: var(--border-radius);
+    background-color: var(--color-code-bg);
+    border: 1px solid var(--color-code-border);
 }
 
 .centerCode {
     display: block;
     width: fit-content;
-    margin: 0.5rem auto;
+    margin: 0.3rem auto;
 }
 
 .sh-constructor {
@@ -397,7 +402,9 @@ aside {
 @media screen and (prefers-color-scheme: dark) {
     :root {
         --color-text: #f9f9f9;
-        --color-background: #150c1f;
+        --color-background: #141315;
+        --color-code-border: #222;
+        --color-code-bg: #1a1a1a;
     }
 
     body {
@@ -416,19 +423,10 @@ aside {
         color: var(--color-gray-4);
     }
 
-    code {
-        background-color: #1A1A1A;
-    }
-
-    pre {
-        background-color: #1A1A1A;
-        border: none;
-    }
-
     .example,
     .problem {
-        background: transparent;
-        border-color: #1a191c;
+        background: #1e1816;
+        border-color: #36323c;
     }
 
     .sh-constructor {
