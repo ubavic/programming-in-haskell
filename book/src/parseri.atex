@@ -1,0 +1,347 @@
+@chapter{Parseri}
+
+@p @def{Parser} je funkcija koja od niza nekih simbola generiše vrednosti. Najčešće parseri služe da se niske (liste karaktera) transformišu u neke vrednosti poput brojeva ili struktura podataka.
+
+@example{
+@p Funkcija @code{read :: Read a => String -> a} koja "čita" vrednost iz niske, nije ništa drugo nego jedan parser.
+
+@terminal{
+ghci> read "39.5" :: Float
+39.5
+ghci> read "[True, False]" :: [Bool]
+[True, False]
+}
+}
+
+@example{
+@p I sami smo konstruisali jedan parser u lekciji o listama. U pitanju je funkcija @code{uBroj :: [Char] -> Int} koja iz niske parsira brojeve.
+}
+
+@p Parsiranje je generalno težak problem. Stoga ne čudi što je tokom istorije računarstva razvijeno mnogo teorije o parserima i konkretnim tehnikama za njihovo konstruisanje. Svakako, teorija o parserima prevazilazi obime ove knjige, ali možemo ovde prikazati jednu tehniku za konstrukciju parsera. U pitanju su takozvani @def{parser kombinatori} koji su zapravo funkcije višeg reda kojima se jednostavniji parseri kombinuju u složenije.
+
+@section{Tip parsera}
+
+@p Parsiranjem bi trebalo nisku (koja je lista karaktera) pretvoriti u neku vrednost tipa @code{T}. Na primer, parser celobrojnih brojeva bi trebalo da nisku transformiše u vrednost tipa @code{Int}, pa bi tip ovakvog parsera bio @code{String -> Int}. Parser logičkih lista bi trebalo da nisku pretvori u vrednost tipa @code{[Bool]}, pa bi tip ovakvog parsera bio @code{String -> [Bool]}. Stoga ćemo definisati novi (apstraktni) tip @ccode{Parser a = String -> a}, koji može predstaviti parsere za vrednosti bilo kog tipa. Međutim, kroz ovaj novi tip je neophodno obezbediti još par stvari. 
+
+@list{
+@li Prvo, nećemo svaki parser konstruisati kao jedinstvenu funkciju. Složenije parsere ćemo konstruisati kombinovanjem manjih funkcija. Svaka od tih funkcija parsiraće jedan karakterističan deo niske (Na primer, parser @code{Float} vrednosti može biti sačinjen od tri parsera: prvog koji parsira ceo deo, drugog koji parsira tačku, i trećeg koji parsira razlomljeni deo. Slično, parser logičkih nizova može biti sačinjen od parsera koji parsira zagrade, parsera za literale logičke vrednosti, parsera za zarez, parsera za beline, itd...). Parsere ćemo kombinovati tako što će svaki naredni parser, parsirati ono "što ostane" nakon pokretanja prethodnih parsera. Stoga jedan parser vrednosti @code{T} neće vraćati samo vrednost tipa @code{T}, već uređen par tipa @code{(T, String)}, gde druga koordinata označava ostatak niske koja se parsira.
+@li Drugo, ne možemo očekivati da će svako parsiranje biti uspešno. Iz niske @code{"Hi!"} ne možemo parsirati broj niti logičku listu. Zbog toga, parser će zapravo vratiti možda-vrednost @code{Maybe (T, String)}. Ako je parser uspeo, rezultat je oblika @code{Just (x, s)} za neku nisku @code{s} i vrednost @code{x :: T}. U suprotnom, parser vraća @code{Nothing}.  
+}
+
+@p Uzimajući prethodno u obzir, stižemo do definicije tipa
+
+@codeBlock{
+newtype Parser a = P (String -> Maybe (a, String))
+}{Od sada, parser celih brojeva je tipa @code{Parser Int}, a parser lista logičkih vrednosti je tipa @code{Parser [Bool]}, itd...}
+
+@p Sa navedenom definicijom tipa biće zgodna funkcija koja "pokreće" parser nad niskom:
+
+@codeBlock{
+parsiraj :: Parser a -> String -> Maybe (a, String)
+parsiraj (P p) s = p s 
+}
+
+
+@p Kreirajmo parser koji parsira jedno slovo iz niske. Taj parser ima tip @code{Parser Char}. Sa konstruktorom @code{P} obuhvatićemo funkciju koja uzima jedno slovo sa početka niske. Ako je niska prazna, parser će vratiti @code{Nothing}.
+
+@codeBlock{
+slovo :: Parser Char
+slovo = P f
+    where
+        f [] = Nothing
+        f (x:xs) = Just (x, xs)
+}{Lokalno definisana funkcija @code{f} vrši glavnu ulogu. Međutim, da bi dobili vrednost tipa @code{Parse Char}, neophodno je da "upakujemo" ovu funkciju u konstruktor @code{P}. Naravno, postavlja se pitanje zašto je bilo neophodno da definišemo novi tip a ne tipski sinonim koji koji ne bi zahtevao konstruktor. Razlog tome je što za novi tip možemo definisati instance klasa @code{Functor} i @code{Applicative}, što nije moguće sa tipskim sinonimom koji se odnosi na tip funkcije.}
+
+@p Testiranje parsera je veoma jednostavno (i veoma čitljivo!):
+
+@terminal{
+ghci> parsiraj slovo "Hello world!"
+Just ('H', "ello world!")
+ghci> parsiraj slovo ""
+Nothing
+}
+
+@p Nakon slova, najprirodnije je kreirati parser cifre. Parser cifre treba da nam vrati numeričku vrednost cifre, ako ulazna niska počinje sa cifrom.
+
+@codeBlock{
+cifra :: Parser Int
+cifra = P f where
+    f []     = Nothing
+    f (x:xs) =
+        if x `elem` ['1' .. '9']
+        then Just (romEnum x - fromEnum '0', xs)
+        else Nothing
+}{Tip karaktera pripada klasi @code{Enum}, te je moguće koristiti funkciju @code{fromEnum} koja daje @em{ASCII} vrednost karaktera. Oduzimanjem te vrednosti od @em{ASCII} vrednosti karaktera @code{'0'}, dobijamo numeričku vrednost koju niska predstavlja.}
+
+@terminal{
+ghci> parsiraj cifra "9abc"
+Just (0, "abc")
+ghci> parsiraj cifra "1234"
+Just (1, "234")
+ghci> parsiraj cifra "Hello!"
+Nothing
+}
+
+@problem{Kreirati funkciju @code{maloSlovo :: Parser Char} koja parsira samo mala latinična slova (tj. karakter iz raspona @code{['a' .. 'w']}).}
+
+
+@p Često je zgodno da kreiramo funkciju koja kreira nekakav parser na osnovu prosleđenih argumenata. Parser @code{simbol :: Char -> Parser Char} je primer takve funkcije. Funkcija @code{simbol} uzima jedan karakter i vraća parser koji parsira isključivo taj karakter, a za sve ostale karaktere podbacuje.
+
+@codeBlock{
+simbol :: Char -> Parser Char
+simbol c = P $ \s -> case s of
+    x:xs -> if x == c then Just (c, xs) else Nothing
+    _   -> Nothing
+}
+
+@terminal{
+ghci> parsiraj (simbol 'H') "Hello!"
+Just ('H', "ello!")
+ghci> parsiraj (simbol 'A') "Hello!"
+Nothing
+}
+
+
+@problem{Kreirati funkciju @code{niska :: String -> Parser String} koja na osnovu niske @code{s} kreira parser koji parsira isključivo @code{s}.}
+
+
+@section{Kombinatori}
+
+@p Parseri koje smo do sad konstruisali su bili "atomički". Za kreiranje složenijih parsera, poput onih koji parsiraju čitav kôd nekog programskog jezika, potrebno je jednostavnije parsere ukombinovati u složenije. Takvo kombinovanje vršimo pomoću funkcija koje nazivamo @def{parser kombinatori}. Parser kombinatori o postojećih parsera prave nove parsere.
+
+@p Verovatno najjednostavniji, netrivijalni, parser kombinator je kombinator koji na uspešan rezultat nekog parsera primenjuje datu funkciju @code{f}:
+
+@codeBlock{
+primeni :: (a -> b) -> Parser a -> Parser b
+primeni f p = P $ 
+        \s -> case p s of
+            Just (x, s') -> Just (f x, s')
+            Nothing -> Nothing
+}
+
+@example{
+@p Imaćemo prilike da se uverimo u narednom primerima zašto je @code{primeni} koristan, a sada dajemo jedan jednostavan primer da bi demonstrirali kako ovaj kombinator funkcioniše. Primenom funkcije @m{f(x) = x^2} na parser cifre, dobijamo parser koji sa početka niske parsira kvadrat cifre.
+
+@terminal{
+ghci> kvadrat = primeni (\x -> x*x) cifra
+ghci> kvadrat "3"
+Just (9, "")
+}
+}
+
+@p Veoma koristan je parser kombinator @em{ili}, koji uzima dva parsera i kreira novi parser koji pokušava da pokrene prvi parser a slučaju neuspeha i drugi parser. Ovakav kombinator ima sasvim jednostavnu definiciju:
+
+@codeBlock{
+ili :: Parser a -> Parser a -> Parser a
+ili p1 p2 = P $ 
+        \s -> case parsiraj p1 s of
+            Just (v, s') -> Just (v, s')
+            Nothing -> parsiraj p2 s
+}
+
+@example{
+@p Koristeći kombinator @code{ili} možemo lako napraviti parser koji parsira samo simbole @pre{x} i @pre{o}:
+
+@terminal {
+ghci> iksoks = ili (simbol 'x') (simbol 'o')
+ghci> parsiraj iksoks "xoxox"
+Just ("x","oxox")
+ghci> parsiraj iksoks "aaaa"
+Nothing
+}
+
+@p Kombinator @code{ili} je veoma zgodno postaviti u infiksni oblik. tako smo mogli da definišemo @ccode{iksoks = (simbol 'x') `ili` (simbol 'o')}. Iako možda deluje neobično, ovakva sintaksa doprinosi čitljivosti jer zapis podseća na prirodne rečenice: @em{parsirati simbol "x" ili simbol "o"}.
+}
+
+@problem{Napisati parser koji koji simbole @pre{x} i @pre{o} parsira kao logičke vrednosti @code{True} i @code{False}.}
+
+@p Do sada smo parsirali samo jedinstvene vrednosti. Sada ćemo konstruisati parser kombinator tipa @code{Parser a -> Parser [a]} koji parsira listu vrednosti istog tipa, tako što pokreće prosleđeni parser dokle god može. Nazovimo ovaj kombinator @code{više} jer rezultat (može) sadržati više vrednosti istog tipa. Definicija kombinatora mora sadržati rekurzivne pozive, što ćemo uspostaviti sa pomoćnom rekurzivnom funkcijom @code{r}:
+
+@codeBlock{
+više :: Parser a -> Parser [a]
+više (P f) = P $ \s -> (Just r s)
+    where
+        r [] = []
+        r xs = case f xs of
+            Just (v, xs') -> v : r xs'
+            Nothing       -> []
+}
+
+@problem{Konstruisati kombinator @code{zatim :: Parser a -> Parser b -> Parser (a , b)}, koji pokreće prvi a zatim i drugi parser, i vraća uređen par rezultat parsiranja.}
+
+@problem{Parser @code{više p} može da vrati i praznu listu kao uspešnu vrednost što često nije poželjno. Definisati kombinator @code{baremJedan :: Parser a -> Parser [a]}, koji mora da parsira barem jednu vrednost (tj, nikad neće vratiti praznu listu).}{
+@p Umesto da direktno napišemo definiciju kombinatora, iskoristićemo postojeće kombinatore. Ako je dat parser @code{p :: Parser A}, tada parser @ccode{p `zatim` (više p)} parsira vrednost tipa @code{(A, [A])}. Stoga je dovoljno sa kombinatorom @code{primeni} spojiti ove dve ove koordinate u jednu listu sa funkcijom @code{\(x,xs) -> x:xs} (ovo je naravno funkcija @code{uncurry (:)}). Prema tome, možemo definisati @ccode{baremJedan p = primeni (uncurry (:)) (p `zatim` (više p))}.}
+
+@p Sada kada smo se upoznali sa najvažnijim parser kombinatorima, možemo lako konstruisati jedan veoma koristan parser. U pitanju je parser celobrojnih vrednosti. Uspešni pokretanjem parsere @ccode{više cifra} dobijamo vrednost tipa @code{[Int]} koja predstavlja cifre sa početka ulazne niske. Stoga je dovoljno napisati funkciju @code{cifreUBroj :: [Int] -> Int} koja će niz cifara svesti na broj. Naravno, ovde nam je potreban rekurzivan prolazak kroz listu, pri čemu ćemo čuvati "trenutnu vrednost" koja se pri svakom koraku uvećava 10 puta (tj za jedno decimalno mesto). Direktna implementacija@note{Jednostavnije, funkciju @code{cifreUBroj} smo mogli da definišemo i kao @ccode{foldl (\a x -> 10*a + x) 0} odnosno još kraće @ccode{foldl ((+) . (*10)) 0}} izgleda ovako:
+
+@codeBlock{
+cifreUBroj :: [Int] -> Int
+cifreUBroj xs =  r 0 xs where
+    r v []     = v
+    r v (x:xs) = r (10 * v + x) xs
+}
+
+@p Sada, parser @code{broj :: Parser Int} može da se definiše kao @ccode{broj = primeni cifreUBroj $ više cifra}.
+
+@terminal{
+ghci> parsiraj broj "123abc456"
+Just (123, "abc456")
+ghci> parsiraj broj "abc"
+0
+}{Umesto @code{više} možemo da iskoristimo kombinator @code{baremJedan} da bi dobili @code{Nothing} ako ulazna niska ne počinje sa brojem.}
+
+@problem{Konstruisati parser celobrojnih vrednosti bez korišćenja kombinatora.}
+
+@section{Aplikativni parseri}
+
+@p Tip funkcije @ccode{primeni :: (a -> b) -> Parser a -> Parser b} neodoljivo podseća na tip metode @ccode{fmap :: Functor φ => (a -> b) -> φ a -> φ b} sa kojom smo se upoznali i lekciji o funktorima. Kako je i tip @code{Parser} jedan apstraktni tip vrste @code{* -> *} ima smisla instancirati @code{Functor Parser} koristeći istu definiciju koju smo dali za @code{primeni}
+
+@codeBlock{
+instance Functor Parser where
+    fmap f p = P $
+        \s -> case p s of
+            Just (x, s') -> Just (f x, s')
+            Nothing -> Nothing
+}{Rezultat "mapiranja" funkcije @code{f} na neki parser @code{p}, je novi parser koji na uspešan rezultat parsiranja parsera @code{f} primenjuje funkciju @code{f}.}
+
+@p Sada je neophodno dokazati da ovako data definicija zadovoljava dva zakona.
+
+@p Prvo, za svaki parser @code{p} mora važiti da je @ccode{fmap id p = p}. Kako je parser @code{p} oblika @code{P p'} za neku funkciju @code{p'}, važi sledeće @ccode{fmap id p = fmap id (P p')} @ccode{= P $ \s -> case p' s of 𝕁 (x, s') -> 𝕁 (id x, s'); ℕ -> ℕ} @ccode{= P $ \s -> case p' s of 𝕁 (x, s') -> 𝕁 (x, s'); ℕ -> ℕ} @ccode{= P p' = p}, gde smo sa @code{𝕁} i @code{ℕ} skraćeno označili konstruktore @code{Just} i @code{Nothing}. Ovim je prvi zakon dokazan.
+
+@p Za dokaz drugog zakona, neka su date funkcije @code{f :: A -> B} i @code{g :: B -> C}. Tada za svaki parser @code{p = P p' :: Parser A} važi @ccode{fmap (g . f) p = fmap (g . f) (P p')}
+@ccode{= P $ \s -> case p' s of 𝕁 (x, s') -> 𝕁 ((g . f) x, s'); ℕ -> ℕ}
+@ccode{= P $ \s -> case p' s of 𝕁 (x, s') -> 𝕁 (g (f x), s'); ℕ -> ℕ}
+@ccode{= fmap g $ P $ \s -> case p' s of 𝕁 (x, s') -> 𝕁 (f x, s'); ℕ -> ℕ}
+@ccode{= fmap g $ fmap f $ P $ \s -> case p' s of 𝕁 (x, s') -> 𝕁 (x, s'); ℕ -> ℕ}
+@ccode{= fmap g $ fmap f $ P p'}
+@ccode{= (fmap g . fmap f) p},
+čime je dokazan i drugi zakon funktora.
+
+@p Sledeći korak je implementirati instancu @code{Applicative Parser}. Za metodu @code{pure :: a -> Parser a}, nemamo mnogo izbora: to će biti "konstantan" parser koji ne parsira ništa. Za metodu @ccode{<*> :: Parser (a -> b) -> Parser a -> Parser b} takođe nemamo mnogo opcija. Ako nam je dat parser @code{p1 :: Parser (A -> B)} i parser @code{p2 :: Parser A}, sve što možemo da uradimo da bi dobili vrednost @code{B} je da "pokrenemo" parser @code{p1} i onda sa dobijenim vrednostima "pokrenemo" parser @code{p2}. Naravno, ako neki od parsera ne uspe, tada ni "kombinacija" ovih parsera ne bi trebalo da uspe.
+
+@codeBlock{
+instance Applicative Parser where
+    pure x = P $ \s -> Just (s, x)
+
+    p1 <*> p2 = P $ \s -> primeni (parsiraj p1 s) p2
+        where
+            primeni Nothing       _ = Nothing
+            primeni (Just (s',f)) p = parsiraj (fmap f p) s'
+}{Pomoćna funkcija @code{primeni}, proverava da li je parsiranje sa @code{p1} uspelo. Ako jeste uspelo, tada se rezultat @code{(s', f)} prosleđuje parseru @code{p2}, tako što se parser @code{fmap f p1} pokreće nad ostatkom @code{s'}.}
+
+@problem{Dokazati da navedena definicija poštuje zakone aplikativnih funktora.}
+
+@p Parseri koji parsiraju funkciju (tj. vrednosti tipa oblika @code{Parser (A -> B)}) su na prvi pogled veoma čudan pojam. Šta uopšte znači parsirati funkciju iz niske karaktera? Ali, setimo se koja je bila motivacija za uvođenje aplikativnih funktora: aplikacija funkcija više promenljiva na vrednosti u funktorima. Od sada koristeći @code{pure} i @code{<*>} možemo kombinovati parsere koristeći proizvoljne funkcije.
+
+@example{
+@p Kreirajmo parser koji parsira jedno slovo, zatim cifru i zatim te dve vrednosti kombinuje u uređeni par. Iz prethodnih primera i zadataka imamo parsere @code{slovo :: Parser Char} i @code{cifra :: Parser Int}, a želimo parser @code{slovoCifra :: Parser (Char, Int)}.
+
+@p Funkcija @ccode{f = \x y -> (x, y) :: a -> b -> (a, b)} kombinuje dve vrednosti u uređen par@note{Ovu funkciju kraće možemo zapisati kao konstruktor uređenog para @code{(,)}.}. Stoga, vrednost @code{pure f :: Parser (a -> b -> (a, b))} je moguće sa operatorom@note{Podsećamo da je @code{<*>} levoasocijativan operator.} @code{<*>} primeniti na dve vrednosti tipa @code{Parser A} i @code{Parser B}, da bi dobili vrednost @code{Parser (A, B)}. I zaista
+
+@terminal{
+ghci> f = \x y -> (x, y)
+ghci> slovoCifra = f <$> slovo <*> cifra
+ghci> parsiraj slovoCifra "D7"
+Just (('D',7), "")
+}{Idealno za parsiranje oznaka šahovskih polja!}
+}
+
+
+@p Kako operatori @code{<*} i @code{*>} funkcionišu u kontekstu parsera? Po definiciji, operator @ccode{(<*) :: Parser a -> Parser b -> Parser a} je definisan kao @ccode{p1 <* p2 = liftA2 const p1 p2} što se svodi na @ccode{p1 <* p2 = (fmap const p1) <*> p2}. Ako je @code{p1 :: Parser A}, tada je @code{fmap const p1 :: Parser (a -> Int)} parser koji je moguće primeniti sa @code{<*>} na bilo koji drugi parser, ali će parsirana vrednost zavisiti samo od parsera @code{p1}, dok će parsirana vrednost parsera @code{p2} biti ignorisana, pod uslovom da parser @code{p2} uspe. Ako parser @code{p2} nije uspešan, tada će i parser @code{p1 <* p2} podbaciti. Slično je i sa operatorom @ccode{ (*>) :: f a -> f b -> f b} koji ignoriše rezultat levog parsera (pod uslovom da je taj parser uspeo).
+
+@p Navedeni operatori nam omogućavaju da konstruišemo parsere koji moraju parsirati neke delove niske, ali ti delovi ne utiču na parsiranu vrednost. Primer za ovu situaciju je parsiranje brojeva sa decimalnom tačkom: tačka se mora naći u zapisu decimalnog broja, ali ne utiče nikako na vrednost tog broja.
+
+@example{
+@p Imitirajući ideju o rekurzivnoj primeni parsera, možemo na jednostavan način implementirati funkciju @ccode{niska :: String -> Parser String} koju smo spomenuli u prethodnom zadatku.
+
+@p Prvo, parsiranje prazne niske iz bilo koje druge niske uvek treba da uspe. Ovo predstavlja bazni slučaj. Drugo, parsiranje neke niske @code{x:xs} iz niske @code{s} može da se izvede tako što se prvo parsira simbol @code{x}, pa ako to parsiranje uspe, rekurzivno se parsira i ostatak @code{xs}:
+
+@codeBlock{
+niska :: String -> Parser String
+niska ""     = P $ \s -> Just (s, "")
+niska (x:xs) = P $ \s -> case parsiraj (simbol x) s of
+    Just (s',_) -> parsiraj ((x:) <$> niska xs) s'
+    Nothing     -> Nothing
+}
+
+@terminal{
+ghci> parsiraj (niska "True") "Truehelloworld"
+Just ("helloworld","True")
+ghci> parsiraj (niska "False") "Falsebyeworld"
+Just ("byeworld","False")
+ghci> parsiraj (niska "hello") "bye"
+Nothing
+}
+}
+
+@problem{Definisati parser @code{decimalanBroj :: Parser Float} koji parsira broj oblika @eq{\overline{a_1\cdots a_n .b_1\cdots b_m}.}}
+
+@problem{
+Definisati parser @ccode{logičkeListe :: Parser [Bool]} koji parsira liste logičkih vrednosti @code{True} i @code{False}. Na primer, parser bi trebalo da ispravno parsira nisku @code{"[True,False]"}. Pretpostaviti da u nisci neće biti belina.
+}
+
+@problem{
+Definisati parser @ccode{preskočiBeline :: Parser ()} koji samo preskače karaktere beline @code{' '}, @code{'\n'} i @code{'\t'}.
+}
+
+@problem{Ponovo definisati parser @code{logičkeListe :: Parser [Bool]} ali tako da ispravno parsira niske u kojima se nalaze beline između logičkih vrednosti i zareza ili zagrada. Na primer, parser bi trebalo da ispravno parsira nisku poput @ccode{"[  True,    False ]"}.}
+
+@section{Parsiranje matematičkih izraza}
+
+@p U lekciji o rekurzivnim strukturama podataka, definisali smo tip @code{Izraz} ka algebarski tip @ccode{data Izraz = Broj Int | Zbir Izraz Izraz | Proizvod Izraz Izraz}. Takođe smo i definisali instancu @code{Show Izraz} na sasvim jednostavan način.
+
+@codeBlock{
+instance Show Izraz where
+    show (Broj a) = show a
+    show (Zbir a b) = "(" ++ show a ++ "+" ++ show b ++ ")"
+    show (Proizvod a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
+}
+
+@p Kako to obično biva, obrnuti proces, proces čitanja strukture iz niske, je značajno komplikovaniji za implementaciju, ali nam tehnika aplikativnih parsera može nam pomoći u ovom slučaju. Sa parserom kog budemo konstruisali, moći ćemo da iz niske pročitamo vrednost @code{Izraz}.
+
+@p Pre nego što počnemo sa definisanjem parsera, moramo tačno definisati oblik niska koje ćemo parsirati. Na primer, složeni parseri izraza mogu ispravno parsirati izraze poput @code{"2 +  5"} ili @code{"2*-7+6"} jer su napravljeni tako da ignorišu beline (razmake), da vode računa o prioritetu operacija, podržavaju unarni operator negacije, itd... Da bismo skratili naredne redove, mi nećemo kreirati ovako složeni parser. Parser koji budemo konstruisali moći će da parsira samo one izraze koji su nastali sa funkcijom @code{show :: Izraz -> String} koju smo gore definisali tj, izraze sačinjene isključivo od cifara i znakova @code{+}, @code{-}, @code{(}, @code{)}, pri čemu se oko svakog podizraza nalaze zagrade (osim oko samih brojeva).
+  
+@p Kako je i sama struktura tipa @code{Izraz} rekurzivna, i parser tipa @code{Parser Izraz} biće rekurzivan. Posebno ćemo konstruisati parser @code{izrazBroj} koji parsira brojeve, parser @code{izrazZbir} koji parsira zbir dva manja izraza, i parser @code{izrazProizvod} koji parsira proizvod dva manja izraza.
+
+@p Pretpostavimo da su navedeni parseri definisani. Jedan izraz može biti broj, proizvod ili zbir manjih izraza. Zbog toga, da bi parsirali izraz, prvo ćemo pokušati da parsiramo broj. Ako to ne uspemo, onda ćemo pokušati da parsiramo zbir, a ako ni to ne uspemo pokušaćemo da parsiramo proizvod@note{Pritom, ovde uopšte nije bitno kojim redom pokušavamo pa pokrenemo parsere. U složenijim parserima, poredak je često bitan}. Sa kombinatorom @code{ili} lako dobijamo željeni parser:
+
+@codeBlock{
+izraz :: ParserIzraz
+izraz = izrazBroj `ili` izrazZbir `ili` izrazProizvod
+}
+
+@p Ostaje još definisati @code{izrazBroj}, @code{izrazZbir} i @code{izrazProizvod}. Parser @code{izrazBroj} ćemo lako definisati pomoću parsera @code{broj :: Parser Int} kog posedujemo od ranije. Sve što je potrebno je da parsiranu vrednost (koja je tipa @code{Int}), transformišemo u vrednost tipa @code{Izraz}, što se naravno postiže podizanjem konstruktora @code{Broj :: Int -> Izraz} na nivo funktora @code{Parser}:
+
+@codeBlock{
+izrazBroj :: Parser Izraz
+izrazBroj = fmap Broj broj
+}
+
+@p Parser @code{izrazZbir} mora da funkcioniše na sledeći način: prvo je neophodno parsirati simbol za levu zagradu, zatim je potrebno parsirati levi sabirak, pa simbol plus, desni sabirak, i na kraju simbol desne zagrade. Rezultati parsiranja simbola nisu bitni (ako su uspešni), a rezultate parsiranja levog i desnog sabirka moramo ukombinovati u vrednost oblika @code{Zbir x y :: Izraz}. Naravno, u tome će nam pomoći podizanje konstruktora @code{Zbir}. Takođe, kako su oba sabirka izrazi sami za sebe, potrebno ih je parsirati sa @code{izraz} parserom. Ovo uspostavlja rekurziju.
+
+@codeBlock{
+izrazZbir :: Parser Izraz
+izrazZbir =
+    simbol '(' *>
+    (Zbir <$> (izraz <* simbol '+') <*> izraz)
+    <* simbol ')' 
+}
+
+@p Parsiranje proizvoda je u potpunosti analogno parsiranju zbira:
+
+@codeBlock{
+izrazProizvod :: Parser Izraz
+izrazProizvod = 
+    simbol '(' *>
+    (Proizvod <$> (izraz <* simbol '*') <*> izraz)
+    <* simbol ')' 
+}
+
+@p Testiranjem se uveravamo da parser funkcioniše:
+
+@terminal{
+ghci> parsiraj izraz "(1+2)"
+Just ((1+2), "")
+ghci> parsiraj izraz "((10+2)*32)"
+Just (((10+2)*32), "")
+}{Vrednost koju vidimo u prvoj koordinati rezultat je zapravo sintaksno stablo. Međutim, zbog načina na koje smo definisali @code{show}, ovo sintaksno stablo se prikazuje na sasvim jednostavan način.}
