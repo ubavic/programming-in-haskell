@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="600"
+   height="180"
+   viewBox="0 0 600 180"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="euclid.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.5061374"
+     inkscape:cx="293.46592"
+     inkscape:cy="294.12987"
+     inkscape:window-width="2560"
+     inkscape:window-height="1410"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5" />
+  <defs
+     id="defs2" />
+  <rect
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:0.377953;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     id="rect286-6-5-9-2"
+     width="560"
+     height="40"
+     x="20"
+     y="13.317537" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.6772px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';white-space:pre;inline-size:35.9533;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     x="33.256351"
+     y="44.606609"
+     id="text424"
+     transform="matrix(0.9983293,0,0,1.0016735,4.3624125,-5.8439389)"><tspan
+       x="33.256351"
+       y="44.606609"
+       id="tspan8"><tspan
+         style="font-style:italic;-inkscape-font-specification:'Source Code Pro Italic'"
+         id="tspan7">a</tspan></tspan></text>
+  <rect
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:0.377953;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     id="rect286-6-5-9-2-5-5"
+     width="160"
+     height="40"
+     x="420"
+     y="126.68246" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.6772px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';white-space:pre;inline-size:35.9533;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     x="33.256351"
+     y="44.606609"
+     id="text424-7"
+     transform="matrix(0.9983293,0,0,1.0016735,403.63364,107.52098)"><tspan
+       x="33.256351"
+       y="44.606609"
+       id="tspan10"><tspan
+         style="font-style:italic;-inkscape-font-specification:'Source Code Pro Italic'"
+         id="tspan9">c</tspan></tspan></text>
+  <rect
+     style="fill:#fafafa;fill-opacity:1;stroke:#000000;stroke-width:0.377953;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     id="rect286-6-5-9-2-5"
+     width="400"
+     height="40"
+     x="20"
+     y="70" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.6772px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';white-space:pre;inline-size:35.9533;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+     x="33.256351"
+     y="44.606609"
+     id="text424-1"
+     transform="matrix(0.9983293,0,0,1.0016735,4.3624124,53.269053)"><tspan
+       x="33.256351"
+       y="44.606609"
+       id="tspan12"><tspan
+         style="font-style:italic;-inkscape-font-specification:'Source Code Pro Italic'"
+         id="tspan11">b</tspan></tspan></text>
+</svg>

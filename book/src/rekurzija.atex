@@ -105,6 +105,8 @@ paran n = not (paran (n - 1))
 
 @p Po navedenom principu, treći član Fibonačijevog niza je @m{2} (jer je @m{2 = 1 + 1}), četvrti član je @m{3} (jer je @m{3 = 1 + 2}), peti član je @m{5} (jer je @m{5 = 2 + 3}), šesti član je @m{8} (jer je @m{8 = 3 + 5}), i tako dalje...
 
+@figure{fibonacci_squares}{Niz kvadrata čije stranice odgovaraju članovima Fibonačijevog niza se može "upakovati" u spiralnu konfiguraciju kako je prikazano na ovoj slici. Ovakva konfiguracija se može neograničeno nastavljati.}
+
 @p Konstruisanje Haskel funkcije @code{fib} koja za prosleđeni argument @code{n} vraća @m{n}-ti Fibonačijev broj (@m{n}-ti element Fibonačijevog niza) je neznatno složenije nego što su bili prethodni primeri. U ovom slučaju vrednost @code{fib n} zavisi od @code{fib (n - 1)} i @code{fib (n - 2)} te je stoga potrebno navesti dva bazna slučaja@note{Ako bi bio definisan samo jedan bazni slučaj, neka je to na primer @m{n = 1}, tada bi funkcija @code{fib} ušla u beskonačnu petlju. Zaista, za računanje @code{fib 2} bilo bi potrebno izračunati @code{fib 1} i @code{fib 0}. Međutim za računanje @code{fib 0} bilo bi potrebno izračunati @code{fib (-1)} i @code{fib (-2)} i tako dalje...}.
 
 @codeBlock{
@@ -124,7 +126,9 @@ Takozvani @em{Tribonačijev niz} se konstruiše na sledeći način: prva tri čl
 
 @p Rekurzija može delovati komplikovano kada se prvi susretnemo sa njom, ali je ideja o rekurziji veoma prirodna i veoma stara. Još je Euklid u petom veku pre nove ere u knjizi @em{Elementi} izneo nekoliko rekurzivnih postupaka. Najpoznatiji je svakako postupak za traženje najvećeg zajedničkog delioca, koji danas nosi naziv @def{Euklidov algoritam}.
 
-@p Kao što samo ime kaže, @em{najveći zajednički delilac} (@em{NZD}) prirodnih brojeva @m{a} i @m{b} je prirodni broj @m{d} takav da deli @m{a} i @m{b}, i pritom je @m{d} najveći broj sa takvom osobinom. 
+@p Kao što samo ime kaže, @em{najveći zajednički delilac} (@em{NZD}) prirodnih brojeva @m{a} i @m{b} je prirodni broj @m{d} takav da deli @m{a} i @m{b}, i pritom je @m{d} najveći broj sa takvom osobinom.
+
+@figure{euclid}{Pretpostavimo da želimo da popločamo dve staze dužine @m{a} i @m{b} metara. Pritom, širina pločica sa kojima raspolažemo je jednaka širini naših staza a dužinu pločice možemo da biramo. Staze želimo da popločamo tako da obe staze budu popločane sa celim pločama, ali tako da koristimo što duže pločice. Upravo će @em{NZD} od @m{a} i @m{b} biti dužina tražene pločice. Da bi smo odredili @em{NZD} možemo primetiti da pločica koja ima traženu osobinu takođe će u potpunosti popločavati i stazu koja je "razlika" staza dužina @m{a} i @m{b} (to je staza dužine @m{c} na slici).}
 
 @example{
 @p Najveći zajednički delilac brojeva @m{15} i @m{9} je @m{3}. Najveći zajednički delilac brojeva @m{8} i @m{32} je @m{8}.
@@ -156,7 +160,7 @@ nzd a b
 Primetimo da smo više puta za redom oduzimali isti broj (@m{8}) od @m{32}.
 }
 
-@p Navedeni primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo neefikasno rekurzivno pozivali funkciju, možemo da podelimo argumente po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
+@p Navedeni primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost@note{Na primer, NZD od @m{2} i @m{10} je isti kao NZD od @m{2} i @m{8} koji je isti kao NZD od @m{2} i @m{6} koji je isti kao...}. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo neefikasno rekurzivno pozivali funkciju, možemo da podelimo argumente po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} i @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
 
 @p Neka je @m{r} ostatak deljenja @m{a} sa @m{b}. Ako je @m{r} nula, to znači da je @m{a} deljivo sa @m{b}, pa  sledi da je @em{NZD} ova dva broja bаš @m{b}. U suprotnom, dovoljno je potražiti @em{NZD} brojeva @m{b} i @m{r}. Ovo nas dovodi do narednog koda:
 
