@@ -253,26 +253,26 @@ umesto dosadašnjeg @ccode{map (\x -> x * 2) xs}.
 
 @section{Neki važni operatori}
 
-@todo{dodati sliku}
-
 @p Osim aritmetičkih, logičkih i operatora nad listama, Haskel programi sadrže obilje drugih operatora (od kojih mnogi nisu ni prisutni u drugim jezicima). Haskel programeri vole da koriste razne operatore jer time skraćuju programe. Neke od tih operatora ćemo predstaviti u nastavku ove glave, dok ćemo ostale obraditi u narednim lekcijama. 
 
 @subsection{Operator kompozicije}
 
-@p @def{Kompozicija} funkcija @code{f :: a -> b} i @code{g :: b -> c} jeste funkcija @code{h :: a -> c} za koju važi @code{(g (f x)) = h x} za svako @code{x :: a}. Drugim rečima, kompozicija funkcija @code{f} i @code{g} je funkcija čija vrednost za argument @code{x} se dobija primenom funkcije @code{g} na vrednost @code{f x}.
+@p @def{Kompozicija} funkcija @code{f :: A -> B} i @code{g :: B -> C} jeste funkcija @code{h :: A -> C} za koju važi @code{h x = g (f x)} za svako @code{x :: A}. Drugim rečima, kompozicija funkcija @code{f} i @code{g} je funkcija čija vrednost za argument @code{x} se dobija primenom funkcije @code{g} na vrednost @code{f x}.
 
-@p Kompozicija funkcija je operacija koja se često koristi u matematici. U matematičkoj notaciji, kompozicija funkcija @m{f} i @m{g} se označava se @m{g\circ f}. Primetimo da se levo od operatora @m{\circ} navodi funkcija koja se primenjuje druga. 
+@figure{composition}
+
+@p Kompozicija funkcija je operacija koja se često koristi u matematici. U matematičkoj notaciji, kompozicija funkcija @m{f} i @m{g} se označava se @m{g\circ f}. Primetimo da se levo od operatora @m{\circ} navodi funkcija koja se primenjuje druga.
 
 @example{
-@p Neka su date funkcije @m{f(x)=2x} i @m{g(x)=x^2}. Tada je funkcija @m{g\circ f} data sa @eq{(g\circ f)(x) = g(f(x))=g(2x)=4x^2.} Sa druge strane, funkcija @m{f\circ g} je data sa @eq{(f\circ g)(x) = f(g(x)) = f(x^2)= 2x^2.}
+@p Neka su date funkcije @m{f(x)=2x} i @m{g(x)=x^2} koje imaju tip @m{\mathbb N \to \mathbb N}. Tada je funkcija @m{g\circ f} data sa @eq{(g\circ f)(x) = g(f(x))=g(2x)=4x^2.} Kako obe funkcije imaju kodomen i domen @m{\mathbb N} možemo naći i kompoziciju @m{f\circ g}: @eq{(f\circ g)(x) = f(g(x)) = f(x^2)= 2x^2.}
 Dakle vidimo da funkcije @m{g\circ f} i @m{f\circ g} ne moraju biti iste.
 }
 
-@p U Haskelu, operator kompozicije se označava sa @code{.}, i u potpunosti odgovara matematičkom operatoru kompozicije @m{\circ}. Tip operatora @code{.} je 
+@p U Haskelu, operator kompozicije se označava sa @code{.}, i u potpunosti odgovara matematičkom operatoru kompozicije @m{\circ}. Operator @code{.} poseduje parametarski polimorfan tip  
+@ccode{(b -> c) -> (a -> b) -> a -> c}.
 
-@codeBlock{
-(.) :: (b -> c) -> (a -> b) -> a -> c 
-}{Iz tipa vidimo da je prvi argument funkcija tipa @code{b -> c} pa zatim funkcija tipa @code{a -> b}. Primenom vrednosti ova dva tipa, ostaje nam tip @code{a -> c} koji predstavlja funkciju.}
+@p Funkcije se ne mogu proizvoljno komponovati. Da bismo mogli funkciju @code{g} da primenimo na vrednost @code{f x}, neophodno je da domen funkcije @code{g} bude jednak kodomenu funkcije @code{f}. Zato su argumenti operatora @code{.} 
+
 
 @example{
 @p Prethodni primer možemo prevesti u Haskel. Funkcije @code{f} i @code{g} i kompozicije se lako definišu:
@@ -300,7 +300,6 @@ ghci> h2 3
 18 
 }}
 
-@p Funkcije se ne mogu proizvoljno komponovati. Da bismo mogli funkciju @code{g} da primenimo na vrednost @code{f x}, neophodno je da domen funkcije @code{g} bude jednak kodomenu funkcije @code{f}. Zato su argumenti operatora @code{.} funkcije tipa @code{b -> c} i @code{a -> b}.
 
 @example{
 @p Neka je dat kod
