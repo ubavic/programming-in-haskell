@@ -344,4 +344,4 @@ ghci> parsiraj izraz "(1+2)"
 Just ((1+2), "")
 ghci> parsiraj izraz "((10+2)*32)"
 Just (((10+2)*32), "")
-}{Vrednost koju vidimo u prvoj koordinati rezultat je zapravo sintaksno stablo. Međutim, zbog načina na koje smo definisali @code{show}, ovo sintaksno stablo se prikazuje na sasvim jednostavan način.}
+}{Vrednost koju vidimo u prvoj koordinati je sintaksno stablo. Zbog načina na koje smo definisali @code{show}, ovo sintaksno stablo se prikazuje na sasvim jednostavan način.}

@@ -8,7 +8,7 @@
    version="1.1"
    id="svg5"
    sodipodi:docname="2_2.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,13 +24,13 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="1.5061374"
-     inkscape:cx="240.68189"
+     inkscape:cx="240.34992"
      inkscape:cy="101.58436"
-     inkscape:window-width="1920"
-     inkscape:window-height="1050"
+     inkscape:window-width="2560"
+     inkscape:window-height="1410"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg5" />
   <defs
      id="defs2" />
@@ -90,46 +90,46 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
-     x="438.79944"
+     x="438.79947"
      y="69.900017"
      id="text424"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan422"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
-       x="438.79944"
+       x="438.79947"
        y="69.900017">4</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
-     x="192.34045"
+     x="192.26047"
      y="70.02002"
      id="text444"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan442"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
-       x="192.34045"
-       y="70.02002">-2</tspan></text>
+       x="192.26047"
+       y="70.02002">-1</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
-     x="144.33466"
+     x="144.29468"
      y="69.900017"
      id="text448"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan446"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
-       x="144.33466"
-       y="69.900017">-3</tspan></text>
+       x="144.29468"
+       y="69.900017">-2</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
-     x="246.45625"
+     x="246.45628"
      y="69.900017"
      id="text452"
      transform="scale(0.9983293,1.0016735)"><tspan
        id="tspan450"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529168"
-       x="246.45625"
+       x="246.45628"
        y="69.900017">0</tspan></text>
   <text
      xml:space="preserve"

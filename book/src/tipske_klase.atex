@@ -393,7 +393,7 @@ recip x = 1 / x
 x / y   = x * recip y
 }
 
-@p Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama @em{prstena} i @em{polja}.
+@p Definicije klasa @code{Num} i @code{Fractional} približno odgovaraju definicijama algebarskih struktura @em{prstena} i @em{polja}.
 
 @example{
 @p Uvedimo tip @code{Racionalan} u navedene klase. Imajući na umu zakone poput @eq{\frac{a}{b} \pm \frac{c}{d} = \frac{ad\pm cb}{cd} \qquad \frac{a}{b} \cdot \frac{c}{d} = \frac{ab}{cd} \qquad  \left\lvert\frac{a}{b}\right\rvert=\frac{\lvert a\rvert}{\lvert b\rvert}} kodiranje je veoma jednostavno:
