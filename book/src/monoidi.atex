@@ -1,0 +1,41 @@
+@section{@em{Semigrupa} i @em{Monoid}}
+
+@p Kroz primer klase @em{Number}, videli smo da pojam @em{broja} nije u potpunosti određen. Čak i ako matematičara pitamo @em{Šta je broj?}, možemo dobiti nekoliko primera skupa brojeva. Razlike između, na primer, skupa prirodnih i skupa kompleksnih brojeva su veće nego što to možda deluje@note{Na primer, za skup prirodnih brojeva je karakteristično da svaki njegov neprazan podskup ima najmanji element, dok to ne važi ni za skup racionalnih, realnih ili brojeva. Za skup kompleksnih brojeva je karakteristično to što svaka polinomska jednačina ima rešenje u ovom skupu. Realne brojeve u odnosu na racionalne brojeve razlikuje to što u skupu realnih brojeva svaki Košijev niz konvergira. Ovo su primer samo nekih od mnogobrojnih osobina koje matematičari izučavaju kroz različite oblasti}. Matematičari su u svrhu izučavanja osobina različitih skupova brojeva, oformili definicije takozvanih @def{algebarskih struktura}. Algebarske strukture predstavljaju skupe sa određenim operacijama koje zadovoljavaju određene osobine. I ranije u ovoj lekciji smo spomenuli dve algebarske strukture, ali za ovu knjigu tačne definicije algebarskih struktura nisu potrebne. Ipak, definicije dve algebarske strukture su uključene u standardnu biblioteku Haskela i njih ćemo objasniti u nastavku. To su @em{semigrupa} i @em{monoid}.
+
+@subsection{Semigrupa}
+
+@p Semigrupa je svaki skup @m{S} zajedno sa binarnom operacijom @m{\lozenge\colon S \times S \to S} koja je asocijativna odnosno za koju važi da je @eq{x \lozenge (y \lozenge z) = (x \lozenge y) \lozenge z} za sve elemente @m{x}, @m{y} i @m{z} iz @m{S}.
+
+@example{
+@p Skup brojeva @m{\{1, 2, 3, \dots\}} zajedno sa operacijom sabiranja jeste jedna semigrupa. Asocijativnost sabiranja prirodnih brojeva sa može dokazati indukcijom.
+}
+
+@example{
+@p Skup brojeva @m{\{1, 2, 3, \dots\}} zajedno sa operacijom množenja jeste jedna semigrupa. Asocijativnost sabiranja sa može dokazati indukcijom.
+}
+
+@p Iako 
+
+@p U Haskelu, pojam semigrupe je realizovan kros tipsku klasu @code{Semigroup}, koja je značajno jednostavnija od onih koje smo gore obradili:
+
+@codeBlock{
+class Semigroup a where
+  (<>) :: a -> a -> a
+}{Za operaciju @code{<>} mora da važi da je asocijativna. Ova osobina ne može se iskazati kroz Haskel kod, već je sam programer mora dokazati.}
+
+@p Suština klase je operacija @code{<>} kojom se kombinuju dva elementa. U slučaju lista, to bi bila operacija nadovezivanja lista @code{++}. Prema tome, za svaki tip @code{T} važi da je tip @code{[T]} semigrupa. Ovo se može iskazati kroz Haskel kod:
+
+@codeBlock{
+instance Semigroup [a] where
+    (<>) = (++)
+}{Sa ovim kodom je zapravo instancirano beskonačno mnogo instanci, za svaki tip po jedna.}
+
+@problem{Ako je su @m{(A, \lozenge_A)} i @m{(B, \lozenge_B)} semigrupe, dokazati da je Dekartov proizvod @m{A\times B} zajedno sa operacijom @m{\lozenge_\times} definisanom sa @eq{(a_1, b_1) \lozenge_\times (a_2, b_2) = (a_1 \lozenge_A a_2, b_1 \lozenge b_2)}. U koju vrednost se evaluira vrednost @code{(1, "A") <> (2, "B")}}
+
+@subsection{Monoid}
+
+@p Monoid je semigupa @m{(S, \lozenge)} koja poseduje @def{neutralni element}, odnosno element @m{e\in S} za koji važi @eq{x \lozenge e = x \qquad e\lozenge x = x} za svako @eq{x \in S}.
+
+@example{
+@p Skup brojeva @m{\{1, 2, 3, \dots\}} zajedno sa operacijom sabiranja @em{nije} monoid, jer se u ovom skupu ne nalazi neutralni element za sabiranje @m{0}. Skup brojeva @m{\{0, 1, 2, 3, \dots\}} zajedno sa operacijom sabiranja jeste monoid.
+}
