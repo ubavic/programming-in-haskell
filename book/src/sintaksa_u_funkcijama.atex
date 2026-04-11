@@ -5,7 +5,7 @@
 @p U prethodnim primerima videli smo da lambda izrazi mogu biti veoma nepregledni zbog višestrukih zagrada. Zbog toga su u lambda račun, pa i Haskel, uvedene konvencije koje omogućavaju brisanje suvišnih zagrada u lambda izrazima:
 
 @list{
-@li @em{Zagrade oko lambda izraza ne zapisujemo.} Kada unosimo neki izraz u @em{GHCi}, tada nije neophodno da postavljamo zagradu koja obuhvata celokupan izraz. Isto važi i kada u kodu definišemo neki lambda izraz. Na primer, umesto @code{s = (f 20)} pišemo @code{f = f 20}.
+@li @em{Zagrade oko lambda izraza ne zapisujemo.} Kada unosimo neki izraz u @em{GHCi}, tada nije neophodno da postavljamo zagradu koja obuhvata celokupan izraz. Isto važi i kada u kodu definišemo neki lambda izraz. Na primer, umesto @code{g = (f 20)} pišemo samo @code{g = f 20}.
 @li @em{Aplikacija ima veći prioritet u odnosu na apstrakciju.} Praktično to znači da telo lambda funkcije nije neophodno postavljati u posebne zagrade. Na primer umesto @code{\x -> (f x)} pišemo @code{\x -> f x}.
 @li @em{Aplikacija lambda izraza je levoasocijativna.} To znači da se izraz oblika @code{((M N) P)} može zapisati kao @code{M N P}. Induktivnim argumentom sledi da se i izraz @code{(((M N) P) Q)} može zapisati kao @code{M N P Q}, itd... Na primer, umesto @code{(zbir 22) 33} pišemo samo @code{zbir 22 33}. Sa druge strane, iz izraza @code{f 10 (g 20)} ne možemo obrisati zagrade, jer bismo time dobili izraz koji se interpretira kao @code{((f 10) g) 20}.
 @li @em{Apstrakcija je desnoasocijativna.} Npr. umesto @code{\x -> (\y -> x + y)} pišemo @code{\x -> \y -> x + y}.

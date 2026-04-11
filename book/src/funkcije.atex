@@ -108,7 +108,7 @@ ghci> (\x -> (2 * x)) 10
 
 
 @problem{
-Napisati lambda izraz koji za dati broj @m{r} daje površinu kruga čiji je poluprečnik @code{r}. Dodeliti ovaj izraz imenu @code{površinaKruga}. Izračunati površinu krugova čiji su poluprečnici @m{2} i @m{5}. Konstanta @code{\pi} je dostupna pod imenom @code{pi}.
+Napisati lambda izraz koji za dati broj @m{r} daje površinu kruga čiji je poluprečnik @code{r}. Dodeliti ovaj izraz imenu @code{površinaKruga}. Izračunati površinu krugova čiji su poluprečnici @m{2} i @m{5}. Konstanta @m{\pi} je dostupna pod imenom @code{pi}.
 }{
 @p Površina kruga sa poluprečnikom @m{r} je @m{\pi r^2}, te stoga možemo definisati traženi lambda izraz sa @code{\r -> (pi * r^2)}. Ovaj izraz možemo imenovati, odnosno dodeliti nekom imenu, i sačuvati u @code{.hs} datoteci:
 
@@ -127,7 +127,7 @@ ghci> površinaKruga 5
 }
 
 @problem{
-Temperatura od @m{x} stepeni Farenhajta je jednaka temperaturi od @m{\frac{5}{9}(x - 32)} stepeni Celzijusa. Napisati funkciju @code{uCelzijuse} koja stepene Farenhajta pretvara u stepne Celzijusa. Izraziti i stepene Farenhajta preko stepena Celzijusa, i napisati funkciju @code{uFarenhajte} koja vrši konverziju. Potvrditi sa obe funkcije da je @m{30^\circ \mathrm C} jednako @m{86^\circ \mathrm F}
+Temperatura od @m{x} stepeni Farenhajta je jednaka temperaturi od @m{\frac{5}{9}(x - 32)} stepeni Celzijusa. Napisati funkciju @code{uCelzijuse} koja stepene Farenhajta pretvara u stepne Celzijusa. Izraziti i stepene Farenhajta preko stepena Celzijusa, i napisati funkciju @code{uFarenhajte}. Potvrditi sa obe funkcije da je @m{30^\circ \mathrm C} jednako @m{86^\circ \mathrm F}
 }
 
 @section{Beta redukcija}

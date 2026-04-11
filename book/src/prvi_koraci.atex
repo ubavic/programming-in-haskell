@@ -252,7 +252,7 @@ dobraDefinicija = 1
   lošaDefinicija = 1
 }
 
-@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Python} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravili svaki izraz je moguće prelomiti. Na primer, sledeća tri koda su primeri validnog preloma istog izraza:
+@p Treće pravilo je pomalo neobično za jezike koji su osetljivi na nazubljivanje@note{@em{Python} je primer jednog takvog jezika. Sa druge strane @em{C} jezik je u potpunosti neosetljiv na nazubljivanje koda.}. Po ovom pravilu svaki izraz je moguće prelomiti. Na primer, sledeća tri koda su primeri validnog preloma istog izraza:
 
 @codeBlock{
 a = 10 * 10 + 1
