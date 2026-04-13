@@ -1,8 +1,6 @@
 @chapter{Prvi koraci}
 
-@p Naredna lekcija sadrži informacije neophodne za razumevanje svih ostalih lekcija. Ako neku lekciju ne bi trebalo da preskočite, to je definitivno ova. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
-
-@p Sekcije @em{Let … in}, @em{Where} i @em{Prelom i nazubljivanje} nisu suštinski važne za razumevanje ostatka knjige, ali će poslužiti da demonstriramo neke pojedinosti Haskel koda. Ove sekcije se mogu površno preći prilikom prvog čitanja.
+@p Naredna lekcija sadrži informacije neophodne za razumevanje svih ostalih lekcija. Možda će neke stvari biti nejasne (ili dosadne) prilikom prvog čitanja, ali važno je da budu poznate.
 
 @section{Haskel kompajler}
 
@@ -20,7 +18,7 @@
 
 @section{Struktura Haskel koda}
 
-@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se @def{imenima}@note{Koriste se još i izrazi @em{labele} i @code{identifikatori}} pridružuju vrednosti nekog izraza. Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
+@p Haskel kôd se zapisuje u tekstualnim datotekama sa ekstenzijom @code{.hs}. Svaka @code{.hs} datoteka sastoji se od @def{definicija} kojima se @def{imenima}@note{Koriste se još i izrazi @em{labele} i @em{identifikatori}} pridružuju vrednosti nekog izraza. Na primer, sledeći blok koda je validan primer @code{.hs} datoteke:
 
 @codeBlock{
 dana_u_nedelji = 7
@@ -28,7 +26,7 @@ dana_u_nedelji = 7
 sati_u_danu = 24
 }{U ovoj datoteci, imenu @code{dana_nedelji} odnosno @code{sati_u_danu} je pridružena vrednost @code{7} odnosno @code{24}.}
 
-@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti i funkcija...}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova@note{Ovo uključuje i slova srpske latinice i ćirilice.}, brojeve kao i karaktere @code{_} i @code{'}.
+@p Važno je znati da imena @em{moraju} početi malim slovom@note{Barem kada govorimo o imenima vrednosti (što uključuje i funkcije).}. Na ostalim mestima u imenu je dozvoljeno koristiti velika i mala slova@note{Ovo uključuje i slova srpske latinice i ćirilice.}, brojeve kao i karaktere @code{_} i @code{'}.
 
 @p Ime ne sme biti jedna od ključnih reči@note{Ovo su sve ključne reči Haskela, i u ovoj knjizi ćemo ih sve pojasniti.} @code{as}, @code{class}, @code{data}, @code{default}, @code{deriving}, @code{do}, @code{else}, @code{hiding} @code{if}, @code{import}, @code{in}, @code{infix}, @code{infixl}, @code{infixr}, @code{instance}, @code{let}, @code{module}, @code{newtype}, @code{of}, @code{then}, @code{type}, @code{where}, @code{qualified}.
 
@@ -53,7 +51,7 @@ sati_u_danu = 24
 
 @section{Izvršavanje Haskel koda}
 
-@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći ove operatore, vrednosti tipa @code{Int}, zagrade @code{()} možemo da gradimo @em{aritmetičke izraze}:
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći aritmetičke operatore, vrednosti tipa @code{Int} i zagrade @code{(} i @code{)}, možemo graditi @em{aritmetičke izraze}:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -67,7 +65,7 @@ dana_u_godini = 28 + 4 * 30 + 7 * 31
 
 sati_u_nedelji :: Int
 sati_u_nedelji = dana_nedelji * sati_u_danu
-}{Definicija labele @code{sati_u_nedelji} koristi definicije @code{dana_u_nedelji} i @code{sati_u_danu}. Imena uvek predstavljaju vrednosti koje su im dodeljene prilikom definicije, i mogu se koristiti umesto tih konkretnih vrednosti.}
+}{Definicija @code{sati_u_nedelji} koristi u sebi definicije @code{dana_u_nedelji} i @code{sati_u_danu}. Imena uvek predstavljaju vrednosti koje su im dodeljene prilikom definicije, i mogu se koristiti umesto tih konkretnih vrednosti.}
 
 @p Lista definicija nije sama po sebi mnogo korisna ako ne možemo utvrditi vrednosti izraza. Tako je u prethodnom primeru zgodno saznati koliko to sati ima u nedelji, a da bi smo saznali tu vrednost potrebno je da izvršimo Haskel kôd. Postoje dva načina na koje je moguće izvršiti Haskel kôd:
 
@@ -79,7 +77,7 @@ sati_u_nedelji = dana_nedelji * sati_u_danu
 
 @p Iz određenih razloga koji će biti pojašnjeni kasnije, definisanje imena @code{main} zahteva poznavanje nešto naprednijeg programiranja u Haskelu. Stoga će demonstracija kompilacije programa biti odložena za neku narednu lekciju, a do tada ćemo koristiti isključivo @em{GHCi} program.
 
-@p Rad u programu @em{GHCi} zahteva da prvo sačuvamo prethodni primer u datoteku sa ekstenzijom @code{.hs}. Na primer, neka je to datoteka @code{prviProgram.hs}. Zatim je potrebno da otvorimo terminal i promenimo aktivni direktorijum tog terminala u direktorijum u kom se nalazi datoteka @code{prviProgram.hs}. Nakon toga možemo pokrenuti @pre{ghci} program@note{Ako koristite @em{repl.it} web okruženje, dovoljno je da samo pokrenete komandu @pre{ghci} u terminalu koji se nalazi sa desne strane editora koda. Editor koda koji se nalazi na levoj strani prikazuje kôd koji se nalazi u datoteci @code{main.hs}. }. Nakon pokretanja komande @pre{ghci} komande pojaviće se tekst poput sledećeg:
+@p Rad u programu @em{GHCi} zahteva da prvo sačuvamo prethodni primer u datoteku sa ekstenzijom @code{.hs}. Na primer, neka je to datoteka @code{PrviProgram.hs}. Zatim je potrebno da otvorimo terminal i promenimo aktivni direktorijum tog terminala u direktorijum u kom se nalazi datoteka @code{PrviProgram.hs}. Nakon toga možemo pokrenuti @pre{ghci} program@note{Ako koristite @em{repl.it} web okruženje, dovoljno je da samo pokrenete komandu @pre{ghci} u terminalu koji se nalazi sa desne strane editora koda. Editor koda koji se nalazi na levoj strani prikazuje kôd koji se nalazi u datoteci @code{main.hs}. }. Nakon pokretanja komande @pre{ghci} komande pojaviće se tekst poput sledećeg:
 
 @terminal{
 C:\Users\User\Desktop>ghci
@@ -89,16 +87,16 @@ ghci>
 
 @p Pokretanjem @pre{ghci} programa otvara se novi prompt@note{Prompt je jedan ili više karaktera kojim se označava mesto korisničkog unosa. @em{GHCi} prompt je @pre{ghci>}.} u koji možemo da upišemo Haskel kôd ili @em{GHCi} naredbe. @em{GHCi} naredbe je moguće koristiti samo unutar @em{GHCi} okruženja, i imena tih naredbi počinju sa @pre{:}. Jedna od tih naredbi je i @pre{:load} uz pomoć koje možemo da učitamo sadržaj neke @pre{.hs} datoteke.
 
-@p Na primer, učitavanje datoteke @pre{prviProgram.hs} izgleda ovako:
+@p Na primer, učitavanje datoteke @pre{PrviProgram.hs} izgleda ovako:
 
 @terminal{
-ghci> :load prviProgram.hs
-[1 of 1] Compiling Main             ( prviProgram.hs, interpreted )
+ghci> :load PrviProgram.hs
+[1 of 1] Compiling Main             ( PrviProgram.hs, interpreted )
 Ok, one module loaded.
 ghci>
-}{Ako niste pokrenuli @pre{ghci} iz direktorijuma u kom se nalazi datoteka @pre{prviProgram.hs} dobićete grešku @pre{error: can't find file: prviProgram.hs}. U tom slučaju, možete u naredni prompt navesti putanju do željene datoteke @pre{:l putanja\do\prviProgram.hs}}
+}{Ako niste pokrenuli @pre{ghci} iz direktorijuma u kom se nalazi datoteka @pre{PrviProgram.hs} dobićete grešku @pre{error: can't find file: PrviProgram.hs}. U tom slučaju, možete u naredni prompt navesti putanju do željene datoteke @pre{:l putanja\do\PrviProgram.hs}}
 
-@p Nakon što je datoteka @pre{prviProgram.hs} učitana, možemo koristiti definisane vrednosti. Ako upišemo @code{dana_u_nedelji} i pritisnemo @pre{Enter}, vrednost dodeljena ovom imenu će biti ispisana, i nakon toga će pojaviti prompt spreman za novi unos:
+@p Nakon što je datoteka @pre{PrviProgram.hs} učitana, možemo koristiti definisane vrednosti. Ako upišemo @code{dana_u_nedelji} i pritisnemo @pre{Enter}, vrednost dodeljena ovom imenu će biti ispisana, i nakon toga će pojaviti prompt spreman za novi unos:
 
 @terminal{
 ghci> dana_u_nedelji
@@ -115,14 +113,14 @@ ghci> sati_u_nedelji
 
 @p Možda opisani postupak deluje trivijalno, ali predstavlja suštinu rada u interaktivnom okruženju@note{@em{GHCi} je primer @em{REPL} (Read-evaluate-print loop) programa čiji se rad sastoji od uzimanja korisničkih komandi, izvršavanja tih komandi i ispisivanja rezultata nazad u komandnu liniju, nakon čega program ponovo čeka korisnički unos.}.
 
-@p Ako želimo, u datoteku @pre{prviProgram.hs} možemo dodati još definicija poput @code{sekundi_u_danu = 24 * 60 * 60} itd... Da bismo mogli da koristimo nove definicije, neophodno je da sačuvamo izmene datoteke @code{prviProgram.hs} a zatim da ponovo učitamo datoteku u @em{GHCi}. To možemo da učinimo ponovo sa naredbom @pre{:load prviProgram.hs} ili sa naredbom @pre{:reload} koja ponovo učitava sve datoteke koje su do tada bile učitane:
+@p Ako želimo, u datoteku @pre{PrviProgram.hs} možemo dodati još definicija poput @code{sekundi_u_danu = 24 * 60 * 60} itd... Da bismo mogli da koristimo nove definicije, neophodno je da sačuvamo izmene datoteke @code{PrviProgram.hs} a zatim da ponovo učitamo datoteku u @em{GHCi}. To možemo da učinimo ponovo sa naredbom @pre{:load PrviProgram.hs} ili sa naredbom @pre{:reload} koja ponovo učitava sve datoteke koje su do tada bile učitane:
 
 @terminal{
 ghci> :reload
 Ok, one module loaded.
 ghci> sekundi_u_danu
 86400
-}{Naredba @pre{:reload} je pogotovo korisna kada se u @em{GHCi} učita više datoteka od jednom. O tome nismo govorili, ali je moguće i to učiniti uz opreznost da se nazivi labela ne ponavljaju.}
+}{Naredba @pre{:reload} je pogotovo korisna kada se u @em{GHCi} učita više datoteka od jednom. O tome nismo govorili, ali je moguće i to učiniti uz opreznost da se imena ne ponavljaju.}
 
 @p U @em{GHCi} prompt je moguće direktno unositi i Haskel izraze koji će se odmah evaluirati:
 

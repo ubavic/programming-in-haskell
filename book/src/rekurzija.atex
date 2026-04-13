@@ -99,7 +99,7 @@ paran n = not (paran (n - 1))
 
 @section{Fibonačijev niz}
 
-@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio knjigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}. Knjiga je bila priručnik za trgovce, a za nas je interesantno da je u jednom od mnogobrojnih primera Fibonači prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do data nije imala zečeve. Nije mnogo važno kako je Fibonači došao do rezultata, ali se ispostavilo da je broj parova zečeva na kraju svakog meseca redom @m{1}, @m{1}, @m{2}, @m{3}, @m{5}, @m{8}, itd... Zapravo, na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
+@p Italijanski srednjovekovni matematičar Leonardo iz Pize je objavio knjigu @em{Liber Abaci}@note{U istoriji matematike ova knjiga je ostala upamćena po tome što je evropljanima prezentovala arapski sistem brojeva. Do tada su u Evropi korišćeni rimski brojevi.}, priručnik za trgovce. U jednom od mnogobrojnih primera Fibonači je prezentovao račun koji se bavi rastom populacije zečeva na nekoj lokaciji koja do tada nije imala zečeve. Fibonači je ustanovio da je broj zečeva na kraju svakog meseca jednak broju zečeva na kraju prošlog meseca uvećanog za broj zečeva sa kraja pretposlednjeg meseca.
 
 @p Danas definicija @em{Fibonačijevog niza} nema mnogo veze za zečevima, a niz se konstruiše po sledećem principu: prva dva člana Fibonačijevog niza su @m{1} i @m{1}. Svaki naredni član Fibonačijevog niza je zbir prethodna dva člana.
 

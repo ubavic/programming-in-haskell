@@ -260,7 +260,7 @@ zapremina = (\a -> (\b -> (\c -> (a * b * c))))
 
 @section{@em{Prelude}}
 
-@p @def{Prelid}@note{eng. @em{prelude}} je kratka muzička forma improvizacijskog karaktera, koja se koristi kao uvod u veća muzička dela. U Haskelu, @em{Prelude} predstavlja kôd koji je dostupan svakom programu. Definicije iz Prelida, mogu se shvatiti kao uvod u definicije koje je korisnik napisao.
+@p U Haskelu, @def{Prelid} (eng. @em{prelude}) predstavlja kôd koji je dostupan svakom programu@note{U muzici prelid je kratka muzička forma improvizacijskog karaktera, koja se koristi kao uvod u veća muzička dela. Tako i definicije iz Haskel Prelida mogu da se shvate kao u uvod u naš program.}. Ovaj kod je deo standardne biblioteke Haskela.
 
 @p Sve predefinisane funkcije koje smo do sada predstavili, poput @code{not}, @code{mod}, @code{div}, @code{length}, @code{head}, @code{fst}, i tako dalje, zapravo su definisane u Haskel Prelidu. Takođe, konstante poput @code{pi} su definisane u Prelidu. U narednim lekcijama videćemo kako su tačno navedene funkcija definisane, i upoznaćemo još mnoge druge definicije iz Prelida.
 
