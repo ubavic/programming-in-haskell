@@ -72,7 +72,7 @@ Matematičkom notacijom zapisano, navedeni izraz predstavlja funkciju @m{g(x) = 
 
 @codeBlock{
 g = (\x -> (2 * x))
-}{Primer validne definicije funkcije u @code{.hs} datoteci.}
+}{Primer validne definicije funkcije u @pre{.hs} datoteci.}
 
 @p Nakon učitavanja navedenog koda u @em{GHCi}, možemo koristiti funkciju @code{g} i primenjivati@note{U imperativnim jezicima, češće se koristi izraz @em{pozivanje funkcije}. U funkcionalnim jezicima pravilnije je reći @em{primena funkcije na vrednost}, ali ćemo mi koristiti oba izraza.} je na neke vrednosti. Da bi funkciju primenili na vrednost potrebno je tu vrednost navesti nakon imena funkcije, razdvajajući ih razmakom:
 
@@ -110,7 +110,7 @@ ghci> (\x -> (2 * x)) 10
 @problem{
 Napisati lambda izraz koji za dati broj @m{r} daje površinu kruga čiji je poluprečnik @code{r}. Dodeliti ovaj izraz imenu @code{površinaKruga}. Izračunati površinu krugova čiji su poluprečnici @m{2} i @m{5}. Konstanta @m{\pi} je dostupna pod imenom @code{pi}.
 }{
-@p Površina kruga sa poluprečnikom @m{r} je @m{\pi r^2}, te stoga možemo definisati traženi lambda izraz sa @code{\r -> (pi * r^2)}. Ovaj izraz možemo imenovati, odnosno dodeliti nekom imenu, i sačuvati u @code{.hs} datoteci:
+@p Površina kruga sa poluprečnikom @m{r} je @m{\pi r^2}, te stoga možemo definisati traženi lambda izraz sa @code{\r -> (pi * r^2)}. Ovaj izraz možemo imenovati, odnosno dodeliti nekom imenu, i sačuvati u @pre{.hs} datoteci:
 
 @codeBlock{
 površinaKruga = (\r -> (2 * r^2))

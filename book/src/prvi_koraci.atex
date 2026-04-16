@@ -345,7 +345,7 @@ površina = 2*(a*b + b*c + c*a)
 }
 
 
-@p Zapravo, ovakvi blokovi definicija se mogu shvatiti kao male @code{.hs} datoteke. I kao što u @code{.hs} datoteci svaka definicija mora da počne od leve ivice, tako u bloku definicija sve definicije moraju da počnu od iste kolone@note{Ovo objašnjava četvrto pravilo.} (a ta kolona je uspostavljena početkom prve definicije).
+@p Zapravo, ovakvi blokovi definicija se mogu shvatiti kao male @pre{.hs} datoteke. I kao što u @pre{.hs} datoteci svaka definicija mora da počne od leve ivice, tako u bloku definicija sve definicije moraju da počnu od iste kolone@note{Ovo objašnjava četvrto pravilo.} (a ta kolona je uspostavljena početkom prve definicije).
 
 @codeBlock{
 w :: Int

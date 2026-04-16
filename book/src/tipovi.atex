@@ -118,7 +118,7 @@ ghci> mod 7 3
 
 @p Operatorom @code{^} je moguće stepenovati celobrojnu vrednost na prirodan stepen. Na primer @code{7^2} se evaluira u @code{49}.
 
-@p Ako pokušamo da sa @code{^} stepenujemo broj na negativan stepen dobićemo izuzetak@note{Pokušajte da iz neke @code{.hs} datoteke učitate definiciju @code{a = 7^(-2)}. Primetićete da će se datoteka uspešno učitati. Tek kada kroz @em{GHCi} prompt potražite vrednost od @code{a} doći će do izuzetka. Ovo nam govori da se Haskel kôd ne izvršava pri učitavanju datoteke već prilikom evaluacije izraza.}:
+@p Ako pokušamo da sa @code{^} stepenujemo broj na negativan stepen dobićemo izuzetak@note{Pokušajte da iz neke @pre{.hs} datoteke učitate definiciju @code{a = 7^(-2)}. Primetićete da će se datoteka uspešno učitati. Tek kada kroz @em{GHCi} prompt potražite vrednost od @code{a} doći će do izuzetka. Ovo nam govori da se Haskel kôd ne izvršava pri učitavanju datoteke već prilikom evaluacije izraza.}:
 
 @terminal{
 ghci> 7^(-2)
@@ -157,7 +157,7 @@ ghci> True == 1
 
 @p @code{Integer} je takođe tip koji predstavlja celobrojne vrednosti. I nad ovim vrednostima ovog tipa mogu se koristiti funkcije @code{+}, @pre{-}, @code{*}, @code{div}, @code{mod}, @code{rem}, @code{^}, @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=}. Razlika između tipova @code{Int} i @code{Integer} je u tome što su vrednosti tipa @code{Integer} neograničene@note{Naravno, ništa na računaru nije neograničeno pa tako ni tip @code{Integer} ne može da predstavi proizvoljno veliki broj. Ograničenja ovog tipa određena su raspoloživom radnom memorijom računara.}, dok su vrednosti tipa @code{Int} ograničene dužinom procesorske reči.
 
-@p Da bi demonstrirali razliku možemo napraviti mali eksperiment. U jednoj @code{.hs} datoteci definišimo jednu @code{Int} i jednu @code{Integer} konstantu:
+@p Da bi demonstrirali razliku možemo napraviti mali eksperiment. U jednoj @pre{.hs} datoteci definišimo jednu @code{Int} i jednu @code{Integer} konstantu:
 
 @codeBlock{
 a :: Int
