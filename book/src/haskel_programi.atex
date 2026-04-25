@@ -1,40 +1,40 @@
 @chapter{Haskel programi}
 
-@p U dosadašnjim lekcijama prikazali smo iskljičivo rad u interaktivnom okruženju @em{GHCi}. Sada ćemo se upoznati sa Haskel kompajlerom i naučićemo kako da kompajliramo Haskel kôd u izvršne datoteke. Takođe ćemo se upoznati sa metodama koje nam omogućavaju ulaz i izlaz iz programa (bilo kroz terminal, bilo kroz datoteke), kao i nekim osnovama organizacije Haskell koda.
+@p U dosadašnjim lekcijama prikazali smo isključivo rad u interaktivnom okruženju @em{GHCi}. Sada ćemo se upoznati sa Haskel kompajlerom i naučićemo kako da kompajliramo Haskel kôd u izvršne datoteke. Takođe ćemo se upoznati sa metodama koje nam omogućavaju ulaz i izlaz iz programa (bilo kroz terminal, bilo kroz datoteke), kao i nekim osnovama organizacije Haskell koda.
 
 @section{@em{Hello World!}}
 
-@p Većina knjiga o programskim jezicima započinje sa @em{Hello World!} programom: jednostavnim programom čija je jedina svrha da ispiše pozdrav u terminal. Sa mnogim Haskel knjigama, pa tako i ovom koju čitate, to nije slučaj. Umesto toga, na početku se prikazuje rad kroz interaktvno okruženje @em{ghci} da bi se osnovne osobine jezika dobro upoznale. Tek onda se demonstrira pisanje programa koji se samostalno izvšavaju i koji mogu prilikom izvršavanja da intereaguju sa korisnikom, datotekama, itd... Razlog ovakvog pristupa je jednostavan: pisanje samostalnih Haskel programa zahteva razumevanje nešto naprednijih koncepata Haskel jezika. Ali čitaoca ne treba da brine ova konstatacija jer ćemo mi te koncepte ovde postupno uvoditi. Znanje iz prethodnih lekcija značajno će olakšati čitanje ove lekcije. Ali o tom potom. Pogledajmo prvo @em{Hello world}.
+@p Većina knjiga o programskim jezicima započinje sa @em{Hello World!} programom: jednostavnim programom čija je jedina svrha da ispiše pozdrav u terminal. Sa mnogim Haskel knjigama, pa tako i ovom koju čitate, to nije slučaj. Umesto toga, na početku se prikazuje rad kroz interaktivno okruženje @em{ghci} da bi se osnovne osobine jezika dobro upoznale. Tek onda se demonstrira pisanje programa koji se samostalno izvršavaju i koji mogu prilikom izvršavanja da intereaguju sa korisnikom, datotekama, itd... Razlog ovakvog pristupa je jednostavan: pisanje samostalnih Haskel programa zahteva razumevanje nešto naprednijih koncepata Haskel jezika. Ali čitaoca ne treba da brine ova konstatacija jer ćemo mi te koncepte ovde postupno uvoditi. Znanje iz prethodnih lekcija značajno će olakšati čitanje ove lekcije.
 
-@p Definišimo jednu datoteku, na primer @code{hello.hs}, i u nju smestimo naredni kôd (koji ćemo u nastavku pojasniti):
+@p Definišimo datoteku @pre{Hello.hs}, i u nju smestimo naredni kôd:
 
 @codeBlock{
 main :: IO ()
 main = putStrLn "Hello World!"
 }
 
-@p I kao što je u većini drugih programskih jezika uvek potrebno definisati @em{main} funkciju koja predstavlja početnu tačku izvršavanja programa, tako i svaki Haskel program koji se kompajlira mora imati definisanu vrednost @code{main} tipa @code{IO ()}. 
+@p I kao što je u većini drugih programskih jezika uvek potrebno definisati @em{main} funkciju koja predstavlja početnu tačku izvršavanja programa, tako i svaki Haskel program koji se kompajlira mora imati definisanu vrednost @code{main} tipa @code{IO ()}. Vrednost @code{main} mora biti definisana u @code{Main} modulu. Kako @em{GHCI} implicitno dodaje @code{Main} modul kad drugi nije definisan, mi nećemo definisati modul u narednim primerima.
 
-@p Kôd možemo iskompajlirati u izvršni program pomoću @em{GHC} kompjalera. U sistemskom promptu@note{Dakle, ovde ne govorimo o pokretanju @em{GHCi} programa. Komande koje navodimo se sve pokreću u sistemskom promptu kog u nastavku označavamo sa @code{$}.} potrebno je pokrenuti kompajler @pre{ghc} i kao jedini argument proslediti mu ime datoteke koju je potrebno iskompajlirati: 
-
-@terminal{
-$ ghc hello.hs
-[1 of 1] Compiling Main             ( hello.hs, hello.o )
-Linking hello ...
-}
-
-@p Ako je kompilacija prošla uspešno, u direktorijumu u kom je @code{hello.hs} naći će se izvršna datoteka @pre{hello} (ili @pre{hello.exe} ako govorimo o @em{Windows} sistemima). Pokretanjem datoteke dobijamo dugo očekivani pozdrav:
+@p Kôd možemo iskompajlirati u izvršni program pomoću @em{GHC} kompajlera. U sistemskom promptu@note{Dakle, ovde ne govorimo o pokretanju @em{GHCi} programa. Komande koje navodimo se sve pokreću u sistemskom promptu kog u nastavku označavamo sa @code{$}.} potrebno je pokrenuti kompajler @pre{ghc} i kao jedini argument proslediti mu ime datoteke koju je potrebno iskompajlirati: 
 
 @terminal{
-$ ./hello
+$ ghc Hello.hs
+[1 of 1] Compiling Main             ( Hello.hs, hello.o )
+Linking Hello ...
+}{Primerimo da je ime modula koji se kompajlira @code{Main}}
+
+@p Ako je kompilacija prošla uspešno, u direktorijumu u kom je @code{Hello.hs} naći će se izvršna datoteka @pre{Hello} (ili @pre{Hello.exe} ako govorimo o @em{Windows} sistemima). Pokretanjem datoteke dobijamo dugo očekivani pozdrav:
+
+@terminal{
+$ ./Hello
 Hello World!
-}{Na @em{Windows} sistemima, umesto komande @code{./hello}, potrebno je uneti @code{.\hello.exe}. U nastavku lekcije ćemo ignorisati ovu razliku.}
+}{Na @em{Windows} sistemima, umesto komande @code{./Hello}, potrebno je uneti @code{.\Hello.exe}. U nastavku lekcije ćemo ignorisati ovu razliku.}
 
-@p Gorenavedeni kôd nije dugačak, ali jeste drugačiji od koda kojeg smo do sada pisali. Funkcija @code{putStrLn} primenjena na nisku @code{"Hello World!"} ne izgleda neobično, ali tip @code{IO ()} svakako izgleda.
+@p Navedeni kôd nije dugačak, ali jeste drugačiji od koda kojeg smo do sada pisali. Funkcija @code{putStrLn} primenjena na nisku @code{"Hello World!"} ne izgleda neobično, ali tip @code{IO ()} svakako izgleda.
 
-@p Tip @code{()} nam je poznat iz prethodne lekcije. U pitanju je tip koji sadrži samo jednu vrednost, vrednost koja se označava sa @code{()}. Tip @code{IO} je zapravo apstraktni tip vrste @code{* -> *}. Eksplicitnu definiciju definiciju tipa @code{IO} ne možemo navesti, ali možemo objasniti šta ovaj tip predstavlja.
+@p Tip @code{()} nam je poznat iz jedne od prethodnih lekcija. U pitanju je tip koji sadrži samo jednu vrednost, vrednost koja se označava sa @code{()}. Tip @code{IO} je zapravo apstraktni tip vrste @code{* -> *}. Definiciju tipa @code{IO} ne možemo navesti, ali možemo objasniti šta ovaj tip predstavlja.
 
-@p Za neki tip @code{T}, tip @code{IO T} predstavlja proceduru (u najširem smislu te reči), koja se može izvršiti tokom izvršavanja programa, i čiji rezultat je vrednost tipa @code{T}. Vrednosti koje poseduju tip oblika @code{IO T} nazivamo @def{akcije}. Prema tome, @code{main} je jedna akcija koja će se izvršiti tokom izvršavanja programa i čiji rezultat je vrednost tipa @code{()}, odnosno baš @code{()}. 
+@p Za neki tip @code{T}, tip @code{IO T} predstavlja proceduru (u najširem smislu te reči), koja se može izvršiti, i čiji rezultat je vrednost tipa @code{T}. Vrednosti koje poseduju tip oblika @code{IO T} nazivamo @def{akcije}. Prema tome, @code{main} je jedna akcija koja će se izvršiti tokom izvršavanja programa i čiji rezultat je vrednost tipa @code{()}, odnosno baš @code{()}. 
 
 @p Zapravo @code{main} je akcija koja ima poseban status: to je akcija koja se uvek prva izvršava pri radu programa, i poziva ostale akcije. U navedenom programu, akcija @code{main} je pozvala akciju @code{putStrLn "Hello World!"}. Funkcija @code{putStrLn} poseduje@note{U šta se možete uveriti pomoću @code{:type} naredbe u @em{GHCi} programu.} tip @code{String -> IO ()}, pa vrednost primene @code{putStrLn} na neku nisku je akcija tipa @code{IO ()} koja se može dodeliti imenu @code{main}. Dakle, @code{putStrLn} je funkcija koja nisku preslikava u akciju koja će ispisati tu nisku, ali vrednost @code{putStrLn} sama za sebe nije akcija.
 
@@ -56,10 +56,10 @@ main = do
 @p Kompilacijom i izvršavanjem programa dobijamo očekivani rezultat
 
 @terminal{
-$ ghc hello.hs
-[1 of 1] Compiling Main             ( hello.hs, hello.o )
+$ ghc Main.hs
+[1 of 1] Compiling Main             ( Main.hs, hello.o )
 Linking hello ...
-$ ./hello
+$ ./Main
 Hello World!
 Don't worry,
 Be happy.
@@ -80,7 +80,7 @@ main = do
 }{Kada se u @code{do} bloku nalazi samo jedna akcija (kao u slučaju @code{pozdrav} funkcije), tada nije potrebno otvarati @code{do} blok. Pogledati kako je u gore definisana @code{main} akcija sa jednom akcijom.}
 
 @terminal{
-$ ./hello
+$ ./Main
 Zdravo Nikola!
 Zdravo Nikolina!
 }
@@ -98,7 +98,7 @@ main = do
 }{Strelicom @code{<-} se vrednost tipa @code{T} "otpakuje" iz vrednosti tipa @code{IO T}.}
 
 @terminal{
-$ ./hello
+$ ./Main
 Vaše ime je: Marija
 Zdravo Marija!
 }
@@ -146,21 +146,40 @@ main = do
     putStrLn (show zbir)
 }
 }
+@problem{Napisati @em{Hello World} program u jednoj liniji. Iskoristiti činjenicu da dekleracije tipova nisu neophodne u Haskel kodu.}
+{
+@p @ccode{main = putStrLn "Hello World"}
+}
 
-@problem{Napisati @em{quine}, to jest program koji ispisuje sopstveni kôd.}
-{@p Napisati @em{quine} u bilo kom jeziku nije lak zadatak. Dobra početna tačka je program koji ispisuje neku nisku. Odabraćemo nisku koja je početak koda samog programa:
+@problem{U jednoj liniji napisati program koji ispisuje @em{Hello World} program.}
+{
+@p Par navodnika označava početak i kraj niske. Međutim problem se javlja ako želimo da napišemo nisku koja sadrži navodnik u sebi. Zbog toga koristimo kosu crtu koja označava da naredni karakter ima specijalno značenje. Konkretno, da bi naveli dupli navodnik unutar niske koristimo @pre{\"}.
+
+@codeBlock{
+main = putStrLn "main = putStrLn \"Hello World\""
+}
+}
+
+@problem{
+Analizirati šta funkcija @code{show} radi kada se primeni na nisku. Posebno, analizirati razliku između funkcija @code{putStrLn . show} i @code{putStrLn}.
+}
+
+@p U računarstvu, @def{kvajn}@note{Na engleskom @em{quine}. Termin je dobio ime po logičaru Willard Van Orman Quine-u.} je program koji ispisuje sopstveni kôd. Napisati kvajn u bilo kom jeziku nije lak zadatak. Sledeći zadatak je možda najteži u ovoj knjizi, ali prethodna tri zadatka treba da pomognu pri rešavanju.
+
+@problem{Napisati program koji ispisuje sopstveni kôd.}
+{@p Dobra početna tačka je program koji ispisuje neku nisku. Odabraćemo nisku koja je početak koda samog programa:
 
 @codeBlock{
 main = putStrLn "main = putStrLn"
-}{Iskoristićemo to što u Haskelu ne moramo da navodimo deklaracije tipova da bismo pojednostavili rešenje.}
+}
 
 @p Kompilacijom i pokretanjem programa dobijamo početak koda.
 
 @terminal{
-$ ghc quine.hs
-[1 of 1] Compiling Main             ( quine.hs, quine.o )
-Linking quine ...
-$ ./quine
+$ ghc Quine.hs
+[1 of 1] Compiling Main             ( Quine.hs, quine.o )
+Linking Quine ...
+$ ./Quine
 main = putStrLn
 }
 
@@ -168,43 +187,43 @@ main = putStrLn
 
 @codeBlock{
 main = putStrLn "main = putStrLn \"main = putStrLn\""
-}{Par navodnika označava početak i kraj niske. Međutim problem se javlja ako želimo da napišemo nisku koja sadrži navodnik u sebi. Zbog toga koristimo kosu crtu koja označava da naredni karakter ima specijalno značenje. Konkretno, da bi naveli dupli navodnik unutar niske koristimo @pre{\"}. Ovim smo definisali nisku @em{main = putStrLn "main = putStrLn"}.}
+}
 
 @terminal{
-$ ./quine
+$ ./Quine
 main = putStrLn "main = putStrLn"
 }{Pokretanjem rešenja uviđamo da je strategija bila naivna. Novim programom jesmo ispisali kôd prethodnog programa, ali nismo uspeli da konstruišemo @em{quine} - program koji ispisuje sopstveni kôd.}
 
-@p Kako mi dodajemo tekst u nisku to program postaje duži te moramo da dodajemo još više teksta, i tako dalje... Takav proces se nikad neće zaustaviti. Zbog toga moramo konstruisati nisku koju ćemo ispisati. Vratimo se na prvi pokušaj rešenja, tj. program @ccode{main = putStrLn "main = putStrLn"} i dodajmo funkciju @code{(\s -> s ++ s)} koja "duplira" nisku. Kôd te funkcije ćemo takođe dodati u nisku:
+@p Kako mi dodajemo tekst u nisku to program postaje duži te moramo da dodajemo još više teksta, i tako dalje... Takav proces se nikad neće zaustaviti. Zbog toga moramo napisati program koji će tokom izvršavanja konstruisati nisku koja će se ispitati. Vratimo se na prvi pokušaj rešenja, tj. program @ccode{main = putStrLn "main = putStrLn"} i dodajmo funkciju @code{(\s -> s ++ s)} koja "duplira" nisku. Kôd te funkcije ćemo takođe dodati u nisku:
 
 @codeBlock{
 main = putStrLn ((\s->s++s) "main = putStrLn (\\s->s++s)")
 }{Da bi naveli kosu crtu unutar niske koristimo @pre{\\}}
 
 @terminal{
-$ ./quine
+$ ./Quine
 main = putStrLn (\s->s++s)main = putStrLn (\s->s++s)
 }
 
-@p Poredeći kôd i ispis programa vidimo da nedostaje par zagrada, par navodnika, razmak, i kosa crta u lambda funkciji. Zagrade i razmak možemo da pokušamo da dodamo u nisku i telo lambda funkcije:
+@p Poredeći kôd i ispis programa vidimo da nedostaje par zagrada, par navodnika, razmak, i kosa crta u lambda funkciji. Otvorenu zagradu ćemo dodati u sam literal niske, a razmak i zatvorenu zagradu ćemo dodati u telo lambda funkcije:
 
 @codeBlock{
 main = putStrLn ((\s->s++" "++s++")") "main = putStrLn ((\\s->s++\" \"++s++\")\")")
 }
 
 @terminal{
-$ ./quine
+$ ./Quine
 main = putStrLn ((\s->s++" "++s++")") main = putStrLn ((\s->s++" "++s++")"))
 }
 
-@p Rešenje sad deluje dosta blizu. Neophodno je sad postaviti drugi deo ispisa u navodnike i dodati kose crte. Tj. potrebno je nisku ispisati u obliku u kom bi bila zapisana kao Haskel literal. Upravo to radi @code{show} funkcija. Sada je dovoljno umesto @code{\s->s++" "++s++")"} napisati @code{\s->s++" "++show s++")"}.
+@p Rešenje sad deluje dosta blizu. Neophodno je sad postaviti drugi deo ispisa u navodnike i dodati kose crte. Tj. potrebno je nisku ispisati u obliku u kom bi bila zapisana kao Haskel literal. Upravo to radi @code{show} funkcija. Sada je dovoljno umesto @ccode{\s->s++" "++s++")"} napisati @ccode{\s->s++" "++show s++")"}.
 
 @codeBlock{
 main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
 }
 
 @terminal{
-$ ./quine
+$ ./Quine
 main = putStrLn ((\s->s++" "++show s++")") "main = putStrLn ((\\s->s++\" \"++show s++\")\")")
 }
 }
@@ -271,7 +290,7 @@ main = do
 @codeBlock{
 Ono sve što znaš o meni
 To je stvarno tako malo
-U dvje riječi sve bi stalo
+U dv'je riječi sve bi stalo
 Kada pričala bi ti
 }{Sadržaj datoteke @pre{pesma.txt}}
 
@@ -285,13 +304,13 @@ main = do
 }{Kao što pokretanje akcije @code{getLine} daje korisnički unos, tako i pokretanje akcije @code{readFile "pesma.txt"} daje sadržaj datoteke. U oba slučaja moramo iskoristiti strelicu @code{<-} da bi pokrenuli akciju i rezultat smestili u novo ime.}
 
 @terminal{
-$ ghc main.hs
-[1 of 1] Compiling Main             ( main.hs, main.o )
-Linking main ...
-$ ./main
+$ ghc Main.hs
+[1 of 1] Compiling Main             ( Main.hs, main.o )
+Linking Main ...
+$ ./Main
 Ono sve što znaš o meni
 To je stvarno tako malo
-U dvje riječi sve bi stalo
+U dv'je riječi sve bi stalo
 Kada pričala bi ti
 }
 
@@ -307,16 +326,6 @@ main = do
 @p Pri radu sa funkcijama @code{readFile} i @code{writeFile} trebalo bi imati na umu da ove funkcije mogu dovesti do izuzetka koji prekidaju rad programa ako se ne obrade. Na primer, ako pokušamo čitanje datoteke koja ne postoji, ili upisavanje u datoteku za koju nemamo odgovarajuće dozvole. Videćemo uskoro kako se izuzeci mogu kontrolisati.
 
 @problem{Koristeći funkciju @code{lines :: String -> [String]} naći broj liniji u nekoj određenoj datoteci (npr @pre{pesma.txt}).}
-
-@section{Kratak osvrt na module}
-
-@p Pre nego što nastavimo sa akcijama, moramo napraviti kratku digresiju i upoznati se sa Haskel modulima. U Haskelu, @def{modul} je osnovna jedinica podele programa. Jedan modul sastoji se iz definicija funkcija, tipova, klasa, i drugih stvari sa kojima ćemo se upoznati... Ime modula mora početi velikim slovom i može sadržati samo alfanumeričke karaktere kao i znak tačke. Moduli omogućuju bolju organizaciju koda: kodu jednog modula nisu dostupne definicije iz drugog modula osim ako se eksplicitno ne @em{uvedu} u modul. Ovim je olakšano razdvajanje koda u smislene celine i organizacija koda. Sa druge strane, uvodeći module možemo iskoristiti funkcije ili akcije koje nismo sami napisali@note{Upravo zbog ovoga i spominjemo ovde module}.
-
-@p Svaka Haskel datoteka čini jedan poseban modul. U dosadašnjem izlaganju, implicitno smo radili sa @code{Main} modulom@note{Ime ovog modula možete da vidite prilikom kompilacije.} koji se podrazumeva ako neki drugi modul nije naveden. Za sve datoteke koje smo napisali, podrazumevalo se da definišu @code{Main} modul. Takođe, još jedan modul nam je bi "sakriven pred očima": to je prelid, odnosno @code{Prelude} modul koji se implicitno učitava u svaki Haskel program.
-
-@p Za nas će do kraja ove sekcije biti korisno da znamo kako možemo učitati određene funkcije iz standardnih modula. Da bismo uvezli neku funkciju @code{funkcija} iz modula @code{NekiModul} potrebno da na početku datoteke, pre svih drugih definicija napišemo liniju @ccode{import NekiModul (funkcija)}. Na ovaj način uvedena funkcija je dostupna našem kodu kao da smo je sami napisali. Ako iz modula @code{NekiModul} želimo da uvezemo više funkcija, na primer @code{funkc1} i @code{funkc2}, kôd ćemo započeti sa @code{import NekiModul (funkc1, funkc2)}. Ako uvozimo funkcije iz različitih modula, tada poredak uvoza nije bitan - bitno je samo da se svi uvozi nalaze pre definicija i deklaracija.
-
-@p Naravno, imena funkcija koje uvozimo iz drugih modula ne smeju se podudarati sa funkcijama koje smo sami definisali. Iako nam sistem modula omogućuje prevazilaženje ovog problema, za nas će za sada biti dovoljne samo informacije koje smo ovde dali. 
 
 @section{Rad sa argumentima komande linije}
 
@@ -340,19 +349,19 @@ main = do
 }{Sadržaj datoteke @pre{argumenti.hs}}
 
 @terminal{
-$ ghc argumenti.hs
-[1 of 2] Compiling Main             ( argumenti.hs, argumenti.o )
+$ ghc Argumenti.hs
+[1 of 2] Compiling Main             ( Argumenti.hs, argumenti.o )
 
-$ ./argumenti
-argumenti
+$ ./Argumenti
+Argumenti
 []
 
-$ ./argumenti a b C DDD 123
-argumenti
+$ ./Argumenti a b C DDD 123
+Argumenti
 ["a","b","C","DDD","123"]
 
-$ ./argumenti argument1 "drugi argument"
-argumenti
+$ ./Argumenti argument1 "drugi argument"
+Argumenti
 ["argument1","drugi argument"]
 }{Kompilacija navedenog programa i tri primera pokretanja. Svaka reč nakon imena programa se interpretira kao poseban argument. Poslednji primer ilustruje mogućnost prosleđivanja argumenta sačinjenog od više reči korišćenjem navodnika.}
 
@@ -386,5 +395,3 @@ main = do
 @problem{Napisati program koji ispisuje prvih pet linija tekstualne datoteke čije ime je navedeno kao prvi argument komandne linije (ovo je takozvani @em{head} program). Ako argument nije prisutan, program treba da ispiše poruku o grešci. Ako je prisutan drugi argument, proveriti da li taj argument predstavlja prirodan broj, i u potvrdnom slučaju ispisati broj linija u skladu sa tim argumentom. Iskoristiti funkcije @code{uBroj} i @code{daLiJeBroj} iz lekcije o listama.}
 
 @todo{Nasumične vrednosti}
-
-@todo{IO u interaktivnom okruženju}

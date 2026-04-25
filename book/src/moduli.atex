@@ -1,1 +1,190 @@
 @chapter{Moduli}
+
+@p Ova knjiga je organizovana u celine (@em{lekcije}) da bi materija koja se izlaže bila pristupačnija za čitanje. Koncepti koji su povezni izloženi su u okviru iste lekcije, što značajno olakšava i nalaženje informacija. Iz potpuno istih razloga, u svakom programskom jeziku velike kodove želimo da podelimo u posebne datoteke (i direktorijume), grupišući povezane koncepte u celine. Na taj način prvenstveno sami sebi olakšavamo snalaženje u kodu. Haskel, kao i svaki drugi moderan programski jezik, podržava grupisanje koda u celine.
+
+@p U Haskelu, @def{modul} je osnovna jedinica podele programa. Jedan modul sastoji se iz definicija funkcija, tipova i klasa tipova. Ime modula mora početi velikim slovom i može sadržati samo alfanumeričke karaktere kao i znak tačke. Modul se definiše, tako što se na početku @pre{.hs} datoteke navede linija @ccode{module ImeModula where}.
+
+@example{
+@p Modul @code{GeometrijaKruga} definiše dve funkcije koje su mogu uvesti u druge module.
+
+@codeBlock{
+module GeometrijaKruga where
+
+površina :: Float -> Float
+površina r = r^2 * pi
+
+obim :: Float -> Float
+obim r = 2 * pi * r
+}}
+
+@p Svaka Haskel datoteka može sadržati definiciju samo jednog modula, i obrnuto, svaki modul mora biti sadržan u jednoj datoteci. Prema tome, moduli se mogu poistovetiti sa @pre{.hs} datotekama. Neophodno je imenovati @pre{.hs} datoteke imenom modula (sve sa početnim velikim slovom)@note{Iako sam Haskel jezik ne uslovljava da naziv datoteke i naziv modula moraju da budu isti, svi alati (uključujući @em{GHC} i @em{GHCi}) koriste ovu konvenciju. Ako koristite samo jednu @pre{.hs} datoteku kroz @em{GHCi}, onda ime datoteke nije mnogo važno. Ali u iole složenijoj postavci, svako odstupanje od konvencija koje su izložene u ovoj lekciji će vam zadati glavobolje.}.
+
+@p Datoteke sa Haskel kodom možemo dalje podeliti u direktorijume. Neophodno je da sama imena modula prate hijerarhiju koja je ustanovljena direktorijumima, tako što ćemo imena direktorijuma postaviti u ime modula i razdvojiti ih tačkom. Pri tome, sve putanje se uzimaju u odnosu na korenski direktorijum projekta, tj. u odnosu na direktorijum u kom pokrećemo @em{GHCi}. Na primer, pretpostavimo da u direktorijumu projekta imamo poddirektorijum @pre{Životinje}. Ako je datoteka @pre{Mačka.hs} smeštena u direktorijumu @pre{Životinje}, modul u datoteci @pre{Mačka.hs} ćemo imenovati @code{Životnije.Mačka}. Ako se u direktorijumu @pre{Životinje} nalazi direktorijum @pre{Ribe} i u tom direktorijumu se nalazi datoteka @pre{Tuna.hs}, tada ćemo modul u toj datoteci imenovati @code{Životnije.Ribe.Tuna}. I analogno za složenije slučajeve. Kao i datoteke, i direktorijume je neophodno imenovati sa početnim velikim slovom, koristeći samo alfanumeričke karaktere.
+
+@section{Izvoz definicija}
+
+@p Dekleracijom modula sa konstrukcijom @code{module X where} sve definicije koje se nalaze u istoj datoteci biće dostupne za uvoz u duge datoteke. Tj. na ovaj način sve definicije će biti @em{javne}.
+
+@p Često ne želimo da sve definicije iz nekog modula učinimo dostupnim za uvoz u druge module, tj. želimo da neke definicije ostavimo @em{privatnim}. To se postiže tako što ćemo u dekleraciji modula, odmah nakon imena modula postaviti uređenu @m{n}-torku imena koje želimo da budu javni. Sva imena koja se ne nalaze u ovoj @m{n}-torci biće privatna. Poredak kojim su navedene imena nije važan. Naravno, ako nakon imena modula navedemo @m{n}-torku dužine @m{0}, tj. @code{()}, sve definicije će biti privatne.
+
+@example{
+@p NAredni modul @code{GeometrijaValjka} definiše četiri funkcije funkcije, ali samo su @code{površina} i @code{zapremina} javne definicije.
+
+@codeBlock{
+module GeometrijaValjka (površina, zapremina) where
+
+površinaOsnovice :: Float -> Float
+površinaOsnovice r = r^2 * pi
+
+površinaOmotača :: Float -> Float -> Float
+površinaOmotača r h = 2 * pi * r * h
+
+površina :: Float -> Float -> Float
+površina r h = 2 * (površinaOsnovice r) + (površinaOmotača r h)
+
+zapremina :: Float -> Float -> Float
+zapremina r h = h * (površinaOsnovice r)
+}}
+
+
+@p Neki od razloga zašto ne želimo uvek sve definicije da izvezemo su:
+
+@list{
+    @li Određene funkcije imaju određene pretpostavke, na primer, nisu korektne za sve argumente, ili čak nisu ni definisane za sve argumente. Ako takve funkcije učinimo privatnim, onda ćemo biti sigurni da se koriste samo u okviru modula na način na koji smo zamislili (sa nekim dodatnim proverama). Ali ovaj razlog je zapravo dublji od pukih provera argumenata. Pažljivim odabirom funkcija koje izvozimo možemo se osigurati da će funkcije biti pozvane određenim redosledom (što može biti važno ako se bavimo ulazom i izlazom u program, npr. upisivanjem u bazu)
+    @li Privatne funkcije je lakše menjati jer se koriste na manje mesta. Karakteristična je  promena tipa neke funkcije koja zahteva da se izvrše izmene na svim mestima gde se ta funkcija poziva .
+    @li Smanjenjem broja funkcija koje su javne, olakšavamo korisnicima (kolegama programerima) naših modula razumevanje istih. Umesto da proučavaju desetine funkcija, korisnicima će biti izloženo nekoliko funkcija od suštinskog značaja. 
+}
+
+@subsection{Izvoz tipova i konstruktora}
+
+@p Kao i funkcije, i tipovi i konstruktori se mogu izvoziti iz modula. Konstruktori se izvoze tako što se navedu u zagradama odmah nakon tipa (u okviru iste "koordinate").
+
+@example {
+@p Ako iz modula @code{Vektor} želimo da izvezemo i tip @code{Vektor} i konstruktor tog tipa, možemo sledeće da napišemo
+
+@codeBlock{
+module Vektor (Vektor(MkVektor), dužina) where
+
+newtype Vektor = MkVektor (Float, Float)
+
+dužina :: Vektor -> Float
+dužina (Vektor (x, y)) = sqrt (a^2 + b^2)
+}
+}
+
+@p Izvozom konstruktora, dopuštamo da se u drugim modulima konstruišu vrednosti odgovarajućeg tipa kao i da vrši dekonstrukcija podudaranjem oblika. Ako ne želimo da dozvolimo ove operacije u drugim modulima, umesto samih konstruktora možemo izvoziti funkcije koje imaju analognu ulogu ali sa dodatnom logikom (najčešće vezanu za validaciju podataka). Ova tehnika se naziva @em{pametni konstruktor} (eng. @em{smart constructor}).
+
+@example{
+@p U nekom programu, u modulu @code{Ljudi} podatak o osobi definisan je kao tip @ccode{newtype Osoba = MkOsoba (String, Int)}, gde prva koordinata predstavlja ime osobe a druga koordinata predstavlja broj godina. Ako bi konstruktor @code{MkOsoba} bio javan, tada bi se bilo gde u ostatku programa mogla kreirati nova vrednost tipa @code{Osoba}. Međutim, greške se lako potkradu, i mogu se kreirati besmislene vrednosti poput @code{Osoba ("Petar", -100)}. Stoga, umesto konstruktora @code{MkOsoba} svuda u programu ćemo koristiti funkciju koja ima isti tip kao i konstruktor, ali i dodatnu logiku:
+
+@codeBlock{
+napraviOsobu :: String -> Int -> Osoba
+napraviOsobu ime godine = MkOsoba (ime godine')
+        where
+            godine' = min 120 (max godine 0)
+}{Na ovaj način, ograničili smo broj godina na interval od @m{0} do @m{120}. U lekciji algebarski tipovi podataka videćemo kako možemo da elegantno vratimo grešku, umesto da "tiho" zamenimo vrednost.}
+
+@p Ovu funkciju ćemo postaviti za javnu, i na taj način ćemo se osigurati da u drugim modulima ne možemo kreirati besmislene vrednosti. Takođe, ako želimo da dodamo novu validaciju (na primer za ime), biće dovoljno da dodamo tu validaciju samo na jedno mesto - u definiciji funkcije @code{napraviOsobu}.
+}
+
+@section{Uvoz definicija}
+
+@p @def{Dekleracije uvoza} se navode odmah nakon dekleracija modula, i imaju oblik @ccode{import X (...)}, gde su u zagradama nalazi uređena lista javnih definicija iz @code{X} koje želimo da uvezemo. Definicije koje smo uvezli možemo koristi pod istim imenom koji im dodeljen u izvornom modulu.
+
+@p Ako se uvozi više različitih modula, tada se svaki uvoz navodi u posebnom redu, pri čemu poredak uvoza nije bitan. Greška pri kompilaciji (interpretaciji) će se dogoditi ako se pokuša uvoz istih imena iz različitih modula.
+
+@example{
+@p Da bismo uvezli funkciju @code{obim} iz modula @code{GeometrijaKruga} u modul @code{GeometrijaValjka} potrebno odmah nakom dekleracije modula a pre svih drugih definicija, napišemo liniju @ccode{import GeometrijaKruga (površina)}. Na ovaj način funkcija @code{obim} postaje dostupna u modulu @code{GeometrijaValjka}:
+
+@codeBlock{
+module GeometrijaValjka (površina, zapremina) where
+
+import GeometrijaKruga (obim)
+
+površinaOsnovice :: Float -> Float
+površinaOsnovice r = r^2 * pi
+
+površinaOmotača :: Float -> Float -> Float
+površinaOmotača r h = (obim r) * h
+
+površina :: Float -> Float -> Float
+površina r h = 2 * (površinaOsnovice r) + (površinaOmotača r h)
+
+zapremina :: Float -> Float -> Float
+zapremina r h = h * (površinaOsnovice r)
+}
+
+@p Primetimo da je funkcija @code{obim} dostupna pod baš tim imenom, i da smo je iskoristili u funkciji @code{površinaOmotača}.
+
+@p Ako se datoteke @pre{GeometrijaValjka.hs} i @pre{GeometrijaKruga.hs} tada je možemo da učitamo @pre{GeometrijaValjka.hs} u @em{GHCi} okruženje sa @pre{:load} komadom. Oba modula će se učitati:
+
+@terminal{
+ghci> :load GeometrijaValjka.hs
+[1 of 2] Compiling GeometrijaKruga  ( GeometrijaKruga.hs, interpreted )
+[2 of 2] Compiling GeometrijaValjka ( GeometrijaValjka.hs, interpreted )
+Ok, two modules loaded.
+}
+
+@p Učitavanjem modula @pre{GeometrijaValjka.hs} sve definicije (uključujući i privatne), postaju dostupne u okruženju. Iz modula @pre{GeometrijaKruga.hs} biće dostupne javne definicije.
+}
+
+@p Kao i kod izvoza, sa praznom @m{n}-torkom, @code{()} nećemo uvesti ni jednu definiciju@note{Mada ovakav uvoz nije u potpunosti beskoristan, i koristi se zbog nekih efekata...}, dok izostavljanjem bilo kakve @m{n}-torke uvozimo sve javne definicije iz modula. Takođe, ako želimo da uvezemo sve definicije @em{osim} par određenih, to možemo da uradimo sa dodajući listu "neželjenih" definicija nakon @code{hiding} ključne reči. Na primer, da uvezemo sve definicije iz modula @code{M} osim @code{f} i @code{g}, napisaćemo @ccode{import M hiding (f, g)}.
+
+@subsection{Kvalifikovani uvoz}
+
+@p Dekleracije uvoza koje smo do sada videli uvoze definicije (funkcije, tipove, konstruktore...) pod istim imenom kako su originalno definisane. Međutim ako se u modul @code{M} ceo modul @code{N} koji sadrži i ime @code{x}, a u samom modulu je ime @code{x} takođe definisano, tada će ime @code{x} imati vrednost kakva je definisana u @code{M}@note{U prethodnom primeru, probajte da uvezete ceo modul @code{GeometrijaKruga} u modul @code{GeometrijaValjka}.}. Da bi se izbegao ovakav problem, koristi se @def{kvalifikovani uvoz}.
+
+@p Pri kvalifikovanom uvozu, sva imena koja se uvoze, dobijaju prefiks. Podrazumevani prefiks je ime modula koji se uvozi. Dekleracija kvalifikovanog uvoza je @ccode{import qualified N}. Da bi se umesto imena modula koristio prefiks @em{X} potrebno je koristiti dekleraciju @ccode{import qualified N as X}, pri čemu ime @code{X} ne sme sadržati tačke.
+
+@example{
+@p Modul @code{GeometrijaKruga} možemo uvesti pod imenom @code{GK}:
+
+@codeBlock{
+module GeometrijaValjka (površina, zapremina) where
+
+import qualified GeometrijaKruga as GK
+
+površinaOsnovice :: Float -> Float
+površinaOsnovice = GK.površina
+
+površinaOmotača :: Float -> Float -> Float
+površinaOmotača r h = (GK.obim r) * h
+}
+}
+
+@section{Moduli u interaktivnom okruženju}
+
+@p Do sada smo učitavali datoteke u @em{GHCi} sa @pre{:load} komandom. Kao što smo mogli da vidimo do sada, ako u Haskel datoteci nije deklarisan modul, tada će taj modul biti implicitno učitan pod imenom @em{Main}. Komanda @pre{:load} takođe dozvoljava učitavanja više @em{.hs} datoteka od jednom, dovoljno je navesti listu datoteka razdvojenih razmakom:
+
+@terminal{
+ghci> :load A.hs B.hs
+}
+
+@p Komanda @pre{:load} može da učita datoteke na osnovu putanje. Tako na primer, ako pokrenemo @em{GHCi} u @pre{home} direktorijumu, a modul @pre{A.hs} se nalazi u @pre{home/haskel-project} direktorijumu, tada možemo da upišemo komandu @pre{haskel-project/A.hs} da bismo učitali modul. Međutim, Alternativno, i mnogo bolje@note{Kao što je gore navedeno, u imenima modula koji se uvoze mogu se navesti direktorijumi razdvojeni tačkama. Da bi uvoz funkcionisao ime mora modula mora u potpunosti da prati relativnu putanju do modula, u odnosu na direktorijum u kom smo trenutno pozicionirani sa @pre{:cd} komandom.}, je da se @em{GHCi} pozicioniramo u korenski direktorijum Haskel projekta. To možemo uraditi sa @pre{:cd} komandom, na primer: @pre{:cd haskel-project}.
+
+@p Ako upišemo komandu @code{:load} bez argumenata, tada ćemo "odbaciti" sve učitane module do tada.
+
+@p Sa komandom @pre{:browse} možemo prikazati listu svih definicija u poslednje učitanom modulu. Specijalno, ako nakon komande @pre{:browse} navedemo ime modula, možemo pregledati sve definicije iz tog određenog modula.
+
+
+@section{Standardna biblioteka}
+
+@p Haskell kompajler dolazi sa mnogobrojnim modulima. I sami smo do sada koristili predefinisane funkcije za koje smo rekli da dolaze iz Prelida (@code{Prelude}), koji je zapravo samo jedan od predefinisanih modula. Modul @code{Prelude} se razlikuje po tome što se implicitno uvozi u svaki drugi modul. Taj implicitni možemo da se spreči sa uvozom @code{import Prelude ()}. 
+
+@p U Prelid modulu se ne nalaze same definicije, već se imena uvoze iz drugih modula i ista takva takva izvoze (takozvani @em{reeksport}). Definicije koje Prelid reeksportuje su one koje se najčešće koriste. Mnoge druge funkcije nisu dostupne kroz Prelid, već kroz posebne module. Nekih od tih modla su pojašnjeni u nastavku, a lista svih modula sa dokumentacijom se može pregledati na @url{Haskell Hierarchical Libraries}{https://downloads.haskell.org/ghc/latest/docs/libraries/} stranici.
+
+@list{
+    @li @code{Data.Char} sadrži mnoge funkcije za proveru karaktera (@code{isDigit}, @code{isSpace}, @code{isUpperCase}...) kao i funkcije za transformacije karaktera (@code{toUpper}, @code{toLower})
+    @li @code{Data.Complex} sadrži definiciju apstraktnog tipa @code{Complex} kao i funkcije za rad sa kompleksnim brojevima. Tip @code{Complex} je definisan kao apstraktan, jer time je omogućeno da se naprave posebni tipovi za različite konkretne numeričke tipove, ako na primer @code{Complex Int} i @code{Complex Float}
+    @li @code{Data.List} sadrži mnogobrojne funkcije za rad sa listama: @code{isPrefixOd}, @code{isSuffixOf}, @code{intersect}, @code{intercalate}, @code{lines}, @code{tail}, @code{take}, @code{takeWhile}, @code{words}, @code{zip}, @code{zip3}...
+    @li @code{Data.Set} sadrži definiciju apstraktnog tipa @code{Set}. Vrednost tipa @code{Set T} za neki konkretan tip @code{T}, predstavlja @em{skup} elementa tipa @code{A}. Za razliku od lista, vrednosti u skupovima ne mogu da se ponavljaju, i njihov poredak nije bitan. Naravno, u modulu  @code{Data.Set} su dostupne mnoge funkcije za rad sa skupovima, poput @code{member}, @code{union}, @code{cartesianProduct}, @code{size}...
+    @li @code{Data.Map} sadrži definiciju apstraktnog tipa @code{Map :: * -> * -> *}. Za neke tipove @code{A} i @code{B}, vrednost tipa @code{Map A B} predstavlja strukturu koja sadrži vrednosti tipa @code{B} indeksirane vrednostima tipa @code{A} (ovakva struktura se naziva i @em{rečnik}).
+}
+
+@p Da bi koristili bilo koji od navedenih modula, uglavnom je dovoljno da navedemo dekleraciju uvoza@note{U slučaju @code{Set} i @code{Map} modula, na nekim Linux sistemima je neophodno uvesti paket @code{containers} tako što ćemo u @em{GHCi} upisati @ccode{:set -package containers}.}. 
+
+@problem{
+Pregledati definicije @code{Prelude} modula koristeći @pre{:browse} komandu.
+}
+
+@todo{Kreiranje projekata sa Cabal alatom}
