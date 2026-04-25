@@ -169,13 +169,13 @@ ghci> :load A.hs B.hs
 
 @section{Standardna biblioteka}
 
-@p Haskell kompajler dolazi sa mnogobrojnim modulima. I sami smo do sada koristili predefinisane funkcije za koje smo rekli da dolaze iz Prelida (@code{Prelude}), koji je zapravo samo jedan od predefinisanih modula. Modul @code{Prelude} se razlikuje po tome što se implicitno uvozi u svaki drugi modul. Taj implicitni možemo da se spreči sa uvozom @code{import Prelude ()}. 
+@p Haskell kompajler dolazi sa mnogobrojnim modulima. I sami smo do sada koristili predefinisane funkcije za koje smo rekli da dolaze iz Prelida (@code{Prelude}), koji je zapravo samo jedan od predefinisanih modula. Modul @code{Prelude} se razlikuje po tome što se implicitno uvozi u svaki drugi modul. Taj implicitni uvoz može se sprečiti sa deklaracijom @code{import Prelude ()}. 
 
 @p U Prelid modulu se ne nalaze same definicije, već se imena uvoze iz drugih modula i ista takva takva izvoze (takozvani @em{reeksport}). Definicije koje Prelid reeksportuje su one koje se najčešće koriste. Mnoge druge funkcije nisu dostupne kroz Prelid, već kroz posebne module. Nekih od tih modla su pojašnjeni u nastavku, a lista svih modula sa dokumentacijom se može pregledati na @url{Haskell Hierarchical Libraries}{https://downloads.haskell.org/ghc/latest/docs/libraries/} stranici.
 
 @list{
     @li @code{Data.Char} sadrži mnoge funkcije za proveru karaktera (@code{isDigit}, @code{isSpace}, @code{isUpperCase}...) kao i funkcije za transformacije karaktera (@code{toUpper}, @code{toLower})
-    @li @code{Data.Complex} sadrži definiciju apstraktnog tipa @code{Complex} kao i funkcije za rad sa kompleksnim brojevima. Tip @code{Complex} je definisan kao apstraktan, jer time je omogućeno da se naprave posebni tipovi za različite konkretne numeričke tipove, ako na primer @code{Complex Int} i @code{Complex Float}
+    @li @code{Data.Complex} sadrži definiciju apstraktnog tipa @code{Complex} kao i funkcije za rad sa kompleksnim brojevima. Tip @code{Complex} je definisan kao apstraktan, jer time je omogućeno da se naprave posebni tipovi za različite konkretne numeričke tipove, ako na primer @code{Complex Int} i @code{Complex Float}. Konstruktor za kompleksne brojeve je @code{:+} koji se navodi između argumenata, pa tako @code{2 :+ 3} predstavlja kompleksan broj @m{2 + 3i}.
     @li @code{Data.List} sadrži mnogobrojne funkcije za rad sa listama: @code{isPrefixOd}, @code{isSuffixOf}, @code{intersect}, @code{intercalate}, @code{lines}, @code{tail}, @code{take}, @code{takeWhile}, @code{words}, @code{zip}, @code{zip3}...
     @li @code{Data.Set} sadrži definiciju apstraktnog tipa @code{Set}. Vrednost tipa @code{Set T} za neki konkretan tip @code{T}, predstavlja @em{skup} elementa tipa @code{A}. Za razliku od lista, vrednosti u skupovima ne mogu da se ponavljaju, i njihov poredak nije bitan. Naravno, u modulu  @code{Data.Set} su dostupne mnoge funkcije za rad sa skupovima, poput @code{member}, @code{union}, @code{cartesianProduct}, @code{size}...
     @li @code{Data.Map} sadrži definiciju apstraktnog tipa @code{Map :: * -> * -> *}. Za neke tipove @code{A} i @code{B}, vrednost tipa @code{Map A B} predstavlja strukturu koja sadrži vrednosti tipa @code{B} indeksirane vrednostima tipa @code{A} (ovakva struktura se naziva i @em{rečnik}).
@@ -187,4 +187,9 @@ ghci> :load A.hs B.hs
 Pregledati definicije @code{Prelude} modula koristeći @pre{:browse} komandu.
 }
 
+
 @todo{Kreiranje projekata sa Cabal alatom}
+
+@problem{
+U matematici, @em{Mebijusova transformacija} je kompleksna funkcija oblika @eq{m(z)=\frac{\alpha z + \beta}{\gamma z + \delta},} gde su @m{\alpha}, @m{\beta}, @m{\gamma}, @m{\delta} kompleksni brojevi za koje važi @m{\alpha\delta-\beta\gamma \ne 0.} Definisati modul @code{Mebijus}, i u modulu definisati funkciju @code{novaT} koja od uređene četvorke tipa @ccode{(Complex Float, Complex Float, Complex Float, Complex Float)} konstruiše funkciju tipa @code{(Complex Float -> Complex Float)}. Na primer, @code{novaT (1, 0, 2, 0 :+ 1)} treba da vrati funkciju koja predstavlja transformaciju @m{z \mapsto z/(2z+i).} U funkciji @code{novaT} izvršiti neophodne provere, i u slučaju greške vratiti identičku transformaciju @eq{m(z) = z = (z + 0)/(0z + 1).} Demonstrirati da transformacija @m{m(z)=\frac{z - i}{z + i}} preslikava realnu liniju u jedinični krug (npr. koristeći @code{map} funkciju i opseg @code{[-10 .. 10]}, i funkciju @code{abs} koja računa @em{modul} kompleksnog broja).
+}
