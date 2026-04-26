@@ -72,7 +72,7 @@ Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba
 
 @subsection{Uređene @m{n}-torke kao proizvodi tipova}
 
-@p Pažljiv čitalac će uvideti da smo koncept proizvoda tipova već imali kod uređenih @m{n}-torki. I zaista tip @code{Osoba} iz prethodnog primera je u nekom smislu ekvivalentan tipu @code{([Char], Int, Bool)}@note{Preciznije, između navedenih tipova postoji bijekcija: uzajamno jednoznačna korenspondencija.}. Svaku vrednost tipa @code{Osoba} možemo konvertovati u vrednost tipa @code{([Char], Int, Bool)} i obrnuto@note{Napišite funkcije koje uspostavljaju bijekciju.}.
+@p Pažljiv čitalac će uvideti da smo koncept proizvoda tipova već imali kod uređenih @m{n}-torki. I zaista tip @code{Osoba} iz prethodnog primera je u nekom smislu ekvivalentan tipu @code{([Char], Int, Bool)}. Svaku vrednost tipa @code{Osoba} možemo konvertovati u vrednost tipa @code{([Char], Int, Bool)} i obrnuto.
 
 @p Sličnost nije slučajna, jer uređene @m{n}-torke jesu proizvodi tipova. Na primer, uređen par je @em{apstraktni} tip definisan sa @ccode{data (,) a b = (,) a b}. Slično su definisane i druge uređene @m{n}-torke @ccode{data (,,) a b c = (,,) a b c}, @ccode{data (,,,) a b c d = (,,,) a b c d} i tako dalje. Primetimo da tipovi i konstruktori imaju isto ime!
 
@@ -156,7 +156,7 @@ uMetre x = x
 @p Tip @code{Dužina} predstavlja uniju tri @code{Float} tipa. Ali iako su tipovi u sumi isti, ova unija je @em{disjunktna}. Drugim rečima vrednosti @code{Metar 1}, @code{Milja 1} i @code{SvetlosnaSekunda 1} su međusobno potpuno različite vrednosti, iako se svaka od ovih vrednosti dobila primenom konstruktora na @code{1 :: Float}
 }
 
-@p Napomenimo da poredak konstruktora u sumi nije od značaja. Tako na primer, definicija @ccode{data SlovoIliBroj = Slovo Char | Broj Int} definiše isti@note{Tačnije, svaka od ove dve definicije se može zameniti sa onom drugom u kodu, i ostatak koda neće morati da se promeni.} tip kao i definicija @code{data SlovoIliBroj = Broj Int | Slovo Char}. Za razliku od toga, u proizvodima poredak tipova je bitan. Tako na primer, definicija @ccode{data SlovoIBroj = SIB Int Char} je sasvim različita od definicije@note{Ove dve definicije su naravno ekvivalentne u smislu da mogu predstaviti vrednosti koje su u jednoznačnoj korenspodenciji. Međutim, ako se jedna od ove dve definicije zameni sa drugom, ta zamena će zahtevati i promenu ostatka koda (na svim mestima u kodu gde su iskorišćeni konstruktori).} @ccode{data SlovoIBroj = SIB Char Int}
+@p Napomenimo da poredak konstruktora u sumi nije od značaja. Tako na primer, definicija @ccode{data SlovoIliBroj = Slovo Char | Broj Int} definiše isti@note{Tačnije, svaka od ove dve definicije se može zameniti sa onom drugom u kodu, i ostatak koda neće morati da se promeni.} tip kao i definicija @code{data SlovoIliBroj = Broj Int | Slovo Char}. Za razliku od toga, u proizvodima poredak tipova je bitan. Tako na primer, definicija @ccode{data SlovoIBroj = SIB Int Char} je sasvim različita od definicije@note{Ove dve definicije su naravno ekvivalentne u smislu da mogu predstaviti vrednosti koje su u jednoznačnoj korenspodenciji (više o tome u nastavku lekcije). Međutim, ako se jedna od ove dve definicije zameni sa drugom, ta zamena će zahtevati i promenu ostatka koda (na svim mestima u kodu gde su iskorišćeni konstruktori).} @ccode{data SlovoIBroj = SIB Char Int}
 
 @subsection{Suma jediničnih tipova}
 
@@ -257,14 +257,9 @@ data MoždaNiska = SamoNiska String | Ništa
 data Možda t = Samo t | Ništa
 }
 
-@p Upravo ovako je definisan apstraktni tip @code{Maybe} koji je dostupan u Prelidu:
+@p Upravo ovako je definisan apstraktni tip @code{Maybe} koji je dostupan u Prelidu: @ccode{data Maybe t = Just t | Nothing}. Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
 
-
-@codeBlock{
-data Maybe t = Just t | Nothing
-}
-
-@p Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
+@figure{maybe}{Šematski prikaz @code{Maybe} apstraktnog tipa. Tip @code{A} sadrži tri vrednosti prezentovane sa tri poligona, dok tip @code{Maybe A} sadrži četiri vrednosti. Možemo da smatramo da apstraktni tip @code{Maybe} transformiše tip @code{A} u @code{Maybe A}, poput neke funkcije na nivou tipova. Naravno @code{Maybe} nije funkcija, i zbog toga je na ilustraciji strelica označena sa isprekidanom linijom umesto sa punom linijom. Sa druge strane, konstruktor @code{Just : A -> Maybe A} jeste funkcija.}
 
 @problem{Koje vrednosti sadrži tip @code{Maybe Bool}?}
 {@p @code{Just True}, @code{Just False} i @code{Nothing}.}
@@ -387,8 +382,76 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
     = trenutnaGodina - godinaRođenja >= 18
 }
 
-@todo{Algebra tipova}
+@section{Algebra tipova}
 
+@p U matematici, @def{alegbra}@note{Reč algebra potiče od arapskog izraza الجبر (@em{al-džebra}) koji se koristio za tehniku nameštanja kostiju. Arapski matematičar Al Hurezmi iz IX veka je iskoristio ovaj termin za jednu tehniku rešavanja jednačina, i termin je sa prevodom njegovog priručnika dospeo u Evropu. Interesantno, termin @em{algoritam} je dobijen od samog Al Hurezmijevog imena.} označava disciplinu koja proučava zakonitosti koje važe u formalnim sistemima, pri čemu se te zakonitosti proučavaju i iskazuju kroz @em{algebarske izraze}. Na primer, činjenica da je @eq{(5+2)(5-2) = 25 - 4} spada u domen @em{aritmetike}, dok iskaz @eq{(m+n)(m-n) = m^2 - n^2} spada u domen algebre prirodnih brojeva. Ovaj iskaz je tačan za sve prirodne brojeve @m{m} i @m{n}, i prethodno navedena činjenica je samo jedna instanca ovog algebarskog zakona. Međutim, algebra je mnogo šira od algebre brojeva. Algebra proučava i apstraktne zakonitosti koje važe sa operacijama nad vektorima, skupovima, funkcijama...
+
+@p Na primer, algebarski izraz @eq{(a \circledast b) \circledast c = (c \circledast b) \circledast a} važi za sve prirodne brojeve @m{a}, @m{b} i @m{c} ako operator @m{\circledast} predstavlja sabiranje. Takođe važi i za sve dvodimenzionalne vektore @m{a}, @m{b} i @m{c} ako operator @m{\circledast} predstavlja sabiranje vektora. Međutim, važi i za sve  rotacije @m{a}, @m{b} i @m{c} oko neke ose @m{p} u prostoru, ako @m{\circledast} predstavlja @em{nadovezivanje} (odnosno kompoziciju) rotacija. Slično i za skupove i za operaciju unije skupova... U svim navedenim slučajevima, ovaj algebarski zakon ima gotovo isti dokaz i zasniva se na osobinama komutativnosti i asocijativnosti odgovarajuće operacije.
+
+@subsection{Jednakost tipova}
+
+@p Algebarski zakoni se gotovo uvek navode u obliku jednakosti. Pošto želimo da proučimo algebru tipova, neophodno je prvo razumeti jednakost između tipova.
+
+@p Sistem tipova u nekom programskim jeziku često spada u kategoriju @em{strukturalnih} ili @em{nominativnih} tipskih sistema. U @def{strukturalnom tipskom sistemu}, dva tipa su jednaka ako je njihova struktura ista (šta god to značilo za taj tipski sistem). Nasuprot tome, u @def{nominativnom (nominalnom) tipskom sistemu} dva tipa su jednaka ako su definisana istom definicijom, tj. ako su istog imena. Da bismo shvatili šta ove definicije znače, pogledaćemo zašto sistem tipova u Haskelu zapravo nije ni strukturalan niti nominativan.
+
+@p Neka su definisani tipovi @code{data A = A Int} i @code{data B = B Int}. Za ove tipove bismo rekli da imaju potpuno istu strukturu, vrednosti oba tipa su "sačinjena" od jedne celobrojne vrednosti. Ako bi sistem tipova Haskela bio strukturalan, tada ova dva tipa mogla slobodno da se "mešaju", pa bi tako na primer funkcija tipa @code{A -> Bool} mogla biti primenjena na vrednost tipa @code{B}. Međutim, lako se možemo uveriti da će takva primena dovesti do tipske greške. Prema tome, sistem tipova Haskela nije strukturalan.
+
+@p Sistem tipova Haskela nije ni nominativan, jer tipski sinonimi definisani sa @code{type A = B}, dozvoljavaju da se tipovi @code{A} i @code{B} mešaju. Na primer, na svakom mestu gde se može koristiti vrednost tipa @code{[Char]}, može se iskoristiti vrednost tipa @code{String}. Prema tome, tipovi različitog imena mogu biti jednaki.
+
+@p Tačnu definiciju jednakosti tipova ovde ne možemo dati, ali smo kroz prethode redove oslikali neke osobine jednakosti. Sam sistem bismo mogli da okarakterišemo kao nominalan modulo tipski sinonimi. Mi kao korisnici kompajlera i interpretera, možemo smatrati dva tipa u Haskelu jednakim ako ih možemo proizvoljno mešati (koristiti jedan umesto drugog ne uvodeći tipsku greške u kompilaciju). Kako sam kompajler proverava jednakost, ostavljamo za neka kasnija razmatranja.
+
+@subsection{Izomorfizam skupova}
+
+@p Jednakost tipova koju smo analizirali gora je previše stroga: videli smo da (ako ignorišemo tipske sinonime), tipovi su jednaki samo samim sebi@note{To bi bilo kao da u algebri prirodnih brojeva kažemo da @m{m+n} i @m{n+m} nisu jednaki jer nisu isti kao nizovi simbola.}. Zbog toga želimo da uvedemo slabiji pojam jednakosti, takozvani @em{izomorfizam}, koji će nam omogućiti da lakše rezonujemo o nekim odnosima između tipova. Definiciju nove relacije uzećemo iz teorije skupova.
+
+@figure{equality}{Dva kvadrata @m{K_1} i @m{K_2} nisu jednaka, ove dve figure se nalaze se na različitim mestima, i nemaju zajedničkih tačaka. Međutim, ovi kvadrati imaju iste dimenzije, i pomeranjem jednog možemo "savršeno preklopiti" drugi. Zbog toga, za ove kvadrate kažemo da su @em{kongruentni} i to obeležavamo @m{K_1 \cong K_2}. Mnogobrojne osobine koje proučavamo u geometriji (površina, obim, dužina dijagonale....) su potpuno iste za ova dva kvadrata, i za proučavanje ovih osobina nas ne interesuje sam položaj figura u prostoru. Uvođenjem pojma kongruentnosti, rasuđujemo o figurama na apstraktnijem nivou, zanemarujući osobine koje nam nisu interesantne.}
+
+@p Ideja je da skupove sa istim brojem elemenata poistovetimo. Ova ideja bi bila sasvim dobra, ako bismo radili samo sa konačnim skupovima. U matematici mnogi skupovi nisu konačni (kao u ostalom i mnogi tipovi u Haskelu), te je stoga potrebno osmisliti definiciju koja se ne oslanja na pojam broja.
+
+@p Primetimo da dva konačna skupova imaju isti broj elemenata ako se ti elementi mogu "povezati" tako da je svaki element iz jednog skupa povezan sa tačno jednim elementom iz drugog skupa. Ako ovakvo povezivanje formalizujemo kroz pojam funkcije, tada ćemo taj formalizam moći da koristimo i sa beskonačnim skupovima. Navedena razmišljanja su formalizovana kroz narednu definiciju.
+
+@p Za skupove @m{A} i @m{B} kažemo da su @def{izomorfni}, i pišemo @m{A \cong B} ako postoji @def{bijekcija}@note{Bijekcije se nazivaju i @em{uzajamno jednoznačne korespodencije}.} između ova dva tipa, odnosno ako postoji funkcija @m{f\colon A \to B} sa sledećim osobinama:
+
+@list{
+    @li za svaki element @m{b\in B} postoji element @m{a\in A} takav da je @m{f(a) = b} (@em{osobina surjektivnosti})
+    @li ako je @m{f(a_1) = f (a_2)} za @m{a_1, a_2 \in A}, tada mora važiti @m{a_1 = a_2} (@em{osobina injektivnosti})
+}
+
+@p Ako bi ove uslove preneli na grafičko prezentovanje funkcija koje smo do sada videli, gde vrednosti tipa predstavljamo kao tačke, a funkciju kao skup strelica između tih tački, tada nam uslov surjektivnosti funkcije @m{f\colon A \to B} govori da je svaka tačka iz @m{B} povezana sa nekom tačkom iz @m{A}. Uslov injektivnosti nam govori da ne postoje dve tačke iz @m{A} koje su povezane sa istom tačkom iz @m{B}.
+
+@figure{non_inj_non_surj}{Na ilustraciji vidimo dva primera. Levo je prikazana funkcija @m{f\colon A \to B}, koja jeste surjektivna ali nije injektivna. Primetimo da skupovi @m{A} i @m{B} jesu izomorfni, ali @m{f} to ne dokazuje. Desno je prikazana funkcija @m{g : C \to D} koja jeste injektivna, ali nije surjektivna.}
+
+@example{
+@p @def{Identička funkcija} na skupu @m{A}, tj. funkcija @m{\operatorname{id}_A\colon A \to A} definisana sa @m{\operatorname{id}_A(x) = x}, je bijekcija. Zaista, za svaki element @m{a\in A} važi da je @m{a = \operatorname{id}_A(a)} pa je stoga @m{\operatorname{id}_A} surjektivna funkcija. Dalje, ako je @m{\operatorname{id}_A(a_1) = \operatorname{id}_A(a_2)} tada je @eq{a_1 = \operatorname{id}_A(a_1) = \operatorname{id}_A(a_2) = a_2,} pa je stoga @m{\operatorname{id}_A} i injektivna funkcija.
+
+@p Prema tome, za svaki tip @m{A} važi @m{A \cong A}.
+}
+
+@example{
+@p Neka je @m{U} jednočlan skup. Tada za svaki skup postoji jedinstvena funkcija @m{u_A\colon A \to U}.
+
+@p Ako je skup @m{A} prazan, tada @m{u_A} nije surjekcija, a ako skup @m{A} ima barem dva elementa tada @m{u_A} nije injekcija. Funkcija @m{u_A} je bijekcija ako i samo ako je @m{A} isto jednočlan skup. 
+}
+
+@p Ako je @m{f \colon A \to B} bijekcija, tada za svaki element @m{b\in B} postoji element @m{a\in A} takav da je @m{f(a) = b} (zbog surjektivnosti). Štaviše takav, element mora biti jedinstven zbog injektivnosti. Stoga, možemo definisati funkciju tipa @m{B \to A} koja svakom elementu @m{b\in B} dodeljuje element @m{a\in A} takav da važi @m{b= f(a)}. Ovakvu funkciju nazivamo @def{inverzna funkcija} funkcije @m{f} i obeležavamo sa @m{f^{-1}}. Dakle, ako je @m{f(a) = b} tada je @m{f^{-1}(b) = a}. Kombinujući ove dve jednakosti dobijamo da je @m{f\left(f^{-1}(b)\right) = b} i @m{f^{-1}\left(f(a)\right)=a} za sve elemente @m{b\in B} i sve @m{a\in A}. Ove jednakosti se mogu zapisati i kao @eq{f^{-1}\circ f = \operatorname{id}_A \quad {\rm i} \quad f \circ f^{-1} = \operatorname{id}_B,} gde su @m{\operatorname{id}_A} i @m{\operatorname{id}_B} identičke funkcije na skupovima @m{A} i @m{B} respektivno.
+
+@p Važi i obrnuto: ako postoje funkcije @m{f \colon A \to B} i @m{g \colon B \to A} takve da je @m{g\circ f = \operatorname{id}_A} i @m{f \circ g = \operatorname{id}_B}, onda su ove funkcije bijekcije i jedna drugoj inverzne. Funkcija @m{f} je surjektivna funkcija, jer za proizvoljno @m{b\in B}, važi da @m{f(g(b)) = \operatorname{id}_B (b) = b}, što znači da @m{f} slika @m{g(b)} u @m{b}. Funkcija @m{f} je injektivna, jer ako je @m{f(a_1) = f(a_2)} tada je i @m{g(f(a_1)) = g(f(a_2))} pa je i @m{a_1 = a_2} zbog @m{g\circ f = \operatorname{id}_A}. Analogno se dokazuje i da je @m{g} bijekcija.
+
+@p Navedenim razmatranjem smo dokazali da postoji bijekcija između @m{A} i @m{B} ako i samo ako postoje funkcije @m{f \colon A \to B} i @m{g \colon B \to A} takve da je @m{f \circ g = \operatorname{id}_B} i @m{g \circ f = \operatorname{id}_A}. Uslov izomorfizma skupova smo mogli da definišemo koristeći i ovu karakterizaciju, ali smo ovako (dužim putem) videli smisao jednakosti.
+
+@p Koristeći prethodnu karakterizaciju izomorfnih skupova, možemo lako da dokažemo još neke osobine relacije izomorfnosti. Ako je @m{A \cong B} to znači da postoje funkcije @m{f \colon A \to B} i @m{g \colon B \to A} takve da je @m{f \circ g = \operatorname{id}_B} i @m{g \circ f = \operatorname{id}_A}, a samim tim to znači da je @m{B \cong A}. Takođe, ako je @m{A \cong B} i @m{B \cong C}, sledi da postoje funkcije @m{f_1 \colon A \to B} i @m{g_1 \colon B \circ A} takve da je @m{f_1 \circ g_1 = \operatorname{id}_B} i @m{g_1 \circ f_1 = \operatorname{id}_A} i funkcije @m{f_2 \colon B \to C} i @m{g_2 \colon C \to B} takve da je @m{f_2 \circ g_2 = \operatorname{id}_C} i @m{g_2 \circ f_2 = \operatorname{id}_B}. Dalje, važi da je@note{Ovde koristimo dve činjenice. Prvo, kompozicija funkcija je asocijativna operacija te se zagrade mogu postavljati proizvoljno u izrazu sačinjenom od kompozicija. Drugo, identičke funkcije su neutrali za operaciju kompozicije te se mogu proizvoljno uklanjati iz izraza.} @eq{(g_1 \circ g_2) \circ (f_2 \circ f_1) = g_1 \circ \operatorname{id}_B \circ f_1 = \operatorname{id}_A} i @eq{(f_2 \circ f_1) \circ (g_1 \circ g_2) = f_2 \circ \operatorname{id}_A \circ g_2 = \operatorname{id}_B,} pa je @m{A \cong C}, jer funkcije @m{f_2 \circ f_1 \colon A \to C} i @m{g_1 \circ g_2 \colon C \to A} imaju neophodne osobine.
+
+@p Dakle relacija @m{\cong} poseduje svojstva kakva očekujemo od jednakosti. Svaki skup je izomorfan samom sebi. Ako je @m{A} izomorfan sa @m{B}, tada je i @m{B} izomorfan sa @m{A}. I, ako je @m{A} izomorfan sa @m{B} i @m{B} izomorfan sa @m{C}, tada je i @m{A} izomorfan sa @m{C}. Naravno, ovo je sasvim očekivano, jer smo relaciju @m{\cong} definisali tako da za konačne skupove važi @m{A \cong B}  ako @m{A} i @m{B} imaju isti broj elementa.
+
+@p Motivisani skupovima, uvodimo pojam izomorfizma Haskel tipova. Za tipove @code{A} i @code{B} kažemo da su izomorfni, ako postoje funkcije @code{f :: A -> B} i @code{g :: B -> A} takve da važi @code{g . f = id} i  @code{f . g = id}.
+
+@p Kao i slučaju konačnih skupova, dva tipa sa konačno mnogo vrednosti su izomorfna ako imaju isti broj elementa. 
+
+@example{
+@p Tipovi @code{Bool} i @code{Maybe ()} su izomorfni. Da bismo to dokazali dovoljno je da konstruišemo par funkcija, čije obe kompozicije su identitčke funkcije. Uzmimo @code{f :: Bool -> Maybe ()} sa @ccode{f x = if x then Just () else Nothing} i @code{g :: Maybe () -> Bool} sa @ccode{g x = x /= Nothing}. Lako se proverava da jednakosti @code{g(f(x)) = x} i @code{f(g(y)) = y} važe.
+}
+
+@todo{Algebarski zakoni}
 
 @section{Zadaci}
 
