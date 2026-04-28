@@ -279,10 +279,9 @@ primeni :: (Int -> Bool) -> ((Int, Int) -> (Bool, Bool))
 primeni = (\f -> (\par -> (f (fst par), f (snd par))))
 }
 
-@p Da bi testirali našu funkciju, definisaćemo i funkciju @code{paran}
+@p Da bi testirali našu funkciju, definisaćemo i funkciju @code{paran :: Int -> Bool}
 
-@code{
-paran :: Int -> Bool
+@ccode{
 paran = (\n -> (0 == mod n 2))
 }
 

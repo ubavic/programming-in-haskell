@@ -1,6 +1,6 @@
 @chapter{Moduli}
 
-@p Ova knjiga je organizovana u celine (@em{lekcije}) da bi materija koja se izlaže bila pristupačnija za čitanje. Koncepti koji su povezni izloženi su u okviru iste lekcije, što značajno olakšava i nalaženje informacija. Iz potpuno istih razloga, u svakom programskom jeziku velike kodove želimo da podelimo u posebne datoteke (i direktorijume), grupišući povezane koncepte u celine. Na taj način prvenstveno sami sebi olakšavamo snalaženje u kodu. Haskel, kao i svaki drugi moderan programski jezik, podržava grupisanje koda u celine.
+@p Ova knjiga je organizovana u celine (@em{lekcije}) da bi materija koja se izlaže bila pristupačnija za čitanje. Koncepti koji su povezni izloženi su u okviru iste lekcije, što značajno olakšava i nalaženje informacija. Iz potpuno istih razloga, u svakom programskom jeziku velike kodove želimo da podelimo u posebne datoteke (i direktorijume), grupišući povezane koncepte u celine. Na taj način prvenstveno sami sebi olakšavamo snalaženje u kodu. Haskel, kao i svaki drugi moderan programski jezik, podržava grupisanje koda.
 
 @p U Haskelu, @def{modul} je osnovna jedinica podele programa. Jedan modul sastoji se iz definicija funkcija, tipova i klasa tipova. Ime modula mora početi velikim slovom i može sadržati samo alfanumeričke karaktere kao i znak tačke. Modul se definiše, tako što se na početku @pre{.hs} datoteke navede linija @ccode{module ImeModula where}.
 
@@ -28,7 +28,7 @@ obim r = 2 * pi * r
 @p Često ne želimo da sve definicije iz nekog modula učinimo dostupnim za uvoz u druge module, tj. želimo da neke definicije ostavimo @em{privatnim}. To se postiže tako što ćemo u dekleraciji modula, odmah nakon imena modula postaviti uređenu @m{n}-torku imena koje želimo da budu javni. Sva imena koja se ne nalaze u ovoj @m{n}-torci biće privatna. Poredak kojim su navedene imena nije važan. Naravno, ako nakon imena modula navedemo @m{n}-torku dužine @m{0}, tj. @code{()}, sve definicije će biti privatne.
 
 @example{
-@p NAredni modul @code{GeometrijaValjka} definiše četiri funkcije funkcije, ali samo su @code{površina} i @code{zapremina} javne definicije.
+@p Modul @code{GeometrijaValjka} definiše četiri funkcije funkcije, ali samo su @code{površina} i @code{zapremina} javne definicije:
 
 @codeBlock{
 module GeometrijaValjka (površina, zapremina) where
@@ -47,11 +47,11 @@ zapremina r h = h * (površinaOsnovice r)
 }}
 
 
-@p Neki od razloga zašto ne želimo uvek sve definicije da izvezemo su:
+@p Postoji nekoliko dobrih razloga zašto ne želimo sav kod da izvezemo iz modula:
 
 @list{
-    @li Određene funkcije imaju određene pretpostavke, na primer, nisu korektne za sve argumente, ili čak nisu ni definisane za sve argumente. Ako takve funkcije učinimo privatnim, onda ćemo biti sigurni da se koriste samo u okviru modula na način na koji smo zamislili (sa nekim dodatnim proverama). Ali ovaj razlog je zapravo dublji od pukih provera argumenata. Pažljivim odabirom funkcija koje izvozimo možemo se osigurati da će funkcije biti pozvane određenim redosledom (što može biti važno ako se bavimo ulazom i izlazom u program, npr. upisivanjem u bazu)
-    @li Privatne funkcije je lakše menjati jer se koriste na manje mesta. Karakteristična je  promena tipa neke funkcije koja zahteva da se izvrše izmene na svim mestima gde se ta funkcija poziva .
+    @li Određene funkcije imaju određene pretpostavke, na primer, nisu korektne za sve argumente, ili čak nisu ni definisane za sve argumente. Ako takve funkcije učinimo privatnim, onda ćemo biti sigurni da se koriste samo u okviru modula na način na koji smo zamislili. Ovaj razlog je zapravo dublji od pukih provera argumenata. Pažljivim odabirom funkcija koje izvozimo možemo se osigurati da će funkcije biti pozvane određenim redosledom (što može biti važno ako se bavimo ulazom i izlazom u program, npr. upisivanjem u bazu).
+    @li Privatne funkcije je lakše menjati jer se koriste na manje mesta. Karakteristična je promena tipa neke funkcije koja zahteva da se izvrše izmene na svim mestima gde se ta funkcija poziva.
     @li Smanjenjem broja funkcija koje su javne, olakšavamo korisnicima (kolegama programerima) naših modula razumevanje istih. Umesto da proučavaju desetine funkcija, korisnicima će biti izloženo nekoliko funkcija od suštinskog značaja. 
 }
 
