@@ -2,7 +2,9 @@
 
 @p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicija tipa @code{T} sada će počinjati sa @code{data T = …}, a umesto jednog konstruktora od sada ćemo potencijalno imati više konstruktora.
 
-@p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Ove operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone iz algebre skupova (ali i mnoge zakone algebre prirodnih brojeva). Upravo zbog toga se i ovako dobijeni tipovi nazivaju @def{algebarski tipovi podataka}.
+@p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Tipovi koji se dobijaju uz ove dve operacije nazivaju se @def{algebarski tipovi podataka}.
+
+@p Navedene operacije odgovaraju pojmovima @em{Dekartovog proizvoda} i @em{unije} u teoriji skupova. Kao što ćemo uvideti, sličnost se ne završava na tome: proizvod i suma tipova poštuju zakone poznate iz algebre skupova i algebre prirodnih brojeva@note{Ipak, ovo nije razlog zašto se ovi tipovi nazivaju @em{algebarski}. Postoje dublji razlozi za ovaj naziv.}.
 
 @section{Proizvod}
 
@@ -259,7 +261,7 @@ data Možda t = Samo t | Ništa
 
 @p Upravo ovako je definisan apstraktni tip @code{Maybe} koji je dostupan u Prelidu: @ccode{data Maybe t = Just t | Nothing}. Od sada, svaki tip oblika @code{Maybe a} nazivaćemo @def{možda-tip}.
 
-@figure{maybe}{Šematski prikaz @code{Maybe} apstraktnog tipa. Tip @code{A} sadrži tri vrednosti prezentovane sa tri poligona, dok tip @code{Maybe A} sadrži četiri vrednosti. Možemo da smatramo da apstraktni tip @code{Maybe} transformiše tip @code{A} u @code{Maybe A}, poput neke funkcije na nivou tipova. Naravno @code{Maybe} nije funkcija, i zbog toga je na ilustraciji strelica označena sa isprekidanom linijom umesto sa punom linijom. Sa druge strane, konstruktor @code{Just : A -> Maybe A} jeste funkcija.}
+@figure{maybe}{Šematski prikaz @code{Maybe} apstraktnog tipa. Tip @code{A} sadrži tri vrednosti prezentovane sa tri poligona, dok tip @code{Maybe A} sadrži četiri vrednosti. Možemo da smatramo da apstraktni tip @code{Maybe} transformiše tip @code{A} u @code{Maybe A}, poput neke funkcije na nivou tipova. Naravno @code{Maybe} nije funkcija, i zbog toga je na ilustraciji strelica označena sa isprekidanom linijom umesto sa punom linijom. Sa druge strane, konstruktor @code{Just :: A -> Maybe A} jeste funkcija.}
 
 @problem{Koje vrednosti sadrži tip @code{Maybe Bool}?}
 {@p @code{Just True}, @code{Just False} i @code{Nothing}.}
@@ -443,15 +445,80 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
 
 @p Dakle relacija @m{\cong} poseduje svojstva kakva očekujemo od jednakosti. Svaki skup je izomorfan samom sebi. Ako je @m{A} izomorfan sa @m{B}, tada je i @m{B} izomorfan sa @m{A}. I, ako je @m{A} izomorfan sa @m{B} i @m{B} izomorfan sa @m{C}, tada je i @m{A} izomorfan sa @m{C}. Naravno, ovo je sasvim očekivano, jer smo relaciju @m{\cong} definisali tako da za konačne skupove važi @m{A \cong B}  ako @m{A} i @m{B} imaju isti broj elementa.
 
-@p Motivisani skupovima, uvodimo pojam izomorfizma Haskel tipova. Za tipove @code{A} i @code{B} kažemo da su izomorfni, ako postoje funkcije @code{f :: A -> B} i @code{g :: B -> A} takve da važi @code{g . f = id} i  @code{f . g = id}.
+@p Motivisani skupovima, uvodimo pojam izomorfizma Haskel tipova. Za tipove @code{A} i @code{B} kažemo da su izomorfni, ako postoje funkcije @code{f :: A -> B} i @code{g :: B -> A} takve da važi @code{g . f = id} i  @code{f . g = id}. Ako su tipovi @code{A} i @code{B} izomorfni, to označavamo sa @code{A ≅ B}.
 
 @p Kao i slučaju konačnih skupova, dva tipa sa konačno mnogo vrednosti su izomorfna ako imaju isti broj elementa. 
 
 @example{
-@p Tipovi @code{Bool} i @code{Maybe ()} su izomorfni. Da bismo to dokazali dovoljno je da konstruišemo par funkcija, čije obe kompozicije su identitčke funkcije. Uzmimo @code{f :: Bool -> Maybe ()} sa @ccode{f x = if x then Just () else Nothing} i @code{g :: Maybe () -> Bool} sa @ccode{g x = x /= Nothing}. Lako se proverava da jednakosti @code{g(f(x)) = x} i @code{f(g(y)) = y} važe.
+@p Tipovi @code{Bool} i @code{Maybe ()} su izomorfni. Da bismo to dokazali dovoljno je da konstruišemo par funkcija, čije obe kompozicije su identičke funkcije. Uzmimo @code{f :: Bool -> Maybe ()} sa @ccode{f x = if x then Just () else Nothing} i @code{g :: Maybe () -> Bool} sa @ccode{g x = x /= Nothing}. Lako se proverava da jednakosti @code{g (f x) = x} i @code{f (g y) = y} važe.
 }
 
-@todo{Algebarski zakoni}
+@subsection{Algebarski zakoni}
+
+@p U narednim redovima ćemo izneti neke zakone algebre prirodnih brojeva, videti koji je pandan tim zakonima u algebri tipova, a zatim  i dokazati iznete zakone. Da bi skratili naredne redove, i napravili razliku između algebre brojeva i algebre tipova, uvešćemo skraćeni zapis za sumu i proizvod tipova. Sa @code{A ⊕ B} ćemo označiti sumu tipova @code{A} i @code{B}, a sa @code{A ⊗ B} proizvod tipova.
+
+@p Za sabiranje prirodnih brojeva važi zakon @em{komutativnosti}: @m{m + n = n + m} za sve prirodne brojeve @m{m} i @m{n}. Ako ovaj zakon "mehanički" prevedemo na algebru tipova dobijamo @ccode{A ⊕ B ≅ B ⊕ A}. Ovaj metaizraz@note{U ovoj sekciji u Haskel kodu će pojavljivati simboli @code{⊕} i @code{⊗}. Njih samo koristimo da bi imenovali nove tipove, tj. da bi samo ime, poput @code{A ⊕ B}, ukazivalo kojom konstrukcijom je dobijen taj tip. Ovi simboli ne mogu se koristiti u Haskel kodu koji se kompajlira.} nam govori da je tip definisan sa kodom @code{S1 A | S2 B} izomorfan sa tipom definisanim sa @code{S1 B | S2 A}@note{Imena konstruktora smo proizvoljno uzeli.}. Da bi dokazali ovaj izomorfizam, definišimo narednu funkciju (jedna će biti dovoljna):
+
+@codeBlock{
+data S t1 t2 = S1 t1 | S2 t2
+
+f :: S A B -> S B A
+f (S1 a) = S2 a
+f (S2 b) = S1 b
+
+g :: S B A -> S A B
+g (S1 b) = S2 b
+g (S2 a) = S1 a  
+}
+
+@p Dokažimo da važi @code{g . f = id :: S A B} Svaka vrednost @code{x :: S A B} je oblika @code{S1 a} ili @code{S2 b}, gde @code{a :: A} i @code{b :: B}. Ako je @code{x = S1 a}, tada je @code{f x = S2 a}, pa je @code{g (f x) = g (S2 a) = S1 a = x}. Ako je @code{x = S2 b} tada je @code{g (f x) = g (S1 b) = S2 b = x}. Dakle, važi @code{g (f x) = x} za svako @code{x: S A B}, tj. @ccode{g . f = id :: S A B -> S A B}. Na potpuno isti način@note{Pažliv čitalac će primetiti da su @code{f} i @code{g} samo tipski konkretne instance parametraski polimorfne funkcije @code{h :: S x y -> S y x}. Zapravo, čitav ovaj dokaza je moga da se svede na pokazivanje da važi @code{h . h = id}.} se dokazuje i jednakost @code{f . g = id :: S B A -> S B A} odakle zaključujemo da je @code{S A B ≅ S B A}.
+
+@p Sličnim rezonovanjem se dokazuje i zakon komutativnosti proizvoda @ccode{A ⊗ B ≅ B ⊗ A}.
+
+@p Određeni brojevi imaju posebna svojstva pri aritmetičkim operacijama. Na primer, broj @m{0} ima osobinu da važi @eq{0+n = n \quad {\rm i}\quad 0\times n = 0} za svaki prirodan broj @m{n}. Intuitivno deluje da je pandan broju @m{0} tip koji ne sadrži vrednosti, odnosno @code{Void}. Direktnim prevođenjem ovih jednakosti, dobijamo izomorfizme @code{Void ⊕ A ≅ A} i @code{Void ⊗ A ≅ Void} koje je potrebno dokazati.
+
+@p Sledeći par funkcija dokazuju da je @code{Void ⊕ A ≅ A}:
+
+@codeBlock{
+data S t1 t2 = S1 t1 | S2 t2
+
+f :: S Void A -> A
+f (S2 a) = a
+
+g :: A -> S Void A
+g a = S2 a
+}{Možda deluje kao da funkcija @code{f} nije totalna, ali ona je definisana za sve vrednosti iz @code{S Void A}. Kako ne postoji vrednost tipa @code{Void}, sledi da ne postoji ni vrednost oblika @code{S1 x :: S Void A}.}
+
+@p Povera izomorfizma je jednostavna: svako @code{x :: S Void A} je oblika @code{S2 a} za @code{a :: A}. Sledi da je @ccode{g (f x) = g (f (S2 a)) = a = S2 a = x} i @ccode{f (g a) = f (S2 a) = a}. 
+
+@p Za dokazivanje @code{Void ⊗ A ≅ Void} iskoristićemo naredne funckije:
+
+@codeBlock{
+data P t1 t2 = P t1 t2
+
+f :: P Void A -> Void
+f (P v _) = v 
+
+g :: Void -> P Void A
+g v = g v
+}{Umesto što smo definisanli @code{P}, mogli smo da iskoristimo tip uređenih parova @code{()}.}
+
+@p U ovom slučaju dokaz je jednstavan@note{Dokaz se zasniva na tome da je iskaz @m{p\Rightarrow q} tačan kad @m{p} nije tačno (@em{vacuous truth}). Iz iskaza @em{x je tipa Void}, možemo zaključiti bilo šta jer ne postoji vrednost tipa @code{Void}.}: ne postoji vrednost @code{x :: Void} te jednakost važi @code{f (g x) = x} za sve @code{x :: Void}. Isto, postoji vrendost tipa @code{P Void A} pa i jednakost @code{g (f x) = x} važi uvek za @code{x :: P Void A}.
+
+@p Dakle tip @code{Void} se ponaša u algebri tipova onako kako se ponaša broj @m{0} u algebri prirodnih brojeva. Broj @m{1} ima osobinu da je @m{1\times n = n} za sve prirodne brojeve @m{n}. Pandan ovom zakonu je @ccode{() ⊗ A ≅ A}, što se dokazuje korišćenjem funkcija:
+
+@codeBlock{
+data P t1 t2 = P t1 t2
+
+f :: P () A -> A
+f (P _ a) = a 
+
+g :: A -> P () A
+g a = ((), a)
+}
+
+@p Dokaz za @code{f . g = id} i @code{g . f = id} nećemo navoditi, jer nije ništa komplikovaniji od prethodnih. Istaknimo da smo ovde umsesto @code{()} mogli da iskoristimo bilo koji tip kokji ima jednu vrednost. Štaviše, možemo dokazati nešto opštije tvrđenje: ako je @code{A₁ ≅ A₂} i  @code{B₁ ≅ B₂}, tada je i @ccode{A₁ ⊕ B₁ ≅ A₂ ⊕ B₂} i @ccode{A₁ ⊗ B₁ ≅ A₂ ⊗ B₂}.
+
 
 @section{Zadaci}
 
