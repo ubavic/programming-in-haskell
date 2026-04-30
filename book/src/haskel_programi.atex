@@ -87,7 +87,7 @@ Zdravo Nikolina!
 
 @p Osim @code{putStrLn} funkcije, u Prelidu su dostupne i funkcije @code{putChar :: Char -> IO ()} i @code{putStr :: String -> IO ()}. Funkcija @code{putStrLn} se razlikuje od @code{putStr} samo po tome što dobijana akcija uz prosleđenu nisku ispisuje i karakter za novi red. Funkcija @code{putChr} daje akciju koja će ispisati jedan karakter.
 
-@p Uz ispisivanje sadržaja u terminal, neophodno je i prihvatati korisnički unos. Za "prihvatanje" linije koristi se akcija @code{getLine :: IO String} dostupna u Prelidu. Tip @code{IO String} označava da se radi o akciji čiji rezultat je niska - to će biti niska koju je korisnik uneo. Da bi se toj vrednosti pristupilo, potrebno ju je dodeliti novom imenu uz pomoć strelice @code{<-} unutar @code{do} bloka:
+@p Uz ispisivanje sadržaja u terminal, neophodno je i prihvatati korisnički unos. Za "prihvatanje" linije koristi se akcija @code{getLine :: IO String} dostupna u Prelidu. Tip @code{IO String} označava da se radi o akciji čiji rezultat je niska - to će biti niska koju je korisnik uneo. Da bi se toj vrednosti pristupilo, potrebno ju je @def{dodeliti} novom imenu uz pomoć strelice @code{<-} unutar @code{do} bloka:
 
 @codeBlock{
 main :: IO ()
@@ -103,7 +103,7 @@ Vaše ime je: Marija
 Zdravo Marija!
 }
 
-@p Vrednost koju "otpakujemo" sa @code{<-} je "obična" vrednost poput onih sa kojima smo do sada "radili". Otpakovanu vrednost možemo dalje prosleđivati funkcijama. Akcije koristimo samo kada želimo da ispišemo ili učitamo podatke.
+@p Vrednost koju dodeljnujemo sa @code{<-} je "obična" vrdnost. Dodeljenu vrednost možemo dalje prosleđivati funkcijama. Akcije @code{putStrLn} i @code{getLine} koristimo samo kada želimo da ispišemo ili učitamo podatke.
 
 @codeBlock{
 inicijali :: String -> String -> String
@@ -118,7 +118,7 @@ main = do
     putStrLn (inicijali ime prezime)
 }
 
-@p Unutar @code{do} bloka je dozvoljeno definisati vrednosti koristeći @code{let} ključnu reč. U @code{do} blokovima definicije moraju imati smisleni redosled: definicije koje sadrže definisane (ili "otpakovane") vrednosti moraju se nalaziti nakon tih definicija. Prethodni primer smo mogli i da napišemo ovako:
+@p Unutar @code{do} bloka je dozvoljeno definisati vrednosti koristeći @code{let} ključnu reč. U @code{do} blokovima definicije moraju imati smisleni redosled: definicije koje sadrže definisane (ili dodeljene) vrednosti moraju se nalaziti nakon tih definicija. Prethodni primer smo mogli i da napišemo ovako:
 
 @codeBlock{
 inicijali :: String -> String -> String
@@ -133,6 +133,35 @@ main = do
     let inic = inicijali ime prezime
     putStrLn inic
 }
+
+@p U poslednjoj liniji @code{do} bloka mora se nalaziti akcija. Tip celog @code{do} bloka je tip akcije koja je poslednje navedene.
+
+@example{
+@p Definišimo akciju bez dekleracije tipa:
+@codeBlock{
+akcija1 = do
+    putStr "Unesite komandu:"
+    getLine
+}
+@p Kompajler će zaključiti da je @code{akcija1} tipa @code{IO String}, jer je poslednja akciija tipa @code{IO String}. Da smo u kodu pogrešno deklarisali @code{akcija1 :: IO ()}
+ tada bi došlo do tipske greške.}
+
+
+@p Pri radu sa akcijama možemo koristiti funkciju @code{return ::  a -> IO a} koja nam omogućuje da proizvoljnu vrednost "obmotamo" u @code{IO} tip. To nam sada daje mogućnost da pravimo akcije koje nisu samo tipa @code{IO ()} ili @code{IO String}.
+
+
+@example{
+@p Tivijalnu akciju čiji rezultat je uvek vrednost @code{42} možemo da definišemo sa
+
+@codeBlock{
+odgovor :: IO Int
+odgovor = return 42
+}
+
+@p Primetimo da ova akcija ne vrši nikakav ulaz ili izlaz i programa.
+}
+
+@p Kroz primere u ovoj sekciji, prošli smo kroz sve pojedinosti @code{do} bloka: unutar bloka možemo da pokrećemo više akcija, možemo da dodljujemo vrednosti iz pokrenutih akicja sa @code{<-}, i možemo da definišemo vrednosti sa @code{let}, a tip @code{do} bloka je tip poslednje navedene akcije. 
 
 @problem{
 U jednoj od prošlih lekcija smo konstruisali funkciju @code{uBroj :: String -> Int} koja prevodi nisku u broj. Koristeći ovu funkciju definisati @code{main} akciju koja uzima dva broja, a zatim ispsuje njihov zbir. Pretpostaviti da će obe unete niske predstavljati validan zapis broja.
@@ -285,16 +314,7 @@ main = do
 
 @p Dakle, funkcija @ccode{writeFile :: FilePath -> String -> IO ()} uzima putunju do datoteke, nisku, i daje akciju koja kada se pokrene upisuje dati sadržaj u datoteku na navedenoj lokaciji. Funkcija @ccode{readFile :: FilePath -> IO String} je nešto jednostavnija. Ta funkcija uzima putanju do datoteke a vraća akciju koja kada se pokrene učitava sadržaj datoteke u nisku.
 
-@p Da bismo demonstrirali primenu navedenih funkcija, kreirajmo datoteku @pre{pesma.txt} i sačuvajmo je u istom direktorijumu u kom se nalazi i kôd programa.
-
-@codeBlock{
-Ono sve što znaš o meni
-To je stvarno tako malo
-U dv'je riječi sve bi stalo
-Kada pričala bi ti
-}{Sadržaj datoteke @pre{pesma.txt}}
-
-@p Program koji učitava sadržaj pesme i ispisuje u terminal je sledeći
+@p Da bismo demonstrirali primenu navedenih funkcija, kreirajmo datoteku @pre{pesma.txt} i sačuvajmo je u istom direktorijumu u kom se nalazi i kôd programa. Program koji učitava sadržaj pesme i ispisuje u terminal je sledeći:
 
 @codeBlock{
 main :: IO ()

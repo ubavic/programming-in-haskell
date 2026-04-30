@@ -1,10 +1,10 @@
 @chapter{Funktori}
 
-@p Koncept @em{funktora} je važan za Haskel. Iako isprva deluje kao nepotrebno apstraktan pojam, funktori zapravo opisuju veoma prirodnu transformaciju.
-
-@p Pojam funktora je preuzet iz apstraktnih oblasti matematike, ali se u Haskelu taj pojam svodi na klasu tipova. Pre nego što tačno definišemo nove pojmove, pokušaćemo da damo motivaciju.
+@p Koncept @em{funktora} je važan za Haskel. Iako isprva možda deluje kao nepotrebno apstraktan pojam, funktori zapravo opisuju veoma prirodnu transformaciju. Kroz mnogobrojne primere, videćemo da se funktori pojavljuju često.
 
 @section{Funktori}
+
+@p Pojam funktora je preuzet iz apstraktnih oblasti matematike, ali se u Haskelu taj pojam svodi na jednu klasu tipova. Pre nego što tačno definišemo nove pojmove, pokušaćemo da damo motivaciju.
 
 @subsection{Motivacija}
 
@@ -51,7 +51,7 @@ maybeMap f (Just a) = Just (f a)
 maybeMap _ Nothing = Nothing
 }{Ubrzo će postati jasan izbor imena ove funkcije...}
 
-@p Sada se @code{dupliraj''} može@note{Zaista, @code{(maybeMap (2*)) (Just x)} je po definiciji (funkcije @code{maybeMap}) @code{Just ((2*) x)}, što se svodi na @code{Just (2 * x)}. Sa druge strane @code{(maybeMap (2*)) Nothing} je po definiciji @code{Nothing}. To je upravo ono što smo želeli.} elegantnije definisati:
+@p Sada se @code{dupliraj''} može@note{@code{(maybeMap (2*)) (Just x)} je po definiciji (funkcije @code{maybeMap}) @code{Just ((2*) x)}, što se svodi na @code{Just (2 * x)}. Sa druge strane @code{(maybeMap (2*)) Nothing} je po definiciji @code{Nothing}. To je upravo ono što smo želeli.} elegantnije definisati:
 
 @codeBlock{
 dupliraj'' :: Maybe Float -> Maybe Float
@@ -60,9 +60,9 @@ dupliraj'' = maybeMap (2*)
 
 @p Rečeno žargonom Haskel programera, funkcija @code{maybeMap} @em{podiže} funkciju tipa @code{a -> b} u funkciju tipa @code{Maybe a -> Maybe b}. Više nije neophodno svaku funkciju redefinisati tako da radi sa možda-tipovima, @code{maybeMap} na jedan uniforman način to radi za nas.
 
-@p Kada radimo sa više funkcija, tada @code{maybeMap} možemo da iskoristimo sa operatorom kompozicije. Umesto da posebno od @code{f :: A -> B} i @code{g :: B -> C} definišemo odgovarajuće funkcije @code{f' :: Maybe A -> Maybe B} i @code{g' :: Maybe B -> Maybe C}, možemo jednostavno da @code{maybeMap} primenimo na @code{g . f}: @ccode{maybeMap (g . f) :: Maybe A -> Maybe C}. Ova kompozicija se mogla zapisati i kao @ccode{maybeMap g . maybeMap f}. Zaista @code{maybeMap (g . f)} primenjena na vrednost @code{Just x} je po definiciji @code{Just (g (f x))}, a @code{maybeMap g . maybeMap f} primenjena na vrednost @code{Just x} je @ccode{maybeMap g (maybeMap f (Just x))} odnosno @code{maybeMap g (Just (f x))}, odnosno @code{Just (g (f x))}. I analogno se dokazuje jednakost i za @code{Nothing} vrednost@note{Dokažite!}.
+@p Kada radimo sa više funkcija, tada @code{maybeMap} možemo da iskoristimo sa operatorom kompozicije. Umesto da posebno od @code{f :: A -> B} i @code{g :: B -> C} definišemo odgovarajuće funkcije @code{f' :: Maybe A -> Maybe B} i @code{g' :: Maybe B -> Maybe C}, možemo jednostavno da @code{maybeMap} primenimo na @code{g . f}: @ccode{maybeMap (g . f) :: Maybe A -> Maybe C}. Ova kompozicija se mogla zapisati i kao @ccode{maybeMap g . maybeMap f}. Zaista, @code{maybeMap (g . f)} primenjena na vrednost @code{Just x} je po definiciji @code{Just (g (f x))}, a @code{maybeMap g . maybeMap f} primenjena na vrednost @code{Just x} je @ccode{maybeMap g (maybeMap f (Just x))} odnosno @code{maybeMap g (Just (f x))}, odnosno @code{Just (g (f x))}. I analogno se dokazuje jednakost i za @code{Nothing} vrednost@note{Dokažite!}.
 
-@p Funkcija @code{maybeMap} ima još jednu zanimljivu osobinu: naime, važi jednakost @ccode{(maybeMap id) v = v} za svaku vrednost @code{v :: Maybe A}@note{Zaista @code{(maybeMap id) (Just x)} je po definiciji @code{(Just (id x))}, odnosno @code{Just x}. Sa druge strane, @code{(maybeMap id) Nothing} je @code{Nothing}.}. Odavde sledi da je @code{maybeMap id} upravo identička funkcija na @code{Maybe A}!
+@p Funkcija @code{maybeMap} ima još jednu zanimljivu osobinu: naime, važi jednakost @ccode{(maybeMap id) v = v} za svaku vrednost @code{v :: Maybe A}@note{@code{(maybeMap id) (Just x)} je po definiciji @code{(Just (id x))}, odnosno @code{Just x}. Sa druge strane, @code{(maybeMap id) Nothing} je @code{Nothing}.}. Odavde sledi da je @code{maybeMap id} upravo identička funkcija na @code{Maybe A}.
 
 @p Opisane osobine funkcije @code{maybeMap} već smo videli ranije u drugom kontekstu: funkcija @ccode{map :: (a -> b) -> [a] -> [b]} primenjuje datu funkciju na svaki element date liste i vraća dobijeno listu. Ali @code{map} možemo takođe da shvatimo kao @em{podizanje} funkcije tipa @code{a -> b} u funkciju tipa @code{[a] -> [b]}, jer kada @code{map} primenimo na neku funkciju @code{f :: A -> B}, dobijamo funkciju tipa @code{[A] -> [B]}. Takođe, za funkciju @code{map} važe iste osobine: kompozicija @code{map g . map f} je ista kao kompozicija @code{map (g . f)}@note{Ovo je obrađeno u jednom od zadataka u sekciji o @code{map} funkciji.}, i @code{map id} je identička funkcija.
 
@@ -94,6 +94,8 @@ class Functor f where
 @p Kompajler ne može proveriti da li su navedeni zakoni zadovoljeni. Na programeru je da osigura da implementacija @code{fmap} za određenu instancu zadovoljava zakone. Svaki apstraktni tip koji je instanca @code{Functor} klase nazivamo @def{funktor}. 
 
 @p Operator @code{<$} koji je naveden u definiciji klase predstavlja podizanje @code{const} funkcije. Govoreći rečnikom struktura od malopre, sa operatorom @code{<$} zamenjuju se sve vrednosti u strukturi sa istom vrednošću. Ovaj operator je definisan preko @code{fmap} funkcije, i nije ga potrebno implementirati.
+
+@figure{functor}{Ilustracija ideje o funktoru. Neka funkcija @code{f} transfomiše trouglove u petouglove, i neka postoji tip @code{Kutija A} koji predstavlja kutiju koja sadrži vrednost tipa @code{A}. Tada @code{fmap f} u kontekstu funktora @code{Kutija}, menja sadržaj kujtije sa funkcijom @code{f}, dok samu kutiju (strukturu) čuva. Kao što ćemo videti, funktori nisu ograničeni samo na nekakve strukture podataka, već mogu biti i apstraktniji.}
 
 @example{
 @p Kao što smo već nagovestili, apstraktni tip @code{[] :: * -> *} je funktor. Instanca @code{Functor []} je već definisana na sledeći način
@@ -190,16 +192,16 @@ maybeMap2 _  _        _       = Nothing
 @p Funkcija @code{maybeMap2} značajno olakšava rad sa funkcijama dva parametra, ali ne rešava problem sa funkcijama tri i više parametara. Naravno, lako možemo implementirati odgovarajuće funkcije @code{maybeMap3}, @code{maybeMap4}, @code{maybeMap5}, ... ali nas to ponovo vodi ka ružnom kodu@note{Npr. ako u nekom trenutku promenimo broj parametara funkcije koju podižemo, tada na svakom mestu gde podižemo tu funkciju moramo i da menjamo odgovarajuću @code{maybeMap} funkciju.}. I dalje nećemo imati uniforman način podizanja funkcija više parametara na nivo možda-tipova.
 
 
-@p Vratimo se korak u nazad, i pogledajmo zašto dobro poznata funkcija @code{fmap} nije zgodna za rad sa funkcijama dve promenljive. Neka je @code{sum' = (+) :: Int -> Int -> Int}. Primenom @code{fmap} na @code{sum'} i jednu @code{Maybe} vrednost dobijamo funkciju "upakovanu" u @code{Maybe} strukturu:
+@p Vratimo se korak u nazad, i pogledajmo zašto dobro poznata funkcija @code{fmap} nije zgodna za rad sa funkcijama dve promenljive. Neka je @code{zbir = (+) :: Int -> Int -> Int}. Primenom @code{fmap} na @code{zbir} i jednu @code{Maybe} vrednost dobijamo funkciju "upakovanu" u @code{Maybe} strukturu:
 
 @terminal{
-ghci> sum' = (+) :: Int -> Int -> Int
-ghci> s = fmap sum' (Just 2)
-ghci> :t s
-s :: Maybe (Int -> Int)
-}
+ghci> zbir = (+) :: Int -> Int -> Int
+ghci> z = fmap zbir (Just 2)
+ghci> :t z
+z :: Maybe (Int -> Int)
+}{Funkcjiu @code{zbir} defišemo samo iz razloga da bi se ograničili na tip @code{Int -> Int -> Int}. Operator @code{+} je polimorfan, i tip @code{Num a} bi samo nepotrebno otežao analizu koja sledi.}
 
-@p Zašto ovo ima smisla? Tip funkcije @code{sum'} je @code{Int -> Int -> Int}, odnosno eksplicitnije napisano @ccode{Int -> (Int -> Int)}. Ako funkcija @ccode{fmap :: Functor f => (a -> b) -> f a -> f b} uzima za prvi argument funkciju tipa @code{a -> b}, tada će u slučaju funkcije @code{sum'}, tipska promenljiva @code{a} biti @code{Int} a promenljiva @code{b} biti @code{Int -> Int}. Stoga je i @ccode{fmap sum' :: Functor f => f Int -> f (Int -> Int) } odnosno @ccode{fmap sum' (Just 2) :: Maybe (Int -> Int)}. Vrednost tipa @code{Maybe (Int -> Int)} predstavlja unarnu funkciju u @code{Maybe} strukturi. Setimo se da mi želimo da @code{f} primenimo na @em{dve} @code{Maybe Int} vrednosti, a vrednost @code{s} je nastala primenom na jednu vrednost. Stoga je potrebno funkciju u vrednosti @code{s} primeniti na još jednu @code{Mayb Int} vrednost. Zato ćemo definisati @code{maybeApply} funkciju@note{Definicija veoma podseća na definiciju funkcije @code{fmap2}, ali postoje suštinske razlike. @code{fmap2} podiže binarnu funkciju na nivo možda-tipova, dok @code{maybeApply} primenjuje unarnu funkciju obmotanu u možda-tip na neku možda-vrednost.}:
+@p Zašto ovo ima smisla? Tip funkcije @code{zbir} je @code{Int -> Int -> Int}, odnosno eksplicitnije napisano @ccode{Int -> (Int -> Int)}. Ako funkcija @ccode{fmap :: Functor f => (a -> b) -> f a -> f b} uzima za prvi argument funkciju tipa @code{a -> b}, tada će u slučaju funkcije @code{zbir}, tipska promenljiva @code{a} biti @code{Int} a promenljiva @code{b} biti @code{Int -> Int}. Stoga je i @ccode{fmap zbir :: Functor f => f Int -> f (Int -> Int) } odnosno @ccode{fmap zbir (Just 2) :: Maybe (Int -> Int)}. Vrednost tipa @code{Maybe (Int -> Int)} predstavlja unarnu funkciju u @code{Maybe} strukturi. Setimo se da mi želimo da @code{f} primenimo na @em{dve} @code{Maybe Int} vrednosti, a vrednost @code{z} je nastala primenom na jednu vrednost. Stoga je potrebno funkciju u vrednosti @code{z} primeniti na još jednu @code{Mayb Int} vrednost. Zato ćemo definisati @code{maybeApply} funkciju@note{Definicija veoma podseća na definiciju funkcije @code{fmap2}, ali postoje suštinske razlike. @code{fmap2} podiže binarnu funkciju na nivo možda-tipova, dok @code{maybeApply} primenjuje unarnu funkciju obmotanu u možda-tip na neku možda-vrednost.}:
 
 @codeBlock{
 maybeApply :: Maybe (a -> b) -> Maybe a -> Maybe b
@@ -210,20 +212,20 @@ maybeApply  _        _       = Nothing
 @p Sa funkcijom @code{maybeApply} možemo završiti prethodni primer iz terminala:
 
 @terminal{
-ghci> sum' = (+) :: Int -> Int -> Int
-ghci> s = fmap sum' (Just 2)
-ghci> maybeApply s (Just 3)
+ghci> zbir = (+) :: Int -> Int -> Int
+ghci> z = fmap zbir (Just 2)
+ghci> maybeApply z (Just 3)
 Just 5
 }
 
 @p Ako koristimo operator podizanja @code{<$>} (koji je sinonim za @code{fmap}) a @code{maybeApply} postavimo u infiksni oblik, kôd možemo elegantnije zapisati:
 
 @terminal{
-ghci> (sum' <$> Just 2) `maybeApply` (Just 3)
+ghci> (zbir <$> Just 2) `maybeApply` (Just 3)
 Just 5
-ghci> (sum' <$> Nothing) `maybeApply` (Just 3)
+ghci> (zbir <$> Nothing) `maybeApply` (Just 3)
 Nothing
-ghci> (sum' <$> Just 2) `maybeApply` Nothing
+ghci> (zbir <$> Just 2) `maybeApply` Nothing
 Nothing
 }
 
@@ -240,15 +242,15 @@ maybeMap2 f a b = (f <$> a) `maybeApply` b
 
 @p Mi smo se već do sada upoznali sa "klasičnim" operatorom aplikacije @ccode{($) :: (a -> b) -> a -> b}. Operator podizanja @ccode{(<$>) :: (a -> b) -> f a -> f b} može se takođe@note{Opet ističemo jednu suptilnu činjenicu. Tip @ccode{t = (a -> b) -> f a -> f b} možemo shvatiti kao tip funkcije koja uzima dve vrednosti, tipa @code{a -> b} i @code{a}, i daje vrednost tipa @code{b}. U tom smislu, @code{t} je tip funkcije koja aplicira funkciju na vrednost. Sa druge strane, funkcija tipa @code{t} može se shvatiti i kao funkcija koja uzima funkciju tipa @code{a -> b} i daje funkciju tipa @code{f a -> f b}. U tom smislu, tip @code{t} predstavlja tip funkcije koja podiže druge funkcije na nivo funktora @code{f}.} shvatiti kao neka vrsta operatora aplikacije. Operator @code{<$>} aplicira funkciju tipa @code{a -> b} na vrednost tipa @code{f a}. Operator @ccode{(<*>) :: f (a -> b) -> f a -> f b} takođe u nekom smislu vrši apliciranje funkcije na vrednost. Primetimo koliko su tipovi ova tri operatora međusobno slična.
 
-@p Naravno, ne možemo očekivati da će svaka implementacija funkcije @code{<$>} biti dobra. Na primer, da smo @code{maybeApply} funkciju, koja jeste operator aplikacije funktora za @code{Maybe}, definisali kao konstantnu funkciju, tada ne bismo mogli smisleno da podižemo ostale funkcije: 
+@p Naravno, ne možemo očekivati da će svaka implementacija funkcije @code{<$>} biti dobra. Na primer, da smo @code{maybeApply} definisali kao konstantnu funkciju tada ne bismo mogli smisleno da podižemo ostale funkcije: 
 
 @codeBlock{
-maybeApply :: Maybe (a -> b) -> Maybe a -> Maybe b
-maybeApply  _        _       = Nothing
+badMaybeApply :: Maybe (a -> b) -> Maybe a -> Maybe b
+badMaybeApply  _        _       = Nothing
 }
 
 @terminal{
-ghci> (sum' <$> Just 2) `maybeApply` (Just 3)
+ghci> (zbir <$> Just 2) `badMaybeApply` (Just 3)
 Nothing
 }{Rezultat svih primena je @code{Nothing}, što nije mnogo korisno.}
 
@@ -347,7 +349,7 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 
 @p Da bismo definisali @code{<*>} neophodno je da obratimo pažnju na zakone aplikativnih funktora. Prvo, iz @ccode{fmap f x = pure f <*> x}, i iz @code{pure f = [f]} sledi da @code{[f] <*> [x1, … xn]} mora biti @code{[f x1, … f xn]}. Prema tome, @code{<*>} primenjuje funkcije iz leve liste na vrednosti iz desne liste. Postoji mnogo načina na koje se takva primena može definisati, i za sada nam nije jasno kako se više funkcija primenjuje na više vrednosti (za sada samo razumemo @code{[f] <*> xs})@note{Na primer, možda bi operator @code{(<*>)} funkcije i vrednosti uparivao član po član poput @code{zip} funkcije koja uparuje vrednosti dve liste u listu parova. Ali kako mora važiti prvi zakon @code{fmap f x = pure f <*> x} sledi da ovakva definicija nije moguća. U suprotnom bi bilo @ccode{[f x1,f x2]}@ccode{= fmap f [x1, x2]}@ccode{= pure f <*> [x1, x2]}@ccode{= [f] <*> [x1, x2] = [f x1]}, što naravno nije tačno.}. Zbog toga, @code{<*>} definišemo kao operaciju koja primenjuje svaku funkciju iz leve liste na svaku vrednost iz desne: @ccode{fs <*> xs = [ f x | f <- fs, x <- xs ]}.
 
-Za ovako definisane @code{pure} i @code{<*>}, nije teško dokazati zakone aplikativnih funktora. 
+Za ovako definisane @code{pure} i @code{<*>}, nije teško dokazati zakone aplikativnih funktora.
 
 @section{Strelice kao funktori}
 
@@ -434,8 +436,35 @@ instance Functor ((->) t) where
 
 instance Applicative ((->) t) where
     pure x  = \_ -> x
-    f <$> g = \n -> (f n) (g n)
+    f <*> g = \n -> (f n) (g n)
 }  
 
 @p Vratimo se na tipski sinonim @code{ToInt}, koji konstruiše tip funkcija sa kodomenom @code{Int}. Da li je ovaj apstraktni tip funktor? Ako bi @code{ToInt} bio funktor, tada bismo od funkcija tipa @code{g :: A -> B} i @code{f :: A -> Int} mogli da konstruišemo funkciju tipa @code{B -> Int}. Međutim to je definitivno nemoguće, jer ako nam je data vrednost @code{B}, na tu vrednost ne možemo primeniti ni @code{f} ni @code{g}. Prema tome, @code{ToInt} ne može biti funktor, a samim tim ni aplikativni funktor. Isto važi i za svaki drugi apstraktni tip @code{FuncToT a = a -> T}.
 
+@section{IO funktor}
+
+@p Tip @code{IO A} predstavlja akciju (proceduru) koja kad se izvrši daje vrednost tipa @code{A}. Dakle, apstraktni tip @code{IO :: * -> *} prevodi konkretan tip @code{A} u tip akcije koja vraća vrednost  tipa @code{A}. Ovo je veoma slično funktoru @code{FromInt} kog smo gore konstruisali. Razlika je u tome što vrednost tipa @code{IO A} ne zahteva argument da bi se dobila vrednost tipa @code{A} (akcije pokrećemo), dok vrednost tipa @code{FromInt} zahteva vrednost tipa @code{Int} da bi se dobila vrednost tipa @code{A} (funkcije primenjujemo).
+
+@p Ako smo razumeli instance @code{Functor FromInt} i @code{Applicative FromInt}, onda naredene definicije bi trebalo da budu takođe razumljive. Ideja narednih implementacijama @code{fmap} i @code{<*>} je da se oslobodimo @code{IO} "omotača" pokretanjem akcija. Kao dodatnu pomoć za razumevanje, u komentarima su navedeni tipovi koji treba da poseduju metode u kontekstu tipa @code{IO}. 
+
+@codeBlock{
+instance Functor IO where
+    -- fmap :: (a -> b) -> IO a -> IO b
+    fmap f action = do 
+        r <- action
+        return $ f r        
+
+instance Applicative IO where
+    -- pure :: a -> IO a
+    pure    = return
+    
+    -- (<*>) :: IO (a -> b) -> IO a -> IO b 
+    actionF <*> actionX = do
+        f <- actionF
+        x <- actionX
+        retrun $ f x
+}{Obe intance su već definisane u standardnoj biblioteci.}
+
+@p Dokazivanje zakona funktora za date definicije je pravolinijski i nalik na dokazima koji su već izloženi u ovoj lekciji, te stoga neće biti navodeni.
+
+@p Za kraj, primetimo da tip @code{IO A}, za razliku od svih drugih funktora koje smo anlizirali do sada, ne predstavlja vrednosti koje "sadrže u sebi" vrednosti tipa @code{A}. Na primer, pri kompajliranju, vrednost tipa @code{IO Int} ne (mora da) sadrži vrednost tipa @code{Int}. Ovo navodimo ovde jer pomalo odstupa od intuicije koju smo ranije razvili o funktorima kao strukturama koje sadrže vrednosti (ilustracija sa kutijama).
