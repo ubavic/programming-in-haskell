@@ -1,12 +1,12 @@
 @chapter{Rekurzivni tipovi podataka}
 
-@p Rekurzivni tipovi podataka su tipovi čije vrednosti mogu "sadržati u sebi" vrednosti istog tipa. Ovakva apstraktna karakterizacija ne znači trenutno mnogo. Zbog toga ćemo u nastavku upoznati se sa dva najznačajnija rekurzivna tipa, a to su @em{liste} i @em{stabla}. Kroz primere, uvidećemo da su rekurzivni tipovi podataka pogodni za predstavljanje vrednosti neograničene složenosti.
+@p Rekurzivni tipovi podataka su tipovi čije vrednosti mogu "sadržati u sebi" vrednosti istog tipa. Ovakva apstraktna karakterizacija ne znači trenutno mnogo. Zbog toga ćemo u nastavku upoznati dva najznačajnija rekurzivna tipa, a to su @em{liste} i @em{stabla}. Kroz primere, uvidećemo da su rekurzivni tipovi podataka pogodni za predstavljanje vrednosti neograničene složenosti.
 
-@p Važno je napomenuti da su rekurzivni tipovi specijalni slučaj algebarskih tipova podataka (koje smo već upoznali). Ono što izdvaja rekurzivne tipove podataka je to što se u definiciji tipa nalazi tip koji se definiše@note{Baš kao što se u definiciji rekurzivne funkcije pojavljuje sama funkcija koja se definiše. Otuda i ime @em{rekurzivni tipovi podataka}.}
+@p Važno je napomenuti da su rekurzivni tipovi specijalni slučaj algebarskih tipova podataka (koje smo već upoznali). Ono što izdvaja rekurzivne tipove podataka je to što se u definiciji tipa pojavljuje sam tip koji se definiše@note{Baš kao što se u definiciji rekurzivne funkcije pojavljuje sama funkcija koja se definiše. Otuda i ime @em{rekurzivni tipovi podataka}.}
 
 @section{Liste}
 
-@p Konstruisaćemo tip @code{ListaBrojeva} čije vrednosti su liste s celobrojnim vrednostima@note{Već znamo da je to @code{[Int]}, ali ignorišimo to za trenutak.}. Tip @code{ListaBrojeva} mora sadržati vrednost prazne liste, liste sa jednim elementom, liste sa dva elementa, liste sa tri elementa itd... Prazna lista se može predstaviti sa nularnim konstruktorom. Lista sa jednim elementom se može predstaviti sa unarnim konstruktorom, lista sa dva elementa sa binarnim konstruktorom, i tako dalje... Uzimajući ova razmatranja u obzir, dolazimo do naivne ideje o konstrukciju tipa @code{ListaBrojeva} kao sume konstruktora različite arnosti:
+@p Konstruisaćemo tip @code{ListaBrojeva} čije vrednosti su liste s celobrojnim vrednostima@note{Već znamo da je to @code{[Int]}, ali ignorišimo to za trenutak.}. Tip @code{ListaBrojeva} mora sadržati vrednost prazne liste, liste sa jednim elementom, liste sa dva elementa, liste sa tri elementa itd... Prazna lista se može predstaviti sa nularnim konstruktorom. Lista sa jednim elementom se može predstaviti sa unarnim konstruktorom, lista sa dva elementa sa binarnim konstruktorom, i tako dalje... Uzimajući ova razmatranja u obzir, dolazimo do naivne ideje o konstrukciji tipa @code{ListaBrojeva} kao sume konstruktora različite arnosti:
 
 @codeBlock{
 data ListaBrojeva =
@@ -27,7 +27,7 @@ data ListaBrojeva = DodajBroj Int ListaBrojeva | PraznaListaBrojeva
 @p Listu od tri elementa @code{1}, @code{2}, @code{3} možemo konstruisati kao @ccode{DodajBroj 1 (DodajBroj 2 (DodajBroj 3 PraznaListaBrojeva))}.
 }
 
-@p Da bi smo prikazivali vrednosti tipa @code{ListaBrojeva} u konzoli, pridružićemo tip @code{ListaBrojeva} klasi @code{Show}:
+@p Da bismo prikazivali vrednosti tipa @code{ListaBrojeva} u konzoli, pridružićemo tip @code{ListaBrojeva} klasi @code{Show}:
 
 @codeBlock{
 instance Show ListaBrojeva where
@@ -41,7 +41,7 @@ instance Show ListaBrojeva where
 @p Vrednosti tipa @code{ListaBrojeva} prikazujemo tako što elemente liste navodimo između znakova @code{<} i @code{>} koji podsećaju na izlomljene zagrade@note{Odabrali smo izlomljene zagrade namerno da bi se ispis liste razlikovao od ispisa ugrađenih Haskel lista.}. Za prikazivanje samih elemenata liste koristimo pomoćnu rekurzivnu funkciju @code{prikaži}. Sada možemo elegantno prikazivati vrednosti tipa @code{ListaBrojeva} u interaktivnom okruženju:
 
 @terminal{
-ghci> x = DodajBroj 1 (DodajBroj 2 (DodajBroj PraznaListaBrojeva) 
+ghci> x = DodajBroj 1 (DodajBroj 2 (DodajBroj 3 PraznaListaBrojeva))
 ghci> x
 <1, 2, 3>
 }
@@ -59,7 +59,7 @@ dužina (DodajBroj _ xs) = 1 + dužina xs
 @p Funkcija @code{spoji} spaja dve liste vršeći rekurziju po prvoj listi.
 
 @codeBlock{
-spoji :: ListaBrojeva -> ListaBrojeva -> Lista
+spoji :: ListaBrojeva -> ListaBrojeva -> ListaBrojeva
 spoji PraznaListaBrojeva xs = xs
 spoji (DodajBroj x xs) ys = DodajBroj x (spoji xs ys)
 }
@@ -69,7 +69,7 @@ spoji (DodajBroj x xs) ys = DodajBroj x (spoji xs ys)
 @codeBlock{
 obrni :: ListaBrojeva -> ListaBrojeva
 obrni PraznaListaBrojeva = PraznaListaBrojeva
-obrni (DodajBroj x xs) = spoji (obrni xs) x 
+obrni (DodajBroj x xs) = spoji (obrni xs) (DodajBroj x PraznaListaBrojeva)` 
 }{Primetimo da rekurzivna funkcija @code{obrni} koristi u sebi drugu rekurzivnu funkciju @code{spoji}, zbog čega ova implementacija nije najefikasnija moguća.}
 
 @problem{
@@ -90,7 +90,7 @@ Implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaB
 
 @subsection{Apstraktni tip lista}
 
-@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da sa sličnom konstrukcijom mogu se definisati i drugi tipovi lista:
+@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da se sa sličnom konstrukcijom mogu se definisati i drugi tipovi lista:
 
 @codeBlock{
 data ListaChar = DodajChar Char ListaChar | PraznaListaChar
@@ -122,20 +122,20 @@ dužina :: Lista a -> Int
 dužina PraznaLista = 0
 dužina (Dodaj _ xs) = 1 + dužina xs  
 
-spoji :: Lista a -> Lista a -> Lista
+spoji :: Lista a -> Lista a -> Lista a
 spoji PraznaLista xs = xs
 spoji (Dodaj x xs) ys = Dodaj x (spoji xs ys)
 
 obrni :: Lista a -> Lista a
 obrni PraznaLista = PraznaLista
-obrni (Dodaj x xs) = spoji (obrni xs) x 
+obrni (Dodaj x xs) = spoji (obrni xs) (Dodaj x PraznaLista)
 }
 
 @problem{
 Za tip @code{Lista a} implementirati funkcije koje odgovaraju funkcijama @code{filter}, @code{map}, @code{zip} i @code{fold}.
 }
 
-@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implementacija te funkcije za tip @code{ListaBrojeva}. Ali sada moramo bi malo pažljiviji sa klasnim ograničenjima. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri deklaraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
+@p Novi tip je takođe zgodno dodati u klasu @code{Show}. Implementacija funkcije @code{show} će biti potpuno ista kao implementacija te funkcije za tip @code{ListaBrojeva}, ali uz dodatnu pretpostavku. Za svaki tip @code{T}, implementacija @code{show :: Lista T -> String} koristi u sebi implementaciju funkcije @code{show :: T -> String}, te je neophodno postaviti uslov o tipu @code{T} pri deklaraciji instance @code{Show (Lista T)}@note{Gore o tome nismo razmišljali o ovome, jer @code{Int} pripada klasi @code{Show}. Ali tip poput @code{Int -> Int} ne pripada ovoj klasi, te je besmisleno zahtevati da i @code{Lista (Int -> Int)} pripada ovoj klasi.}.
 
 @codeBlock{
 instance Show a => Show (Lista a) where
@@ -284,7 +284,7 @@ Napisati funkciju @ccode{uređeno :: StabloBrojeva -> Bool} koje proverava da li
 @p Stablo @code{stablo2} je uređeno jer je @m{3} veće od @m{2} a manje od @m{4}, @m{6} je manje od @m{8}, a @m{5} je veće @m{3}, @m{2} i @m{4}, i manje od @m{6} i @m{8}. 
 }
 
-@p Uređene stabla su veoma korisna jer se neki algoritmi mogu efikasno implementirati. Na primer, prilikom pretrage uređenog stabla često je potrebno izvršiti značajno manje poređenja: ako tražimo neku vrednost @m{m} u stablu čiji korenski čvor je @m{n} tada je dovoljno nastaviti pretragu samo u levom (odnosno desnom) podstablu ako je @m{m < n} (odnosno ako je @m{m > n}). Oslanjajući se na činjenicu da je korenski čvor veći (odnosno manji) od svih vrednosti u levom (odnosno desnom) podstablu, možemo ignorisati jedno od podstabala. Kôd za pretragu uređenog podstabla je sledeći:
+@p Uređena stabla su značajna jer se neki algoritmi mogu efikasnije implementirati u slučaju uređenog stabla. Na primer, prilikom pretrage uređenog stabla često je potrebno izvršiti značajno manje poređenja: ako tražimo neku vrednost @m{m} u stablu čiji korenski čvor je @m{n} tada je dovoljno nastaviti pretragu samo u levom (odnosno desnom) podstablu ako je @m{m < n} (odnosno ako je @m{m > n}). Oslanjajući se na činjenicu da je korenski čvor veći (odnosno manji) od svih vrednosti u levom (odnosno desnom) podstablu, možemo ignorisati jedno od podstabala. Kôd za pretragu uređenog podstabla je sledeći:
 
 @codeBlock{
 elementUređenogStabla :: Int -> StabloBrojeva -> Bool
@@ -340,11 +340,11 @@ elementStabla v (Čvor a l r)
 @p Ako želimo da govorimo i o uređenim stablima, tada se moramo ograničiti na klasu @code{Ord}.
 
 @problem{
-Implementirati funkciju @ccode{uređeno :: Ord a => Stablo a -> Bool} koje proverava da li je stablo uređeno.
+Implementirati funkciju @ccode{uređeno :: Ord a => Stablo a -> Bool} koja proverava da li je stablo uređeno.
 }
 
 @problem{
-Implementirati funkciju @ccode{elementUređenogStabla :: Ord a => a => Stablo a -> Bool} koje proverava da li vrednost pripada uređenom stablu.
+Implementirati funkciju @ccode{elementUređenogStabla :: Ord a => a -> Stablo a -> Bool} koja proverava da li vrednost pripada uređenom stablu.
 }
 
 @subsection{Stabla kao funktori}
@@ -355,7 +355,7 @@ Implementirati funkciju @ccode{elementUređenogStabla :: Ord a => a => Stablo a 
 
 @codeBlock{
 instance Functor Stablo where
-    fmap f (Stablo a l r) = Stablo (f a) (fmap f l) (fmap f r)
+    fmap f (Čvor a l r) = Čvor (f a) (fmap f l) (fmap f r)
     fmap _ PraznoStablo   = PraznoStablo
 }{Za instanciranje @code{Functor} klase, dovoljno je implementirati @code{fmap} funkciju.}
 
