@@ -1,0 +1,55 @@
+name: Deploy book
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Haskell
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.8'
+          cabal-version: '3.10.2.1'
+
+      - name: Install Inkscape
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y inkscape
+
+      - name: Install SVGO
+        run: npm install -g svgo
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Process illustrations
+        run: |
+          outputDirectory="public/img"
+          rm "$outputDirectory"/*.svg
+          for file in book/illustrations/*; do
+              if [ -f "$file" ]; then
+                  filename=$(basename "$file")
+                  echo "Processing file: $filename"
+                  inkscape --file="$file" --export-text-to-path -o "$outputDirectory"/"$filename"
+                  svgo -i "$outputDirectory"/"$filename" --final-newline --multipass
+              fi
+          done
+
+      - name: Compile book
+        run: |
+          cd compiler
+          cabal v2-run haskellBook.cabal -- "../book/" "../public/"
+
+      - name: Save SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
+          sudo chmod 600 ~/.ssh/key
+          ssh-keyscan -H new.ubavic.rs >> ~/.ssh/known_hosts
+
+      - name: Publish site
+        run: scp -i ~/.ssh/key -r public/* ${{ secrets.USER }}@new.ubavic.rs:/var/www/haskel.ubavic.rs
