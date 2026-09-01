@@ -29,7 +29,6 @@ jobs:
       - name: Process illustrations
         run: |
           outputDirectory="public/img"
-          rm "$outputDirectory"/*.svg
           for file in book/illustrations/*; do
               if [ -f "$file" ]; then
                   filename=$(basename "$file")
