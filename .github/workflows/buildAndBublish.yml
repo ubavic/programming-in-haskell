@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Install Haskell
@@ -43,12 +43,28 @@ jobs:
           cd compiler
           cabal v2-run haskellBook.cabal -- "../book/" "../public/"
 
-      - name: Save SSH key
+      - name: Upload site
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: public/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download site
+        uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: public
+
+      - name: Prepare SCP
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
           sudo chmod 600 ~/.ssh/key
-          ssh-keyscan -H new.ubavic.rs >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} -H new.ubavic.rs >> ~/.ssh/known_hosts
 
-      - name: Publish site
-        run: scp -i ~/.ssh/key -r public/* ${{ secrets.USER }}@new.ubavic.rs:/var/www/haskel.ubavic.rs
+      - name: Publish via SCP
+        run: scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/key -r public/* ${{ secrets.USER }}@new.ubavic.rs:/var/www/haskel.ubavic.rs
