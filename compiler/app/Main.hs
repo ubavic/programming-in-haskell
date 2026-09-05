@@ -3,6 +3,7 @@ module Main where
 
 import Parser ( parseDoc )
 import Renderer ( HTMLRenderer(render), renderChapter, renderIndexPage )
+import TypstRenderer ( renderTypstChapter, renderTypstBook )
 import Document ( Chapter(..), Block(..), filterTodos, addReferences )
 
 import Data.Maybe ( catMaybes )
@@ -58,13 +59,29 @@ parseChapter path filename = do
                     putStrLn err
                     return Nothing
                 Right chapter ->
-                    return (Just (filename <> ".html", chapter))
+                    return (Just (filename, chapter))
 
 saveChapter :: Filename -> Date -> (Filename, Chapter, Maybe (Filename, String), Maybe (Filename, String)) -> IO ()
 saveChapter path date (filename, chapter, prev, next) =
         writeFile (path ++ "/" ++ filename) (buildChapterHTML prev next date chapter) >>
         putStr (warningS . T.unpack . T.unlines . filterTodos $ chapter) >>
         (putStrLn . okS . concat) ["Saved document ", filename]
+
+saveTypstChapter :: Filename -> (Filename, Chapter) -> IO ()
+saveTypstChapter path (filename, chapter) =
+        TIO.writeFile (path ++ "/" ++ dest) (renderTypstChapter $ addReferences chapter) >>
+        putStr (warningS . T.unpack . T.unlines . filterTodos $ chapter) >>
+        (putStrLn . okS . concat) ["Saved document ", dest]
+    where dest = filename ++ ".typ"
+
+loadTypstFile :: Filename -> Filename -> IO (Maybe Text)
+loadTypstFile bookPath name = do
+    result <- try (TIO.readFile (bookPath ++ "/typst/" ++ name)) :: IO (Either SomeException Text)
+    case result of
+        Left _ -> do
+            (putStrLn . errorS . concat) ["Can't load file typst/", name]
+            return Nothing
+        Right contents -> return (Just contents)
 
 buildIndexPage :: [(Filename, String, [Html])] -> Date -> String
 buildIndexPage chapters date = renderHtml $ renderIndexPage chapters date
@@ -74,12 +91,35 @@ generateSpine list = let m = Just <$> list in zip (Nothing : m) (tail m ++ [Noth
 
 main :: IO ()
 main = do
-    path : outPath : _ <- getArgs
-    index <- filter ((/=) '#' . head) . lines <$> readFile (path ++ "/index")
-    parsedChapters <- catMaybes <$> mapM (parseChapter path) index
-    let chapterNames = (\(a, b) -> (a, chapterName b)) <$> parsedChapters
-    let spine = generateSpine chapterNames
-    let renderedChapters = zipWith (\sections (file, name) -> (file, name, sections)) (sections . snd <$> parsedChapters) chapterNames
-    date <- getDate
-    mapM_ (saveChapter outPath date) $ zipWith (\(f, c) (p, n) -> (f, c, p, n)) parsedChapters spine
+    args <- getArgs
+    let typstMode = "--typst" `elem` args
+        positional = filter (/= "--typst") args
+    case positional of
+        path : outPath : _ -> do
+            index <- filter ((/=) '#' . head) . lines <$> readFile (path ++ "/index")
+            parsedChapters <- catMaybes <$> mapM (parseChapter path) index
+            date <- getDate
+            if typstMode
+                then exportTypst path outPath parsedChapters
+                else exportHtml outPath date parsedChapters
+        _ -> putStrLn "Usage: haskellBook [--typst] BOOK_DIR OUT_DIR"
+
+exportHtml :: Filename -> Date -> [(Filename, Chapter)] -> IO ()
+exportHtml outPath date parsedChapters = do
+    let htmlChapters = (\(stem, chapter) -> (stem <> ".html", chapter)) <$> parsedChapters
+        chapterNames = (\(a, b) -> (a, chapterName b)) <$> htmlChapters
+        spine = generateSpine chapterNames
+        renderedChapters = zipWith (\secs (file, name) -> (file, name, secs)) (sections . snd <$> htmlChapters) chapterNames
+    mapM_ (saveChapter outPath date) $ zipWith (\(f, c) (p, n) -> (f, c, p, n)) htmlChapters spine
     writeFile (outPath ++ "/index.html") (buildIndexPage renderedChapters date)
+
+exportTypst :: Filename -> Filename -> [(Filename, Chapter)] -> IO ()
+exportTypst bookPath outPath parsedChapters = do
+    prologue <- loadTypstFile bookPath "prologue.typ"
+    epilogue <- loadTypstFile bookPath "epilogue.typ"
+    mapM_ (saveTypstChapter outPath) parsedChapters
+    case (prologue, epilogue) of
+        (Just p, Just e) ->
+            TIO.writeFile (outPath ++ "/book.typ") (renderTypstBook p e $ map (addReferences . snd) parsedChapters) >>
+            (putStrLn . okS) "Saved document book.typ"
+        _ -> (putStrLn . errorS) "Can't assemble book.typ"

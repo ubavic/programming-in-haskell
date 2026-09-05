@@ -26,6 +26,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Install Typst
+        uses: typst-community/setup-typst@v5
+        with:
+          cache-dependency-path: book/typst/prologue.typ
+
       - name: Process illustrations
         run: |
           outputDirectory="public/img"
@@ -42,6 +47,15 @@ jobs:
         run: |
           cd compiler
           cabal v2-run haskellBook.cabal -- "../book/" "../public/"
+
+      - name: Compile PDF
+        run: |
+          mkdir -p typst-out
+          cd compiler
+          cabal v2-run haskellBook.cabal -- --typst "../book/" "../typst-out/"
+          cd ..
+          cp -a public/img typst-out/img
+          typst compile --root typst-out typst-out/book.typ public/programiranje_u_haskelu-nikola_ubavic.pdf
 
       - name: Upload site
         uses: actions/upload-artifact@v7

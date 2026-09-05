@@ -149,6 +149,8 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
                 " • "
                 a ! A.href "/" $ "Početna"
                 " • "
+                a ! A.href "/programiranje_u_haskelu-nikola_ubavic.pdf" $ "PDF verzija"
+                " • "
                 a ! A.href "https://github.com/ubavic/programming-in-haskell" $ "GitHub"
             div $ do
                 "Knjiga je objavljena pod licencom "

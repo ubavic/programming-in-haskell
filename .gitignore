@@ -1,5 +1,7 @@
 public/*.html
 public/img/*.svg
 compiler/dist-newstyle
+typst-out
 .env
 deploy.sh
+*.pdf
