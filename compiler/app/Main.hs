@@ -89,6 +89,29 @@ buildIndexPage chapters date = renderHtml $ renderIndexPage chapters date
 generateSpine :: [(Filename, String)] -> [(Maybe (Filename, String), Maybe (Filename, String))]
 generateSpine list = let m = Just <$> list in zip (Nothing : m) (tail m ++ [Nothing])
 
+siteUrl :: String
+siteUrl = "https://haskel.ubavic.rs"
+
+sitemapUrl :: String -> String -> String
+sitemapUrl loc priority =
+    concat
+        [ "  <url>\n"
+        , "    <loc>", loc, "</loc>\n"
+        , "    <priority>", priority, "</priority>\n"
+        , "    <changefreq>monthly</changefreq>\n"
+        , "  </url>\n"
+        ]
+
+buildSitemap :: [Filename] -> String
+buildSitemap pages =
+    concat
+        [ "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        , "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+        , sitemapUrl (siteUrl ++ "/") "1.00"
+        ]
+        ++ concatMap (\page -> sitemapUrl (siteUrl ++ "/" ++ page) "0.80") pages
+        ++ "</urlset>\n"
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -112,6 +135,8 @@ exportHtml outPath date parsedChapters = do
         renderedChapters = zipWith (\secs (file, name) -> (file, name, secs)) (sections . snd <$> htmlChapters) chapterNames
     mapM_ (saveChapter outPath date) $ zipWith (\(f, c) (p, n) -> (f, c, p, n)) htmlChapters spine
     writeFile (outPath ++ "/index.html") (buildIndexPage renderedChapters date)
+    writeFile (outPath ++ "/sitemap.xml") (buildSitemap $ fst <$> htmlChapters) >>
+        (putStrLn . okS) "Saved document sitemap.xml"
 
 exportTypst :: Filename -> Filename -> [(Filename, Chapter)] -> IO ()
 exportTypst bookPath outPath parsedChapters = do
