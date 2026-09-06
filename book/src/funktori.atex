@@ -17,7 +17,7 @@ dupliraj :: Maybe Float -> Float
 dupliraj (Just a) = 2 * a
 }
 
-@p Nažalost funkcija @code{dupliraj} nije totalna. Ako joj prosledimo vrednost @code{Nothing} doći će izuzetka i program će biti prekinut. Dakle, moramo vratiti vrednost tipa @code{Float} i u slučaju kada je prosleđena vrednost @code{Nothing}. Stoga funkcija sada izgleda ovako:
+@p Nažalost funkcija @code{dupliraj} nije totalna. Ako joj prosledimo vrednost @code{Nothing} doći će do izuzetka i program će biti prekinut. Dakle, moramo vratiti vrednost tipa @code{Float} i u slučaju kada je prosleđena vrednost @code{Nothing}. Stoga funkcija sada izgleda ovako:
 
 @codeBlock{
 dupliraj :: Maybe Float -> Float
@@ -189,7 +189,7 @@ maybeMap2 _  _        _       = Nothing
 }{Funkcija @code{maybeMap2} podiže funkciju od dva parametra do funkcije koja "radi" sa možda-tipovima.}
 
 
-@p Funkcija @code{maybeMap2} značajno olakšava rad sa funkcijama dva parametra, ali ne rešava problem sa funkcijama tri i više parametara. Naravno, lako možemo implementirati odgovarajuće funkcije @code{maybeMap3}, @code{maybeMap4}, @code{maybeMap5}, ... ali nas to ponovo vodi ka ružnom kodu@note{Npr. ako u nekom trenutku promenimo broj parametara funkcije koju podižemo, tada na svakom mestu gde podižemo tu funkciju moramo i da menjamo odgovarajuću @code{maybeMap} funkciju.}. I dalje nećemo imati uniforman način podizanja funkcija više parametara na nivo možda-tipova.
+@p Funkcija @code{maybeMap2} značajno olakšava rad sa funkcijama dva parametra, ali ne rešava problem sa funkcijama tri i više parametra. Naravno, lako možemo implementirati odgovarajuće funkcije @code{maybeMap3}, @code{maybeMap4}, @code{maybeMap5}, ... ali nas to ponovo vodi ka ružnom kodu@note{Npr. ako u nekom trenutku promenimo broj parametra funkcije koju podižemo, tada na svakom mestu gde podižemo tu funkciju moramo i da menjamo odgovarajuću @code{maybeMap} funkciju.}. I dalje nećemo imati uniforman način podizanja funkcija više parametra na nivo možda-tipova.
 
 
 @p Vratimo se korak u nazad, i pogledajmo zašto dobro poznata funkcija @code{fmap} nije zgodna za rad sa funkcijama dve promenljive. Neka je @code{zbir = (+) :: Int -> Int -> Int}. Primenom @code{fmap} na @code{zbir} i jednu @code{Maybe} vrednost dobijamo funkciju "upakovanu" u @code{Maybe} strukturu:
@@ -343,7 +343,7 @@ Definisati funkciju @code{harm :: Float -> Float -> Maybe Float} koja vraća har
 
 @subsection{Liste kao aplikativni funktori}
 
-@p Da bi @code{[] :: * -> *} postao aplikativni funktor, potrebno je samo definisati funkciju @code{pure :: a -> [a]} i jednu od funkcija @code{(<*>) :: [a -> b] -> [a] -> [b]} ili @code{liftA2 :: (a -> b -> c) -> [a] -> [b] -> c}. Posmatrajući samo tipove navedenih funkcija, možemo dati mnogo različitih definicija funkcija. Naravno neće sve definicije biti dovoljno dobre, tako da zakoni aplikativnih funktora budu zadovoljeni. Ali, u slučaju lista postoji više mogućih definicija instance @code{Applicative [a]} koje zadovoljavaju pomenute zakone. Igrom slučaja, jedna od tih definicija je odabrana i implementirana u prelidu. Tu definiciju ćemo prikazati u nastavku:
+@p Da bi @code{[] :: * -> *} postao aplikativni funktor, potrebno je samo definisati funkciju @code{pure :: a -> [a]} i jednu od funkcija @code{(<*>) :: [a -> b] -> [a] -> [b]} ili @code{liftA2 :: (a -> b -> c) -> [a] -> [b] -> [c]}. Posmatrajući samo tipove navedenih funkcija, možemo dati mnogo različitih definicija funkcija. Naravno neće sve definicije biti dovoljno dobre, tako da zakoni aplikativnih funktora budu zadovoljeni. Ali, u slučaju lista postoji više mogućih definicija instance @code{Applicative [a]} koje zadovoljavaju pomenute zakone. Jedna od tih definicija je odabrana i implementirana u prelidu. Tu definiciju ćemo prikazati u nastavku:
 
 @p Funkcija @code{pure} uzima vrednost nekog neodređenog tipa @code{a} i vraća vrednost tipa @code{[a]}. Kako je tip u potpunosti neodređen (nije ograničen nekom tipskom klasom), ne možemo mnogo što šta uraditi sa vrednošću. Za vrednost @code{x}, funkcija @code{pure} može vratiti @code{[]}, @code{[x]}, @code{[x, x]}, @code{[x, x, x]}, itd...  Heuristički govoreći, konstantna funkcija @code{\x -> []} bi bila beskorisna, dok bi funkcije poput @code{\x -> [x, x]}, @code{\x -> [x, x, x]} vraćale "previše". Zbog toga, definisaćemo @code{pure} kao funkciju @code{\x -> [x]}.
 

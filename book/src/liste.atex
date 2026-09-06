@@ -151,6 +151,9 @@ velikoSlovo :: Char -> Bool
 velikoSlovo c = elem c ['A' .. 'Z'] 
 }}
 
+@problem{Implementirati funkciju @ccode{daLiJeCifra :: Char -> Bool} bez korišćenja bilo koje sintakse za grananje.}
+
+
 @section{Rekurzija nad listama}
 
 @p Liste imaju prirodnu rekurzivnu strukturu. Svaka lista osim prazne je nastala nadovezivanjem nekog elementa na početak neke kraće liste. Mnogi algoritmi za rad sa listama se mogu implementirati rekurzijom po dužini liste. Baza rekurzije čini slučaj prazne liste, dok rekurzivni korak predstavlja svođenje problema na isti problem za kraću listu.
@@ -208,7 +211,7 @@ last' (_:xs) = last' xs
 Reimplementirati funkcije za rad sa listama poput @code{tail}, @code{reverse}.
 }
 
-@p Ponekad je potrebno implementirati funkcije koje su rekurzivne po više parametara.
+@p Ponekad je potrebno implementirati funkcije koje su rekurzivne po više parametra.
 
 @example{
 @p Često je potrebno odrediti da li je neka niska podniska druge. Tačnije, potrebna je funkcija @ccode{daLiJePodniska :: [Char] -> [Char] -> Bool} koja određuje da li se prva prosleđena niska sadrži u drugoj prosleđenoj nisci. Ideja za implementaciju funkcije @code{daLiJePodniska} je naravno tehnika rekurzije.
@@ -390,7 +393,7 @@ ghci> foldr g 1 [2, 3]
 0.66666666666
 }{Prvi izraz se svodi na @code{(1 / 2) / 3}, dok se drugi izraz svodi na @code{2 / (3 / 1)}.}
 
-@p Često je zgodno da umesto posebne inicijalne vrednosti, iskoristimo prvi (ili poslednji) element liste. Tada nam mogu pomoći funkcije @ccode{foldl1 :: (a -> a -> a) -> [a] -> a} i @ccode{foldr1 :: (a -> a -> a) -> [a] -> a} koje se razlikuju od @code{foldl} i @code{foldr} funkcija po tome što nemaju i inicijalnu vrednost kao jedan od parametara.
+@p Često je zgodno da umesto posebne inicijalne vrednosti, iskoristimo prvi (ili poslednji) element liste. Tada nam mogu pomoći funkcije @ccode{foldl1 :: (a -> a -> a) -> [a] -> a} i @ccode{foldr1 :: (a -> a -> a) -> [a] -> a} koje se razlikuju od @code{foldl} i @code{foldr} funkcija po tome što nemaju i inicijalnu vrednost kao jedan od parametra.
 
 @example{
 @p Binarna funkcija @code{min :: Ord a => a -> a -> a} vraća manju od dve vrednosti@note{Setimo se, klasa @code{Ord} sadrži sve one tipove čiji se vrednosti mogu porediti sa @code{<}, @code{==}, @code{>}, itd... Prema tome za dve vrednosti nekog tipa iz @code{Ord}, uvek možemo odrediti koja je manja.}. Ako želimo da odredimo najmanju vrednost u tročlanoj listi, dovoljno je da prvo odredimo najmanju vrednost od prva dva elementa, a zatim tu vrednost uporedimo sa trećim elementom. Slično važi i za liste veće dužine. Prema tome, funkcija @code{min} nam je dovoljna za implementaciju funkcije @code{najmanji :: Ord a => [a] -> a}:
@@ -452,8 +455,8 @@ uCifru _ = 0
 cifreUBroj :: [Int] -> Int
 cifreUBroj [] = 0
 cifreUBroj [x] = x
-cifreUBroj xs = (cifreUBroj (init xx)) * 10 + (last xs)
-}{Slučaj prazne liste je dodat radi totalnosti}
+cifreUBroj xs = (cifreUBroj (init xs)) * 10 + (last xs)
+}{Slučaj prazne liste je dodat da ne bi došlo do izuzetka prilikom prosleđivanja prazne liste.}
 
 @p Koristeći navedenu pomoćnu funkciju, zadatak je lako rešiti
 
@@ -506,7 +509,7 @@ ghci> head numerisaniDani
 
 @terminal{
 ghci> g a b = show a ++ ". " ++ b
-ghci> numerisaniDani = zipWith f [1 .. 7] dani
+ghci> numerisaniDani = zipWith g [1 .. 7] dani
 }{Funkcija koju prosleđujemo funkciji @code{zipWith}, ne treba da uzima par već da bude funkcija višeg reda. Zbog toga smo definisali @code{g}.}
 }
 

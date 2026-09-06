@@ -344,7 +344,7 @@ ghci> :type [True, False] !! 1
 ghci> :type length [True, False]
 length [True, False] :: Int
 ghci> :type (True, 'a')
-(Bool, Char) 
+(True, 'a') :: (Bool, Char) 
 }{Primetimo da se @code{:type} komanda odnosi na ceo ostatak linije. Stoga nije neophodno pisati @code{:type ([True] !! 0)}, već samo @code{:type [True] !! 0}, itd...}
 
 @p Zaključivanje tipova je složen proces, ali možemo demonstrirati osnove ovog procesa. 
@@ -362,14 +362,14 @@ ghci> :type 2
 2 :: Num a => a
 }
 
-@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Literal @code{2} može predstavljati vrednost tipa različitih numeričkih tipova. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}, sto se naravno označava sa @code{Num a => a}.
+@p Za izraz @code{2} @em{GHCi} nije mogao da zaključi konkretan tip. Literal @code{2} može predstavljati vrednost tipa različitih numeričkih tipova. Zbog toga @em{GHCi} zaključuje da je @code{2} nekog tipa @code{a} koji pripada klasi @code{Num}, što se naravno označava sa @code{Num a => a}.
 
 @p Ako potražimo tip izraza @code{3.14} uvidećemo da je u pitanju tip @code{Fractional a => a}. Svakako izraz @code{3.14} predstavlja jedan racionalan broj, te ne može biti tipa @code{Int} ili @code{Integer}. Ali racionalan broj može biti predstavljen i kao @code{Float} i kao @code{Double} vrednost. Zbog toga ni ovde nemamo konkretan odgovor već klasno ograničenje.
 
 
 @section{Karijevanje}
 
-@p U lekciji o funkcijama prikazana su dva načina definisanja funkcije sa više parametara. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(A, B) -> C} dok druga tehnika daje funkciju tipa @code{A -> (B -> C)}. 
+@p U lekciji o funkcijama prikazana su dva načina definisanja funkcije sa više parametra. Prvi, i jednostavniji, način podrazumeva konstrukciju funkcije koja uzima uređen par, dok drugi način podrazumeva konstrukciju funkcije višeg reda. Prva tehnika daje funkciju tipa @code{(A, B) -> C} dok druga tehnika daje funkciju tipa @code{A -> (B -> C)}, za neke tipove @code{A}, @code{B}, @code{C}. 
 
 @p Intuitivno je jasno da su ove dve tehnike podjednako dobre. Svaka funkcija koja se može definisati na jedan od pomenutih načina može se definisati i na drugi. Stvar je ukusa za koju tehniku ćemo se opredeliti@note{Ipak, dobro je naglasiti da je u duhu Haskel jezika koristiti funkcije višeg reda. Kasnije ćemo videti da funkcije višeg reda dovode do značajno elegantnijeg koda.}. Ono što je zanimljivo je da je Haskel toliko ekspresivan jezik da se lako može definisati funkcija višeg reda koja transformiše funkciju tipa @code{(A, B) -> C} u funkciju tipa @code{A -> (B -> C)} (gde su @code{A}, @code{B} i @code{C} neki tipovi). Ovakva transformacija se naziva @def{karijevanje}@note{Eng. @em{currying}. po Haskel Kariju (Haskell Curry)}. Označimo funkciju koja vrši ovu transformaciju sa @code{k}.
 

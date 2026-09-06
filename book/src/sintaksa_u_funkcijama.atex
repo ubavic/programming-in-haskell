@@ -129,12 +129,12 @@ pozitivan x
  | x < 0 = "Negativan"
 }
 
-@p Prilikom "poziva" @code{pozitivan (-4)}, prvo će se proveriti prvi navedeni slučaj, odnosno @code{x >= 0}. Kako se @code{-4 >= 0} beta redukuje u @code{False}, proveriće se naredni slučaj @code{x < 0}. Kako se @code{-4 < 0} redukuje u @code{True}, vrednost @code{pozitivan (-4)} je @code{"Negativan"}.
+@p Prilikom "poziva" @code{pozitivan (-4)}, prvo će se proveriti prvi navedeni slučaj, odnosno @code{x >= 0}. Kako se @code{-4 >= 0} evaluira u @code{False}, proveriće se naredni slučaj @code{x < 0}. Kako se @code{-4 < 0} redukuje u @code{True}, vrednost @code{pozitivan (-4)} je @code{"Negativan"}.
 
 @p Dakle, sa ograđenim definicijama moguće je proveriti niz uslova. Funkcija će imati vrednost koja odgovara prvom tačnom uslovu. Ako ni jedan od uslova nije tačan, tada će doći do izuzetka.
 
 @codeBlock{
-pozitivan' :: :: Int -> [Char]
+pozitivan' :: Int -> [Char]
 pozitivan' x
  | x > 0 = "Pozitivan"
  | x < 0 = "Negativan"
@@ -254,7 +254,7 @@ f 0 = 1
 f _ = 0
 }
 
-@p Sa podudaranjem oblika, možemo lako definisati i funkcije više parametara. Tako na primer naredna dva koda definišu istu funkciju:
+@p Sa podudaranjem oblika, možemo lako definisati i funkcije više parametra. Tako na primer naredna dva koda definišu istu funkciju:
 
 @codeBlock{
 g :: Int -> Int -> Int
@@ -376,6 +376,9 @@ saberi3 (x, y, z) = x + y + z
 
 @p Iz dva navedena primera, vidimo da nam funkcije poput @code{fst} ili @code{snd} nisu neophodne.
 
+
+@problem{Sa uređenom trojkom @code{(Double, Double, Double)} može se prezentovati vektor trodimenzionalnog prostora. Napisati funkcije za zbir, skalarni i vektorski proizvod dva vektora, kao i funkciju koja skalira vektor za dati koeficijent i funkciju koja računa dužinu vektora.}
+
 @subsection{Podudaranje oblika unutar lambda izraza}
 
 @p U lambda izrazima moguće je upotrebiti podudaranje oblika za dekonstrukciju argumenta. Zbog same forme lambda izraza, moguće je navesti samo jedan oblik po kom se vrši podudaranje. Taj oblik postavljamo između "lambde" i strelice.
@@ -388,16 +391,4 @@ saberi3 (x, y, z) = x + y + z
 
 @example{
 @p Umesto funkcija @code{fst} i @code{snd} možemo koristiti lambda funkcije @code{\(x, y) -> x} i @code{\(x, y) -> y}.
-}
-
-@section{Zadaci}
-
-@problem{Sa uređenom trojkom @code{(Double, Double, Double)} može se prezentovati vektor trodimenzionalnog prostora. Napisati funkcije za zbir, skalarni i vektorski proizvod dva vektora, kao i funkciju koja skalira vektor za dati koeficijent i funkciju koja računa dužinu vektora.}
-
-@problem{Reimplementirati funkciju @ccode{daLiJeCifra :: Char -> Bool} bez korišćenja bilo koje sintakse za grananje.}
-{@p Možemo iskoristiti funkciju @ccode{elem :: Eq a => a -> [a] -> Bool} koja proverava da li se element nalazi u listi:
-@codeBlock{
-daLiJeCifra :: Char -> Bool
-daLiJeCifra x = elem x "0123456789"
-}
 }

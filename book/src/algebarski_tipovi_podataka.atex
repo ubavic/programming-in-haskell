@@ -238,7 +238,7 @@ data MoždaBroj = SamoBroj Float | Ništa
 apsolutnaRazlika :: MoždaBroj -> MoždaBroj -> MoždaBroj
 apsolutnaRazlika (SamoBroj x) (SamoBroj y) = SamoBroj $ abs $ x - y
 apsolutnaRazlika _ _ = Ništa
-}{Funkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga ima smisla vratiti samo vrednost @code{Nista}}
+}{Funkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Ništa}, i stoga ima smisla vratiti samo vrednost @code{Ništa}}
 
 @codeBlock{
 podeli :: MoždaBroj -> MoždaBroj -> MoždaBroj
@@ -247,7 +247,7 @@ podeli (SamoBroj x) (SamoBroj y) =
         then Ništa
         else SamoBroj $ x / y
 podeli _ _ = Ništa
-}{Neke funkcije su takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa u slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethodnoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
+}{Neke funkcije su takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa u slučaju kada je @code{y == 0} vraćamo @code{Ništa}. Kao i u prethodnoj funkciji, ako je jedan od argumenata @code{Ništa}, vrednost @code{Ništa} i vraćamo.}
 
 @p Slično tipu @code{MoždaBroj} možemo konstruisati@note{Obratite pažnju da u istom modulu nije moguće definisati tip @code{MoždaBroj} i @code{MoždaNiska} jer imaju istoimeni konstruktor @code{Ništa}. Naravno, rešenje je da promenimo ime konstruktora u npr @code{NištaNiska} ili @code{BezNiske}. U nastavku ćemo radi jednostavnosti zadržati naziv @code{Ništa}.} tip @code{MoždaNiska}:
 
@@ -276,15 +276,15 @@ data Možda t = Samo t | Ništa
 @p Možda-tipovi se često koriste da bi se parcijalnim funkcijama pridružile odgovarajuće totalne funkcije. Ideja je da se za one vrednosti domena za koje je funkcija nedefinisana, prosto vrati @code{Nothing} vrednost.
 
 @example{
-@p Funkcija @code{head :: [a] -> a} koja vraća glavu niza nije totalna: pozivanje @code{head []} dovodi do izuzetka, jer prazan niz nema glavu. Zbog toga, u jednom od standardnih modula, definisana je funkcija @code{maybeHead}:
+@p Funkcija @code{head :: [a] -> a} koja vraća glavu niza nije totalna: pozivanje @code{head []} dovodi do izuzetka, jer prazan niz nema glavu. Zbog toga, u jednom od standardnih modula, definisana je funkcija @code{listToMaybe}:
 
 @codeBlock{
-maybeHead :: [a] -> Maybe a
-maybeHead []  = Nothing
-maybeHead (x:_) = Just x
+listToMaybe :: [a] -> Maybe a
+listToMaybe []  = Nothing
+listToMaybe (x:_) = Just x
 }
 
-@p Dakle, ako niz nije prazan @code{maybeHead} će vratiti glavu niza upakovanu u @code{Just}. Ako je niz prazan, @code{maybeHead} će vratiti @code{Nothing}.
+@p Dakle, ako niz nije prazan @code{listToMaybe} će vratiti glavu niza upakovanu u @code{Just}. Ako je niz prazan, @code{listToMaybe} će vratiti @code{Nothing}.
 }
 
 @problem{
@@ -379,9 +379,9 @@ punoIme (MkOsoba @@{ime = ime, prezime = prezime@@})
 
 punaAdresa :: Osoba -> String
 punaAdresa (MkOsoba @@{mestoStanovanja = mesto, adresaStanovanja = adresa@@})
-    = mesto ++ ", " ++ adresa
+    = adresa ++ ", " ++ mesto 
 
-punoletna :: Int -> Osoba -> MyBool
+punoletna :: Int -> Osoba -> Bool
 punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
     = trenutnaGodina - godinaRođenja >= 18
 }
@@ -502,7 +502,7 @@ f :: P Void A -> Void
 f (P v _) = v
 
 g :: Void -> P Void A
-g v = g v
+g v = case v of {}
 }{Umesto što smo definisali @code{P}, mogli smo da iskoristimo tip uređenih parova @code{(,)}.}
 
 @p U ovom slučaju dokaz je jednostavan@note{Dokaz se zasniva na tome da je iskaz @m{p\Rightarrow q} tačan kad @m{p} nije tačno (@em{vacuous truth}). Iz iskaza @em{x je tipa Void}, možemo zaključiti bilo šta jer ne postoji vrednost tipa @code{Void}.}: ne postoji vrednost @code{x :: Void} te jednakost važi @code{f (g x) = x} za sve @code{x :: Void}. Isto, ne postoji vrednost tipa @code{P Void A} pa i jednakost @code{g (f x) = x} važi uvek za @code{x :: P Void A}.

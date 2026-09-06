@@ -102,8 +102,8 @@ dužina'' ss = case ss of
 @p Iskoristimo primer iz prethodne glave za demonstraciju različitog preloma @em{case} izraza. Sve naredne definicije definišu istu funkciju
 
 @codeBlock{
-data Dužina = Metar Float | Milja Float | SvetlosnaSekunda
-    Float deriving (Show)
+data Dužina = Metar Float | Milja Float | SvetlosnaSekunda Float
+    deriving (Show)
 
 uMetre' :: Dužina -> Dužina
 uMetre' l = case l of
@@ -205,7 +205,7 @@ Naći sve pravougle trouglove obima manjeg od @m{100} čije su stranice celi bro
 @p Pragma @pre{LANGUAGE} mora se navesti na vrhu datoteke, pre deklaracije modula, i odnosi se samo na modul u kom je navedena:
 
 @codeBlock{
-@@{ -# LANGUAGE LambdaCase #-@@}
+@@{-# LANGUAGE LambdaCase #-@@}
 module Main where
 
 ...
@@ -256,12 +256,12 @@ zbir = foldr (+) 0
 @p Primetimo da u definiciji @code{sum = foldr (+) 0} iz primera, ne pojavljuje se parametar funkcije @code{sum}. Stoga za ovu definiciju kažemo da je napisana u stilu bez tačaka. Izraz @em{bez tačaka} potiče iz matematike, gde se često za argument funkcije kaže @em{tačka}@note{često čujemo izraz @em{vrednost funkcije u tački}} (iako možda ta funkcija nema veze sa geometrijskim tačkama). Kôd bez tačaka može biti elegantniji od "koda sa tačkama", ali ta elegantnost može vrlo lako da preraste u nečitljivost@note{navedene osobine koda su subjektivne. Čak i za najjednostavniji kod bez tačaka, kakav smo videli u primeru, možemo reći da je nečitljiv, jer iz oblika definicije nije odmah jasno da je @code{zbir} funkcija.}. Ipak, dobro je razumeti ovu tehniku, jer je popularna među Haskel programerima i može se videti u svim projektima. 
 
 @example{
-@p Napišimo definiciju @ccode{f x = 2 * x - 1} u stilu bez tačaka. Prvo možemo izdvojiti operator oduzimanja u prefiksnu poziciju čime dobijamo @ccode{f x = (-) (2 * x) 1}. Pošto je za eta konverziju neophodno da parametar bude smešten na desnoj strani izraza, iskoristićemo @code{flip :: (a -> b -> c) -> b -> a -> c} kombinator koji obrće redosled parametara funkcija. Kombinator ćemo primeniti na funkciju @code{(-)}, čime stižemo do definicije @ccode{f x = flip (-) 1 (x * 2)}. Ako postavimo i @code{*} u prefiksnu poziciju dobijamo @ccode{f x = flip (-) 1 ((*) 2 x)}. Vidimo da se ovde radi o kompoziciji funkcija @code{flip (-) 1} i @code{(*) 2} primenjenoj na @code{x}, pa je @ccode{f x = ((flip (-) 1) . ((*) 2)) x}. Prostom eta redukcijom stižemo do @ccode{f = (flip (-) 1) . ((*) 2)}
+@p Napišimo definiciju @ccode{f x = 2 * x - 1} u stilu bez tačaka. Prvo možemo izdvojiti operator oduzimanja u prefiksnu poziciju čime dobijamo @ccode{f x = (-) (2 * x) 1}. Pošto je za eta konverziju neophodno da parametar bude smešten na desnoj strani izraza, iskoristićemo @code{flip :: (a -> b -> c) -> b -> a -> c} kombinator koji obrće redosled parametra funkcija. Kombinator ćemo primeniti na funkciju @code{(-)}, čime stižemo do definicije @ccode{f x = flip (-) 1 (x * 2)}. Ako postavimo i @code{*} u prefiksnu poziciju dobijamo @ccode{f x = flip (-) 1 ((*) 2 x)}. Vidimo da se ovde radi o kompoziciji funkcija @code{flip (-) 1} i @code{(*) 2} primenjenoj na @code{x}, pa je @ccode{f x = ((flip (-) 1) . ((*) 2)) x}. Prostom eta redukcijom stižemo do @ccode{f = (flip (-) 1) . ((*) 2)}
 
 @p U ovom primeru vidimo da ne treba po svaku cenu pisati kod u stilu bez tačaka@note{Protivnici programiranja bez tačaka nazivaju ovaj still @em{pointless} umesto @em{pointfree}.}.
 }
 
-@p Ironično, u stilu bez tačaka često se pojavljuje operator kompozicije koji se zapisuje sa tačkom. Ovo često buni početnike, te je dobro napomenuti da stil bez tačaka samo podrazumeva da se funkcije definišu bez navođenja parametara, a da ne podrazumeva ništa o upotrebi operatora kompozicije.
+@p Ironično, u stilu bez tačaka često se pojavljuje operator kompozicije koji se zapisuje sa tačkom. Ovo često buni početnike, te je dobro napomenuti da stil bez tačaka samo podrazumeva da se funkcije definišu bez navođenja parametra, a da ne podrazumeva ništa o upotrebi operatora kompozicije.
 
 @p Pokušajmo sad da rešimo "problem" koji se često može sresti u Haskel kodu. Neka su date funkcije @code{f' :: A -> B -> C} i @code{g' :: C -> D}. U kodu nam je potrebna funkcija @code{h = \x y -> g' (f' x y)}, i voleli bismo ovu funkciju napišemo u stilu bez tačaka. Prva ideja koja nam pada na pamet je da iskoristimo operator kompozicije @code{.} i definišemo @code{h = g' . f'}. Međutim dobićemo tipsku grešku čim ovako definišemo @code{h}. Razlog tome je što je kodomen funkcije @code{f} tip @code{B -> C}@note{Podsećamo da je u tipovima strelica @code{->} desnoasocijativna, što znači da je tip @code{f :: A -> B -> C} zapravo tip @code{f' :: A -> (B -> C)}}. To znači da domen funkcije @code{g'} mora biti isto @code{B -> C} ako želimo izvršimo kompoziciju, što naravno nije za naš primer. Dakle, funkcije više promenljivih ne možemo uvek lako komponovati sa @code{.}.
 

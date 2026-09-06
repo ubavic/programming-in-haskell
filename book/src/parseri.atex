@@ -71,7 +71,7 @@ cifra = P f where
         if x `elem` ['0' .. '9']
         then Just (fromEnum x - fromEnum '0', xs)
         else Nothing
-}{Tip karaktera pripada klasi @code{Enum}, te je moguće koristiti funkciju @code{fromEnum} koja daje @em{Unicode} vrednost karaktera. Oduzimanjem te vrednosti od @em{Uncode} vrednosti karaktera @code{'0'}, dobijamo numeričku vrednost koju karakter cifre predstavlja.}
+}{Tip karaktera pripada klasi @code{Enum}, te je moguće koristiti funkciju @code{fromEnum} koja daje @em{Unicode} vrednost karaktera. Oduzimanjem te vrednosti od @em{Unicode} vrednosti karaktera @code{'0'}, dobijamo numeričku vrednost koju karakter cifre predstavlja.}
 
 @terminal{
 ghci> parsiraj cifra "9abc"
@@ -129,7 +129,7 @@ Just (9, "")
 }
 }
 
-@p Veoma koristan je parser kombinator @em{ili}, koji uzima dva parsera i kreira novi parser koji pokušava da pokrene prvi parser a slučaju neuspeha i drugi parser. Ovakav kombinator ima sasvim jednostavnu definiciju:
+@p Veoma koristan je parser kombinator @em{ili}, koji uzima dva parsera i kreira novi parser koji pokušava da pokrene prvi parser a u slučaju neuspeha i drugi parser. Ovakav kombinator ima sasvim jednostavnu definiciju:
 
 @codeBlock{
 ili :: Parser a -> Parser a -> Parser a
@@ -172,7 +172,7 @@ više (P f) = P $ \s -> (Just r s)
 @problem{Parser @code{više p} može da vrati i praznu listu kao uspešnu vrednost što često nije poželjno. Definisati kombinator @code{baremJedan :: Parser a -> Parser [a]}, koji mora da parsira barem jednu vrednost (tj, nikad neće vratiti praznu listu).}{
 @p Umesto da direktno napišemo definiciju kombinatora, iskoristićemo postojeće kombinatore. Ako je dat parser @code{p :: Parser A}, tada parser @ccode{p `zatim` (više p)} parsira vrednost tipa @code{(A, [A])}. Stoga je dovoljno sa kombinatorom @code{primeni} spojiti ove dve ove koordinate u jednu listu sa funkcijom @code{\(x,xs) -> x:xs} (ovo je naravno funkcija @code{uncurry (:)}). Prema tome, možemo definisati @ccode{baremJedan p = primeni (uncurry (:)) (p `zatim` (više p))}.}
 
-@p Sada kada smo se upoznali sa najvažnijim parser kombinatorima, možemo lako konstruisati jedan veoma koristan parser. U pitanju je parser celobrojnih vrednosti. Uspešni pokretanjem parsere @ccode{više cifra} dobijamo vrednost tipa @code{[Int]} koja predstavlja cifre sa početka ulazne niske. Stoga je dovoljno napisati funkciju @code{cifreUBroj :: [Int] -> Int} koja će niz cifara svesti na broj. Naravno, ovde nam je potreban rekurzivan prolazak kroz listu, pri čemu ćemo čuvati "trenutnu vrednost" koja se pri svakom koraku uvećava 10 puta (tj za jedno decimalno mesto). Direktna implementacija@note{Jednostavnije, funkciju @code{cifreUBroj} smo mogli da definišemo i kao @ccode{foldl (\a x -> 10*a + x) 0} odnosno još kraće @ccode{foldl ((+) . (*10)) 0}} izgleda ovako:
+@p Sada kada smo se upoznali sa najvažnijim parser kombinatorima, možemo lako konstruisati jedan veoma koristan parser. U pitanju je parser celobrojnih vrednosti. Uspešnim pokretanjem parsera @ccode{više cifra} dobijamo vrednost tipa @code{[Int]} koja predstavlja cifre sa početka ulazne niske. Stoga je dovoljno napisati funkciju @code{cifreUBroj :: [Int] -> Int} koja će niz cifara svesti na broj. Naravno, ovde nam je potreban rekurzivan prolazak kroz listu, pri čemu ćemo čuvati "trenutnu vrednost" koja se pri svakom koraku uvećava 10 puta (tj za jedno decimalno mesto). Direktna implementacija@note{Jednostavnije, funkciju @code{cifreUBroj} smo mogli da definišemo i kao @ccode{foldl (\a x -> 10*a + x) 0} odnosno još kraće @ccode{foldl ((+) . (*10)) 0}} izgleda ovako:
 
 @codeBlock{
 cifreUBroj :: [Int] -> Int
@@ -199,7 +199,7 @@ Nothing
 @codeBlock{
 instance Functor Parser where
     fmap f p = P $
-        \s -> case p s of
+        \s -> case parsiraj p s of
             Just (x, s') -> Just (f x, s')
             Nothing -> Nothing
 }{Rezultat "mapiranja" funkcije @code{f} na neki parser @code{p}, je novi parser koji na uspešan rezultat parsiranja parsera @code{p} primenjuje funkciju @code{f}.}
@@ -221,12 +221,12 @@ instance Functor Parser where
 
 @codeBlock{
 instance Applicative Parser where
-    pure x = P $ \s -> Just (s, x)
+    pure x = P $ \s -> Just (x, s)
 
     p1 <*> p2 = P $ \s -> primeni (parsiraj p1 s) p2
         where
             primeni Nothing       _ = Nothing
-            primeni (Just (s',f)) p = parsiraj (fmap f p) s'
+            primeni (Just (f,s')) p = parsiraj (fmap f p) s'
 }{Pomoćna funkcija @code{primeni}, proverava da li je parsiranje sa @code{p1} uspelo. Ako jeste uspelo, tada se rezultat @code{(s', f)} prosleđuje parseru @code{p2}, tako što se parser @code{fmap f p1} pokreće nad ostatkom @code{s'}.}
 
 @problem{Dokazati da navedena definicija poštuje zakone aplikativnih funktora.}
@@ -258,17 +258,17 @@ Just (('D',7), "")
 
 @codeBlock{
 niska :: String -> Parser String
-niska ""     = P $ \s -> Just (s, "")
+niska ""     = P $ \s -> Just ("", s)
 niska (x:xs) = P $ \s -> case parsiraj (simbol x) s of
-    Just (s',_) -> parsiraj ((x:) <$> niska xs) s'
+    Just (_, s') -> parsiraj ((x:) <$> niska xs) s'
     Nothing     -> Nothing
 }
 
 @terminal{
 ghci> parsiraj (niska "True") "Truehelloworld"
-Just ("helloworld","True")
+Just ("True","helloworld")
 ghci> parsiraj (niska "False") "Falsebyeworld"
-Just ("byeworld","False")
+Just ("False","byeworld")
 ghci> parsiraj (niska "hello") "bye"
 Nothing
 }
@@ -288,7 +288,7 @@ Definisati parser @ccode{preskočiBeline :: Parser ()} koji samo preskače karak
 
 @section{Parsiranje matematičkih izraza}
 
-@p U lekciji o rekurzivnim strukturama podataka, definisali smo tip @code{Izraz} ka algebarski tip @ccode{data Izraz = Broj Int | Zbir Izraz Izraz | Proizvod Izraz Izraz}. Takođe smo i definisali instancu @code{Show Izraz} na sasvim jednostavan način.
+@p U lekciji o rekurzivnim strukturama podataka, definisali smo tip @code{Izraz} kao algebarski tip @ccode{data Izraz = Broj Int | Zbir Izraz Izraz | Proizvod Izraz Izraz}. Takođe smo i definisali instancu @code{Show Izraz} na sasvim jednostavan način.
 
 @codeBlock{
 instance Show Izraz where

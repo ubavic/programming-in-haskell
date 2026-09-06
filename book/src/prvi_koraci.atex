@@ -8,7 +8,7 @@
 
 @p @em{GHC} instalacija korisniku pruža dva programa. Prvi program je sam kompajler @pre{ghc} koji Haskel kôd kompajlira u izvršnu datoteku. Drugi program je @pre{ghci} koji se koristi kao interaktivno okruženje za interpretaciju Haskel koda. Značajan deo ove knjige biće prikazan kroz rad u @em{GHCi} okruženju (detalji će biti objašnjeni uskoro).
 
-@p Specijalizovana desktop razvojna okruženja za Haskel ne postoje, ali postoji @em{Haskell Language Server} (HLS) koji može da nadomesti ovaj "nedostatak"@note{Ovo i nije toliki nedostatak, jer je danas sve zastupljenije da se razvoj programa vrši kroz tekstualni editor sa raznim proširenjima.}. Tekstualni editori (poput VS Code-a ili vim-a) prošireni sa HSL-om se mogu koristi kao razvojno okruženje.
+@p Specijalizovana desktop razvojna okruženja za Haskel ne postoje, ali postoji @em{Haskell Language Server} (HLS) koji može da nadomesti ovaj "nedostatak"@note{Ovo i nije toliki nedostatak, jer je danas sve zastupljenije da se razvoj programa vrši kroz tekstualni editor sa raznim proširenjima.}. Tekstualni editori (poput VS Code-a ili vim-a) prošireni sa HLS-om mogu se koristiti kao razvojno okruženje.
 
 @p Instalacija navedenih programa može se razlikovati u zavisnosti od sistema. Trenutno se za sve operativne sisteme (Linux, Windows, Mac) preporučuje @url{GHCup}{https://www.haskell.org/ghcup/} kao alat za automatsku instalaciju svih potrebnih programa. Na sajtu @em{GHCup} projekta možete pronaći instrukcije za instalaciju@note{Korisnici @em{Windows} operativnog sistema moraju da instaliraju @url{Msys2}{https://www.msys2.org/} pre pokretanja @em{GHCup} instalacije.}. Preporučljivo je da prilikom instalacije instalirate sve programe (@em{Stack}, @em{Cabal}, @em{HLS}).
 
@@ -51,7 +51,7 @@ sati_u_danu = 24
 
 @section{Izvršavanje Haskel koda}
 
-@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći aritmetičke operatore, vrednosti tipa @code{Int} i zagrade @code{(} i @code{)}, možemo graditi @em{aritmetičke izraze}:
+@p Prilikom definisanja imena u Haskel kodu, dozvoljeno je koristiti operatore i funkcije. Na primer, vrednosti tipa @code{Int} možemo sabirati, oduzimati i množiti koristeći operatore @code{+}, @pre{-} i @code{*}. Koristeći aritmetičke operatore, vrednosti tipa @code{Int} i zagrade @pre{(} i @pre{)}, možemo graditi @em{aritmetičke izraze}:
 
 @codeBlock{
 dana_u_nedelji :: Int
@@ -104,7 +104,7 @@ ghci> dana_u_nedelji
 ghci>
 }
 
-@p Mnogo bitnije je ono što dobijamo nakon unosa imena @code{sati_u_nedelji}. U ovom slučaju, @em{GHCi} će interpretirati Haskel kôd @code{dana_nedelji * sati_u_nedelji} odnosno iskoristiće definicije navedenih vrednosti a zatim i izvršiti naznačeno množenje. Rezultat će biti ispisan:
+@p Mnogo bitnije je ono što dobijamo nakon unosa imena @code{sati_u_nedelji}. U ovom slučaju, @em{GHCi} će interpretirati Haskel kôd @code{dana_u_nedelji * sati_u_nedelji} odnosno iskoristiće definicije navedenih vrednosti a zatim i izvršiti naznačeno množenje. Rezultat će biti ispisan:
 
 @terminal{
 ghci> sati_u_nedelji

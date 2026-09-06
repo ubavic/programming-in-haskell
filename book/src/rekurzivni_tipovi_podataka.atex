@@ -158,7 +158,7 @@ data [] a = [] | a : ([] a)
 
 @p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sadrže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infiksnog konstruktora sa odgovarajućim @code{infix} deklaracijama.}, te se navodi između argumenata.
 
-@p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i u konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
+@p Haskel kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskel sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i u konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
 
 @section{Stabla}
 
@@ -166,7 +166,7 @@ data [] a = [] | a : ([] a)
 
 @p @def{Stablo} je rekurzivna struktura podataka sačinjena od @em{čvorova}, u kojoj svaki čvor sadrži @em{vrednost} i nekoliko manjih stabala (od kojih neka mogu biti prazna). Specijalno, @def{binarno stablo} je stablo u kom svaki čvor sadrži vrednost i dva manja stabla@note{Koja pritom mogu biti prazna}.
 
-@p Tip binarnog stabla koje sadrži u sebi vrednosti tipa @code{Int} možemo kreirati na sledeći način: prazno stablo ćemo kreirati sa nularnim konstruktorom @code{PraznoStablo}, dok ćemo čvorove kreirati sa konstruktorom @code{Čvor}. Konstruktor @code{Čvor} zavisi od tri parametara: vrednosti tipa @code{Int}, kao i od dve vrednosti tipa @code{StabloBrojeva}:
+@p Tip binarnog stabla koje sadrži u sebi vrednosti tipa @code{Int} možemo kreirati na sledeći način: prazno stablo ćemo kreirati sa nularnim konstruktorom @code{PraznoStablo}, dok ćemo čvorove kreirati sa konstruktorom @code{Čvor}. Konstruktor @code{Čvor} zavisi od tri parametra: vrednosti tipa @code{Int}, kao i od dve vrednosti tipa @code{StabloBrojeva}:
 
 @codeBlock{
 data StabloBrojeva =

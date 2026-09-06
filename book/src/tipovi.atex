@@ -94,7 +94,7 @@ ghci> 3 * (-2)
 
 @p Za deljenje celobrojnih vrednosti, koristi se funkcija @code{div} sa dva parametra. Prvi parametar je deljenik (broj koji se deli) a drugi je delilac (broj kojim se deli). Rezultat deljenja je @em{celobrojna} vrednost odnosno vrednost tipa @code{Int}. 
 
-@p I pri radu sa funkcijama više parametara, argumenti se razdvajaju razmacima@note{Česta početnička greška je da se sintaksa pozivanja funkcija iz drugih jezika prenese u Haskel, odnosno da se argumenti funkcije postave u zagrade i razdvoje zarezom. Zato početnici često pokušavaju da podele dva broja sa @code{div (5, 7)} što dovodi do tipske greške. Uverite se i sami.}:
+@p I pri radu sa funkcijama više parametra, argumenti se razdvajaju razmacima@note{Česta početnička greška je da se sintaksa pozivanja funkcija iz drugih jezika prenese u Haskel, odnosno da se argumenti funkcije postave u zagrade i razdvoje zarezom. Zato početnici često pokušavaju da podele dva broja sa @code{div (5, 7)} što dovodi do tipske greške. Uverite se i sami.}:
 
 @terminal{
 ghci> div 7 2
@@ -278,7 +278,7 @@ ghci> 1 ++ [2,3,4,5]
 @li @code{init} vraća sve elemente liste osim poslednjeg. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
 @li @code{tail} vraća sve elemente liste osim prvog. Pozivanjem ove funkcije nad praznom listom dolazi do izuzetka.
 @li @code{reverse} vraća prosleđenu listu u obrnutom smeru.
-@li @code{elem} je funkcija od dva parametara koja proverava da li se prvi argument nalazi u listi prosleđenoj kao drugi argument. Rezultat provere je logička vrednost.
+@li @code{elem} je funkcija od dva parametra koja proverava da li se prvi argument nalazi u listi prosleđenoj kao drugi argument. Rezultat provere je logička vrednost.
 @li @code{null} proverava da li je lista prazna. Rezultat provere je logička vrednost.
 }
 
@@ -318,7 +318,7 @@ ghci> [True, False, True, False, True] !! 7
 *** Exception: Prelude.!!: index too large
 }
 
-@p Kad god imamo tip čije se vrednosti mogu upoređivati sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=} tada se i liste elemenata tog tipa mogu porediti sa istim operatorima. Ova poređenja se vrše leksikografski. Specijalno, liste se su jednake ako i samo ako sadrže iste vrednosti poređane istim redosledom.
+@p Kad god imamo tip čije se vrednosti mogu upoređivati sa @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>} i @code{>=} tada se i liste elemenata tog tipa mogu porediti sa istim operatorima. Ova poređenja se vrše leksikografski. Specijalno, liste su jednake ako i samo ako sadrže iste vrednosti poređane istim redosledom.
 
 @terminal{
 ghci> [1,2,3] == [1,2,3]
@@ -362,7 +362,7 @@ ghci> mojKarakter
 @terminal{
 ghci> fromEnum 'A'
 65
-}{Nekome ko ne poznaje @em{Unicode} ili @em{ASCII} može delovati neobično da se @code{'A'} nalazi tek na 65 mestu. To je zato što ne na početku kodne tabele nalaze specijalni karakteri, zatim cifre, pa tek onda velika i mala slova latinice.}
+}{Nekome ko ne poznaje @em{Unicode} ili @em{ASCII} može delovati neobično da se @code{'A'} nalazi tek na 65 mestu. To je zato što se na početku kodne tabele nalaze specijalni karakteri, zatim cifre, pa tek onda velika i mala slova latinice.}
 
 @p Karaktere, kao i brojeve, možemo porediti. To poređenje je takođe ustanovljeno pozicijom u @em{Unicode} kodnoj tabeli. Stoga imamo
 

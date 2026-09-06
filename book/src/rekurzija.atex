@@ -60,7 +60,7 @@ faktorijel' n
 @section{Par-nepar}
 
 @problem{
-Implementirati funkciju @code{paran :: Int -> Bool} koja proverava da li je broj prirodan paran. Pretpostaviti da će argument funkcije biti pozitivan broj.
+Implementirati funkciju @code{paran :: Int -> Bool} koja proverava da li je prirodan broj paran. Pretpostaviti da će argument funkcije biti pozitivan broj.
 }
 
 @p Korišćenjem funkcije @code{mod}, možemo dati odmah sledeće rešenje
@@ -162,7 +162,7 @@ Primetimo da smo više puta za redom oduzimali isti broj (@m{8}) od @m{32}.
 
 @p Poslednji primer nam ukazuje da ponekad se može desiti da jedan argument umanjujemo više puta za istu vrednost. Broj takvih oduzimanja nije bitan, već samo ostatak koji se dobija na kraju. Da ne bismo neefikasno rekurzivno pozivali funkciju, možemo da podelimo argumente po modulu. Na primer, ako je @m{a = nb +r} za neke prirodne brojeve @m{n} i @m{r}, pri čemu je @m{n \ge 1} i @m{0\le r \lt b}, tada se oduzimanjem @m{n} puta vrednosti @m{b} od @m{a} dobija ostatak @m{r}. Stoga, najveći zajednički delilac brojeva @m{a} i @m{b} je najveći zajednički delilac brojeva @m{b} i @m{r} (jer je@note{Ustanovili smo da je @em{NZD} brojeva @m{a} i @m{b} isti kao @em{NZD} brojeva @m{a - b} i @m{b}. Ali @em{NZD} brojeva @m{a - b} i @m{b} je isti kao @em{NZD} brojeva  @m{(a - b) - b} i @m{b} koji je isti kao @em{NZD} brojeva @m{a - 3b} i @m{b}, itd. sve do @em{NZD} brojeva @m{a - nb} i @m{b}.} @m{r = a - nb}). Ovo nas dovodi do malo drugačije i efikasnije implementacije.
 
-@p Neka je @m{r} ostatak deljenja @m{a} sa @m{b}. Ako je @m{r} nula, to znači da je @m{a} deljivo sa @m{b}, pa  sledi da je @em{NZD} ova dva broja bаš @m{b}. U suprotnom, dovoljno je potražiti @em{NZD} brojeva @m{b} i @m{r}. Ovo nas dovodi do narednog koda:
+@p Neka je @m{r} ostatak deljenja @m{a} sa @m{b}. Ako je @m{r} nula, to znači da je @m{a} deljivo sa @m{b}, pa  sledi da je @em{NZD} ova dva broja baš @m{b}. U suprotnom, dovoljno je potražiti @em{NZD} brojeva @m{b} i @m{r}. Ovo nas dovodi do narednog koda:
 
 @codeBlock{
 nzd' :: Int -> Int -> Int
@@ -174,7 +174,7 @@ nzd' a b = if r == 0 then b else nzd' b r
 @p Nađimo još jednom @em{NZD} brojeva @m{8} i @m{32}. Kako je @code{mod 8 32 = 8}, izraz @code{nzd' 8 32} se svodi na izraz @ccode{nzd' 8 8} koji se direktno svodi na vrednost @code{8}.
 }
 
-@problem{Skakavac @em{A} se nalazi u koordinatnom početku brojevne prave, a skakavac @em{B} se nalazi u tački @m{p}, gde je @m{p} prirodan broj. Kretanje oba skakavca je ograničeno samo brojevnu pravu, i pritom @em{A} uvek skače @m{m} jedinica (levo ili desno), a @em{B} uvek skače @m{n} jedinica (takođe, levo ili desno). Brojevi @m{m} i @m{n} su takođe prirodni. Napisati funkciju @ccode{susret :: Int -> Int -> Int -> Bool} koja na osnovu tri prirodna broja @m{p}, @m{m} i @m{n} određuje da li je moguće da se skakavci ikad susretnu u jednoj tački.}{
+@problem{Skakavac @em{A} se nalazi u koordinatnom početku brojevne prave, a skakavac @em{B} se nalazi u tački @m{p}, gde je @m{p} prirodan broj. Kretanje oba skakavca je ograničeno samo na pravu, i pritom @em{A} uvek skače @m{m} jedinica (levo ili desno), a @em{B} uvek skače @m{n} jedinica (takođe, levo ili desno). Brojevi @m{m} i @m{n} su takođe prirodni. Napisati funkciju @ccode{susret :: Int -> Int -> Int -> Bool} koja na osnovu tri prirodna broja @m{p}, @m{m} i @m{n} određuje da li je moguće da se skakavci ikad susretnu u jednoj tački.}{
 @p Oba skakavca se mogu naći samo u celobrojnim tačkama. Pretpostavimo da su se nakon @m{\mu} skokova skakavaca @em{A} i @m{\nu} skokova skakavaca @em{B}, dva skakavca susrela u celom broju @m{z}. Tada važi @m{z = \mu m = p + \nu n,} odnosno @eq{p = \mu m - \nu n.} Neka je @m{d} @em{NZD} brojeva @m{m} i @m{n}. Ako važi navedena jednakost, tada @m{d} mora deliti broj @m{p}. Obratno, ako @m{d} deli @m{p} tada Bezuov stav garantuje gornju jednakost za neke @m{\mu} i @m{\nu}. Dakle, skakavci se mogu susresti, ako i samo ako @m{d} deli @m{p}.
 
 @p Neophodno je razmotriti još specijalne slučajeve. Ako su i @m{m} i @m{n} jednaki nuli, tada se skakavci mogu susresti samo ako su već u istoj tački. Ako je samo @m{m} jednak nuli, tada se skakavci mogu susresti samo ako @m{n} deli početnu razdaljinu @m{p}. I slično važi ako je samo @m{n} jednak nuli.

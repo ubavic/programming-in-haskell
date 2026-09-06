@@ -150,17 +150,19 @@ ghci> '!' @@@: "Hello"
 @terminal{
 ghci> '?' @@@: '!' @@@: "Hello"
 
-<interactive>:2:12: error:
-    • Couldn't match expected type ‘[String]’ with actual type ‘Char’
+<interactive>:16:10: error: [GHC-83865]
+    • Couldn't match expected type ‘[Char]’ with actual type ‘Char’
     • In the second argument of ‘(@@@:)’, namely ‘'!'’
-      In the first argument of ‘(@@@:)’, namely ‘"Hello" @@@: '!'’
-      In the expression: "Hello" @@@: '!' @@@: '!'
+      In the first argument of ‘(@@@:)’, namely ‘'?' @@@: '!'’
+      In the expression: '?' @@@: '!' @@@: "Hello"
 
-<interactive>:2:19: error:
-    • Couldn't match expected type ‘[[String]]’ with actual type ‘Char’
-    • In the second argument of ‘(@@@:)’, namely ‘'!'’
-      In the expression: "Hello" @@@: '!' @@@: '!'
-      In an equation for ‘it’: it = "Hello" @@@: '!' @@@: '!'
+<interactive>:16:19: error: [GHC-83865]
+    • Couldn't match type ‘Char’ with ‘[Char]’
+      Expected: [[Char]]
+        Actual: String
+    • In the second argument of ‘(@@@:)’, namely ‘"Hello"’
+      In the expression: '?' @@@: '!' @@@: "Hello"
+      In an equation for ‘it’: it = '?' @@@: '!' @@@: "Hello"
 }
 
 @p Izraz @code{x @@@: y @@@: z}, tj @code{(x @@@: y) @@@: z}, zahteva da @code{x} bude tipa @code{T}, @code{y} tipa @code{[T]} a @code{z} tipa @code{[[T]]}. Zbog toga, @code{@@@:} nije pogodan za nadovezivanje više elemenata na kraj liste@note{Sa druge strane, ovako definisan operator nam dozvoljava pisanje izraza @ccode{'!' @@@: "world" @@@: ["Hello"]} koji se evaluira u @ccode{["Hello", "world!"]}} jer moramo pisati zagrade kad povezujemo više elemenata na kraj liste:

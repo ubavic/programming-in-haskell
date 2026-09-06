@@ -211,10 +211,10 @@ class Eq a where
   
   x /= y               = not (x == y)
   x == y               = not (x /= y)
-  @@{ -# MINIMAL (==) | (/=) #-@@}
+  @@{-# MINIMAL (==) | (/=) #-@@}
 }
 
-@p Linija @code{@@{ -# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati. Kroz naredne primere upoznaćemo se detaljnije sa sintaksom pragme @em{MINIMAL}.
+@p Linija @code{@@{-# MINIMAL (==) | (/=) #-@@}}, koja samo podseća na komentar, naziva se @def{pragma}, i služi da kompajleru ukaže da je barem jednu od funkcija @code{==} i @code{/=} dovoljno i potrebno implementirati. Kroz naredne primere upoznaćemo se detaljnije sa sintaksom pragme @em{MINIMAL}.
 
 @p Svaka od te dve funkcije se može izvesti preko one druge, i u samoj definiciji klase @code{Eq} su navedena ta izvođenja. Međutim, da se ne bismo vrteli u krug sa definicijama@note{Ako definišemo @code{==} kao negaciju @code{/=}, a @code{/=} kao negaciju @code{==}, tada bi svako poređenje dovelo do beskonačne rekurzije.}, svaka instanca @code{Eq} klase mora sadržati barem jednu od definicija operatora @code{==} ili @code{/=}. 
 
@@ -241,9 +241,7 @@ class (Eq a) => Ord a where
                   else if x <= y then LT
                   else GT
 
-    x <= y = case compare x y of
-      GT -> False;
-      _ -> True
+    x <= y = (compare x y) /= GT
 
     x >= y = y <= x
     x > y = not (x <= y)
@@ -251,7 +249,7 @@ class (Eq a) => Ord a where
 
     max x y = if x <= y then y else x
     min x y = if x <= y then x else y
-    @@{ -# MINIMAL compare | (<=) #-@@}
+    @@{-# MINIMAL compare | (<=) #-@@}
 }
 
 @p Ovde vidimo nešto drugačiju definiciju klase. Umesto sa @code{class Ord a where} definicija klase započinje sa @code{class (Eq a) => Ord a where}. Izraz @code{(Eq a) =>} predstavlja klasno ograničenje. Kao i kod tipova vrednosti, klasnim ograničenjima ograničavamo skup tipova koji mogu biti postavljeni na mesto tipske promenljive @code{a}. U ovom slučaju, sa klasnim ograničenjem garantujemo da će neki tip pripadati nekoj drugoj klasi pre nego što ga pridružimo ovoj klasi. 
@@ -383,7 +381,7 @@ class Num a => Fractional a where
   (/) :: a -> a -> a
   recip :: a -> a
   fromRational :: Rational -> a
-  @@{ -# MINIMAL fromRational, (recip | (/)) #-@@}
+  @@{-# MINIMAL fromRational, (recip | (/)) #-@@}
 }
 
 @p Funkcija @code{fromRational} transformiše vrednost tipa @code{Rational} u vrednost instance. Do sada tip @code{Rational} nismo spominjali, ali u pitanju je tip koji se koristi za prezentovanje racionalnih brojeva u proizvoljnoj tačnosti.

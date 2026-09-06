@@ -21,7 +21,7 @@ main = putStrLn "Hello World!"
 $ ghc Hello.hs
 [1 of 1] Compiling Main             ( Hello.hs, hello.o )
 Linking Hello ...
-}{Primerimo da je ime modula koji se kompajlira @code{Main}}
+}{Primetimo da je ime modula koji se kompajlira @code{Main}}
 
 @p Ako je kompilacija prošla uspešno, u direktorijumu u kom je @code{Hello.hs} naći će se izvršna datoteka @pre{Hello} (ili @pre{Hello.exe} ako govorimo o @em{Windows} sistemima). Pokretanjem datoteke dobijamo dugo očekivani pozdrav:
 
@@ -143,7 +143,7 @@ akcija1 = do
     putStr "Unesite komandu:"
     getLine
 }
-@p Kompajler će zaključiti da je @code{akcija1} tipa @code{IO String}, jer je poslednja akciija tipa @code{IO String}. Da smo u kodu pogrešno deklarisali @code{akcija1 :: IO ()}
+@p Kompajler će zaključiti da je @code{akcija1} tipa @code{IO String}, jer je poslednja akcija tipa @code{IO String}. Da smo u kodu pogrešno deklarisali @code{akcija1 :: IO ()}
  tada bi došlo do tipske greške.}
 
 
@@ -161,7 +161,7 @@ odgovor = return 42
 @p Primetimo da ova akcija ne vrši nikakav ulaz ili izlaz i programa.
 }
 
-@p Kroz primere u ovoj sekciji, prošli smo kroz sve pojedinosti @code{do} bloka: unutar bloka možemo da pokrećemo više akcija, možemo da dodljujemo vrednosti iz pokrenutih akicja sa @code{<-}, i možemo da definišemo vrednosti sa @code{let}, a tip @code{do} bloka je tip poslednje navedene akcije. 
+@p Kroz primere u ovoj sekciji, prošli smo kroz sve pojedinosti @code{do} bloka: unutar bloka možemo pokretati više akcija, unutar bloka možemo dodeljivati vrednosti iz pokrenutih akcija sa @code{<-}, unutar bloka možemo definisati vrednosti sa @code{let}, i tip bloka je tip poslednje navedene akcije u bloku.
 
 @problem{
 U jednoj od prošlih lekcija smo konstruisali funkciju @code{uBroj :: String -> Int} koja prevodi nisku u broj. Koristeći ovu funkciju definisati @code{main} akciju koja uzima dva broja, a zatim ispisuje njihov zbir. Pretpostaviti da će obe unete niske predstavljati validan zapis broja.
@@ -302,7 +302,7 @@ main = do
 }{Kako je prva akcija samo definisana, a druga pokrenuta, ispis u konzoli će biti @em{Zdravo!}}
 }
 
-@p Za korisnike drugih programskih jezika, ovakvo razdvajanje pojma akcija od pojma funkcija deluje kao nepotrebno komplikovanje. Ali zapravo se ovde radi o prednosti Haskel jezika u odnosu na druge jezike. Dok u mnogim drugim jezicima (C/C++, Python, Java, Javaskript, Go, itd..) ne postoji nikakva kontrola interakcije programa sa spoljnim svetom@note{Na primer, ako radite na projektu koji sadrži hiljade procedura koje pozivaju jedna drugu, tada ne možete lako znati da li će neka funkcija koju pozovete imati neki efekat koji ne želite. Šta ako funkcija koju pozivate, dalje poziva neke funkcije koje štampaju šifre u konzolu ili brišu tabele iz baze? Čak i ako analizirate sav kôd koji pozivate, ne možete biti sigurni da vaš kolega kasnije neće slučajno izmeniti kôd na neželjen način.}, u Haskelu je kroz sistem tipova (tj. @code{IO} tip) obezbeđeno jasno razdvajanje dela koda koji intereaguje sa spoljnim svetom od dela koda koji to ne čini. Na taj način postignuto je da se mnoge potencijalne greške (bagovi), uoče i isprave tokom kompilacije programa.
+@p Za korisnike drugih programskih jezika, ovakvo razdvajanje pojma akcija od pojma funkcija deluje kao nepotrebno komplikovanje. Ali zapravo se ovde radi o prednosti Haskel jezika u odnosu na druge jezike. Dok u mnogim drugim jezicima (C/C++, Python, Java, JavaScript, Go, itd..) ne postoji nikakva kontrola interakcije programa sa spoljnim svetom@note{Na primer, ako radite na projektu koji sadrži hiljade procedura koje pozivaju jedna drugu, tada ne možete lako znati da li će neka funkcija koju pozovete imati neki efekat koji ne želite. Šta ako funkcija koju pozivate, dalje poziva neke funkcije koje štampaju šifre u konzolu ili brišu tabele iz baze? Čak i ako analizirate sav kôd koji pozivate, ne možete biti sigurni da vaš kolega kasnije neće slučajno izmeniti kôd na neželjen način.}, u Haskelu je kroz sistem tipova (tj. @code{IO} tip) obezbeđeno jasno razdvajanje dela koda koji interaguje sa spoljnim svetom od dela koda koji to ne čini. Na taj način postignuto je da se mnoge potencijalne greške (bagovi), uoče i isprave tokom kompilacije programa.
 
 @p U navedenim programskim jezicima postoji slična podela koda. Programeri često govore o @def{čistom}@note{@em{pure}} i @def{nečistom}@note{@em{impure}} kodu. Čiste funkcije su one funkcije koje zadovoljavaju dva pravila: za iste parametre vraćaju iste povratne vrednosti i nemaju propratne efekte. To su upravo one dve osobine koje smo naveli za Haskel funkcije. Prema tome možemo reći da su Haskel funkcije uvek čiste dok su akcije nečiste. Primetimo da u navedenim programskim jezicima razlika između čistog i nečistog kod nije uspostavljena kroz kompajler (kao što je to slučaj sa Haskelom), već programer mora sam da zaključi o kakvom kodu se radi. 
 
