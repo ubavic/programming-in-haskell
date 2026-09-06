@@ -14,12 +14,12 @@
     @li Džoker @code{_}
     @li Literal uređene @m{n}-torka oblika, odnosno izraz poput @code{(1, 'a')}, @code{(x, y, z)}, @code{(_,1,_,x)} itd... 
     @li Literal liste oblika, odnosno izraz poput @code{[]}, @code{[5]}, @code{[x,y,_]}, itd...
-    @li Konstruktor primenjen na oblike ili zapise, odnosno izraz poput @code{True}, @code{Maybe x}, @code{Vektor x y _} itd...
+    @li Konstruktor primenjen na oblike ili zapise, odnosno izraz poput @code{True}, @code{Just x}, @code{Vektor x y _} itd...
 }
 
-@p Svako podudaranje oblika koje možemo konstruisati samo kombinovanjem prethodno navedenih oblika. Primetimo da oblici @m{n}-torke, liste i algebarskog tipa podatka, dozvoljavaju da se konstruišu oblici proizvoljne složenosti@note{Na primer, @code{Maybe x}, ali @code{Maybe (Maybe x)}, i @code{Maybe (Maybe (Maybe x))}, itd...}. 
+@p Svaki oblik koji možemo konstruisati samo kombinovanjem prethodno navedenih oblika. Primetimo da oblici @m{n}-torke, liste i algebarskog tipa podatka, dozvoljavaju da se konstruišu oblici proizvoljne složenosti@note{Na primer, @code{Just x}, ali @code{Just (Just x)}, i @code{Just (Just (Just x))}, itd...}. 
 
-@p Numerički literal, karakter ili niska u obliku će se podudariti sa argumentom funkcije, ako i samo ako je taj argument jednak@note{U smislu operatora @code{==}} tom literalu. Oblik sačinjen od imena, podudariće se sa svakim argumentom, i to ime će imati vrednost argumenta sa desne strane jednakosti. Jedno ime može se koristi samo na jednom mestu sa leve strane jednakosti@note{Npr. ne možemo sa oblikom @code{[x, x]} podudariti dvočlane liste sa istim prvim i drugim argumentom.}. Džoker @code{_} takođe se podudara sa svakom vrednošću argumenta, ali za razliku od imena džoker se može pojavljivati na više mesta sa leve strane jednakosti. Vrednost argumenata koji se podudario sa džokerom, ne može se iskoristiti sa desne strane jednakosti.
+@p Numerički literal, karakter ili niska u obliku će se podudariti sa argumentom funkcije, ako i samo ako je taj argument jednak@note{U smislu operatora @code{==}} tom literalu. Oblik sačinjen od imena, podudariće se sa svakim argumentom, i to ime će imati vrednost argumenta sa desne strane jednakosti. Jedno ime može se koristiti samo na jednom mestu sa leve strane jednakosti@note{Npr. ne možemo sa oblikom @code{[x, x]} podudariti dvočlane liste sa istim prvim i drugim argumentom.}. Džoker @code{_} takođe se podudara sa svakom vrednošću argumenta, ali za razliku od imena džoker se može pojavljivati na više mesta sa leve strane jednakosti. Vrednost argumenata koji se podudario sa džokerom, ne može se iskoristiti sa desne strane jednakosti.
 
 @p Oblici sa listama, @m{n}-torkama, i konstruktorima uglavnom u sebi sadrže neke druge @em{podoblike} (npr. literale). Ovi oblici će se podudariti sa argumentom funkcije ako i samo ako se svi podoblici podudare sa odgovarajućim vrednostima.
 
@@ -36,7 +36,7 @@
 data Vektor = Vektor Float Float Float Float Float
 }
 
-@p Neka su date i dve funkcije @code{g1, g2 :: Vektor -> Float}. Zamislimo da je potrebno napisati funkciju @code{f :: Vektor -> Int} koja za dati vektor @code{v} vraća vraća vrednost @code{g1 v} ako je prva koordinata vektora @code{v} pozitivna, a suprotnom @code{g2 v}. Jedna implementacija tražene funkcije bi mogla da glasi ovako:
+@p Neka su date i dve funkcije @code{g1, g2 :: Vektor -> Float}. Zamislimo da je potrebno napisati funkciju @code{f :: Vektor -> Float} koja za dati vektor @code{v} vraća vrednost @code{g1 v} ako je prva koordinata vektora @code{v} pozitivna, a u suprotnom @code{g2 v}. Jedna implementacija tražene funkcije bi mogla da glasi ovako:
 
 @codeBlock{
 f :: Vektor -> Float
@@ -94,7 +94,7 @@ dužina'' :: [a] -> Int
 dužina'' ss = case ss of
     []    -> 0
     x:xs  -> 1 + dužina'' xs
-}{Tri definicije funkcije koja računa dužinu liste. Prva definicija nam je dobro poznata. U drugoj definiciji je iskorišćen je @code{case} izraz unutar lambda izraza. Primetimo da je ovako napisan lambda izraz mogao da se navede bilo gde u kodu, i da nije bilo potrebe da se dodeljuje imenu @code{dužina}. Treća definicija je mešavina prethodne dve: parametar @code{ss} je vezan tehnikom podudaranja oblika (pri čemu je naveden samo jedan, opšti, oblik), a u telu funkcije je iskorišćena @em{case} notacija. Primetimo kako u @em{case} izrazu oblik @code{x:xs} nismo morali da obuhvatimo sa za zagradama kao što je to slučaj u prvoj definiciji.}
+}{Tri definicije funkcije koja računa dužinu liste. Prva definicija nam je dobro poznata. U drugoj definiciji je iskorišćen je @code{case} izraz unutar lambda izraza. Primetimo da je ovako napisan lambda izraz mogao da se navede bilo gde u kodu, i da nije bilo potrebe da se dodeljuje imenu @code{dužina}. Treća definicija je mešavina prethodne dve: parametar @code{ss} je vezan tehnikom podudaranja oblika (pri čemu je naveden samo jedan, opšti, oblik), a u telu funkcije je iskorišćena @em{case} notacija. Primetimo kako u @em{case} izrazu oblik @code{x:xs} nismo morali da obuhvatimo sa zagradama kao što je to slučaj u prvoj definiciji.}
 
 @p Za blok oblika koji sledi nakon koda @code{case x of} važe iste napomene kao i za blokove poput @code{where} ili @code{let in} blokova. Blok se može napisati i u jednoj liniji razdvajanjem slučajeva sa znakom @code{;}. Ako se blok prelomi u više linija, tada počeci svih linija moraju biti poravnati po vertikali.
 
@@ -121,7 +121,7 @@ uMetre''' l = case l of Milja m -> Metar (1609.344 * m); SvetlosnaSekunda s -> M
 }
 }
 
-@p Možda isprava ne deluje kao mnogo korsina, ali @em{case} notacija može skratiti kôd.
+@p Možda isprva ne deluje kao mnogo korisna, ali @em{case} notacija može skratiti kôd.
 
 @problem{Napisati funkciju @code{moždaZbir :: Maybe [Maybe Int] -> Int} koja sabira sve vrednosti različite od @code{Nothing} u datom možda-nizu možda-brojeva. Iskoristiti @em{case} notaciju}
 
@@ -132,7 +132,7 @@ uMetre''' l = case l of Milja m -> Metar (1609.344 * m); SvetlosnaSekunda s -> M
 
 @p U matematici, često se koristi zapis @eq{ \left\{x\in A \mid  \Phi\left(x\right)\right\}} za definisanje skupa svih elemenata @m{x} iz skupa @m{A} takvih da važi neko svojstvo @m{\Phi}. Na primer, @m{\left\{x\in \mathbb Z \mid x \equiv_2 0 \right\}} je skup svih celih brojeva deljivih sa @m{2} (odnosno skup svih parnih brojeva), a skup @m{\left\{x\in \mathbb C \mid x^3 = 1\right\}} predstavlja skup svih rešenja jednačine @m{x^3 - 1 = 0}, itd... Ovakva notacija je podložna promenama, pa se umesto opisanog oblika koristi i @eq{ \left\{x \mid  x\in A, \Phi\left(x\right)\right\}.} Takođe, često se koristi i zapis @eq{ \left\{ f(x) \mid  x\in A, \Phi\left(x\right)\right\}} koji označava skup slika pri funkciji @m{f} svih elemenata iz @m{A} koji poseduju svojstvo @m{\Phi}. Na primer, @m{\left\{x^2 \mid x \in \mathbb Z, x \equiv_2 0 \right\}} je skup kvadrata svih parnih brojeva. 
 
-@p Haskel je preuzeo ovu korisnu matematičku sintaksu za @em{izlistavanje lista}@note{eng. @em{list comprehension}}. Izlistavanje se navodi između uglastih zagrada (kako je to i slučaj sa listama u Haskelu), a koristi se i uspravna crta kao u matematičkom zapisu. Sa desne strana uspravne crte navodi se lista iz koje se neka promenljiva @em{izdvaja}, kao i niz predikata@note{izraza tipa @code{Bool}} koje vrednost promenljive mora da zadovolji. Na primer, ako je definisana lista @ccode{xs = [-3, -2, -1, 0, 1, 2, 3, 4] :: [Int]}, tada se izraz@note{Setimo se, @code{even :: Integral a => a -> Bool} je funkcija koja određuje da li je broj paran.} @ccode{[x | x <- xs, even x]} evaluira u listu @code{[-2, 0, 2, 4]}, a izraz @ccode{[x^2 | x <- xs, even x]} se evaluira u listu @code{[4, 0, 4, 16]}.
+@p Haskel je preuzeo ovu korisnu matematičku sintaksu za @em{izlistavanje lista}@note{eng. @em{list comprehension}}. Izlistavanje se navodi između uglastih zagrada (kako je to i slučaj sa listama u Haskelu), a koristi se i uspravna crta kao u matematičkom zapisu. Sa desne strane uspravne crte navodi se lista iz koje se neka promenljiva @em{izdvaja}, kao i niz predikata@note{izraza tipa @code{Bool}} koje vrednost promenljive mora da zadovolji. Na primer, ako je definisana lista @ccode{xs = [-3, -2, -1, 0, 1, 2, 3, 4] :: [Int]}, tada se izraz@note{Setimo se, @code{even :: Integral a => a -> Bool} je funkcija koja određuje da li je broj paran.} @ccode{[x | x <- xs, even x]} evaluira u listu @code{[-2, 0, 2, 4]}, a izraz @ccode{[x^2 | x <- xs, even x]} se evaluira u listu @code{[4, 0, 4, 16]}.
 
 @p Kao što vidimo iz poslednjeg primera, pri izlistavanju Haskel lista je bitan poredak i ponavljanje elementa je dozvoljeno, dok je za skupove u matematici poredak nebitan, a elementi u njima ne mogu da se ponavljaju. Poredak pri izlistavanju Haskel lista je uslovljen poretkom izdvajanja elementa iz liste sa operatorom@note{Mnogo više o ovom operatoru će biti rečeno u lekciji o monadama.} @code{<-}. Elementi će biti "obrađeni" onim redom kojim su navedeni u listi iz koje se izdvajaju.
 
@@ -170,7 +170,7 @@ Iz liste možda-brojeva izdvojiti samo vrednosti iz @code{Just} konstruktora kao
 
 @subsection{Izlistavanje iz više lista}
 
-@p Sa izlistavanjem moguće je iz više lista izdvojiti elemente, dako što će se sa desne strane uspravne crte navesti više izdvajanja sa operatorom @code{<-}. U slučaju izdvajanja iz dve liste, prvo će se "izdvojiti" svi elementi druge liste sa prvim elementom prve liste, pa svi elementi druge liste sa drugim elementom prve liste i tako dalje.... Sledeći primer ilustruje izdvajanja iz više lista. 
+@p Sa izlistavanjem moguće je iz više lista izdvojiti elemente, tako što će se sa desne strane uspravne crte navesti više izdvajanja sa operatorom @code{<-}. U slučaju izdvajanja iz dve liste, prvo će se "izdvojiti" svi elementi druge liste sa prvim elementom prve liste, pa svi elementi druge liste sa drugim elementom prve liste i tako dalje.... Sledeći primer ilustruje izdvajanja iz više lista. 
 
 @example{
 @p Sa izlistavanjem iz liste brojeva i liste karaktera možemo lako generisati listu svih polja šahovske table. Svako polje predstavićemo kao uređen par prirodnog broja i karaktera na sledeći način @ccode{[(a, b) | a <- [1 .. 8], b <- ['A' .. 'H']]}. Ovim dobijamo listu sa @m{64} elementa @ccode{[(1,'A'),(1,'B'),(1,'C') … (8,'H')]}
@@ -186,7 +186,7 @@ Naći sve pravougle trouglove obima manjeg od @m{100} čije su stranice celi bro
 
 @section{Pragme i ekstenzije}
 
-@p @def{Pragma} je instrukcija za Haskel kompajler smeštena u kodu. Pragme se zapisuju u obliku @pre{@@{ -# WORD … #-@@}}, gde @pre{WORD} označava tip pragme, nakon čega mogu slediti dodatne informacije. Neki od dostupnih, i najčešće prisutnih, tipova pragmi su:
+@p @def{Pragma} je instrukcija za Haskel kompajler smeštena u kodu. Pragme se zapisuju u obliku @pre{@@{-# WORD … #-@@}}, gde @pre{WORD} označava tip pragme, nakon čega mogu slediti dodatne informacije. Neki od dostupnih, i najčešće prisutnih, tipova pragmi su:
 
 @list{
  @li @pre{LANGUAGE} omogućava ekstenzije Haskel jezika. O ekstenzijama ćemo govoriti u nastavku.
@@ -256,7 +256,7 @@ zbir = foldr (+) 0
 @p Primetimo da u definiciji @code{sum = foldr (+) 0} iz primera, ne pojavljuje se parametar funkcije @code{sum}. Stoga za ovu definiciju kažemo da je napisana u stilu bez tačaka. Izraz @em{bez tačaka} potiče iz matematike, gde se često za argument funkcije kaže @em{tačka}@note{često čujemo izraz @em{vrednost funkcije u tački}} (iako možda ta funkcija nema veze sa geometrijskim tačkama). Kôd bez tačaka može biti elegantniji od "koda sa tačkama", ali ta elegantnost može vrlo lako da preraste u nečitljivost@note{navedene osobine koda su subjektivne. Čak i za najjednostavniji kod bez tačaka, kakav smo videli u primeru, možemo reći da je nečitljiv, jer iz oblika definicije nije odmah jasno da je @code{zbir} funkcija.}. Ipak, dobro je razumeti ovu tehniku, jer je popularna među Haskel programerima i može se videti u svim projektima. 
 
 @example{
-@p Napišimo definiciju @ccode{f x = 2 * x - 1} u stilu bez tačaka. Prvo možemo izdvojiti operator oduzimanja u prefiksnu poziciju čime dobijamo @ccode{f x = (-) (2 * x) 1}. Pošto je za eta konverziju neophodno da parametar bude smešten na desnoj strani izraza, iskoristićemo @code{flip :: f -> a -> b -> b -> a} kombinator koji obrće redosled parametara funkcija. Kombinator ćemo primeniti na funkciju @code{(-)}, čime stižemo do definicije @ccode{f x = flip (-) 1 (x * 2)}. Ako postavimo i @code{*} u prefiksnu poziciju dobijamo @ccode{f x = flip (-) 1 ((*) 2 x)}. Vidimo da se ovde radi o kompoziciji funkcija @code{flip (-) 1} i @code{(*) 2} primenjenoj na @code{x}, pa je @ccode{f x = ((flip (-) 1) . ((*) 2)) x}. Prostom eta redukcijom stižemo do @ccode{f = (flip (-) 1) . ((*) 2)}
+@p Napišimo definiciju @ccode{f x = 2 * x - 1} u stilu bez tačaka. Prvo možemo izdvojiti operator oduzimanja u prefiksnu poziciju čime dobijamo @ccode{f x = (-) (2 * x) 1}. Pošto je za eta konverziju neophodno da parametar bude smešten na desnoj strani izraza, iskoristićemo @code{flip :: (a -> b -> c) -> b -> a -> c} kombinator koji obrće redosled parametara funkcija. Kombinator ćemo primeniti na funkciju @code{(-)}, čime stižemo do definicije @ccode{f x = flip (-) 1 (x * 2)}. Ako postavimo i @code{*} u prefiksnu poziciju dobijamo @ccode{f x = flip (-) 1 ((*) 2 x)}. Vidimo da se ovde radi o kompoziciji funkcija @code{flip (-) 1} i @code{(*) 2} primenjenoj na @code{x}, pa je @ccode{f x = ((flip (-) 1) . ((*) 2)) x}. Prostom eta redukcijom stižemo do @ccode{f = (flip (-) 1) . ((*) 2)}
 
 @p U ovom primeru vidimo da ne treba po svaku cenu pisati kod u stilu bez tačaka@note{Protivnici programiranja bez tačaka nazivaju ovaj still @em{pointless} umesto @em{pointfree}.}.
 }

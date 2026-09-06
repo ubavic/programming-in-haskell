@@ -69,7 +69,7 @@ spoji (DodajBroj x xs) ys = DodajBroj x (spoji xs ys)
 @codeBlock{
 obrni :: ListaBrojeva -> ListaBrojeva
 obrni PraznaListaBrojeva = PraznaListaBrojeva
-obrni (DodajBroj x xs) = spoji (obrni xs) (DodajBroj x PraznaListaBrojeva)` 
+obrni (DodajBroj x xs) = spoji (obrni xs) (DodajBroj x PraznaListaBrojeva)
 }{Primetimo da rekurzivna funkcija @code{obrni} koristi u sebi drugu rekurzivnu funkciju @code{spoji}, zbog čega ova implementacija nije najefikasnija moguća.}
 
 @problem{
@@ -90,7 +90,7 @@ Implementirati funkciju @ccode{primeni :: (Int -> Int) -> ListaBrojeva -> ListaB
 
 @subsection{Apstraktni tip lista}
 
-@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da se sa sličnom konstrukcijom mogu se definisati i drugi tipovi lista:
+@p Tip @code{ListaBrojeva} sadrži samo liste celobrojnih vrednosti. Jasno je da se sa sličnom konstrukcijom mogu definisati i drugi tipovi lista:
 
 @codeBlock{
 data ListaChar = DodajChar Char ListaChar | PraznaListaChar
@@ -109,10 +109,10 @@ data Lista a = Dodaj a (Lista a) | PraznaLista
 @terminal{
 ghci> x = Dodaj 'a' (Dodaj 'b' PraznaLista)
 ghci>:t x
-Lista Char
+x :: Lista Char
 ghci> y = Dodaj True (Dodaj False PraznaLista)
 ghci>:t y
-Lista Bool
+y :: Lista Bool
 }
 
 @p Definicije funkcija @code{dužina}, @code{spoji}, @code{obrni} ostaju gotovo iste, ali se tipovi menjaju tako da se u njima pojavljuje tipska promenljiva. Na ovaj način ove funkcije postaju polimorfne i mogu se koristiti sa svim tipovima lista:
@@ -120,7 +120,7 @@ Lista Bool
 @codeBlock{
 dužina :: Lista a -> Int
 dužina PraznaLista = 0
-dužina (Dodaj _ xs) = 1 + dužina xs  
+dužina (Dodaj _ xs) = 1 + dužina xs
 
 spoji :: Lista a -> Lista a -> Lista a
 spoji PraznaLista xs = xs
@@ -158,7 +158,7 @@ data [] a = [] | a : ([] a)
 
 @p Sa navedenim kodom je definisan jedan apstraktni tip @code{[] :: * -> *}. Pod istim imenom je definisan i konstruktor prazne liste @code{[]}. Drugi konstruktor je konstruktor "dodavanja" @code{:}. Kako se ime @code{:} sastoji od specijalnog znaka, a ne slova, taj konstruktor je infiksni konstruktor@note{U lekciji o operatorima smo naveli da operatori ne mogu da sadrže karakter @code{:}. Međutim, za infiksne konstruktore to pravilo je suprotno: infiksni konstruktori @em{moraju} početi sa @code{:}. Ostale stvari koje smo naveli o operatorima važe i za infiksne konstruktore. Između ostalog, moguće je deklarisati prioritet i asocijativnost infiksnog konstruktora sa odgovarajućim @code{infix} deklaracijama.}, te se navodi između argumenata.
 
-@p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
+@p Haskell kompajler dozvoljava da se tip @code{[] a} zapiše kao @code{[a]}. Ovaj izuzetak u Haskell sintaksi značajno poboljšava čitljivost tipova. Takođe, izuzetak postoji i u konstrukciji samih vrednosti, te se vrednost @ccode{a:b:c:[]}, može zapisati i kao @code{[a, b, c]} i slično.
 
 @section{Stabla}
 
@@ -208,7 +208,7 @@ stablo2 = Čvor 5
 @p U ovom stablu, @m{5} je koren, a čvorovi @m{2}, @m{4} i @m{8} su listovi. Primetimo da u stablu čvor @m{6} ima samo jedno dete.
 }
 
-@p Stabla su pogodne strukture podataka za modelovanje mnogih odnosa koje srećemo u svakodnevnici@note{Na primer, pokušajte da sa stablom predstavite porodično stablo: sve vaše direktne pretke (roditelje, roditelje roditelja, itd...). Uvidećete da je porodično stablo zaista jedno binarno stablo. Isprava zbunjujuće, ali u takvom predstavljanju @em{deca} čvorova će zapravo biti @em{roditelji} osobe...}.
+@p Stabla su pogodne strukture podataka za modelovanje mnogih odnosa koje srećemo u svakodnevnici@note{Na primer, pokušajte da sa stablom predstavite porodično stablo: sve vaše direktne pretke (roditelje, roditelje roditelja, itd...). Uvidećete da je porodično stablo zaista jedno binarno stablo. Isprva zbunjujuće, ali u takvom predstavljanju @em{deca} čvorova će zapravo biti @em{roditelji} osobe...}.
 
 @p Prvo bi bilo zgodno napisati funkciju @code{brojČvorova} koja određuje broj čvorova u stablu@note{Kao što funkcija @code{length} određuje broj elemenata u listi.}. Naravno, funkciju ćemo implementirati rekurzivno, podudaranjem vrednosti po konstruktorima. Broj čvorova u praznom stablu je @m{0}. Broj čvorova u stablu @code{Čvor a l r} je za jedan veći od zbira broja čvorova u podstablima @code{l} i @code{r}:
 
@@ -288,14 +288,15 @@ Napisati funkciju @ccode{uređeno :: StabloBrojeva -> Bool} koje proverava da li
 
 @codeBlock{
 elementUređenogStabla :: Int -> StabloBrojeva -> Bool
+elementUređenogStabla _ PraznoStablo = False
 elementUređenogStabla v (Čvor a l r)
     | v == a = True
     | v <  a = elementUređenogStabla v l
-    | v >  a = elementUređenogStabla v r  
+    | v >  a = elementUređenogStabla v r
 }
 
 @example{
-@p Funkcija @code{elementStabla} primenjena na vrednosti @code{8} i @code{stablo2} će imati sledeći tok: pošto je vrednost korenskog čvora (@code{5}) različita od @code{6}, funkcija će rekurzivno proveriti da li se vrednost @code{6} nalazi u levom podstablu. Pri toj pretrazi, funkcija ponovo rekurzivno proverava vrednosti čvorova @m{3}, @m{2} i @m{5}. Pošto levo podstablo ne sadrži traženu vrednost, prelazi se na desno podstablo. Prvo se proverava vrednost korena tog podstabla (čvor @m{6}), a zatim se prelazi na desno dete, gde se pronalazi tražena vrednost. Primetimo da je algoritam obišao celokupno stablo pri pretrazi.
+@p Funkcija @code{elementStabla} primenjena na vrednosti @code{8} i @code{stablo2} će imati sledeći tok: pošto je vrednost korenskog čvora (@code{5}) različita od @code{8}, funkcija će rekurzivno proveriti da li se vrednost @code{8} nalazi u levom podstablu. Pri toj pretrazi, funkcija ponovo rekurzivno proverava vrednosti čvorova @m{3}, @m{2} i @m{5}. Pošto levo podstablo ne sadrži traženu vrednost, prelazi se na desno podstablo. Prvo se proverava vrednost korena tog podstabla (čvor @m{8}), a zatim se prelazi na desno dete, gde se pronalazi tražena vrednost. Primetimo da je algoritam obišao celokupno stablo pri pretrazi.
 
 @p Pogledajmo sada izvršavanje funkcije @code{elementUređenogStabla} primenjene na iste vrednosti @code{8} i @code{stablo2} (ovo stablo je uređeno, te ima smisla koristiti ovu funkciju). Pošto је tražena vrednost veća od vrednosti korenskog čvora @m{5}, algoritam rekurzivno nastavlja pretragu na desnom podstablu. Vrednost @code{8} je takođe veća od vrednosti (sada korenskog) čvora @m{6}, te se ponovo prelazi na desno podstablo. Međutim korenski čvor sada poseduje traženu vrednost, i pretraga se uspešno prekida. Primetimo da smo obišli samo dva čvora pre nego što smo prekinuli pretragu.
 }
@@ -327,7 +328,7 @@ visinaStabla PraznoStablo = 0
 visinaStabla (Čvor _ l r) = 1 + max (visinaStabla l) (visinaStabla r)
 }{Imajte na umu da ove dve definicije ne mogu biti u istoj datoteci kao prethodne definicije, jer se tipovi razlikuju.}
 
-@p Funkcija @code{elementStabla} mora koristiti operator @code{(==) :: Eq a => a -> a -> a}. Stoga je potrebno da i tip funkcije @code{elementStabla} bude ograničen @code{Eq} klasom. Osim toga, definicija funkcije je potpuno ista:
+@p Funkcija @code{elementStabla} mora koristiti operator @code{(==) :: Eq a => a -> a -> Bool}. Stoga je potrebno da i tip funkcije @code{elementStabla} bude ograničen @code{Eq} klasom. Osim toga, definicija funkcije je potpuno ista:
 
 @codeBlock{
 elementStabla :: Eq a => a -> Stablo a -> Bool
@@ -366,13 +367,13 @@ instance Functor Stablo where
 @li Podizanje kompozicije je kompozicija podizanja, tj. @code{fmap (g. f) = fmap g . fmap f}.
 }
 
-@p Zakone možemo dokazati totalnom indukcijom po visini stabla. Na primer, dokažimo prvi zakon@note{Konstruišite analogni dokaz za drugi zakon.}. Baza indukcije su stabla visine @m{0}, a to su prazna stabla. Funkcija @code{fmap id} primenjena na vrednost @code{PraznoStablo} je po definiciji @code{PraznoStablo}. Dalje, za induktivni korak pretpostavimo da tvrđenje važi za sva stabla čija visina je ne veća od @m{n} i dokažimo da onda važi i za stabla visine @m{n+1}. Neka je @code{Stablo a l r} stablo visine @m{n+1}. Funkcija @code{fmap id} primenjena na vrednost @code{Stablo a l r} je po definiciji @ccode{Stablo (id a) (fmap id l) (fmap id r) = Stablo a (fmap id l) (fmap id r)}. Kako su @code{l} i @code{r} stabla visine ne veće od @m{n}, po induktivnoj pretpostavci važi da je @code{fmap id l = l} i @code{fmap id r = r}. Prema tome, primena funkcije @code{fmap id} na vrednost @code{Stablo a l r} daje istu tu vrednost. Indukcijom sledi da ovo važi za sva stabla, pa je @code{fmap id} zaista @code{id :: Stablo a -> Stablo a}.
+@p Zakone možemo dokazati totalnom indukcijom po visini stabla. Na primer, dokažimo prvi zakon@note{Konstruišite analogni dokaz za drugi zakon.}. Baza indukcije su stabla visine @m{0}, a to su prazna stabla. Funkcija @code{fmap id} primenjena na vrednost @code{PraznoStablo} je po definiciji @code{PraznoStablo}. Dalje, za induktivni korak pretpostavimo da tvrđenje važi za sva stabla čija visina je ne veća od @m{n} i dokažimo da onda važi i za stabla visine @m{n+1}. Neka je @code{Čvor a l r} stablo visine @m{n+1}. Funkcija @code{fmap id} primenjena na vrednost @code{Čvor a l r} je po definiciji @ccode{Čvor (id a) (fmap id l) (fmap id r) = Čvor a (fmap id l) (fmap id r)}. Kako su @code{l} i @code{r} stabla visine ne veće od @m{n}, po induktivnoj pretpostavci važi da je @code{fmap id l = l} i @code{fmap id r = r}. Prema tome, primena funkcije @code{fmap id} na vrednost @code{Čvor a l r} daje istu tu vrednost. Indukcijom sledi da ovo važi za sva stabla, pa je @code{fmap id} zaista @code{id :: Stablo a -> Stablo a}.
 
 @problem{
 Klasa @code{Functor} definiše i operator @code{<$} kao @code{fmap . const}. Šta u kontekstu instance @code{Functor Stablo}, radi operator @code{<$}?
 }
 
-@problem{Kreirati tip @code{TernarnoStablo :: * -> *} koji predstavlja stablo u kom svaki element ima tri direktna potomka. Implementirati funkcije za rad sa ovim tipom. Instancirati @code{Functor TrenarnoStablo}}
+@problem{Kreirati tip @code{TernarnoStablo :: * -> *} koji predstavlja stablo u kom svaki element ima tri direktna potomka. Implementirati funkcije za rad sa ovim tipom. Instancirati @code{Functor TernarnoStablo}}
 
 @section{Aritmetički izrazi}
 
@@ -381,7 +382,7 @@ Klasa @code{Functor} definiše i operator @code{<$} kao @code{fmap . const}. Št
 @eq{22 * (1 + 6),}
 @eq{((10+32) * 18) * (333 + 4)...}
 
-@p Da bismo našli pogodan način predstavljanja matematičkih izraza, za primer pogledajmo rekurzivnu strukturu izraza @eq{(17 + 3) * (10 * (1 + 1)).} Navedeni izraz predstavlja zbir dva manja izraza @m{17 + 3} i @m{10 * (1 + 1)}. Prvi od tih izraza je zbir dva broja, dok je drugi proizvod broja i još manjeg izraza @m{1 + 1}. Na ovom primeru vidimo da su izrazi sačinjeni od manjih izraza ili brojeva koji se kombinuju uz pomoć dve operacije.
+@p Da bismo našli pogodan način predstavljanja matematičkih izraza, za primer pogledajmo rekurzivnu strukturu izraza @eq{(17 + 3) * (10 * (1 + 1)).} Navedeni izraz predstavlja proizvod dva manja izraza @m{17 + 3} i @m{10 * (1 + 1)}. Prvi od tih izraza je zbir dva broja, dok je drugi proizvod broja i još manjeg izraza @m{1 + 1}. Na ovom primeru vidimo da su izrazi sačinjeni od manjih izraza ili brojeva koji se kombinuju uz pomoć dve operacije.
 
 @p Navedeno razmatranje nas dovodi do rekurzivne definicije tipa @code{Izraz}. Vrednosti tipa @code{Izraz} konstruisaćemo na tri načina. Prvo, svaki prirodan broj za sebe čini izraz. Drugo, ako su data dva izraza, onda je i njihov zbir izraz. Treće, ako su data dva izraza onda je i njihov proizvod izraz:
 
@@ -411,7 +412,7 @@ instance Show Izraz where
     show (Proizvod a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
 }
 
-@p Druga funkcija koju je najlogičnije implementirati  je funkcija @code{izračunaj :: Izraz -> Int}, koja izraz sračunava izraz u jedinstvenu vrednost. Funkciju implementiramo rekurzivno: sračunavanjem broja se dobija taj isti broj, dok se sračunavanjem zbira (proizvoda) dva izraza dobija zbir (proizvod) vrednosti koje su dobijene sračunavanjem odgovarajućih podizraza:
+@p Druga funkcija koju je najlogičnije implementirati  je funkcija @code{izračunaj :: Izraz -> Int}, koja sračunava izraz u jedinstvenu vrednost. Funkciju implementiramo rekurzivno: sračunavanjem broja se dobija taj isti broj, dok se sračunavanjem zbira (proizvoda) dva izraza dobija zbir (proizvod) vrednosti koje su dobijene sračunavanjem odgovarajućih podizraza:
 
 @codeBlock{
 izračunaj :: Izraz -> Int
@@ -419,7 +420,6 @@ izračunaj (Broj a) = a
 izračunaj (Zbir a b) = izračunaj a + izračunaj b
 izračunaj (Proizvod a b) = izračunaj a * izračunaj b
 }
-
 
 @problem{
 Kreirati tip @code{MatematičkiIzraz} čije vrednosti mogu da prezentuju matematičke izraze sačinjene od nepoznate @m{x}, realnih brojeva, operacija sabiranja, oduzimanja, množenja, deljenja i stepenovanja kao i funkcija poput sinusa i kosinusa. Napisati funkciju koja izračunava ove izraze u zavisnosti od vrednosti nepoznate. Implementirati funkciju koja računa izvod matematičkog izraza. Implementirati funkciju koja određuje da li je izraz polinom. Implementirati funkciju koja pronalazi neodređen integral polinoma. 
@@ -429,10 +429,10 @@ Kreirati tip @code{MatematičkiIzraz} čije vrednosti mogu da prezentuju matemat
 @em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Ako ste upoznati sa @em{LaTeX} jezikom za zapisivanje matematičke notacije, konstruišite funkciju @ccode{uLatex :: MatematičkiIzraz -> String} koja daje @em{LaTeX} kôd za dati izraz. Koristite @em{LaTeX} naredbe poput @pre{\times}, @pre{^}, @pre{\frac}, @pre{\left(} i @pre{\right)}, i tako dalje... }
 
 @problem{
-Definisati tip @code{LogičkiIzraz} koji predstavlja logičke izraze sačinjene od logičkih vrednosti i operacija konjunkcije i disjunkcije. Uvesti tip @code{LogickiIzraz} u @code{Show} klasu tipova. Implementirati funkciju @code{izracunajLogički :: LogičkiIzraz -> Bool} koja izračunava zadati logički izraz.}
+Definisati tip @code{LogičkiIzraz} koji predstavlja logičke izraze sačinjene od logičkih vrednosti i operacija konjunkcije i disjunkcije. Uvesti tip @code{LogičkiIzraz} u @code{Show} klasu tipova. Implementirati funkciju @code{izracunajLogički :: LogičkiIzraz -> Bool} koja izračunava zadati logički izraz.}
 
 @problem{
-@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Neka je data funkcija @code{f :: Int -> Bool} sa @code{f x = x /= 0}. Konstruisati funkciju @code{konvertuj :: Izraz -> LogičkiIzraz} koja logički izraz prevodi u aritmetički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izračunaj = izracunajLogički . konvertuj}
+@em{Za ovaj zadatak je neophodno uraditi prethodni zadatak} Neka je data funkcija @code{f :: Int -> Bool} sa @code{f x = x /= 0}. Konstruisati funkciju @code{konvertuj :: Izraz -> LogičkiIzraz} koja aritmetički izraz prevodi u logički izraz tako što sabiranje prevodi u disjunkciju, množenje u konjunkciju a brojeve u skladu sa datom funkcijom @code{f}. Na primer, izraz @code{2 * (7 + 0)} se konvertuje u @m{\top\land(\top\lor\bot).} Da li važi @ccode{f . izračunaj = izracunajLogički . konvertuj}
 }
 
 @todo{foldable klasa}

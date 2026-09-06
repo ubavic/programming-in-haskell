@@ -18,7 +18,7 @@
 
 @p Tip koji ne sadrži nijednu vrednost označava se sa @code{Void} i nazivamo ga @def{prazan tip}@note{@em{void type}}.
 
-@p Posmatrajmo sada totalnu funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} bi morala biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može da postoji ako tip @code{A} nije neprazan. Prema tome, jedina totalna funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
+@p Posmatrajmo sada totalnu funkciju @code{s :: A -> Void}. Za @code{x :: A}, @code{s x} bi morala biti vrednost tipa @code{Void}. Vrednost tipa @code{Void} ne postoji, iz čega sledi da funkcija @code{s} ne može postojati ako je tip @code{A} neprazan. Prema tome, jedina totalna funkcija čiji kodomen je @code{Void} je jedinstvena funkcija tipa @code{Void -> Void}.
 
 @p Sa druge strane, za svaki tip @code{A}, postoji jedinstvena totalna funkcija@note{Takva polimorfna funkcija je poznata pod imenom @code{absurd}.} tipa @code{Void -> A}. Ali kako je nemoguće konstruisati vrednost tipa @code{Void}, takve funkcije ne možemo nikad "pozvati".
 
@@ -52,7 +52,7 @@ f2 () = False
 
 @p Do sada smo već upoznali neke načine konstrukcije novih tipova. Na primer, od od nekoliko tipova @code{T₁}, @code{T₂}, ... @code{Tₙ} možemo napraviti odgovarajući tip uređenih n-torki @code{(T₁, T₂, … Tₙ)}. Pri ovakvim konstrukcijama često se dobijaju tipovi koji nisu baš kratki za pisanje, a što je još bitnije, ni za čitanje@note{Na primer, funkcija koja sabira dva dvodimenzionalna vektora ima tip @ccode{(Float, Float) -> (Float, Float) -> (Float, Float)}}.
 
-@p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo imе @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Tipski sinonim se definiše sa deklaracijom poput naredne:
+@p Da bismo izbegli navedene probleme, možemo definisati @def{tipski sinonim}. Sinonim predstavlja novo ime @em{već postojećeg tipa}, i može se koristiti umesto originalnog imena. Tipski sinonim se definiše sa deklaracijom poput naredne:
 
 @codeBlock{
 type Ime = PostojeciTip
@@ -128,7 +128,7 @@ newtype NoviTip = Konstruktor PostojeciTip
 newtype MyBool = MkMyBool Bool
 }{Često se za ime konstruktora uzima ime tipa ispred kojeg se stavlja @em{Mk} (skraćeno od @em{Make}), jer konstruktor predstavlja jedini način da se "napravi" vrednost tipa @code{MyBool}.}
 
-@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisi isto što i @code{True} i @code{False}! Na primer, možemo se uveriti da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
+@p Kreirani tip @code{MyBool} sadrži samo dve vrednosti. Te vrednosti su @code{MkMyBool True} i @code{MkMyBool False}. Ove dve vrednosti nisu isto što i @code{True} i @code{False}! Na primer, možemo se uveriti da vrednosti tipa @code{MyBool} ne mogu se koristiti sa logičkim operatorima:
 
 @terminal{
 ghci> a = (MkMyBool True) || (MkMyBool False)
@@ -239,13 +239,13 @@ sumVecDouble (MkVecDouble (a,b,c)) (MkVecDouble (x,y,z)) = MkVecDouble (a+x, b+y
 @p Da bismo pri definiciji tipova izbegli nepotrebno dupliranje koda, možemo koristiti apstraktne tipove. @def{Apstraktni tip} je tip koji zavisi od nekog drugog tipa. U nekom smislu, apstraktni tipovi predstavljaju funkciju čiji su argumenti tipovi! Apstraktni tip se definiše tako što se nakon imena tipa navede tipska promenljiva, a nakon konstruktora tip koji potencijalno zavisi od te tipske promenljive@note{Ovakva definicija podseća na podudaranje oblika kod "običnih" funkcija.}.
 
 @example{
-@p Za jednobraznu konstrukciju trodimenzionalnih vektora, možemo koristiti naredni apstraktni tip
+@p Za jednoobraznu konstrukciju trodimenzionalnih vektora, možemo koristiti naredni apstraktni tip
 
 @codeBlock{
 newtype Vec a = MkVec (a, a, a)
 }
 
-@p Na opisani način konstruisana je jedna funkcija na nivou tipova. Ova funkcija proizvoljan tip preslikava u tip @code{(a, a, a)}. Na primer, @code{Vec Char} predstavlja tip @code{(Char,Char,Char)}.
+@p Na opisani način konstruisana je jedna funkcija na nivou tipova.
 
 @p Tipovi iz prethodnog primera nam nisu više neophodni, i sada možemo da koristimo @code{Vec Int}, @code{Vec Float} i @code{Vec Double}:
 
@@ -272,11 +272,11 @@ sumVec (MkVec (a,b,c)) (MkVec (x,y,z)) = MkVec (a+x,b+y,c+z)
 
 @codeBlock{
 data A a b c = MkA (a, [b], Int -> c)
-}{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{A Char Bool Float} predstavlja tip @code{(Char, [Bool], Int -> Float)}.}
+}{Navedeni apstraktni tip je zasigurno veoma čudan, ali validan. Sada izraz @code{A Char Bool Float} predstavlja tip čije vrednosti @code{MkA x} sadrže vrednosti tipa @code{(Char, [Bool], Int -> Float)}.}
 
 @p Apstraktni tipovi, nazivaju se još i @def{konstruktori tipa}, jer kao što ime kaže, oni konstruišu tipove. U tom smislu, konstruktori koji konstruišu vrednosti se nazivaju @def{konstruktori vrednosti}. U gornjem bloku koda @code{A} je konstruktor tipa, a @code{MkA} konstruktor vrednosti.
 
-@p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Doduše, oba apstraktna tipa imaju specificnu sintaksu, koja se razlikuje od onog što smo gore opisali.
+@p Mi smo se do sada susreli sa dva apstraktna tipa a da toga nismo bili ni svesni. Oba apstraktna tipa imaju specifičnu sintaksu, koja se razlikuje od onoga što smo gore opisali.
 
 @p Prvi apstraktni tip koji nam je poznat je konstruktor tipa liste, koji se obeležava sa @code{[]}. Ovaj konstruktor preslikava tip @code{A} u tip @code{[A]}@note{Možda će biti jasnije ako @code{[A]} zapišemo kao @code{[] A} (što je validan zapis u kodu). Pomalo zbunjujuće, ali i konstruktor @em{vrednosti} prazne liste se takođe označava sa @code{[]}.}. U lekciji @em{Rekurzivni tipovi podataka}, videcemo kako je tačno @code{[]} definisan, i dodatno ćemo razjasniti ovaj tip.
 

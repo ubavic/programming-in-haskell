@@ -50,7 +50,7 @@ slovo = P f
     where
         f [] = Nothing
         f (x:xs) = Just (x, xs)
-}{Lokalno definisana funkcija @code{f} vrši glavnu ulogu. Međutim, da bi dobili vrednost tipa @code{Parse Char}, neophodno je da "upakujemo" ovu funkciju u konstruktor @code{P}. Naravno, postavlja se pitanje zašto je bilo neophodno da definišemo novi tip a ne tipski sinonim koji koji ne bi zahtevao konstruktor. Razlog tome je što za novi tip možemo definisati instance klasa @code{Functor} i @code{Applicative}, što nije moguće sa tipskim sinonimom koji se odnosi na tip funkcije.}
+}{Lokalno definisana funkcija @code{f} vrši glavnu ulogu. Međutim, da bi dobili vrednost tipa @code{Parser Char}, neophodno je da "upakujemo" ovu funkciju u konstruktor @code{P}. Naravno, postavlja se pitanje zašto je bilo neophodno da definišemo novi tip a ne tipski sinonim koji koji ne bi zahtevao konstruktor. Razlog tome je što za novi tip možemo definisati instance klasa @code{Functor} i @code{Applicative}, što nije moguće sa tipskim sinonimom koji se odnosi na tip funkcije.}
 
 @p Testiranje parsera je veoma jednostavno (i veoma čitljivo!):
 
@@ -68,21 +68,21 @@ cifra :: Parser Int
 cifra = P f where
     f []     = Nothing
     f (x:xs) =
-        if x `elem` ['1' .. '9']
-        then Just (romEnum x - fromEnum '0', xs)
+        if x `elem` ['0' .. '9']
+        then Just (fromEnum x - fromEnum '0', xs)
         else Nothing
-}{Tip karaktera pripada klasi @code{Enum}, te je moguće koristiti funkciju @code{fromEnum} koja daje @em{ASCII} vrednost karaktera. Oduzimanjem te vrednosti od @em{ASCII} vrednosti karaktera @code{'0'}, dobijamo numeričku vrednost koju niska predstavlja.}
+}{Tip karaktera pripada klasi @code{Enum}, te je moguće koristiti funkciju @code{fromEnum} koja daje @em{Unicode} vrednost karaktera. Oduzimanjem te vrednosti od @em{Uncode} vrednosti karaktera @code{'0'}, dobijamo numeričku vrednost koju karakter cifre predstavlja.}
 
 @terminal{
 ghci> parsiraj cifra "9abc"
-Just (0, "abc")
+Just (9, "abc")
 ghci> parsiraj cifra "1234"
 Just (1, "234")
 ghci> parsiraj cifra "Hello!"
 Nothing
 }
 
-@problem{Kreirati funkciju @code{maloSlovo :: Parser Char} koja parsira samo mala latinična slova (tj. karakter iz raspona @code{['a' .. 'w']}).}
+@problem{Kreirati funkciju @code{maloSlovo :: Parser Char} koja parsira samo mala latinična slova (tj. karakter iz raspona @code{['a' .. 'z']}).}
 
 
 @p Često je zgodno da kreiramo funkciju koja kreira nekakav parser na osnovu prosleđenih argumenata. Parser @code{simbol :: Char -> Parser Char} je primer takve funkcije. Funkcija @code{simbol} uzima jedan karakter i vraća parser koji parsira isključivo taj karakter, a za sve ostale karaktere podbacuje.
@@ -114,7 +114,7 @@ Nothing
 @codeBlock{
 primeni :: (a -> b) -> Parser a -> Parser b
 primeni f p = P $ 
-        \s -> case p s of
+        \s -> case parsiraj p s of
             Just (x, s') -> Just (f x, s')
             Nothing -> Nothing
 }
@@ -124,7 +124,7 @@ primeni f p = P $
 
 @terminal{
 ghci> kvadrat = primeni (\x -> x*x) cifra
-ghci> kvadrat "3"
+ghci> parsiraj kvadrat "3"
 Just (9, "")
 }
 }
@@ -145,7 +145,7 @@ ili p1 p2 = P $
 @terminal {
 ghci> iksoks = ili (simbol 'x') (simbol 'o')
 ghci> parsiraj iksoks "xoxox"
-Just ("x","oxox")
+Just ('x', "oxox")
 ghci> parsiraj iksoks "aaaa"
 Nothing
 }
@@ -187,7 +187,7 @@ cifreUBroj xs =  r 0 xs where
 ghci> parsiraj broj "123abc456"
 Just (123, "abc456")
 ghci> parsiraj broj "abc"
-0
+Nothing
 }{Umesto @code{više} možemo da iskoristimo kombinator @code{baremJedan} da bi dobili @code{Nothing} ako ulazna niska ne počinje sa brojem.}
 
 @problem{Konstruisati parser celobrojnih vrednosti bez korišćenja kombinatora.}
@@ -202,7 +202,7 @@ instance Functor Parser where
         \s -> case p s of
             Just (x, s') -> Just (f x, s')
             Nothing -> Nothing
-}{Rezultat "mapiranja" funkcije @code{f} na neki parser @code{p}, je novi parser koji na uspešan rezultat parsiranja parsera @code{f} primenjuje funkciju @code{f}.}
+}{Rezultat "mapiranja" funkcije @code{f} na neki parser @code{p}, je novi parser koji na uspešan rezultat parsiranja parsera @code{p} primenjuje funkciju @code{f}.}
 
 @p Sada je neophodno dokazati da ovako data definicija zadovoljava dva zakona.
 
@@ -247,7 +247,7 @@ Just (('D',7), "")
 }
 
 
-@p Kako operatori @code{<*} i @code{*>} funkcionišu u kontekstu parsera? Po definiciji, operator @ccode{(<*) :: Parser a -> Parser b -> Parser a} je definisan kao @ccode{p1 <* p2 = liftA2 const p1 p2} što se svodi na @ccode{p1 <* p2 = (fmap const p1) <*> p2}. Ako je @code{p1 :: Parser A}, tada je @code{fmap const p1 :: Parser (a -> Int)} parser koji je moguće primeniti sa @code{<*>} na bilo koji drugi parser, ali će parsirana vrednost zavisiti samo od parsera @code{p1}, dok će parsirana vrednost parsera @code{p2} biti ignorisana, pod uslovom da parser @code{p2} uspe. Ako parser @code{p2} nije uspešan, tada će i parser @code{p1 <* p2} podbaciti. Slično je i sa operatorom @ccode{ (*>) :: f a -> f b -> f b} koji ignoriše rezultat levog parsera (pod uslovom da je taj parser uspeo).
+@p Kako operatori @code{<*} i @code{*>} funkcionišu u kontekstu parsera? Po definiciji, operator @ccode{(<*) :: Parser a -> Parser b -> Parser a} je definisan kao @ccode{p1 <* p2 = liftA2 const p1 p2} što se svodi na @ccode{p1 <* p2 = (fmap const p1) <*> p2}. Ako je @code{p1 :: Parser A}, tada je @code{fmap const p1 :: Parser (a -> b)} parser koji je moguće primeniti sa @code{<*>} na bilo koji drugi parser, ali će parsirana vrednost zavisiti samo od parsera @code{p1}, dok će parsirana vrednost parsera @code{p2} biti ignorisana, pod uslovom da parser @code{p2} uspe. Ako parser @code{p2} nije uspešan, tada će i parser @code{p1 <* p2} podbaciti. Slično je i sa operatorom @ccode{ (*>) :: f a -> f b -> f b} koji ignoriše rezultat levog parsera (pod uslovom da je taj parser uspeo).
 
 @p Navedeni operatori nam omogućavaju da konstruišemo parsere koji moraju parsirati neke delove niske, ali ti delovi ne utiču na parsiranu vrednost. Primer za ovu situaciju je parsiranje brojeva sa decimalnom tačkom: tačka se mora naći u zapisu decimalnog broja, ali ne utiče nikako na vrednost tog broja.
 
@@ -299,14 +299,14 @@ instance Show Izraz where
 
 @p Kako to obično biva, obrnuti proces, proces čitanja strukture iz niske, je značajno komplikovaniji za implementaciju, ali nam tehnika aplikativnih parsera može nam pomoći u ovom slučaju. Sa parserom kog budemo konstruisali, moći ćemo da iz niske pročitamo vrednost @code{Izraz}.
 
-@p Pre nego što počnemo sa definisanjem parsera, moramo tačno definisati oblik niska koje ćemo parsirati. Na primer, složeni parseri izraza mogu ispravno parsirati izraze poput @code{"2 +  5"} ili @code{"2*-7+6"} jer su napravljeni tako da ignorišu beline (razmake), da vode računa o prioritetu operacija, podržavaju unarni operator negacije, itd... Da bismo skratili naredne redove, mi nećemo kreirati ovako složeni parser. Parser koji budemo konstruisali moći će da parsira samo one izraze koji su nastali sa funkcijom @code{show :: Izraz -> String} koju smo gore definisali tj, izraze sačinjene isključivo od cifara i znakova @code{+}, @code{-}, @code{(}, @code{)}, pri čemu se oko svakog podizraza nalaze zagrade (osim oko samih brojeva).
+@p Pre nego što počnemo sa definisanjem parsera, moramo tačno definisati oblik niska koje ćemo parsirati. Na primer, složeni parseri izraza mogu ispravno parsirati izraze poput @code{"2 +  5"} ili @code{"2*-7+6"} jer su napravljeni tako da ignorišu beline (razmake), da vode računa o prioritetu operacija, podržavaju unarni operator negacije, itd... Da bismo skratili naredne redove, mi nećemo kreirati ovako složeni parser. Parser koji budemo konstruisali moći će da parsira samo one izraze koji su nastali sa funkcijom @code{show :: Izraz -> String} koju smo gore definisali tj, izraze sačinjene isključivo od cifara i znakova @code{+}, @code{*}, @code{(}, @code{)}, pri čemu se oko svakog podizraza nalaze zagrade (osim oko samih brojeva).
   
 @p Kako je i sama struktura tipa @code{Izraz} rekurzivna, i parser tipa @code{Parser Izraz} biće rekurzivan. Posebno ćemo konstruisati parser @code{izrazBroj} koji parsira brojeve, parser @code{izrazZbir} koji parsira zbir dva manja izraza, i parser @code{izrazProizvod} koji parsira proizvod dva manja izraza.
 
 @p Pretpostavimo da su navedeni parseri definisani. Jedan izraz može biti broj, proizvod ili zbir manjih izraza. Zbog toga, da bi parsirali izraz, prvo ćemo pokušati da parsiramo broj. Ako to ne uspemo, onda ćemo pokušati da parsiramo zbir, a ako ni to ne uspemo pokušaćemo da parsiramo proizvod@note{Pritom, ovde uopšte nije bitno kojim redom pokušavamo pa pokrenemo parsere. U složenijim parserima, poredak je često bitan}. Sa kombinatorom @code{ili} lako dobijamo željeni parser:
 
 @codeBlock{
-izraz :: ParserIzraz
+izraz :: Parser Izraz
 izraz = izrazBroj `ili` izrazZbir `ili` izrazProizvod
 }
 

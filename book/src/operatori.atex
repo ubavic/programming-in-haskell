@@ -1,8 +1,8 @@
 @chapter{Operatori}
 
-@p Iako možda nismo ni svesni, funkcije koristimo još od najranijih dana matematičkog obrazovanja. Operacije sabiranja, oduzimanja, množenja i deljenja su zapravo funkcije od dve promenljive. Tako na primer, operacija sabiranja koju označavamo simbolom @m{+} je funkcija koja svakom paru brojeva pridružuje njihov zbir. Za razliku od većine ostalih funkcija od dve promenljive, primena funkcije @m{+} na vrednosti @m{x} i @m{y}, ne označava se sa @m{+(x, y)}, već sa @m{x+y}. Glavni razlog je naravno istorijski: simbol @m{+} je ušao u upotrebnu pre nego što se pojam funkcije pojavio. Ali postoji i praktičan razlog: zapis @m{x+y} je jednostavniji (pa samim tim i čitljiviji) od zapisa @m{+(x, y)}. Slično važi i za simbole @m{-}, @m{\times}, @m{\colon} koji takođe predstavljaju funkcije dve promenljive.
+@p Iako možda nismo ni svesni, funkcije koristimo još od najranijih dana matematičkog obrazovanja. Operacije sabiranja, oduzimanja, množenja i deljenja su zapravo funkcije od dve promenljive. Tako na primer, operacija sabiranja koju označavamo simbolom @m{+} je funkcija koja svakom paru brojeva pridružuje njihov zbir. Za razliku od većine ostalih funkcija od dve promenljive, primena funkcije @m{+} na vrednosti @m{x} i @m{y}, ne označava se sa @m{+(x, y)}, već sa @m{x+y}. Glavni razlog je naravno istorijski: simbol @m{+} je ušao u upotrebu pre nego što se pojam funkcije pojavio. Ali postoji i praktičan razlog: zapis @m{x+y} je jednostavniji (pa samim tim i čitljiviji) od zapisa @m{+(x, y)}. Slično važi i za simbole @m{-}, @m{\times}, @m{\colon} koji takođe predstavljaju funkcije dve promenljive.
 
-@p Notaciju pri kojoj ime funkcije navodimo između argumenata funkcije, nazivamo @em{infiksna notacija}. Za razliku od toga, notaciju u kojoj se ime funkcije navodi pre argumenta, naziva se @em{prefiksna notacija}@note{Postoji takođe i @em{postfiksna notacija} u kojoj se ime funkcije navodi nakon argumenta. Postfiksna notacija se znatno ređe koristi. Notacija za faktorijel @m{n!} je u postfiksnom obliku.}. Do sada, sve funkcije koje smo definisali u Haskelu smo koristili isključivo u prefiksnoj notaciji (npr. @code{f x y}).
+@p Notaciju pri kojoj ime funkcije navodimo između argumenata funkcije, nazivamo @em{infiksna notacija}. Za razliku od toga, notacija u kojoj se ime funkcije navodi pre argumenta, naziva se @em{prefiksna notacija}@note{Postoji takođe i @em{postfiksna notacija} u kojoj se ime funkcije navodi nakon argumenta. Postfiksna notacija se znatno ređe koristi. Notacija za faktorijel @m{n!} je u postfiksnom obliku.}. Do sada, sve funkcije koje smo definisali u Haskelu smo koristili isključivo u prefiksnoj notaciji (npr. @code{f x y}).
 
 @p Pojam funkcije je fundamentalan u Haskel jeziku. Zbog toga je Haskel jezik dizajniran tako da omogući programerima da sami definišu funkcije koje će moći da se koriste u infiksnoj notaciji. Ovakve funkcije nazivamo @def{operatori}.
 
@@ -14,7 +14,7 @@
 @li @em{Aritmetički operatori} @code{+}, @pre{-}, @code{*}, @code{/}, @code{^}
 @li @em{Logički operatori} @code{&&}, @code{||}
 @li @em{Operatori poređenja} @code{==}, @code{/=}, @code{<}, @code{<=}, @code{>}, @code{>=}
-@li @em{Nizovni operatori} @code{:}, @code{++}, @code{!!}
+@li @em{Operatori nad listama} @code{:}, @code{++}, @code{!!}
 }
 
 @p Koristeći @code{:type} naredbu u @em{GHCi} okruženju, možemo se uveriti da su i navedeni operatori funkcije. Na primer, tip operatora @code{&&} nam govori da se radi o binarnoj funkciji
@@ -33,14 +33,14 @@ ghci> (&&) True False
 False
 ghci> (+) 4 3
 7
-ghic> (-) 5 2
+ghci> (-) 5 2
 3
 }
 
 @p Iz poslednjeg primera vidimo da je "prvi" argument operatora u prefiksnoj notaciji zapravo levi argument, a "drugi" argument pri prefiksnoj notaciji je desni argument u infiksnoj notaciji.
 
-@problem{Bez korišćenja @pre{type} naredbe, odrediti tipove operatora nadovezivanja i spajanja lista @code{:} i @code{++}.}{
-@p Operator @code{++} poseduje tip @code{[a] -> [a] -> [a]} jer ovaj operator spaja dve liste istog tipa. Operator @code{:} poseduje tip @code{a -> [a] -> a} jer ovaj operator dodaje element (levi argument) na početak liste (desni argument).}
+@problem{Bez korišćenja @pre{:type} naredbe, odrediti tipove operatora nadovezivanja i spajanja lista @code{:} i @code{++}.}{
+@p Operator @code{++} poseduje tip @code{[a] -> [a] -> [a]} jer ovaj operator spaja dve liste istog tipa. Operator @code{:} poseduje tip @code{a -> [a] -> [a]} jer ovaj operator dodaje element (levi argument) na početak liste (desni argument).}
 
 @problem{Kog je tipa operator @code{==}?}
 {@p Operator poređenja poredi dve vrednosti istog tipa i vraća logičku vrednost kao rezultat tog poređenja. Da bi se dve vrednosti nekog tipa mogle porediti, neophodno je da taj tip pripada klasi @code{Eq}. Prema tome, operator @code{==} ima tip @code{Eq a => a -> a -> Bool}.
@@ -69,7 +69,7 @@ ghic> (-) 5 2
 @p U Haskelu, svaki operator ima prioritet koji je označen sa jednim prirodnim brojem. Operatori sa najnižim prioritetom imaju prioritet @m{0}, a oni sa najvišim imaju prioritet @m{9}. Prioritet @m{10} je rezervisan za aplikaciju funkcija na vrednost.
 
 @example{
-@p Operator @code{++} koji nadovezuje liste je asocijativan operator jer očigledno važi @ccode{xs ++ (ys ++ zs) = xs ++ (ys ++ zs)} za sve liste @code{xs}, @code{ys}, @code{zs}. Prema tome, uvek kada nadovezujemo više lista, možemo pisati izraz poput @ccode{xs ++ ys ++ zs} jer je sve jedno kako se taj izraz interpretira.
+@p Operator @code{++} koji nadovezuje liste je asocijativan operator jer očigledno važi @ccode{xs ++ (ys ++ zs) = (xs ++ ys) ++ zs} za sve liste @code{xs}, @code{ys}, @code{zs}. Prema tome, uvek kada nadovezujemo više lista, možemo pisati izraz poput @ccode{xs ++ ys ++ zs} jer je sve jedno kako se taj izraz interpretira.
 }
 
 @example{
@@ -105,7 +105,7 @@ ghic> (-) 5 2
 @codeBlock{
 (|-|) :: Bool -> Bool -> Bool
 (|-|) x y = x /= y
-}{Prvo argument @code{x} predstavlja levi argument, a drugi argument @code{y} predstavlja desni argument.}
+}{Prvi argument @code{x} predstavlja levi argument, a drugi argument @code{y} predstavlja desni argument.}
 
 @p Podudaranje oblika dozvoljava i narednu definiciju:
 
@@ -128,7 +128,7 @@ False
 
 @problem{Definisati operator logičke implikacije @ccode{(==>) :: Bool -> Bool -> Bool}. Implikacija @m{p\Rightarrow q} je netačna ako i samo ako je @code{p} tačno a @code{q} netačno.} 
 
-@p Moguće je deklarisati prioritet i asocijativnost operatora takozvanom @em{infix} deklaracijom. Ova deklaracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i prirodnog broja manjeg od @code{9} koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da operator nije ni jedno ni drugo.
+@p Moguće je deklarisati prioritet i asocijativnost operatora takozvanom @em{infix} deklaracijom. Ova deklaracija se sastoji od jedne od ključnih reči @code{infixl}, @code{infixr} ili @code{infix}, i celog broja od @code{0} od @code{9} koji označava prioritet operatora. Reč @code{infixl} označava da se radi o levoasocijativnom operatoru, @code{infixr} označava da se radi o desnoasocijativnom operatoru, dok @code{infix} označava da operator nije ni jedno ni drugo.
 
 @p Ako prioritet i asocijativnost operatora nisu deklarisani, tada će se podrazumevati vrednost @code{infixl 9}.
 
@@ -180,7 +180,7 @@ infixr 9 @@@:
 @terminal{
 ghci> '?' @@@: '!' @@@: "Hello"
 "Hello!?"
-}{Sada se izraz interpretira kao @code{'?' @@@: ('!' @@@: "Hello")}, što smo i zeleli.}
+}{Sada se izraz interpretira kao @code{'?' @@@: ('!' @@@: "Hello")}, što smo i želeli.}
 
 
 @p Nijedna deklaracija asocijativnosti i prioriteta nije pogrešna. Ipak, pažljivom upotrebom @em{infix} deklaracija možemo se osloboditi mnogih zagrada u kodu.
@@ -271,7 +271,7 @@ Dakle vidimo da funkcije @m{g\circ f} i @m{f\circ g} ne moraju biti iste.
 @p U Haskelu, operator kompozicije se označava sa @code{.}, i u potpunosti odgovara matematičkom operatoru kompozicije @m{\circ}. Operator @code{.} poseduje parametarski polimorfan tip  
 @ccode{(b -> c) -> (a -> b) -> a -> c}.
 
-@p Funkcije se ne mogu proizvoljno komponovati. Da bismo mogli funkciju @code{g} da primenimo na vrednost @code{f x}, neophodno je da domen funkcije @code{g} bude jednak kodomenu funkcije @code{f}. Zato su argumenti operatora @code{.} 
+@p Funkcije se ne mogu proizvoljno komponovati. Da bismo mogli funkciju @code{g} da primenimo na vrednost @code{f x}, neophodno je da domen funkcije @code{g} bude jednak kodomenu funkcije @code{f}. Zato su argumenti operatora @code{.} redom funkcije tipa @code{b -> c} i @code{a -> b}.
 
 
 @example{
@@ -356,11 +356,11 @@ ks [] = id
 ks (f:fs) = f . ks fs
 }
 
-@p Navedeni rekurzivni šablon može se zameniti sa @code{foldl} funkcijom:
+@p Navedeni rekurzivni šablon može se zameniti sa @code{foldr} funkcijom:
 
 @codeBlock{
 ks :: [a -> a] -> a -> a
-ks fs = foldl (.) id fs 
+ks fs = foldr (.) id fs 
 }
 }
 
@@ -381,7 +381,7 @@ Dati primer tipa @m{X} i funkcije @m{f \colon X \to X} takve da važi @eq{f \ne 
 @p Operator aplikacije je operator koji na prvi pogled ne radi ništa korisno. Definicija ovog operatora je
 
 @codeBlock{
-infixr 0
+infixr 0 $
 ($) :: (a -> b) -> a -> b
 f $ a = f a
 }
@@ -435,7 +435,7 @@ ghci> (*2) <$> [1 .. 10]
 @problem{Neka je @code{f :: A -> B} i @code{g :: B -> C}. Zašto su @code{map g . map f} i @code{map (g . f)} iste funkcije? Koji su odgovarajući izrazi sa @code{<$>} operatorom?}
 {@p Funkcija @code{map g . map f} je kompozicija funkcija @code{map f} i @code{map g}. Funkcija @code{map f} transformiše neku listu @code{[x₁, x₂, … xₙ]} u listu @ccode{[f x₁, f x₂ … f xₙ]}, a zatim funkcija @code{map g} transformiše tu listu u @ccode{[g (f x₁), g (f x₂), … g (f xₙ)]}. Sa druge strane, funkcija @code{map (g . f)} primenjuje kompoziciju @code{g . f} na svaki element liste, odnosno @code{[x₁, x₂ … xₙ]} transformiše u @ccode{[(g . f) x₁, (g . f) x₂, … (g . f) xₙ]}. Međutim, po definiciji kompozicije funkcije, jasno je da su liste @ccode{[g (f x₁), g (f x₂), … g(f xₙ)]} i @ccode{[(g . f) x₁, (g . f) x₂, … (g . f) xₙ]} iste vrednosti.
 
-@p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve stane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}. Operator @code{<$>} je desnoasocijativan, pa se poslednja jednakost može zapisati kao @ccode{g <$> f <$> xs = (g . f) <$> xs}.
+@p Kako se @code{map f} može zapisati kao @code{(f <$>)}, i analogno za @code{g}, to se jednakost @code{map g . map f  = map (g . f)} može zapisati kao @ccode{(g <$>) . (f <$>) = ((g . f) <$>)}. Ako obe strane ove jednakost apliciramo na vrednost @code{xs}, dobijamo @ccode{((g <$>) . (f <$>)) xs = (g . f) <$> xs}. Raspisivanjem kompozicije sa leve strane, dobijamo @ccode{g <$> (f <$> xs) = (g . f) <$> xs}.
 }
 
 @section{Primer: Određen integral}
@@ -452,7 +452,7 @@ ghci> (*2) <$> [1 .. 10]
 @eq{I = \sum\limits_{i=0}^{n} f\left(x_i\right) \left(x_{i+1} - x_i\right),}
 gde je @eq{a = x_0 < x_1 < \cdots < x_{n} < x_{n+1} = b} niz tačaka koje dele interval @m{[a,b]}. Navedene podeone tačke se mogu uzeti proizvoljno, ali što ih više ima to će kvadratići biti uži, a samim tim će aproksimacija površine biti tačnija.
 
-@p Lako možemo implementirati funkciju @ccode{int :: (Double -> Double) -> Double -> Double -> Double} koja računa određen integral neke funkcije @code{f :: Float -> Float}. Prvi parametar funkcije @code{int} je funkcija @code{f}, drugi početak intervala a treći kraj intervala. Povratna vrednost je aproksimacija određenog integrala Rimanovom sumom.
+@p Lako možemo implementirati funkciju @ccode{int :: (Double -> Double) -> Double -> Double -> Double} koja računa određen integral neke funkcije @code{f :: Double -> Double}. Prvi parametar funkcije @code{int} je funkcija @code{f}, drugi početak intervala a treći kraj intervala. Povratna vrednost je aproksimacija određenog integrala Rimanovom sumom.
 
 @p Listu podeonih tačaka možemo formirati korišćenjem izlistavanja. Ako su @code{a} i @code{b} krajevi intervala, a @code{d} neki dovoljno mali broj, tada lista @code{[a, a + d .. b]} predstavlja podelu intervala @m{[a,b]}. Primenom funkcije @code{f} na svaki element date liste, dobijamo listu visina pravougaonika: @ccode{map f [a, a + d .. b]}. Množenjem svake od ovih visina sa širinom intervala, odnosno sa @code{d}, dobijamo listu površina pravougaonika: @ccode{map (\h -> h * d) (map f [a, a + d .. b])}. Na kraju, dovoljno je da površine saberemo:
 @ccode{sum (map (\h -> h * d) (map f [a, a + d .. b]))}.
@@ -465,7 +465,7 @@ int f a b = sum povrsine
     where
         povrsine = map (\h -> h * d) (map f [a, a + d .. b])
         d = (b - a) / 200
-}{U ovoj implementaciji uzeto je da je @code{d} jednak @m{200}-tom delu intervala @m{[a, b]}. Prime tome, lista podeonih tačaka će sadržati @m{200} elemenata. Za veću preciznost, dovoljno je uvećati konstantu @code{200}.}
+}{U ovoj implementaciji uzeto je da je @code{d} jednak @m{200}-tom delu intervala @m{[a, b]}. Za veću preciznost, dovoljno je uvećati konstantu @code{200}.}
 
 @example{
 @p U @em{GHCi} okruženju je dostupna funkcija @code{sin} kao i konstanta @code{pi}. Ako učitamo implementaciju funkcije @code{int} možemo da izračunamo integral sinusa na intervalu @m{[0,\pi]}:
@@ -494,6 +494,8 @@ int f a b = d * (sum $ f <$> [a, a + d .. b])
     where d = (b - a) / 200
 }
 }
+
+@note{Greška u jednom sabirku}
 
 @section{Zaključak}
 

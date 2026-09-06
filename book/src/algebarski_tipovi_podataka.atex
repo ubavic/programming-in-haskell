@@ -1,6 +1,6 @@
 @chapter{Algebarski tipovi podataka}
 
-@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicija tipa @code{T} sada će počinjati sa @code{data T = …}, a umesto jednog konstruktora od sada ćemo potencijalno imati više konstruktora.
+@p Do sada smo videli kako možemo kreirati nove tipove koristeći @code{newtype} konstrukciju. U ovoj lekciji predstavićemo jedan opštiji način kreiranja novih tipova. Prva razlika u ovom načinu kreiranja tipova je ta što se umesto ključne reči @code{newtype} koristi @code{data}. Definicija tipa @code{T} sada će počinjati sa @pre{data T = …}, a umesto jednog konstruktora od sada ćemo potencijalno imati više konstruktora.
 
 @p Tipove ćemo kreirati od postojećih tipova koristeći dve operacije: proizvod i sumu. Tipovi koji se dobijaju uz ove dve operacije nazivaju se @def{algebarski tipovi podataka}.
 
@@ -45,7 +45,7 @@ ghci> dužinaVektora v
 @p Nije nužno postaviti iste tipove u proizvod, niti ih mora biti dva.
 
 @example {
-@p Naredni tip prestavlja jednu osobu (njeno ime, godine, i to da li je državljanin Srbije):
+@p Naredni tip predstavlja jednu osobu (njeno ime, godine, i to da li je državljanin Srbije):
 
 @codeBlock{
 data Osoba = Osoba String Int Bool deriving (Show)
@@ -70,7 +70,7 @@ promeniIme novoIme (Osoba _ godine drzavljanin) = Osoba novoIme godine drzavljan
 Napisati getere i setere za sva polja vrednosti tipa @code{Vektor} i @code{Osoba}.
 }
 
-@p Proizvod tipova može da sadrži i samo jedan tip. U tom slučaju proizvod je ekvivalentan @code{newtype} konstrukciji koju smo ranije upoznali.
+@p Proizvod tipova može da sadrži i samo jedan tip. U tom slučaju proizvod je analogan @code{newtype} konstrukciji koju smo ranije upoznali.
 
 @subsection{Uređene @m{n}-torke kao proizvodi tipova}
 
@@ -103,7 +103,9 @@ data T = K
 
 @p Konstruktor @code{K} je funkcija arnosti 0, odnosno konstanta tipa @code{T}. Drugim rečima, tip @code{T} sadrži samo jednu vrednost a to je @code{K}. Zbog toga za @code{T} takođe kažemo da je @def{jedinični tip} baš kao za @code{()}. Zapravo, tip @code{()} je takođe definisan kao prazan proizvod:
 
-@codeBlock{data () = ()}{Ovo je još jedan primer gde konstruktor i tip imaju isto ime.}
+@codeBlock{
+data () = ()
+}{Ovo je još jedan primer gde konstruktor i tip imaju isto ime.}
 
 @section{Suma}
 
@@ -207,7 +209,7 @@ data Dan = Ponedeljak
     | Petak
     | Subota
     | Nedelja 
-}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neophodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da da definicija nije podeljena na više delova sa praznim linijama.}
+}{Radi preglednosti zgodno je definiciju prelomiti u više linija. Pri prelomu, nije neophodno da svaki konstruktor bude u posebnoj liniji niti je neophodno da uspravne crte budu jedna ispod druge. Neophodno je samo da definicija nije podeljena na više delova sa praznim linijama.}
 }
 
 @problem{
@@ -236,7 +238,7 @@ data MoždaBroj = SamoBroj Float | Ništa
 apsolutnaRazlika :: MoždaBroj -> MoždaBroj -> MoždaBroj
 apsolutnaRazlika (SamoBroj x) (SamoBroj y) = SamoBroj $ abs $ x - y
 apsolutnaRazlika _ _ = Ništa
-}{Funkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga smisla vratiti samo vrednost @code{Nista}}
+}{Funkcija će vratiti vrednost oblika @code{SamoBroj i} kad god prosledimo dve vrednosti istog oblika. U svim drugim slučajevima, barem jedna od prosleđenih vrednosti će biti @code{Nista}, i stoga ima smisla vratiti samo vrednost @code{Nista}}
 
 @codeBlock{
 podeli :: MoždaBroj -> MoždaBroj -> MoždaBroj
@@ -245,15 +247,15 @@ podeli (SamoBroj x) (SamoBroj y) =
         then Ništa
         else SamoBroj $ x / y
 podeli _ _ = Ništa
-}{Neke funkcije sy takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethodnoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
+}{Neke funkcije su takve, da i dve "dobre" vrednosti, mogu da daju "lošu" vrednost. Deljenje nulom nije definisano, pa u slučaju kada je @code{y == 0} vraćamo @code{Nista}. Kao i u prethodnoj funkciji, ako je jedan od argumenata @code{Nista}, vrednost @code{Nista} i vraćamo.}
 
-@p Slično tipu @code{MoždaBroj} možemo konstruisati@note{Obratite pažnju da u istom modulu nije moguće definisati tip @code{MoždaBroj} i @code{MoždaNiska} jer imaju istoimeni konstruktor @code{Ništa}. Naravno, rešenje je da promenim ime konstruktora u npr @code{NištaNiska} ili @code{BezNiske}. U nastavku ćemo radi jednostavnosti zadržati naziv @code{Ništa}.} tip @code{MoždaNiska}:
+@p Slično tipu @code{MoždaBroj} možemo konstruisati@note{Obratite pažnju da u istom modulu nije moguće definisati tip @code{MoždaBroj} i @code{MoždaNiska} jer imaju istoimeni konstruktor @code{Ništa}. Naravno, rešenje je da promenimo ime konstruktora u npr @code{NištaNiska} ili @code{BezNiske}. U nastavku ćemo radi jednostavnosti zadržati naziv @code{Ništa}.} tip @code{MoždaNiska}:
 
 @codeBlock{
 data MoždaNiska = SamoNiska String | Ništa
 }
 
-@p Konstrukcija tipa je @code{MozdaNiska} je u potpunosti analogna konstrukciji tipa @code{MoždaBroj}. Jasno je da je ovakva konstrukcija korisna za bilo koji tip, stoga možemo definisati naredni apstraktni tip
+@p Konstrukcija tipa je @code{MoždaNiska} je u potpunosti analogna konstrukciji tipa @code{MoždaBroj}. Jasno je da je ovakva konstrukcija korisna za bilo koji tip, stoga možemo definisati naredni apstraktni tip
 
 @codeBlock{
 data Možda t = Samo t | Ništa
@@ -279,7 +281,7 @@ data Možda t = Samo t | Ništa
 @codeBlock{
 maybeHead :: [a] -> Maybe a
 maybeHead []  = Nothing
-maybeHead x:_ = Just x
+maybeHead (x:_) = Just x
 }
 
 @p Dakle, ako niz nije prazan @code{maybeHead} će vratiti glavu niza upakovanu u @code{Just}. Ako je niz prazan, @code{maybeHead} će vratiti @code{Nothing}.
@@ -298,7 +300,7 @@ Definisati totalne varijante funkcija @code{tail}, @code{init}, @code{last} kori
 
 @codeBlock{
 data Osoba = MkOsoba String String String String Int
-}{Primetimo da iz ove definicije ne znamo koja koordinata predstavlja koju informaciju. Jednino znamo da koordinata tipa @code{Int} predstavlja godinu rođenja. Ovu dvosmislenost možemo rešiti pisanjem komentara pored definicije}
+}{Primetimo da iz ove definicije ne znamo koja koordinata predstavlja koju informaciju. Jedino znamo da koordinata tipa @code{Int} predstavlja godinu rođenja. Ovu dvosmislenost možemo rešiti pisanjem komentara pored definicije}
 
 @p Možemo se odlučiti da prva niska predstavlja ime, druga prezime, treća mesto a četvrta adresu. Tada funkcije za rad sa tipom @code{Osoba} deluju poput sledećih:
 
@@ -309,9 +311,9 @@ punoIme (MkOsoba ime prezime _ _ _)
 
 punaAdresa :: Osoba -> String
 punaAdresa (MkOsoba _ _ mesto adresa _)
-    = adresa ++ ", " ++ ime
+    = adresa ++ ", " ++ mesto
 
-punoletna :: Int -> Osoba -> MyBool
+punoletna :: Int -> Osoba -> Bool
 punoletna trenutnaGodina (MkOsoba _ _ _ _ godinaRođenja)
     = trenutnaGodina - godinaRođenja >= 18
 }
@@ -333,7 +335,7 @@ data Osoba = MkOsoba @@{
 @@}
 }
 
-@p Vrednosti tipa @code{Osoba} je i dalje moguće konstruisati navođenjem vrednosti nakon konstruktora, ali je moguće i iskorititi sintaksu za zapise:
+@p Vrednosti tipa @code{Osoba} je i dalje moguće konstruisati navođenjem vrednosti nakon konstruktora, ali je moguće i iskoristiti sintaksu za zapise:
 
 @codeBlock{
 osoba1 = MkOsoba "Petar" "Petrović" 2000 "Beograd" "Njegoševa"
@@ -347,7 +349,7 @@ osoba2 = MkOsoba @@{
 @@}
 }{Korišćenjem sintakse za zapise, programer nije u obavezi da ispoštuje redosled koordinata, ali mora navesti vrednosti za svaku koordinatu.}
 
-@p Definisanjem tipa @code{Osoba} sintaksom za zapise, zapravo je kreirano šest funkcija @code{ime :: Osoba -> String}, @code{prezime :: Osoba -> String}, @code{godinaRođenja :: Osoba -> Int}, @code{mestoStanovanja :: Osoba -> String}, @code{adresaStanovanja :: Osoba -> String}. Ove funkcije se nazivaju @def{projekcije}, i vraćaju vraćaju odgovarajuće koordinate:
+@p Definisanjem tipa @code{Osoba} sintaksom za zapise, zapravo je kreirano pet funkcija @code{ime :: Osoba -> String}, @code{prezime :: Osoba -> String}, @code{godinaRođenja :: Osoba -> Int}, @code{mestoStanovanja :: Osoba -> String}, @code{adresaStanovanja :: Osoba -> String}. Ove funkcije se nazivaju @def{projekcije}, i vraćaju odgovarajuće koordinate:
 
 @terminal{
 ghci> :t ime
@@ -366,7 +368,7 @@ ghci> ime osoba1
 ghci> osoba3 = osoba1@@{ime = "Miloš"@@}
 ghci> ime osoba3
 "Miloš"
-}{Vrednosti koordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba2}, osim vrednosti @code{labela} koja je @code{"Miloš"}.}
+}{Vrednosti koordinata vrednosti @code{osoba3} su iste kao odgovarajuće vrednosti koordinata @code{osoba1}, osim vrednosti polja @code{ime} koja je @code{"Miloš"}.}
 
 @p Pri podudaranju oblika, moguće je "uhvatiti" samo labele koje su nam potrebne. Tako bi se funkcije od malopre mogla ovako napisati:
 
@@ -386,7 +388,7 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
 
 @section{Algebra tipova}
 
-@p U matematici, @def{alegbra}@note{Reč algebra potiče od arapskog izraza الجبر (@em{al-džebra}) koji se koristio za tehniku nameštanja kostiju. Arapski matematičar Al Hurezmi iz IX veka je iskoristio ovaj termin za jednu tehniku rešavanja jednačina, i termin je sa prevodom njegovog priručnika dospeo u Evropu. Interesantno, termin @em{algoritam} je dobijen od samog Al Hurezmijevog imena.} označava disciplinu koja proučava zakonitosti koje važe u formalnim sistemima, pri čemu se te zakonitosti proučavaju i iskazuju kroz @em{algebarske izraze}. Na primer, činjenica da je @eq{(5+2)(5-2) = 25 - 4} spada u domen @em{aritmetike}, dok iskaz @eq{(m+n)(m-n) = m^2 - n^2} spada u domen algebre prirodnih brojeva. Ovaj iskaz je tačan za sve prirodne brojeve @m{m} i @m{n}, i prethodno navedena činjenica je samo jedna instanca ovog algebarskog zakona. Međutim, algebra je mnogo šira od algebre brojeva. Algebra proučava i apstraktne zakonitosti koje važe sa operacijama nad vektorima, skupovima, funkcijama...
+@p U matematici, @def{algebra}@note{Reč algebra potiče od arapskog izraza الجبر (@em{al-džebra}) koji se koristio za tehniku nameštanja kostiju. Arapski matematičar Al Hurezmi iz IX veka je iskoristio ovaj termin za jednu tehniku rešavanja jednačina, i termin je sa prevodom njegovog priručnika dospeo u Evropu. Interesantno, termin @em{algoritam} je dobijen od samog Al Hurezmijevog imena.} označava disciplinu koja proučava zakonitosti koje važe u formalnim sistemima, pri čemu se te zakonitosti proučavaju i iskazuju kroz @em{algebarske izraze}. Na primer, činjenica da je @eq{(5+2)(5-2) = 25 - 4} spada u domen @em{aritmetike}, dok iskaz @eq{(m+n)(m-n) = m^2 - n^2} spada u domen algebre prirodnih brojeva. Ovaj iskaz je tačan za sve prirodne brojeve @m{m} i @m{n}, i prethodno navedena činjenica je samo jedna instanca ovog algebarskog zakona. Međutim, algebra je mnogo šira od algebre brojeva. Algebra proučava i apstraktne zakonitosti koje važe sa operacijama nad vektorima, skupovima, funkcijama...
 
 @p Na primer, algebarski izraz @eq{(a \circledast b) \circledast c = (c \circledast b) \circledast a} važi za sve prirodne brojeve @m{a}, @m{b} i @m{c} ako operator @m{\circledast} predstavlja sabiranje. Takođe važi i za sve dvodimenzionalne vektore @m{a}, @m{b} i @m{c} ako operator @m{\circledast} predstavlja sabiranje vektora. Međutim, važi i za sve  rotacije @m{a}, @m{b} i @m{c} oko neke ose @m{p} u prostoru, ako @m{\circledast} predstavlja @em{nadovezivanje} (odnosno kompoziciju) rotacija. Slično i za skupove i za operaciju unije skupova... U svim navedenim slučajevima, ovaj algebarski zakon ima gotovo isti dokaz i zasniva se na osobinama komutativnosti i asocijativnosti odgovarajuće operacije.
 
@@ -404,7 +406,7 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
 
 @subsection{Izomorfizam skupova}
 
-@p Jednakost tipova koju smo analizirali gora je previše stroga: videli smo da (ako ignorišemo tipske sinonime), tipovi su jednaki samo samim sebi@note{To bi bilo kao da u algebri prirodnih brojeva kažemo da @m{m+n} i @m{n+m} nisu jednaki jer nisu isti kao nizovi simbola.}. Zbog toga želimo da uvedemo slabiji pojam jednakosti, takozvani @em{izomorfizam}, koji će nam omogućiti da lakše rezonujemo o nekim odnosima između tipova. Definiciju nove relacije uzećemo iz teorije skupova.
+@p Jednakost tipova koju smo analizirali gore je previše stroga: videli smo da (ako ignorišemo tipske sinonime), tipovi su jednaki samo samim sebi@note{To bi bilo kao da u algebri prirodnih brojeva kažemo da @m{m+n} i @m{n+m} nisu jednaki jer nisu isti kao nizovi simbola.}. Zbog toga želimo da uvedemo slabiji pojam jednakosti, takozvani @em{izomorfizam}, koji će nam omogućiti da lakše rezonujemo o nekim odnosima između tipova. Definiciju nove relacije uzećemo iz teorije skupova.
 
 @figure{equality}{Dva kvadrata @m{K_1} i @m{K_2} nisu jednaka, ove dve figure se nalaze se na različitim mestima, i nemaju zajedničkih tačaka. Međutim, ovi kvadrati imaju iste dimenzije, i pomeranjem jednog možemo "savršeno preklopiti" drugi. Zbog toga, za ove kvadrate kažemo da su @em{kongruentni} i to obeležavamo @m{K_1 \cong K_2}. Mnogobrojne osobine koje proučavamo u geometriji (površina, obim, dužina dijagonale....) su potpuno iste za ova dva kvadrata, i za proučavanje ovih osobina nas ne interesuje sam položaj figura u prostoru. Uvođenjem pojma kongruentnosti, rasuđujemo o figurama na apstraktnijem nivou, zanemarujući osobine koje nam nisu interesantne.}
 
@@ -441,7 +443,7 @@ punoletna trenutnaGodina (MkOsoba @@{godinaRođenja = godinaRođenja@@})
 
 @p Navedenim razmatranjem smo dokazali da postoji bijekcija između @m{A} i @m{B} ako i samo ako postoje funkcije @m{f \colon A \to B} i @m{g \colon B \to A} takve da je @m{f \circ g = \operatorname{id}_B} i @m{g \circ f = \operatorname{id}_A}. Uslov izomorfizma skupova smo mogli da definišemo koristeći i ovu karakterizaciju, ali smo ovako (dužim putem) videli smisao jednakosti.
 
-@p Koristeći prethodnu karakterizaciju izomorfnih skupova, možemo lako da dokažemo još neke osobine relacije izomorfnosti. Ako je @m{A \cong B} to znači da postoje funkcije @m{f \colon A \to B} i @m{g \colon B \to A} takve da je @m{f \circ g = \operatorname{id}_B} i @m{g \circ f = \operatorname{id}_A}, a samim tim to znači da je @m{B \cong A}. Takođe, ako je @m{A \cong B} i @m{B \cong C}, sledi da postoje funkcije @m{f_1 \colon A \to B} i @m{g_1 \colon B \circ A} takve da je @m{f_1 \circ g_1 = \operatorname{id}_B} i @m{g_1 \circ f_1 = \operatorname{id}_A} i funkcije @m{f_2 \colon B \to C} i @m{g_2 \colon C \to B} takve da je @m{f_2 \circ g_2 = \operatorname{id}_C} i @m{g_2 \circ f_2 = \operatorname{id}_B}. Dalje, važi da je@note{Ovde koristimo dve činjenice. Prvo, kompozicija funkcija je asocijativna operacija te se zagrade mogu postavljati proizvoljno u izrazu sačinjenom od kompozicija. Drugo, identičke funkcije su neutrali za operaciju kompozicije te se mogu proizvoljno uklanjati iz izraza.} @eq{(g_1 \circ g_2) \circ (f_2 \circ f_1) = g_1 \circ \operatorname{id}_B \circ f_1 = \operatorname{id}_A} i @eq{(f_2 \circ f_1) \circ (g_1 \circ g_2) = f_2 \circ \operatorname{id}_A \circ g_2 = \operatorname{id}_B,} pa je @m{A \cong C}, jer funkcije @m{f_2 \circ f_1 \colon A \to C} i @m{g_1 \circ g_2 \colon C \to A} imaju neophodne osobine.
+@p Koristeći prethodnu karakterizaciju izomorfnih skupova, možemo lako da dokažemo još neke osobine relacije izomorfnosti. Ako je @m{A \cong B} to znači da postoje funkcije @m{f \colon A \to B} i @m{g \colon B \to A} takve da je @m{f \circ g = \operatorname{id}_B} i @m{g \circ f = \operatorname{id}_A}, a samim tim to znači da je @m{B \cong A}. Takođe, ako je @m{A \cong B} i @m{B \cong C}, sledi da postoje funkcije @m{f_1 \colon A \to B} i @m{g_1 \colon B \to A} takve da je @m{f_1 \circ g_1 = \operatorname{id}_B} i @m{g_1 \circ f_1 = \operatorname{id}_A} i funkcije @m{f_2 \colon B \to C} i @m{g_2 \colon C \to B} takve da je @m{f_2 \circ g_2 = \operatorname{id}_C} i @m{g_2 \circ f_2 = \operatorname{id}_B}. Dalje, važi da je@note{Ovde koristimo dve činjenice. Prvo, kompozicija funkcija je asocijativna operacija te se zagrade mogu postavljati proizvoljno u izrazu sačinjenom od kompozicija. Drugo, identičke funkcije su neutrali za operaciju kompozicije te se mogu proizvoljno uklanjati iz izraza.} @eq{(g_1 \circ g_2) \circ (f_2 \circ f_1) = g_1 \circ \operatorname{id}_B \circ f_1 = \operatorname{id}_A} i @eq{(f_2 \circ f_1) \circ (g_1 \circ g_2) = f_2 \circ \operatorname{id}_A \circ g_2 = \operatorname{id}_C,} pa je @m{A \cong C}, jer funkcije @m{f_2 \circ f_1 \colon A \to C} i @m{g_1 \circ g_2 \colon C \to A} imaju neophodne osobine.
 
 @p Dakle relacija @m{\cong} poseduje svojstva kakva očekujemo od jednakosti. Svaki skup je izomorfan samom sebi. Ako je @m{A} izomorfan sa @m{B}, tada je i @m{B} izomorfan sa @m{A}. I, ako je @m{A} izomorfan sa @m{B} i @m{B} izomorfan sa @m{C}, tada je i @m{A} izomorfan sa @m{C}. Naravno, ovo je sasvim očekivano, jer smo relaciju @m{\cong} definisali tako da za konačne skupove važi @m{A \cong B}  ako @m{A} i @m{B} imaju isti broj elementa.
 
@@ -471,7 +473,7 @@ g (S1 b) = S2 b
 g (S2 a) = S1 a  
 }
 
-@p Dokažimo da važi @code{g . f = id :: S A B} Svaka vrednost @code{x :: S A B} je oblika @code{S1 a} ili @code{S2 b}, gde @code{a :: A} i @code{b :: B}. Ako je @code{x = S1 a}, tada je @code{f x = S2 a}, pa je @code{g (f x) = g (S2 a) = S1 a = x}. Ako je @code{x = S2 b} tada je @code{g (f x) = g (S1 b) = S2 b = x}. Dakle, važi @code{g (f x) = x} za svako @code{x: S A B}, tj. @ccode{g . f = id :: S A B -> S A B}. Na potpuno isti način@note{Pažliv čitalac će primetiti da su @code{f} i @code{g} samo tipski konkretne instance parametraski polimorfne funkcije @code{h :: S x y -> S y x}. Zapravo, čitav ovaj dokaza je moga da se svede na pokazivanje da važi @code{h . h = id}.} se dokazuje i jednakost @code{f . g = id :: S B A -> S B A} odakle zaključujemo da je @code{S A B ≅ S B A}.
+@p Dokažimo da važi @code{g . f = id :: S A B} Svaka vrednost @code{x :: S A B} je oblika @code{S1 a} ili @code{S2 b}, gde @code{a :: A} i @code{b :: B}. Ako je @code{x = S1 a}, tada je @code{f x = S2 a}, pa je @code{g (f x) = g (S2 a) = S1 a = x}. Ako je @code{x = S2 b} tada je @code{g (f x) = g (S1 b) = S2 b = x}. Dakle, važi @code{g (f x) = x} za svako @code{x :: S A B}, tj. @ccode{g . f = id :: S A B -> S A B}. Na potpuno isti način@note{Pažljiv čitalac će primetiti da su @code{f} i @code{g} samo tipski konkretne instance parametarski polimorfne funkcije @code{h :: S x y -> S y x}. Zapravo, čitav ovaj dokaza je mogao da se svede na pokazivanje da važi @code{h . h = id}.} se dokazuje i jednakost @code{f . g = id :: S B A -> S B A} odakle zaključujemo da je @code{S A B ≅ S B A}.
 
 @p Sličnim rezonovanjem se dokazuje i zakon komutativnosti proizvoda @ccode{A ⊗ B ≅ B ⊗ A}.
 
@@ -489,21 +491,21 @@ g :: A -> S Void A
 g a = S2 a
 }{Možda deluje kao da funkcija @code{f} nije totalna, ali ona je definisana za sve vrednosti iz @code{S Void A}. Kako ne postoji vrednost tipa @code{Void}, sledi da ne postoji ni vrednost oblika @code{S1 x :: S Void A}.}
 
-@p Povera izomorfizma je jednostavna: svako @code{x :: S Void A} je oblika @code{S2 a} za @code{a :: A}. Sledi da je @ccode{g (f x) = g (f (S2 a)) = a = S2 a = x} i @ccode{f (g a) = f (S2 a) = a}. 
+@p Provera izomorfizma je jednostavna: svako @code{x :: S Void A} je oblika @code{S2 a} za neko @code{a :: A}. Sledi da je @ccode{g (f x) = g (f (S2 a)) = g a = S2 a = x} i @ccode{f (g a) = f (S2 a) = a}. 
 
-@p Za dokazivanje @code{Void ⊗ A ≅ Void} iskoristićemo naredne funckije:
+@p Za dokazivanje @code{Void ⊗ A ≅ Void} iskoristićemo naredne funkcije:
 
 @codeBlock{
 data P t1 t2 = P t1 t2
 
 f :: P Void A -> Void
-f (P v _) = v 
+f (P v _) = v
 
 g :: Void -> P Void A
 g v = g v
-}{Umesto što smo definisanli @code{P}, mogli smo da iskoristimo tip uređenih parova @code{()}.}
+}{Umesto što smo definisali @code{P}, mogli smo da iskoristimo tip uređenih parova @code{(,)}.}
 
-@p U ovom slučaju dokaz je jednstavan@note{Dokaz se zasniva na tome da je iskaz @m{p\Rightarrow q} tačan kad @m{p} nije tačno (@em{vacuous truth}). Iz iskaza @em{x je tipa Void}, možemo zaključiti bilo šta jer ne postoji vrednost tipa @code{Void}.}: ne postoji vrednost @code{x :: Void} te jednakost važi @code{f (g x) = x} za sve @code{x :: Void}. Isto, postoji vrendost tipa @code{P Void A} pa i jednakost @code{g (f x) = x} važi uvek za @code{x :: P Void A}.
+@p U ovom slučaju dokaz je jednostavan@note{Dokaz se zasniva na tome da je iskaz @m{p\Rightarrow q} tačan kad @m{p} nije tačno (@em{vacuous truth}). Iz iskaza @em{x je tipa Void}, možemo zaključiti bilo šta jer ne postoji vrednost tipa @code{Void}.}: ne postoji vrednost @code{x :: Void} te jednakost važi @code{f (g x) = x} za sve @code{x :: Void}. Isto, ne postoji vrednost tipa @code{P Void A} pa i jednakost @code{g (f x) = x} važi uvek za @code{x :: P Void A}.
 
 @p Dakle tip @code{Void} se ponaša u algebri tipova onako kako se ponaša broj @m{0} u algebri prirodnih brojeva. Broj @m{1} ima osobinu da je @m{1\times n = n} za sve prirodne brojeve @m{n}. Pandan ovom zakonu je @ccode{() ⊗ A ≅ A}, što se dokazuje korišćenjem funkcija:
 
@@ -511,22 +513,22 @@ g v = g v
 data P t1 t2 = P t1 t2
 
 f :: P () A -> A
-f (P _ a) = a 
+f (P _ a) = a
 
 g :: A -> P () A
-g a = ((), a)
+g a = P () a
 }
 
-@p Dokaz za @code{f . g = id} i @code{g . f = id} nećemo navoditi, jer nije ništa komplikovaniji od prethodnih. Istaknimo da smo ovde umsesto @code{()} mogli da iskoristimo bilo koji tip kokji ima jednu vrednost. Štaviše, možemo dokazati nešto opštije tvrđenje: ako je @code{A₁ ≅ A₂} i  @code{B₁ ≅ B₂}, tada je i @ccode{A₁ ⊕ B₁ ≅ A₂ ⊕ B₂} i @ccode{A₁ ⊗ B₁ ≅ A₂ ⊗ B₂}.
+@p Dokaz za @code{f . g = id} i @code{g . f = id} nećemo navoditi, jer nije ništa komplikovaniji od prethodnih. Istaknimo da smo ovde umesto @code{()} mogli da iskoristimo bilo koji tip koji ima jednu vrednost. Štaviše, možemo dokazati nešto opštije tvrđenje: ako je @code{A₁ ≅ A₂} i  @code{B₁ ≅ B₂}, tada je i @ccode{A₁ ⊕ B₁ ≅ A₂ ⊕ B₂} i @ccode{A₁ ⊗ B₁ ≅ A₂ ⊗ B₂}.
 
 
 @section{Zadaci}
 
 @problem{Kreirati algebarski tip podataka @code{Vektor} koji predstavlja vektor u trodimenzionalnom prostoru (Koristiti @code{Float} tip za koordinate). Kreirati funkcije za sabiranje vektora, množenje vektora skalarem, skalarnog množenja vektora, vektorskog množenja vektora i računanja dužine vektora.}
 
-@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše konverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednu vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algebarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadrži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljnu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> Transakcija -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
+@problem{Kreirati algebarski tip @code{Valuta} koji može da predstavi neke valute (npr, RSD, EUR, USD) i funkcije koje vrše konverziju između ovih valuta. Kreirati algebarski tip @code{Svota} koji sadrži jednu vrednost tipa @code{Float} i vrednost tipa @code{Valuta}. Kreirati algebarski tip @code{Banka} koji predstavlja nekoliko domaćih banaka. Kreirati tip @code{Račun} koji sadrži vrednost tipa @code{Int} (broj računa) i vrednost tipa @code{Banka} (predstavlja banku u kojoj je otvoren račun). Tip @code{Račun} se koristi samo za identifikaciju, i nema u sebi podatke o promeni računa. Kreirati algebarski tip @code{Transakcija} koji sadrži vrednost tipa @code{Svota}, a zatim dve vrednosti tipa @code{Račun} koje predstavljaju račun sa kog se šalje odnosno na koji se šalje novac. Kreirati jednu proizvoljnu listu @code{Transakcija} od 5 članova ili više. Kreirati funkciju @code{promenaNaRačunu:: Račun -> [Transakcija] -> Svota} koja računa promenu stanja računa nakon svih izvršenih transakcija. Pretpostaviti da račun može da prime svote novca u bilo kojoj valuti. Krajnju promenu iskazati u evrima.}
 
-@problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravougaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Obim} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
+@problem{Kreirati tip @code{Tačka} koji predstavlja tačku u dvodimenzionalnoj ravni. Kreirati tip @code{Figura} koji može da predstavi pravougaonik, krug, trougao, i proizvoljni pravilni mnogougao u ravni. Kreirati funkcije @code{površina :: Figura -> Float} i @code{obim :: Figura -> Float} koje redom računaju površinu i obim figura. Kreirati funkciju @code{transliraj :: (Float, Float) -> Figura -> Figura} koja translira (pomera) figuru. Kreirati funkciju @code{skaliraj :: Float -> Figura -> Figura} koja skalira figuru za uneti faktor.}
 
 @problem{Kreirati tip @code{KompleksanBroj}. Implementirati funkcije koje sabiraju, oduzimaju, množe i dele kompleksne brojeve.}
 
