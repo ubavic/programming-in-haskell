@@ -31,6 +31,15 @@ jobs:
         with:
           cache-dependency-path: book/typst/prologue.typ
 
+      - name: Install Source Code Pro
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p ~/.local/share/fonts
+          gh release download --repo adobe-fonts/source-code-pro --pattern "OTF-*.zip" --dir /tmp
+          unzip -o -j /tmp/OTF-*.zip "*.otf" -d ~/.local/share/fonts
+          fc-cache -f
+
       - name: Process illustrations
         run: |
           outputDirectory="public/img"
