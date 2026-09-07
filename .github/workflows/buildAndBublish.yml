@@ -9,11 +9,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache compiler binary
+        id: compiler
+        uses: actions/cache@v4
+        with:
+          path: compiler/bin/haskellBook
+          key: haskellBook-${{ runner.os }}-${{ hashFiles('compiler/app/**/*.hs', 'compiler/*.cabal') }}
+
       - name: Install Haskell
+        if: steps.compiler.outputs.cache-hit != 'true'
         uses: haskell-actions/setup@v2
         with:
           ghc-version: '9.8'
           cabal-version: '3.10.2.1'
+
+      - name: Build compiler
+        if: steps.compiler.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p compiler/bin
+          cd compiler
+          cabal v2-install exe:haskellBook --installdir="$(pwd)/bin" --install-method=copy --overwrite-policy=always
 
       - name: Install Inkscape
         run: |
@@ -22,9 +40,6 @@ jobs:
 
       - name: Install SVGO
         run: npm install -g svgo
-
-      - name: Checkout
-        uses: actions/checkout@v6
 
       - name: Install Typst
         uses: typst-community/setup-typst@v5
@@ -53,16 +68,12 @@ jobs:
           done
 
       - name: Compile book
-        run: |
-          cd compiler
-          cabal v2-run haskellBook.cabal -- "../book/" "../public/"
+        run: ./compiler/bin/haskellBook book/ public/
 
       - name: Compile PDF
         run: |
           mkdir -p typst-out
-          cd compiler
-          cabal v2-run haskellBook.cabal -- --typst "../book/" "../typst-out/"
-          cd ..
+          ./compiler/bin/haskellBook --typst book/ typst-out/
           cp -a public/img typst-out/img
           typst compile --root typst-out typst-out/book.typ public/programiranje_u_haskelu-nikola_ubavic.pdf
 
