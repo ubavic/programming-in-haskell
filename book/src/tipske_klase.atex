@@ -273,7 +273,7 @@ instance Ord Racionalan where
 }{U implementaciji smo iskoristili činjenicu da je odnos između brojeva @m{a/b} i @m{c/d} isti kao odnos između brojeva @m{a\cdot d} i @m{c \cdot b}.}
 }
 
-@note{fix znak}
+@todo{fix znak}
 
 @section{@em{Show} i @em{Read}}
 

@@ -497,7 +497,7 @@ int f a b = d * (sum $ f <$> [a, a + d .. b])
 }
 }
 
-@note{Greška u jednom sabirku}
+@todo{Greška u jednom sabirku}
 
 @section{Zaključak}
 
