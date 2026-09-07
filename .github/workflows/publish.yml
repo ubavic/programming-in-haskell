@@ -99,8 +99,8 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/key
-          sudo chmod 600 ~/.ssh/key
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          sudo chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -p $SSH_PORT -H new.ubavic.rs >> ~/.ssh/known_hosts
 
       - name: Transfer via rsync
