@@ -6,11 +6,11 @@ import Renderer ( HTMLRenderer(render), renderChapter, renderIndexPage )
 import TypstRenderer ( renderTypstChapter, renderTypstBook )
 import Document ( Chapter(..), Block(..), filterTodos, addReferences )
 
-import Data.Maybe ( catMaybes )
 import Control.Exception ( try, SomeException )
 import Data.Time.Clock ( getCurrentTime, UTCTime(utctDay) )
 import Data.Time.Calendar ( toGregorian )
 import System.Environment ( getArgs )
+import System.Exit ( exitFailure )
 
 import Text.Blaze.Html5 (Html)
 import Text.Blaze.Html.Renderer.String (renderHtml)
@@ -120,12 +120,17 @@ main = do
     case positional of
         path : outPath : _ -> do
             index <- filter ((/=) '#' . head) . lines <$> readFile (path ++ "/index")
-            parsedChapters <- catMaybes <$> mapM (parseChapter path) index
+            results <- mapM (parseChapter path) index
+            parsedChapters <- case sequence results of
+                Nothing -> do
+                    (putStrLn . errorS) "Compilation failed"
+                    exitFailure
+                Just chapters -> return chapters
             date <- getDate
             if typstMode
                 then exportTypst path outPath parsedChapters
                 else exportHtml outPath date parsedChapters
-        _ -> putStrLn "Usage: haskellBook [--typst] BOOK_DIR OUT_DIR"
+        _ -> putStrLn "Usage: haskellBook [--typst] BOOK_DIR OUT_DIR" >> exitFailure
 
 exportHtml :: Filename -> Date -> [(Filename, Chapter)] -> IO ()
 exportHtml outPath date parsedChapters = do
@@ -147,4 +152,4 @@ exportTypst bookPath outPath parsedChapters = do
         (Just p, Just e) ->
             TIO.writeFile (outPath ++ "/book.typ") (renderTypstBook p e $ map (addReferences . snd) parsedChapters) >>
             (putStrLn . okS) "Saved document book.typ"
-        _ -> (putStrLn . errorS) "Can't assemble book.typ"
+        _ -> (putStrLn . errorS) "Can't assemble book.typ" >> exitFailure
