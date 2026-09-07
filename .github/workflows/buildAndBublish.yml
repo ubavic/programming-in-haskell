@@ -93,12 +93,21 @@ jobs:
           name: site
           path: public
 
-      - name: Prepare SCP
+      - name: Prepare SSH
+        env:
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
+          echo "$SSH_KEY" > ~/.ssh/key
           sudo chmod 600 ~/.ssh/key
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} -H new.ubavic.rs >> ~/.ssh/known_hosts
+          ssh-keyscan -p $SSH_PORT -H new.ubavic.rs >> ~/.ssh/known_hosts
 
-      - name: Publish via SCP
-        run: scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/key -r public/* ${{ secrets.USER }}@new.ubavic.rs:/var/www/haskel.ubavic.rs
+      - name: Transfer via rsync
+        env:
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          USER: ${{ secrets.USER }}
+        run: |
+          rsync -az --delete \
+            -e "ssh -p $SSH_PORT -o BatchMode=yes -o IdentitiesOnly=yes" \
+            public/ "$USER@new.ubavic.rs:/var/www/haskel.ubavic.rs/"
