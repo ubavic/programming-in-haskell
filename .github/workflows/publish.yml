@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      IMG_DIR: public/img
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -33,12 +35,21 @@ jobs:
           cd compiler
           cabal v2-install exe:haskellBook --installdir="$(pwd)/bin" --install-method=copy --overwrite-policy=always
 
+      - name: Cache optimized SVGs
+        id: svgs
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.IMG_DIR }}
+          key: svgs-${{ runner.os }}-${{ hashFiles('book/illustrations/**') }}
+
       - name: Install Inkscape
+        if: steps.svgs.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y inkscape
 
       - name: Install SVGO
+        if: steps.svgs.outputs.cache-hit != 'true'
         run: npm install -g svgo
 
       - name: Install Typst
@@ -47,6 +58,7 @@ jobs:
           cache-dependency-path: book/typst/prologue.typ
 
       - name: Install Source Code Pro
+        if: steps.svgs.outputs.cache-hit != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -56,14 +68,15 @@ jobs:
           fc-cache -f
 
       - name: Process illustrations
+        if: steps.svgs.outputs.cache-hit != 'true'
         run: |
-          outputDirectory="public/img"
+          mkdir -p "$IMG_DIR"
           for file in book/illustrations/*; do
               if [ -f "$file" ]; then
                   filename=$(basename "$file")
                   echo "Processing file: $filename"
-                  inkscape --file="$file" --export-text-to-path -o "$outputDirectory"/"$filename"
-                  svgo -i "$outputDirectory"/"$filename" --final-newline --multipass
+                  inkscape --file="$file" --export-text-to-path -o "$IMG_DIR"/"$filename"
+                  svgo -i "$IMG_DIR"/"$filename" --final-newline --multipass
               fi
           done
 
@@ -74,7 +87,7 @@ jobs:
         run: |
           mkdir -p typst-out
           ./compiler/bin/haskellBook --typst book/ typst-out/
-          cp -a public/img typst-out/img
+          cp -a "$IMG_DIR" typst-out/img
           typst compile --root typst-out typst-out/book.typ public/programiranje_u_haskelu-nikola_ubavic.pdf
 
       - name: Upload site
