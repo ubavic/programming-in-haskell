@@ -113,7 +113,7 @@ ghci> sati_u_nedelji
 
 @p Možda opisani postupak deluje trivijalno, ali predstavlja suštinu rada u interaktivnom okruženju@note{@em{GHCi} je primer @em{REPL} (Read-evaluate-print loop) programa čiji se rad sastoji od uzimanja korisničkih komandi, izvršavanja tih komandi i ispisivanja rezultata nazad u komandnu liniju, nakon čega program ponovo čeka korisnički unos.}.
 
-@p Ako želimo, u datoteku @pre{PrviProgram.hs} možemo dodati još definicija poput @code{sekundi_u_danu = 24 * 60 * 60} itd... Da bismo mogli da koristimo nove definicije, neophodno je da sačuvamo izmene datoteke @code{PrviProgram.hs} a zatim da ponovo učitamo datoteku u @em{GHCi}. To možemo da učinimo ponovo sa naredbom @pre{:load PrviProgram.hs} ili sa naredbom @pre{:reload} koja ponovo učitava sve datoteke koje su do tada bile učitane:
+@p Ako želimo, u datoteku @pre{PrviProgram.hs} možemo dodati još definicija poput @code{sekundi_u_danu = 24 * 60 * 60} itd... Da bismo mogli da koristimo nove definicije, neophodno je da sačuvamo izmene datoteke @pre{PrviProgram.hs} a zatim da ponovo učitamo datoteku u @em{GHCi}. To možemo da učinimo ponovo sa naredbom @pre{:load PrviProgram.hs} ili sa naredbom @pre{:reload} koja ponovo učitava sve datoteke koje su do tada bile učitane:
 
 @terminal{
 ghci> :reload
@@ -181,7 +181,7 @@ ghci> let a = 2 in a + 3
 5
 }
 
-@p Samim tim, moguće je ugnježdavati @em{let … in} izraze:
+@p Pošto @em{let … in} predstavlja izraz, moguće je ugnježdavati više ovakvih izraza:
 
 @terminal{
 ghci> let a = 2 in (let b = 3 in a + b)
