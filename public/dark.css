@@ -1,0 +1,75 @@
+:root {
+    --color-text: #f9f9f9;
+    --color-background: #141315;
+    --color-code-border: #222;
+    --color-code-bg: #1a1a1a;
+}
+
+body {
+    background-color: #141217;
+}
+
+a,
+a:visited,
+#index a,
+#index a:visited {
+    color: var(--color-text);
+}
+
+a:hover,
+#index a:hover {
+    color: var(--color-gray-4);
+}
+
+.example,
+.problem {
+    background: #1e1816;
+    border-color: #36323c;
+}
+
+.sh-constructor {
+    color: hsl(225, 70%, 80%);
+}
+
+.sh-number {
+    color: hsl(0, 70%, 80%);
+}
+
+.sh-comment {
+    color: hsl(0, 0%, 80%);
+}
+
+.sh-string {
+    color: hsl(33, 80%, 80%);
+}
+
+.terminal {
+    background-color: #090909;
+    box-shadow: none;
+    color: #fff;
+}
+
+aside {
+    color: var(--color-gray-4);
+}
+
+figure img {
+    filter: invert(1);
+}
+
+figcaption {
+    color: var(--color-gray-3);
+}
+
+nav {
+    background-image: none;
+    background-color: #241d39;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+@media screen and (max-width: 750px) {
+    aside {
+        background-color: #111;
+    }
+}

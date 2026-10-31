@@ -136,6 +136,8 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
         meta ! A.name "theme-color" ! A.content "#ffffff"
         meta ! customAttribute "property" "og:image" ! A.content "https://haskel.ubavic.rs/img/og.png"
         link ! A.rel "stylesheet" ! A.href "style.css"
+        link ! A.rel "stylesheet" ! A.href "dark.css" ! A.id "darkTheme" ! A.media "screen and (prefers-color-scheme: dark)"
+        script ! A.src "theme.js" $ ""
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "192x192" ! A.href "/img/favicon-192x192.png"
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "32x32" ! A.href "/img/favicon-32x32.png"
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "16x16" ! A.href "/img/favicon-16x16.png"
@@ -151,7 +153,16 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
                 " • "
                 a ! A.href "/programiranje_u_haskelu-nikola_ubavic.pdf" $ "PDF verzija"
                 " • "
+                a ! A.href "/programiranje_u_haskelu-nikola_ubavic.epub" $ "EPUB verzija"
+                " • "
                 a ! A.href "https://github.com/ubavic/programming-in-haskell" $ "GitHub"
+            div ! A.id "themeSwitcher" ! A.hidden "" $ do
+                "Tema: "
+                themeButton "light" "svetla"
+                " • "
+                themeButton "dark" "tamna"
+                " • "
+                themeButton "" "sistemska"
             div $ do
                 "Knjiga je objavljena pod licencom "
                 a ! A.href "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" $ "CC BY-NC-SA 4.0"
@@ -159,6 +170,8 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
                 "Autor "
                 a ! A.class_ "version" ! A.href "https://ubavic.rs" $ "Nikola Ubavić"
             div $ string $ "Sadržaj knjige se redovno unapređuje i dopunjuje. Poslednja izmena " <> date <> " godine."
+    where
+        themeButton theme name = button ! A.type_ "button" ! dataAttribute "theme" theme $ name
 
 
 katexImports :: String
