@@ -141,7 +141,6 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "192x192" ! A.href "/img/favicon-192x192.png"
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "32x32" ! A.href "/img/favicon-32x32.png"
         link ! A.rel "icon" ! A.type_ "image/png" ! A.sizes "16x16" ! A.href "/img/favicon-16x16.png"
-        link ! A.rel "stylesheet" ! A.href "https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css"
         preEscapedToHtml katexImports
     body $ do
         pageBody
@@ -176,7 +175,6 @@ pageHTML pageBody pageTitle date = docTypeHtml ! A.lang "sr" $ do
 
 katexImports :: String
 katexImports = "\
-\<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css' integrity='sha384-Juol1FqnotbkyZUT5Z7gUPjQ9gzlwCENvUZTpQBAPxtusdwFLRy382PSDx5UUJ4/' crossorigin='anonymous'>\
-\<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js' integrity='sha384-97gW6UIJxnlKemYavrqDHSX3SiygeOwIZhwyOKRfSaf0JWKRVj9hLASHgFTzT+0O' crossorigin='anonymous'></script>\
-\<script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js' integrity='sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05' crossorigin='anonymous' onload='renderMathInElement(document.body);'></script>\
-\<script src='https://beamanalytics.b-cdn.net/beam.min.js' data-token='c408e92a-b8b2-4f8c-b0ac-a62f282ee954' async></script>"
+\<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css' integrity='sha384-WwGtaC6ywCHxA5cstpj/3+xIZvTez8dq2IcBQaXRkenHZ7FVVq1ZROtURwfbtTlG' crossorigin='anonymous'>\
+\<script defer src='https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js' integrity='sha384-a1WQdjRj162i159OYq041X6I4K8NenkrI09LlPmiHg0YOb7CR+wJOraXwK9abpnE' crossorigin='anonymous'></script>\
+\<script defer src='https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/contrib/auto-render.min.js' integrity='sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz' crossorigin='anonymous' onload='renderMathInElement(document.body);'></script>"
