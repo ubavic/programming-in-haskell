@@ -1,7 +1,10 @@
 public/*.html
 public/img/*.svg
+public/*.typ
 compiler/dist-newstyle
 typst-out
+epub-out
+*.epub
 .env
 deploy.sh
 *.pdf

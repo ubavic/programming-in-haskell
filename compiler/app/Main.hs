@@ -1,14 +1,17 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase, MultiWayIf #-}
 module Main where
 
 import Parser ( parseDoc )
 import Renderer ( HTMLRenderer(render), renderChapter, renderIndexPage )
 import TypstRenderer ( renderTypstChapter, renderTypstBook )
+import EpubRenderer ( renderEpubBook, mathErrors )
 import Document ( Chapter(..), Block(..), filterTodos, addReferences )
 
 import Control.Exception ( try, SomeException )
+import Control.Monad ( forM_ )
 import Data.Time.Clock ( getCurrentTime, UTCTime(utctDay) )
 import Data.Time.Calendar ( toGregorian )
+import Data.Time.Format ( formatTime, defaultTimeLocale )
 import System.Environment ( getArgs )
 import System.Exit ( exitFailure )
 
@@ -116,7 +119,8 @@ main :: IO ()
 main = do
     args <- getArgs
     let typstMode = "--typst" `elem` args
-        positional = filter (/= "--typst") args
+        epubMode = "--epub" `elem` args
+        positional = filter (`notElem` ["--typst", "--epub"]) args
     case positional of
         path : outPath : _ -> do
             index <- filter ((/=) '#' . head) . lines <$> readFile (path ++ "/index")
@@ -127,10 +131,10 @@ main = do
                     exitFailure
                 Just chapters -> return chapters
             date <- getDate
-            if typstMode
-                then exportTypst path outPath parsedChapters
-                else exportHtml outPath date parsedChapters
-        _ -> putStrLn "Usage: haskellBook [--typst] BOOK_DIR OUT_DIR" >> exitFailure
+            if | typstMode -> exportTypst path outPath parsedChapters
+               | epubMode -> exportEpub outPath date parsedChapters
+               | otherwise -> exportHtml outPath date parsedChapters
+        _ -> putStrLn "Usage: haskellBook [--typst | --epub] BOOK_DIR OUT_DIR" >> exitFailure
 
 exportHtml :: Filename -> Date -> [(Filename, Chapter)] -> IO ()
 exportHtml outPath date parsedChapters = do
@@ -153,3 +157,14 @@ exportTypst bookPath outPath parsedChapters = do
             TIO.writeFile (outPath ++ "/book.typ") (renderTypstBook p e $ map (addReferences . snd) parsedChapters) >>
             (putStrLn . okS) "Saved document book.typ"
         _ -> (putStrLn . errorS) "Can't assemble book.typ" >> exitFailure
+
+exportEpub :: Filename -> Date -> [(Filename, Chapter)] -> IO ()
+exportEpub outPath date parsedChapters = do
+    modified <- formatTime defaultTimeLocale "%Y-%m-%dT%H:%M:%SZ" <$> getCurrentTime
+    let chapters = (\(stem, chapter) -> (stem, addReferences chapter)) <$> parsedChapters
+    forM_ chapters $ \(_, chapter) ->
+        putStr . warningS . T.unpack . T.unlines $
+            filterTodos chapter ++ ((T.pack "Can't convert math to MathML: " <>) <$> mathErrors chapter)
+    forM_ (renderEpubBook date modified chapters) $ \(filename, contents) ->
+        TIO.writeFile (outPath ++ "/" ++ filename) contents >>
+        (putStrLn . okS . concat) ["Saved document ", filename]

@@ -19,6 +19,18 @@ In `compiler` directory run
 cabal v2-run haskellBook.cabal -- "../book/" "../public/"
 ```
 
+### EPUB
+
+The `--epub` flag makes the compiler output XHTML files, which `build-epub.sh` packages into an EPUB file together with the stylesheet from `book/epub` and the processed illustrations. If [EPUBCheck](https://github.com/w3c/epubcheck) is installed, the script also validates the result.
+
+```bash
+mkdir -p epub-out
+cd compiler
+cabal v2-run haskellBook.cabal -- --epub "../book/" "../epub-out/"
+cd ..
+./build-epub.sh epub-out public/img programiranje_u_haskelu-nikola_ubavic.epub
+```
+
 ## Atex
 
 Atex is a markup language that supports basic text formatting. It is inspired by the TeX, but unlike the TeX, in Atex commands start with the `@`. Hence the language name (`at + tex`).

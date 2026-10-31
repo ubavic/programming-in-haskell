@@ -1,0 +1,154 @@
+h1,
+h2,
+h3 {
+    font-variant: small-caps;
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+h1 {
+    margin: 0 0 1em;
+}
+
+h2 {
+    margin-top: 2em;
+}
+
+sup {
+    line-height: 0;
+}
+
+code,
+pre {
+    font-family: monospace;
+    font-variant: normal;
+    -webkit-hyphens: none;
+    hyphens: none;
+}
+
+code {
+    font-size: 0.9em;
+}
+
+pre {
+    font-size: 0.8em;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin: 1em 0;
+    padding: 0.5em;
+    border: 1px solid #999;
+    border-radius: 3px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+pre code {
+    font-size: 1em;
+}
+
+.centerCode {
+    display: block;
+    text-align: center;
+    margin: 0.3em 0;
+}
+
+.terminal {
+    background-color: #191919;
+    color: #fff;
+    border: none;
+}
+
+.sh-constructor {
+    color: #3a5fcd;
+}
+
+.sh-number {
+    color: #c0392b;
+}
+
+.sh-comment {
+    color: #888;
+}
+
+.sh-string {
+    color: #b8860b;
+}
+
+.sh-keyword {
+    font-weight: bold;
+}
+
+figure {
+    margin: 1em 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+figure img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+figure pre {
+    margin-bottom: 0.4em;
+}
+
+figcaption {
+    font-size: 0.9em;
+}
+
+.problem,
+.example {
+    margin: 1em 0;
+    padding: 0.1em 0 0.1em 0.8em;
+    border-left: 3px solid #c79797;
+}
+
+.example {
+    border-left-color: #97bbc7;
+}
+
+aside {
+    font-size: 0.9em;
+    margin: 0.5em 0 0.5em 1em;
+}
+
+aside p {
+    margin: 0;
+}
+
+.math-error {
+    font-family: monospace;
+}
+
+#titlepage {
+    text-align: center;
+    margin-top: 30%;
+}
+
+#titlepage h1 {
+    font-size: 2em;
+}
+
+#titlepage .subtitle {
+    font-style: italic;
+}
+
+#titlepage .author {
+    margin-top: 3em;
+}
+
+nav ol {
+    list-style-type: none;
+    padding-left: 1em;
+}
+
+nav > ol {
+    padding-left: 0;
+}
+
+nav a {
+    text-decoration: none;
+}

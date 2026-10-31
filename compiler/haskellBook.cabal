@@ -16,7 +16,9 @@ executable haskellBook
                       time,
                       lens,
                       ghc-syntax-highlighter,
-                      blaze-html
+                      blaze-html,
+                      texmath,
+                      xml
     hs-source-dirs:   app
     default-language: Haskell2010
-    other-modules:    Parser, Document, Renderer, TypstRenderer
+    other-modules:    Parser, Document, Renderer, TypstRenderer, EpubRenderer

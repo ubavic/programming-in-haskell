@@ -67,6 +67,18 @@ jobs:
           unzip -o -j /tmp/OTF-*.zip "*.otf" -d ~/.local/share/fonts
           fc-cache -f
 
+      - name: Install EPUBCheck
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EPUBCHECK_VERSION: 5.4.0
+        run: |
+          gh release download "v$EPUBCHECK_VERSION" --repo w3c/epubcheck --pattern "epubcheck-*.zip" --dir /tmp
+          mkdir -p ~/.local/share ~/.local/bin
+          unzip -q "/tmp/epubcheck-$EPUBCHECK_VERSION.zip" -d ~/.local/share
+          printf '#!/bin/sh\nexec java -jar %s "$@"\n' ~/.local/share/epubcheck-"$EPUBCHECK_VERSION"/epubcheck.jar > ~/.local/bin/epubcheck
+          chmod +x ~/.local/bin/epubcheck
+          echo ~/.local/bin >> "$GITHUB_PATH"
+
       - name: Process illustrations
         if: steps.svgs.outputs.cache-hit != 'true'
         run: |
@@ -89,6 +101,12 @@ jobs:
           ./compiler/bin/haskellBook --typst book/ typst-out/
           cp -a "$IMG_DIR" typst-out/img
           typst compile --root typst-out typst-out/book.typ public/programiranje_u_haskelu-nikola_ubavic.pdf
+
+      - name: Compile EPUB
+        run: |
+          mkdir -p epub-out
+          ./compiler/bin/haskellBook --epub book/ epub-out/
+          ./build-epub.sh epub-out "$IMG_DIR" public/programiranje_u_haskelu-nikola_ubavic.epub
 
       - name: Upload site
         uses: actions/upload-artifact@v7

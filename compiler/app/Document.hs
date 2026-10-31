@@ -58,6 +58,32 @@ filterSections :: Chapter -> [Block]
 filterSections (Chapter _ blocks) = [ s | s@(Section _ _) <- blocks]
 
 
+allBlocks :: Chapter -> [Block]
+allBlocks (Chapter _ blocks) = concatMap withNested blocks
+    where
+        withNested b@(Problem _ s _) = b : concatMap withNested s
+        withNested b@(Example s _) = b : concatMap withNested s
+        withNested b = [b]
+
+
+allElements :: Chapter -> [PElement]
+allElements = concatMap (concatMap withNotes . elements) . allBlocks
+    where
+        elements = \case
+            Section ps _ -> ps
+            Subsection ps -> ps
+            Paragraph ps -> ps
+            CodeBlock _ desc -> concat desc
+            Terminal _ desc -> concat desc
+            Figure _ desc _ -> concat desc
+            Problem ps _ _ -> ps
+            List items -> concat items
+            Example _ _ -> []
+            Todo _ -> []
+        withNotes e@(PNote ps _) = e : concatMap withNotes ps
+        withNotes e = [e]
+
+
 addReferences :: Chapter -> Chapter
 addReferences (Chapter title blocks) = Chapter title $ fst $ addRef blocks (ReferenceState 0 0 0 0 0)
 
