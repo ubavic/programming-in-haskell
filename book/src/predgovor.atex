@@ -12,6 +12,8 @@
 
 @p U kodu koji je dat u knjizi, skoro uvek se vrednosti i funkcije imenuju na srpskom jeziku (sve sa dijakriticima). Iako smatram da je ovo loša praksa za projekte (bez obzira da li su lični ili profesionalni), isto smatram da ovakvo imenovanje može pomoći početniku da lakše uoči koja imena su sistemska a koja je definisao korisnik.
 
+@p Ova knjiga je dostupna u HTML, PDF i EPUB formatima, koji se generišu pomoću programa kog sam napisao u Haskelu. Sadržaj knjige kao i program za izradu krajnjih datoteka je dostupan u GitHub repozitorijumu. Pri izradi nekih delova programa korišćena je veštačka inteligencija. Veštačka inteligencija nije korišćena za pisanje bilo kog dela samog sadržaja knjige.
+
 @p Za kraj, naveo bih literaturu o Haskelu koja je korišćena pri izradi ove knjige kao i resurse koji mogu koristiti čitaocu za naredna istraživanja.
 
 @list{
